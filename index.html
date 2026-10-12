@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UchiSamBot — Study Helper for school students</title>
+<meta name="description" content="Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.">
+<link rel="canonical" href="https://kerio-byte.github.io/uchisambot/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kerio-byte.github.io/uchisambot/">
+<meta property="og:title" content="UchiSamBot — Study Helper for school students">
+<meta property="og:description" content="Step-by-step homework breakdowns, photo tasks, solution checks and flashcards — right in Telegram. First 5 breakdowns free.">
+<meta property="og:image" content="https://kerio-byte.github.io/uchisambot/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3D5AFE">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="alternate icon" href="img/icon-64.png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<style>
+:root{
+  --brand:#3D5AFE; --brand-soft:#EAF0FF; --sky:#4FC3F7; --ink:#14203A; --muted:#50617F;
+  --bg:#F7FAFF; --card:#fff; --line:#E3EAF7; --tg:#229ED9;
+  --r:18px; --shadow:0 10px 30px rgba(30,60,140,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
+  background:radial-gradient(1200px 520px at 50% -180px,#E9F1FF 0%,rgba(233,241,255,0) 70%),var(--bg);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--brand);text-decoration:none}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.2;margin:0}
+p{margin:0}
+h1{font-size:clamp(30px,4.6vw,46px);letter-spacing:-.02em}
+h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
+.sec{padding:56px 0 0}
+.sec-head{text-align:center;margin-bottom:34px}
+.sec-head p{color:var(--muted);margin-top:10px}
+
+.top{position:sticky;top:0;z-index:10;background:rgba(247,250,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:22px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--ink)}
+.brand img{border-radius:9px}
+.nav{display:flex;gap:20px;margin-left:auto}
+.nav a{color:var(--muted);font-size:15px;font-weight:500}
+.nav a:hover{color:var(--ink)}
+.lang{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;border-radius:999px;padding:4px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
+.lang button.on{background:var(--brand);color:#fff}
+@media(max-width:760px){.nav{display:none}}
+
+.hero{padding:48px 0 8px}
+.hero-in{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center}
+.lead{color:var(--muted);font-size:18px;margin:18px 0 26px;max-width:560px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:#fff;font-weight:600;font-size:17px;
+  padding:14px 24px;border-radius:14px;box-shadow:0 10px 24px rgba(61,90,254,.28);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(61,90,254,.34)}
+.btn svg{flex:0 0 auto}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
+.chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
+.hero-phone{display:flex;justify-content:center}
+.hero-phone img{width:min(300px,72vw);border-radius:26px;border:1px solid var(--line);box-shadow:var(--shadow)}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:34px;text-align:center}.lead{margin-left:auto;margin-right:auto}.cta-row,.chips{justify-content:center}.hero{padding-top:34px}}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.steps li{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:var(--brand-soft);color:var(--brand);font-weight:700;margin-bottom:12px}
+.steps h3{font-size:17px;margin-bottom:6px}
+.steps p{color:var(--muted);font-size:14.5px}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+.ico{width:42px;height:42px;border-radius:12px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.card h3{font-size:17px;margin-bottom:6px}
+.card p{color:var(--muted);font-size:14.5px}
+@media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cards{grid-template-columns:1fr}}
+
+.center{justify-content:center}
+
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
+.shots img{width:100%;border-radius:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
+
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:14px}
+.price h3{font-size:16px;color:var(--muted);font-weight:600}
+.price .amount{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:10px 0 8px;color:var(--brand)}
+.price p{color:var(--muted);font-size:14.5px}
+.price.hot{border-color:#C9D6FF;background:linear-gradient(180deg,#F5F8FF,#fff)}
+@media(max-width:860px){.price-grid{grid-template-columns:1fr}}
+.price-fine{text-align:center;color:var(--muted);font-size:14px;margin-bottom:22px}
+.ref-band{display:flex;align-items:center;gap:14px;background:linear-gradient(90deg,#EAF0FF,#F2F7FF);border:1px solid #D7E1FF;border-radius:var(--r);padding:18px 22px;margin-top:8px}
+.ref-band svg{flex:0 0 auto;color:var(--brand)}
+.ref-band p{font-size:15px}
+
+.faq{max-width:760px;margin:0 auto}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.faq summary{list-style:none;cursor:pointer;padding:16px 20px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:20px;color:var(--brand);font-weight:500;line-height:1}
+.faq details[open] summary::after{content:"-"}
+.faq details p{padding:0 20px 16px;color:var(--muted);font-size:15px}
+
+.band{background:linear-gradient(135deg,var(--brand) 0%,#2F49D8 55%,#4FC3F7 130%);border-radius:24px;padding:44px 30px;text-align:center;color:#fff;box-shadow:0 18px 44px rgba(61,90,254,.35)}
+.band h2{color:#fff}
+.band p{color:#DCE6FF;margin:12px 0 24px;font-size:17px}
+.btn.light{background:#fff;color:var(--brand);box-shadow:0 10px 24px rgba(0,20,80,.18)}
+
+footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
+.foot{text-align:center;color:var(--muted);font-size:14px}
+.foot .dim{color:#8194B4;margin-top:8px;font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top">
+      <img src="img/logo.svg" alt="UchiSamBot logo" width="34" height="34">
+      <span>UchiSamBot</span>
+    </a>
+    <nav class="nav">
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" class="on" type="button">EN</button>
+      <button id="lang-ru" type="button">RU</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-in">
+    <div class="hero-txt">
+      <h1 data-i18n="hero.title">Homework that finally makes sense</h1>
+      <p class="lead" data-i18n="hero.sub">UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://t.me/UchiSamBot" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          <span data-i18n="hero.cta">Open in Telegram</span>
+        </a>
+      </div>
+      <div class="chips">
+        <span class="chip" data-i18n="hero.chip1">First 5 breakdowns free</span>
+        <span class="chip" data-i18n="hero.chip2">Nothing to install</span>
+        <span class="chip" data-i18n="hero.chip3">Russian and English</span>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <img src="img/shot4.webp" width="540" height="1170" alt="UchiSamBot chat: a homework breakdown in English" loading="eager">
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="sec-head"><h2 data-i18n="how.title">How it works</h2></div>
+    <ol class="steps">
+      <li><span class="num">1</span><h3 data-i18n="how.s1t">Open the bot</h3><p data-i18n="how.s1d">Tap the button and press Start — nothing to install.</p></li>
+      <li><span class="num">2</span><h3 data-i18n="how.s2t">Send a task</h3><p data-i18n="how.s2d">Type your question or snap a photo of the problem.</p></li>
+      <li><span class="num">3</span><h3 data-i18n="how.s3t">Get a breakdown</h3><p data-i18n="how.s3d">The bot solves it step by step and explains every move.</p></li>
+      <li><span class="num">4</span><h3 data-i18n="how.s4t">Check yourself</h3><p data-i18n="how.s4d">Ask to check your solution, or get a summary and flashcards.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="sec-head"><h2 data-i18n="feat.title">What's inside</h2></div>
+    <div class="cards">
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
+        <h3 data-i18n="f1t">Step-by-step breakdowns</h3><p data-i18n="f1d">Every move explained — not just the final answer.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <h3 data-i18n="f2t">Photo tasks</h3><p data-i18n="f2d">Snap the problem straight from the textbook.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8z"/></svg></div>
+        <h3 data-i18n="f3t">Simple language</h3><p data-i18n="f3d">From simple to complex, like a patient tutor.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5.5"/></svg></div>
+        <h3 data-i18n="f4t">Solution check</h3><p data-i18n="f4d">Finds exactly where the mistake is.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="14" height="12" rx="2"/><path d="M7.5 4.5h10A2.5 2.5 0 0 1 20 7v10"/></svg></div>
+        <h3 data-i18n="f5t">Summaries and flashcards</h3><p data-i18n="f5d">Short revision cards before a test.</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div>
+        <h3 data-i18n="f6t">Any time of day</h3><p data-i18n="f6d">No waiting for a tutor when you are stuck.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="subjects">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 data-i18n="subj.title">School subjects</h2>
+      <p data-i18n="subj.note">And any other school question you are stuck on.</p>
+    </div>
+    <div class="chips center">
+      <span class="chip big" data-i18n="subj.c1">Mathematics</span>
+      <span class="chip big" data-i18n="subj.c2">Russian</span>
+      <span class="chip big" data-i18n="subj.c3">Physics</span>
+      <span class="chip big" data-i18n="subj.c4">Chemistry</span>
+      <span class="chip big" data-i18n="subj.c5">History</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="shots">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 data-i18n="shots.title">Real chats with the bot</h2>
+      <p data-i18n="shots.cap">Russian and English interface</p>
+    </div>
+    <div class="shots">
+      <img src="img/shot1.webp" width="540" height="1170" alt="UchiSamBot welcome screen" loading="lazy">
+      <img src="img/shot2.webp" width="540" height="1170" alt="Sending a homework task to UchiSamBot" loading="lazy">
+      <img src="img/shot3.webp" width="540" height="1170" alt="Step-by-step breakdown from UchiSamBot" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 data-i18n="price.title">Pricing</h2>
+      <p data-i18n="price.note">Payment via Telegram Stars, right in the chat.</p>
+    </div>
+    <div class="price-grid">
+      <div class="card price"><h3 data-i18n="p1t">First 5 breakdowns</h3><div class="amount" data-i18n="p1p">Free</div><p data-i18n="p1d">Try the bot — no payment needed.</p></div>
+      <div class="card price"><h3 data-i18n="p2t">Pack of 5 breakdowns</h3><div class="amount" data-i18n="p2p">120 Stars</div><p data-i18n="p2d">About 24 Stars per breakdown — save 20%.</p></div>
+      <div class="card price hot"><h3 data-i18n="p3t">Pack of 15 breakdowns</h3><div class="amount" data-i18n="p3p">300 Stars</div><p data-i18n="p3d">About 20 Stars per breakdown — save 33%.</p></div>
+    </div>
+    <p class="price-fine" data-i18n="price.fine">Single breakdown — 30 Stars.</p>
+    <div class="ref-band">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/><path d="M19 8v6M16 11h6"/></svg>
+      <p data-i18n="ref.text">Invite a friend — when they solve their first task, you get one more free breakdown.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec-head"><h2 data-i18n="faq.title">FAQ</h2></div>
+    <div class="faq">
+      <details><summary data-i18n="q1">Is this cheating?</summary><p data-i18n="q1a">No. The bot explains and teaches: it shows every step and the rule behind it, so you can solve the next problem yourself.</p></details>
+      <details><summary data-i18n="q2">Which subjects does it cover?</summary><p data-i18n="q2a">Mathematics, Russian, physics, chemistry and history — and in general any school question you are stuck on.</p></details>
+      <details><summary data-i18n="q3">What languages does it speak?</summary><p data-i18n="q3a">Russian and English. Switch any time with /lang.</p></details>
+      <details><summary data-i18n="q4">How do I pay?</summary><p data-i18n="q4a">With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack.</p></details>
+      <details><summary data-i18n="q5">Do I need to install anything?</summary><p data-i18n="q5a">No. It works inside Telegram — on your phone or computer.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="band">
+      <h2 data-i18n="cta.title">Stuck on a problem right now?</h2>
+      <p data-i18n="cta.sub">Send it to the bot — the first 5 breakdowns are free.</p>
+      <a class="btn light" href="https://t.me/UchiSamBot" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        <span data-i18n="cta.btn">Open in Telegram</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <p><strong>UchiSamBot</strong> — <span data-i18n="foot.tag">Study Helper for school students</span></p>
+    <p class="dim"><span data-i18n="foot.pay">Payments are processed via Telegram Stars.</span> &middot; <a href="mailto:kerio982745@gmail.com">kerio982745@gmail.com</a></p>
+  </div>
+</footer>
+
+<script>
+var I18N = {
+en: {
+ 'nav.how':'How it works','nav.features':'Features','nav.pricing':'Pricing','nav.faq':'FAQ',
+ 'hero.title':'Homework that finally makes sense',
+ 'hero.sub':'UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.',
+ 'hero.cta':'Open in Telegram',
+ 'hero.chip1':'First 5 breakdowns free','hero.chip2':'Nothing to install','hero.chip3':'Russian and English',
+ 'how.title':'How it works',
+ 'how.s1t':'Open the bot','how.s1d':'Tap the button and press Start — nothing to install.',
+ 'how.s2t':'Send a task','how.s2d':'Type your question or snap a photo of the problem.',
+ 'how.s3t':'Get a breakdown','how.s3d':'The bot solves it step by step and explains every move.',
+ 'how.s4t':'Check yourself','how.s4d':'Ask to check your solution, or get a summary and flashcards.',
+ 'feat.title':"What's inside",
+ 'f1t':'Step-by-step breakdowns','f1d':'Every move explained — not just the final answer.',
+ 'f2t':'Photo tasks','f2d':'Snap the problem straight from the textbook.',
+ 'f3t':'Simple language','f3d':'From simple to complex, like a patient tutor.',
+ 'f4t':'Solution check','f4d':'Finds exactly where the mistake is.',
+ 'f5t':'Summaries and flashcards','f5d':'Short revision cards before a test.',
+ 'f6t':'Any time of day','f6d':'No waiting for a tutor when you are stuck.',
+ 'subj.title':'School subjects','subj.note':'And any other school question you are stuck on.',
+ 'subj.c1':'Mathematics','subj.c2':'Russian','subj.c3':'Physics','subj.c4':'Chemistry','subj.c5':'History',
+ 'shots.title':'Real chats with the bot','shots.cap':'Russian and English interface',
+ 'price.title':'Pricing','price.note':'Payment via Telegram Stars, right in the chat.',
+ 'p1t':'First 5 breakdowns','p1p':'Free','p1d':'Try the bot — no payment needed.',
+ 'p2t':'Pack of 5 breakdowns','p2p':'120 Stars','p2d':'About 24 Stars per breakdown — save 20%.',
+ 'p3t':'Pack of 15 breakdowns','p3p':'300 Stars','p3d':'About 20 Stars per breakdown — save 33%.',
+ 'price.fine':'Single breakdown — 30 Stars.',
+ 'ref.text':'Invite a friend — when they solve their first task, you get one more free breakdown.',
+ 'faq.title':'FAQ',
+ 'q1':'Is this cheating?','q1a':'No. The bot explains and teaches: it shows every step and the rule behind it, so you can solve the next problem yourself.',
+ 'q2':'Which subjects does it cover?','q2a':'Mathematics, Russian, physics, chemistry and history — and in general any school question you are stuck on.',
+ 'q3':'What languages does it speak?','q3a':'Russian and English. Switch any time with /lang.',
+ 'q4':'How do I pay?','q4a':'With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack.',
+ 'q5':'Do I need to install anything?','q5a':'No. It works inside Telegram — on your phone or computer.',
+ 'cta.title':'Stuck on a problem right now?','cta.sub':'Send it to the bot — the first 5 breakdowns are free.','cta.btn':'Open in Telegram',
+ 'foot.tag':'Study Helper for school students','foot.pay':'Payments are processed via Telegram Stars.',
+ 'meta.title':'UchiSamBot — Study Helper for school students',
+ 'meta.desc':'Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.'
+},
+ru: {
+ 'nav.how':'Как это работает','nav.features':'Возможности','nav.pricing':'Тарифы','nav.faq':'Вопросы',
+ 'hero.title':'Домашка, которая наконец понятна',
+ 'hero.sub':'UchiSamBot разбирает задачу по шагам, объясняет тему простыми словами, проверяет решение и делает карточки для повторения — прямо в Telegram, в любое время дня.',
+ 'hero.cta':'Открыть в Telegram',
+ 'hero.chip1':'Первые 5 разборов бесплатно','hero.chip2':'Ничего не надо устанавливать','hero.chip3':'Русский и английский',
+ 'how.title':'Как это работает',
+ 'how.s1t':'Открой бота','how.s1d':'Нажми кнопку и Start — устанавливать ничего не нужно.',
+ 'how.s2t':'Отправь задачу','how.s2d':'Напиши вопрос или сфотографируй условие.',
+ 'how.s3t':'Получи разбор','how.s3d':'Бот решает по шагам и объясняет каждое действие.',
+ 'how.s4t':'Проверь себя','how.s4d':'Попроси проверить твоё решение или сделать конспект и карточки.',
+ 'feat.title':'Что внутри',
+ 'f1t':'Разбор по шагам','f1d':'Каждое действие объясняется — не только ответ.',
+ 'f2t':'Задачи с фото','f2d':'Сфотографируй условие прямо из учебника.',
+ 'f3t':'Простые объяснения','f3d':'От простого к сложному, как терпеливый репетитор.',
+ 'f4t':'Проверка решения','f4d':'Найдёт, где именно ошибка.',
+ 'f5t':'Конспекты и карточки','f5d':'Короткие карточки для повторения перед контрольной.',
+ 'f6t':'Круглосуточно','f6d':'Не нужно ждать репетитора, когда застрял.',
+ 'subj.title':'Школьные предметы','subj.note':'И любой другой школьный вопрос, где ты застрял.',
+ 'subj.c1':'Математика','subj.c2':'Русский язык','subj.c3':'Физика','subj.c4':'Химия','subj.c5':'История',
+ 'shots.title':'Живые чаты с ботом','shots.cap':'Интерфейс на русском и английском',
+ 'price.title':'Тарифы','price.note':'Оплата звёздами Telegram прямо в чате.',
+ 'p1t':'Первые 5 разборов','p1p':'Бесплатно','p1d':'Попробуй бота — платить не нужно.',
+ 'p2t':'Пакет 5 разборов','p2p':'120 звёзд','p2d':'Около 24 звёзд за разбор — выгода 20%.',
+ 'p3t':'Пакет 15 разборов','p3p':'300 звёзд','p3d':'Около 20 звёзд за разбор — выгода 33%.',
+ 'price.fine':'Один разбор — 30 звёзд.',
+ 'ref.text':'Пригласи друга — когда он решит первую задачу, ты получишь ещё один бесплатный разбор.',
+ 'faq.title':'Вопросы',
+ 'q1':'Это списывание?','q1a':'Нет. Бот объясняет и учит: показывает каждый шаг и правило за ним, чтобы следующую задачу ты решил сам.',
+ 'q2':'Какие предметы?','q2a':'Математика, русский язык, физика, химия, история — и вообще любой школьный вопрос, где ты застрял.',
+ 'q3':'На каких языках?','q3a':'На русском и английском. Переключить можно командой /lang.',
+ 'q4':'Как оплатить?','q4a':'Звёздами Telegram прямо в чате. Первые 5 разборов бесплатно, дальше можно купить один разбор или пакет.',
+ 'q5':'Нужно что-то устанавливать?','q5a':'Нет. Всё работает внутри Telegram — на телефоне или компьютере.',
+ 'cta.title':'Застрял на задаче прямо сейчас?','cta.sub':'Отправь её боту — первые 5 разборов бесплатно.','cta.btn':'Открыть в Telegram',
+ 'foot.tag':'Учебный помощник для школьников','foot.pay':'Оплата проходит через звёзды Telegram.',
+ 'meta.title':'UchiSamBot — учебный помощник для школьников',
+ 'meta.desc':'Telegram-бот, который разбирает домашние задания по шагам, объясняет темы простыми словами, проверяет решения и делает карточки. Первые 5 разборов бесплатно. Русский и английский.'
+}
+};
+(function(){
+  var root = document.documentElement;
+  function apply(l){
+    var d = I18N[l] || I18N.en;
+    var nodes = document.querySelectorAll('[data-i18n]');
+    for (var i=0;i<nodes.length;i++){
+      var k = nodes[i].getAttribute('data-i18n');
+      if (d[k] != null) nodes[i].textContent = d[k];
+    }
+    root.lang = l;
+    document.getElementById('lang-en').classList.toggle('on', l==='en');
+    document.getElementById('lang-ru').classList.toggle('on', l==='ru');
+    document.title = d['meta.title'];
+    var md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', d['meta.desc']);
+    var ogt = document.querySelector('meta[property="og:title"]'); if (ogt) ogt.setAttribute('content', d['meta.title']);
+    var ogd = document.querySelector('meta[property="og:description"]'); if (ogd) ogd.setAttribute('content', d['meta.desc']);
+    try { localStorage.setItem('lang', l); } catch(e){}
+  }
+  var l = null;
+  try { l = localStorage.getItem('lang'); } catch(e){}
+  if (l !== 'ru' && l !== 'en') l = ((navigator.language||'en').toLowerCase().indexOf('ru') === 0) ? 'ru' : 'en';
+  apply(l);
+  document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
+  document.getElementById('lang-ru').addEventListener('click', function(){ apply('ru'); });
+})();
+</script>
+</body>
+</html>
