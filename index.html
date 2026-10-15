@@ -116,6 +116,15 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .foot .dim{color:#8194B4;margin-top:8px;font-size:13px}
 .foot-badge{margin-top:16px}
 .foot-badge img{display:inline-block}
+.contact{max-width:640px;margin:0 auto;text-align:left;background:#fff;border:1px solid #E3EAF7;border-radius:18px;padding:28px 26px}
+.contact h2{margin:0 0 8px}
+.contact-sub{margin:0 0 18px}
+.contact form{display:flex;flex-direction:column;gap:12px}
+.contact input,.contact textarea{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #E3EAF7;border-radius:12px;font:inherit;color:inherit;background:#fff}
+.contact input:focus,.contact textarea:focus{outline:2px solid #3D5AFE;outline-offset:1px;border-color:#3D5AFE}
+.contact textarea{resize:vertical;min-height:96px}
+.contact button.btn{align-self:flex-start;border:0;cursor:pointer;font:inherit;font-weight:600}
+.contact-note{font-size:13px;line-height:1.5;color:#5C6E90;margin:14px 0 0}
 </style>
 </head>
 <body>
@@ -282,6 +291,21 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   </div>
 </section>
 
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="contact">
+      <h2 data-i18n="contact.title">Questions or feedback?</h2>
+      <p class="contact-sub" data-i18n="contact.sub">Write to us — the message goes straight to our team, and we reply to your email. No spam, no mailing lists.</p>
+      <form id="contact-form" novalidate>
+        <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" data-i18n-ph="contact.ph_email" />
+        <textarea id="cf-msg" name="message" rows="4" placeholder="Your question, feedback or complaint…" data-i18n-ph="contact.ph_msg"></textarea>
+        <button type="submit" class="btn" data-i18n="contact.btn">Send message</button>
+      </form>
+      <p class="contact-note" data-i18n="contact.note">The button opens Telegram: your message is copied — paste it into the chat (long-press → Paste) and send. We will reply to your email.</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap foot">
     <p><strong>UchiSamBot</strong> — <span data-i18n="foot.tag">Study Helper for school students</span></p>
@@ -330,7 +354,10 @@ en: {
  'foot.tag':'Study Helper for school students','foot.pay':'Payments are processed via Telegram Stars.',
  'foot.privacy':'Privacy Policy','foot.terms':'Terms of Service',
  'meta.title':'UchiSamBot — Study Helper for school students',
- 'meta.desc':'Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.'
+ 'meta.desc':'Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.',
+ 'contact.title':'Questions or feedback?','contact.sub':'Write to us — the message goes straight to our team, and we reply to your email. No spam, no mailing lists.',
+ 'contact.ph_email':'you@example.com','contact.ph_msg':'Your question, feedback or complaint…',
+ 'contact.btn':'Send message','contact.note':'The button opens Telegram: your message is copied — paste it into the chat (long-press → Paste) and send. We will reply to your email.'
 },
 ru: {
  'nav.how':'Как это работает','nav.features':'Возможности','nav.pricing':'Тарифы','nav.faq':'Вопросы',
@@ -369,7 +396,10 @@ ru: {
  'foot.tag':'Учебный помощник для школьников','foot.pay':'Оплата проходит через звёзды Telegram.',
  'foot.privacy':'Политика конфиденциальности','foot.terms':'Условия использования',
  'meta.title':'UchiSamBot — учебный помощник для школьников',
- 'meta.desc':'Telegram-бот, который разбирает домашние задания по шагам, объясняет темы простыми словами, проверяет решения и делает карточки. Первые 5 разборов бесплатно. Русский и английский.'
+ 'meta.desc':'Telegram-бот, который разбирает домашние задания по шагам, объясняет темы простыми словами, проверяет решения и делает карточки. Первые 5 разборов бесплатно. Русский и английский.',
+ 'contact.title':'Есть вопрос или отзыв?','contact.sub':'Напишите нам — сообщение уйдёт прямо команде, ответим на вашу почту. Без спама и рассылок.',
+ 'contact.ph_email':'you@example.com','contact.ph_msg':'Ваш вопрос, отзыв или жалоба…',
+ 'contact.btn':'Отправить','contact.note':'Кнопка открывает Telegram: текст скопирован — вставьте его в чат (долгое нажатие → Вставить) и отправьте. Ответим на почту.'
 }
 };
 (function(){
@@ -380,6 +410,11 @@ ru: {
     for (var i=0;i<nodes.length;i++){
       var k = nodes[i].getAttribute('data-i18n');
       if (d[k] != null) nodes[i].textContent = d[k];
+    }
+    var phs = document.querySelectorAll('[data-i18n-ph]');
+    for (var j=0;j<phs.length;j++){
+      var pk = phs[j].getAttribute('data-i18n-ph');
+      if (d[pk] != null) phs[j].setAttribute('placeholder', d[pk]);
     }
     root.lang = l;
     document.getElementById('lang-en').classList.toggle('on', l==='en');
@@ -396,6 +431,25 @@ ru: {
   apply(l);
   document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
   document.getElementById('lang-ru').addEventListener('click', function(){ apply('ru'); });
+})();
+</script>
+<script>
+(function(){
+  var f = document.getElementById('contact-form');
+  if (!f) return;
+  f.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var email = (document.getElementById('cf-email').value || '').trim();
+    var msg = (document.getElementById('cf-msg').value || '').trim();
+    if (!email || email.indexOf('@') < 1 || email.indexOf('.') < 0) { document.getElementById('cf-email').focus(); return; }
+    var code = '';
+    try { code = btoa(unescape(encodeURIComponent(email))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); } catch(e){ code = ''; }
+    if (msg && navigator.clipboard && navigator.clipboard.writeText) {
+      try { navigator.clipboard.writeText(msg).catch(function(){}); } catch(e){}
+    }
+    var payload = (code && code.length <= 61) ? ('ct_' + code) : 'ct_none';
+    window.open('https://t.me/UchiSamBot?start=' + payload, '_blank', 'noopener');
+  });
 })();
 </script>
 </body>
