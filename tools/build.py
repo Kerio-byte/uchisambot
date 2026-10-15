@@ -15,14 +15,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LOCALES = ROOT / "src" / "locales"
 BASE = "https://kerio-byte.github.io/uchisambot/"
-LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi"]
+LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 LABELS = {
     "en": "🇬🇧 English", "ru": "🇷🇺 Русский", "es": "🇪🇸 Español", "pt": "🇧🇷 Português",
     "hi": "🇮🇳 हिन्दी", "id": "🇮🇩 Bahasa Indonesia", "tr": "🇹🇷 Türkçe", "vi": "🇻🇳 Tiếng Việt",
+    "uk": "🇺🇦 Українська",
 }
 OG_LOCALE = {"en": "en_US", "ru": "ru_RU", "es": "es_ES", "pt": "pt_BR",
-             "hi": "hi_IN", "id": "id_ID", "tr": "tr_TR", "vi": "vi_VN"}
+             "hi": "hi_IN", "id": "id_ID", "tr": "tr_TR", "vi": "vi_VN", "uk": "uk_UA"}
 NO_TRANSLATE = ["UchiSamBot", "Telegram Stars", "Stars", "/lang", "you@example.com"]
+VIDEO_ALT = {
+    "en": "Demo: the bot breaks down a task step by step.",
+    "ru": "Демонстрация: бот разбирает задачу по шагам.",
+    "es": "Demostración: el bot resuelve una tarea paso a paso.",
+    "pt": "Demonstração: o bot resolve uma tarefa passo a passo.",
+    "hi": "डेमो: बॉट समस्या को चरण-दर-चरण हल करता है।",
+    "id": "Demo: bot menyelesaikan tugas langkah demi langkah.",
+    "tr": "Demo: bot bir soruyu adım adım çözüyor.",
+    "vi": "Bản demo: bot giải bài từng bước.",
+}
 
 
 def url_for(lang: str) -> str:
@@ -171,6 +182,7 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     # 8) пути для подпапок
     if lang != "en":
         out = out.replace('src="img/', 'src="../img/').replace('href="img/', 'href="../img/')
+        out = out.replace('poster="img/', 'poster="../img/')
         out = out.replace('src="demo/', 'src="../demo/')
         out = out.replace('href="privacy.html', 'href="../privacy.html')
         out = out.replace('href="terms.html', 'href="../terms.html')
@@ -180,6 +192,12 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     prefix = "../img/" if lang != "en" else "img/"
     out = re.sub(r'src="(?:\.\./)?img/shot(\d)(?:-\w+)?\.webp"',
                  lambda m: f'src="{prefix}{shot_src(m.group(1), lang)}"', out)
+
+    # 9b) hero-видео: у RU своя версия (у каждого языка свои ассеты; остальным — EN-фолбэк)
+    if lang == "ru":
+        out = out.replace("demo/uchiambot-demo-web.mp4", "demo/uchiambot-demo-web-ru.mp4")
+        out = out.replace("img/demo-poster.webp", "img/demo-poster-ru.webp")
+    out = out.replace(VIDEO_ALT["en"], VIDEO_ALT[lang])
 
     # 10) CSS переключателя (один раз)
     if ".lang-dd" not in src:

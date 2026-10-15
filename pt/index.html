@@ -14,6 +14,7 @@
 <link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/">
 <link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/">
 <link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/">
+<link rel="alternate" hreflang="uk" href="https://kerio-byte.github.io/uchisambot/uk/">
 <link rel="alternate" hreflang="x-default" href="https://kerio-byte.github.io/uchisambot/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kerio-byte.github.io/uchisambot/pt/">
@@ -85,8 +86,8 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
 .chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
 .hero-phone{display:flex;justify-content:center}
-.hero-phone img{width:min(300px,72vw);border-radius:26px;border:1px solid var(--line);box-shadow:var(--shadow)}
-@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:34px;text-align:center}.lead{margin-left:auto;margin-right:auto}.cta-row,.chips{justify-content:center}.hero{padding-top:34px}}
+.hero-phone video{display:block;width:min(300px,72vw);height:auto;border-radius:26px;border:1px solid var(--line);box-shadow:var(--shadow);background:#0B1020}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:0;text-align:center}.hero-left{display:contents}.hero-in h1{order:1}.hero-in .lead{order:2;margin-left:auto;margin-right:auto}.hero-in .cta-row{order:3;justify-content:center}.hero-in .hero-phone{order:4;margin:30px auto 4px}.hero-in .chips{order:5;justify-content:center}.hero-in .hero-badge{order:6}.hero{padding-top:34px}}
 
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .steps li{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
@@ -166,13 +167,13 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
       <a href="#pricing">Preços</a>
       <a href="#faq">Perguntas</a>
     </nav>
-    <details class="lang-dd"><summary aria-label="Language">🌐 Português</summary><div class="lang-list"><a href="../">🇬🇧 English</a><a href="../ru/">🇷🇺 Русский</a><a href="../es/">🇪🇸 Español</a><a href="#" aria-current="page" class="on">🇧🇷 Português</a><a href="../hi/">🇮🇳 हिन्दी</a><a href="../id/">🇮🇩 Bahasa Indonesia</a><a href="../tr/">🇹🇷 Türkçe</a><a href="../vi/">🇻🇳 Tiếng Việt</a></div></details>
+    <details class="lang-dd"><summary aria-label="Language">🌐 Português</summary><div class="lang-list"><a href="../">🇬🇧 English</a><a href="../ru/">🇷🇺 Русский</a><a href="../es/">🇪🇸 Español</a><a href="#" aria-current="page" class="on">🇧🇷 Português</a><a href="../hi/">🇮🇳 हिन्दी</a><a href="../id/">🇮🇩 Bahasa Indonesia</a><a href="../tr/">🇹🇷 Türkçe</a><a href="../vi/">🇻🇳 Tiếng Việt</a><a href="../uk/">🇺🇦 Українська</a></div></details>
   </div>
 </header>
 
 <section class="hero" id="top">
   <div class="wrap hero-in">
-    <div class="hero-txt">
+    <div class="hero-left">
       <h1>Dever de casa que finalmente faz sentido</h1>
       <p class="lead">O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples, confere suas respostas e faz flashcards — direto no Telegram, a qualquer hora do dia.</p>
       <div class="cta-row">
@@ -189,7 +190,9 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
       <p class="hero-badge"><a href="https://launchigniter.com/product/uchisambot-study-helper?ref=badge-uchisambot-study-helper" target="_blank" rel="noopener"><img src="https://launchigniter.com/api/badge/uchisambot-study-helper?theme=light" alt="Featured on LaunchIgniter" width="212" height="55"></a></p>
     </div>
     <div class="hero-phone">
-      <img src="../img/shot4.webp" width="540" height="1170" data-shot="4" data-alt-en="UchiSamBot: choose your language — English or Russian" data-alt-ru="UchiSamBot: выбор языка — русский или английский" alt="UchiSamBot: choose your language — English or Russian" loading="eager">
+      <video id="hero-video" width="540" height="1170" muted loop playsinline autoplay preload="metadata" poster="../img/demo-poster.webp" aria-label="Demonstração: o bot resolve uma tarefa passo a passo.">
+        <source src="../demo/uchiambot-demo-web.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 </section>
@@ -359,6 +362,17 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   ok.textContent = d['contact.ok'] || 'Thank you! We received your message and will reply to your email.';
   f.parentNode.insertBefore(ok, f.nextSibling);
   f.style.display = 'none';
+})();
+</script>
+<script>
+(function(){
+  // Hero-видео: тихий луп; уважаем reduced-motion и saveData — им показываем постер.
+  var v = document.getElementById('hero-video');
+  if (!v) return;
+  var reduce = false, save = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  try { save = !!(navigator.connection && navigator.connection.saveData); } catch(e){}
+  if (reduce || save) { v.removeAttribute('autoplay'); v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
 })();
 </script>
 </body>
