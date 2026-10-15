@@ -33,3 +33,8 @@ poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`.
 Typography: Manrope variable, self-hosted in `fonts/` (5 subsets). Pages preload the
 subset matching the language (latin by default, cyrillic for `/ru/` and `/uk/`);
 `privacy.html` / `terms.html` load fonts from the same folder.
+
+Sticky CTA (mobile only, viewport ≤860px): fixed bottom bar with the main Telegram
+button (`?start=src_landing_sticky`). Appears after ~700px of scroll, hides when the
+contact form (`#contact`) or the footer is in view (IntersectionObserver; without JS
+it stays hidden). Safe-area aware. Markup + inline script live in `index-src.html`.
