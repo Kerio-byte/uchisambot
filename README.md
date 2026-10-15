@@ -38,3 +38,12 @@ Sticky CTA (mobile only, viewport ≤860px): fixed bottom bar with the main Tele
 button (`?start=src_landing_sticky`). Appears after ~700px of scroll, hides when the
 contact form (`#contact`) or the footer is in view (IntersectionObserver; without JS
 it stays hidden). Safe-area aware. Markup + inline script live in `index-src.html`.
+
+Micro-interactions: keyboard focus ring (`:focus-visible`, 2px brand, offset — everywhere
+interactive), press feedback on buttons (`:active`), smooth FAQ open/close (~180 ms via
+`::details-content` + `interpolate-size`; browsers without support get the old instant
+toggle), opacity-only scroll reveal (IntersectionObserver adds `rv-in` to `.rv` elements;
+disabled under `prefers-reduced-motion`; without JS everything stays visible), small
+transition polish on nav/lang/FAQ-summary hovers, and `scroll-padding-top: 84px` so
+anchor jumps clear the sticky header. Smooth scrolling is turned off under
+`prefers-reduced-motion`.

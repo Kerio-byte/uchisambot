@@ -50,14 +50,16 @@
 :root{
   --brand:#3D5AFE; --brand-soft:#EAF0FF; --sky:#4FC3F7; --ink:#14203A; --muted:#50617F;
   --bg:#F7FAFF; --card:#fff; --line:#E3EAF7; --tg:#229ED9;
-  --r:18px; --shadow:0 10px 30px rgba(30,60,140,.08);
+  --r:18px; --shadow:0 10px 30px rgba(30,60,140,.08); interpolate-size:allow-keywords;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{margin:0;font:16px/1.6 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
   background:radial-gradient(1200px 520px at 50% -180px,#E9F1FF 0%,rgba(233,241,255,0) 70%),var(--bg);-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
 a{color:var(--brand);text-decoration:none}
+/* Микровзаимодействия: заметный фокус с клавиатуры (2px brand) */
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:8px}
 .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
 h1,h2,h3{line-height:1.2;margin:0}
 p{margin:0}
@@ -72,18 +74,18 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--ink)}
 .brand img{border-radius:9px}
 .nav{display:flex;gap:20px;margin-left:auto}
-.nav a{color:var(--muted);font-size:15px;font-weight:500}
+.nav a{color:var(--muted);font-size:15px;font-weight:500;transition:color .15s ease}
 .nav a:hover{color:var(--ink)}
 .lang{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
 .lang button{border:0;background:transparent;border-radius:999px;padding:4px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
 .lang button.on{background:var(--brand);color:#fff}
 .lang-dd{position:relative;margin-left:10px}
-.lang-dd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:10px;user-select:none}
+.lang-dd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:10px;user-select:none;transition:background .15s ease,color .15s ease}
 .lang-dd summary::-webkit-details-marker{display:none}
 .lang-dd summary:hover{background:var(--brand-soft);color:var(--brand)}
 .lang-dd[open] summary{background:var(--brand-soft);color:var(--brand)}
 .lang-list{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px rgba(20,40,90,.16);padding:8px;z-index:60;min-width:200px;display:grid;gap:2px}
-.lang-list a{display:flex;align-items:center;padding:9px 12px;border-radius:9px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500}
+.lang-list a{display:flex;align-items:center;padding:9px 12px;border-radius:9px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500;transition:background .12s ease,color .12s ease}
 .lang-list a:hover{background:var(--brand-soft);color:var(--brand)}
 .lang-list a.on{background:var(--brand-soft);color:var(--brand);font-weight:700}
 @media(max-width:760px){.nav{display:none}}
@@ -102,6 +104,7 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:#fff;font-weight:600;font-size:17px;
   padding:14px 24px;border-radius:14px;box-shadow:0 10px 24px rgba(61,90,254,.28);transition:transform .15s,box-shadow .15s}
 .btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(61,90,254,.34)}
+.btn:active{transform:translateY(0)}
 .btn svg{flex:0 0 auto}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .hero-badge{margin-top:22px}
@@ -146,10 +149,14 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 
 .faq{max-width:760px;margin:0 auto}
 .faq details{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
-.faq summary{list-style:none;cursor:pointer;padding:16px 20px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary{list-style:none;cursor:pointer;padding:16px 20px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:color .15s ease}
+.faq summary:hover{color:var(--brand)}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"+";font-size:20px;color:var(--brand);font-weight:500;line-height:1}
 .faq details[open] summary::after{content:"-"}
+/* Плавное раскрытие FAQ (~180мс). Где ::details-content не поддерживается — мгновенно, как раньше */
+.faq details::details-content{height:0;opacity:0;overflow:clip;transition:content-visibility .18s allow-discrete,opacity .18s ease,height .18s ease}
+.faq details[open]::details-content{height:auto;opacity:1}
 .faq details p{padding:0 20px 16px;color:var(--muted);font-size:15px}
 
 .band{background:linear-gradient(135deg,var(--brand) 0%,#2F49D8 55%,#4FC3F7 130%);border-radius:24px;padding:44px 30px;text-align:center;color:#fff;box-shadow:0 18px 44px rgba(61,90,254,.35)}
@@ -182,7 +189,11 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   .sticky-cta.show{transform:none;visibility:visible}
   .sticky-cta .btn{width:100%;min-height:44px;padding:10px 18px;font-size:16px;border-radius:12px}
 }
-@media(prefers-reduced-motion:reduce){.sticky-cta{transition:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sticky-cta{transition:none}.faq details::details-content{transition:none}}
+/* Reveal при прокрутке: только opacity; без JS/IO всё видно сразу */
+html.js .rv{opacity:0}
+html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
+@media(prefers-reduced-motion:reduce){html.js .rv{opacity:1!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -233,10 +244,10 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   <div class="wrap">
     <div class="sec-head"><h2>यह कैसे काम करता है</h2></div>
     <ol class="steps">
-      <li><span class="num">1</span><h3>बॉट खोलें</h3><p>बटन पर टैप करें और Start दबाएँ — कुछ भी इंस्टॉल नहीं करना।</p></li>
-      <li><span class="num">2</span><h3>सवाल भेजें</h3><p>अपना सवाल लिखें या सवाल की फ़ोटो खींचकर भेजें।</p></li>
-      <li><span class="num">3</span><h3>स्टेप-बाय-स्टेप हल पाएँ</h3><p>बॉट हर स्टेप में हल करता है और हर कदम समझाता है।</p></li>
-      <li><span class="num">4</span><h3>अपना हल जाँचें</h3><p>अपना हल जाँचने को कहें, या सारांश और फ्लैशकार्ड पाएँ।</p></li>
+      <li class="rv"><span class="num">1</span><h3>बॉट खोलें</h3><p>बटन पर टैप करें और Start दबाएँ — कुछ भी इंस्टॉल नहीं करना।</p></li>
+      <li class="rv"><span class="num">2</span><h3>सवाल भेजें</h3><p>अपना सवाल लिखें या सवाल की फ़ोटो खींचकर भेजें।</p></li>
+      <li class="rv"><span class="num">3</span><h3>स्टेप-बाय-स्टेप हल पाएँ</h3><p>बॉट हर स्टेप में हल करता है और हर कदम समझाता है।</p></li>
+      <li class="rv"><span class="num">4</span><h3>अपना हल जाँचें</h3><p>अपना हल जाँचने को कहें, या सारांश और फ्लैशकार्ड पाएँ।</p></li>
     </ol>
   </div>
 </section>
@@ -245,27 +256,27 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   <div class="wrap">
     <div class="sec-head"><h2>अंदर क्या-क्या है</h2></div>
     <div class="cards">
-      <div class="card">
+      <div class="card rv">
         <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
         <h3>स्टेप-बाय-स्टेप हल</h3><p>हर कदम समझाया जाता है — सिर्फ़ आख़िरी जवाब नहीं।</p>
       </div>
-      <div class="card">
+      <div class="card rv">
         <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
         <h3>फ़ोटो से सवाल</h3><p>किताब से सीधे सवाल की फ़ोटो खींचें।</p>
       </div>
-      <div class="card">
+      <div class="card rv">
         <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8z"/></svg></div>
         <h3>आसान भाषा</h3><p>आसान से मुश्किल तक, एक धैर्यवान ट्यूटर की तरह।</p>
       </div>
-      <div class="card">
+      <div class="card rv">
         <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5.5"/></svg></div>
         <h3>जवाब की जाँच</h3><p>बताता है कि गलती ठीक कहाँ हुई है।</p>
       </div>
-      <div class="card">
+      <div class="card rv">
         <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="14" height="12" rx="2"/><path d="M7.5 4.5h10A2.5 2.5 0 0 1 20 7v10"/></svg></div>
         <h3>सारांश और फ्लैशकार्ड</h3><p>टेस्ट से पहले रिवीज़न के छोटे कार्ड।</p>
       </div>
-      <div class="card">
+      <div class="card rv">
         <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div>
         <h3>दिन के किसी भी समय</h3><p>अटक जाएँ तो ट्यूटर का इंतज़ार नहीं करना पड़ेगा।</p>
       </div>
@@ -280,11 +291,11 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
       <p>और कोई भी स्कूली सवाल, जहाँ आप अटक जाएँ।</p>
     </div>
     <div class="chips center">
-      <span class="chip big">गणित</span>
-      <span class="chip big">रूसी भाषा</span>
-      <span class="chip big">भौतिकी</span>
-      <span class="chip big">रसायन विज्ञान</span>
-      <span class="chip big">इतिहास</span>
+      <span class="chip big rv">गणित</span>
+      <span class="chip big rv">रूसी भाषा</span>
+      <span class="chip big rv">भौतिकी</span>
+      <span class="chip big rv">रसायन विज्ञान</span>
+      <span class="chip big rv">इतिहास</span>
     </div>
   </div>
 </section>
@@ -296,9 +307,9 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
       <p>रूसी और अंग्रेज़ी इंटरफ़ेस</p>
     </div>
     <div class="shots">
-      <img src="../img/shot1.webp" width="540" height="1170" data-shot="1" data-alt-en="UchiSamBot welcome screen" data-alt-ru="Приветственное окно UchiSamBot" alt="UchiSamBot welcome screen" loading="lazy">
-      <img src="../img/shot2.webp" width="540" height="1170" data-shot="2" data-alt-en="Sending a homework task to UchiSamBot" data-alt-ru="Отправка задания боту UchiSamBot" alt="Sending a homework task to UchiSamBot" loading="lazy">
-      <img src="../img/shot3.webp" width="540" height="1170" data-shot="3" data-alt-en="Step-by-step breakdown from UchiSamBot" data-alt-ru="Пошаговый разбор от UchiSamBot" alt="Step-by-step breakdown from UchiSamBot" loading="lazy">
+      <img class="rv" src="../img/shot1.webp" width="540" height="1170" data-shot="1" data-alt-en="UchiSamBot welcome screen" data-alt-ru="Приветственное окно UchiSamBot" alt="UchiSamBot welcome screen" loading="lazy">
+      <img class="rv" src="../img/shot2.webp" width="540" height="1170" data-shot="2" data-alt-en="Sending a homework task to UchiSamBot" data-alt-ru="Отправка задания боту UchiSamBot" alt="Sending a homework task to UchiSamBot" loading="lazy">
+      <img class="rv" src="../img/shot3.webp" width="540" height="1170" data-shot="3" data-alt-en="Step-by-step breakdown from UchiSamBot" data-alt-ru="Пошаговый разбор от UchiSamBot" alt="Step-by-step breakdown from UchiSamBot" loading="lazy">
     </div>
   </div>
 </section>
@@ -310,12 +321,12 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
       <p>भुगतान Telegram Stars से, सीधे चैट में।</p>
     </div>
     <div class="price-grid">
-      <div class="card price"><h3>पहले 5 स्टेप-बाय-स्टेप हल</h3><div class="amount">मुफ़्त</div><p>बॉट आज़माएँ — पैसे देने की ज़रूरत नहीं।</p></div>
-      <div class="card price"><h3>5 हल का पैक</h3><div class="amount">120 स्टार्स</div><p>हर हल पर लगभग 24 स्टार्स — 20% बचत।</p></div>
-      <div class="card price hot"><h3>15 हल का पैक</h3><div class="amount">300 स्टार्स</div><p>हर हल पर लगभग 20 स्टार्स — 33% बचत।</p></div>
+      <div class="card price rv"><h3>पहले 5 स्टेप-बाय-स्टेप हल</h3><div class="amount">मुफ़्त</div><p>बॉट आज़माएँ — पैसे देने की ज़रूरत नहीं।</p></div>
+      <div class="card price rv"><h3>5 हल का पैक</h3><div class="amount">120 स्टार्स</div><p>हर हल पर लगभग 24 स्टार्स — 20% बचत।</p></div>
+      <div class="card price hot rv"><h3>15 हल का पैक</h3><div class="amount">300 स्टार्स</div><p>हर हल पर लगभग 20 स्टार्स — 33% बचत।</p></div>
     </div>
     <p class="price-fine">एक हल — 30 स्टार्स।</p>
-    <div class="ref-band">
+    <div class="ref-band rv">
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/><path d="M19 8v6M16 11h6"/></svg>
       <p>दोस्त को बुलाएँ — जब वे अपना पहला सवाल हल करेंगे, आपको एक और मुफ़्त हल मिलेगा।</p>
     </div>
@@ -326,20 +337,20 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   <div class="wrap">
     <div class="sec-head"><h2>सवाल-जवाब</h2></div>
     <div class="faq">
-      <details><summary>क्या यह नकल करना है?</summary><p>नहीं। बॉट समझाता और सिखाता है: हर स्टेप और उसके पीछे का नियम दिखाता है, ताकि अगला सवाल आप खुद हल कर सकें।</p></details>
-      <details><summary>कौन-कौन से विषय हैं?</summary><p>गणित, रूसी भाषा, भौतिकी, रसायन विज्ञान और इतिहास — और सामान्य तौर पर कोई भी स्कूली सवाल, जहाँ आप अटक जाएँ।</p></details>
-      <details><summary>यह किन भाषाओं में बात करता है?</summary><p>रूसी और अंग्रेज़ी। /lang से कभी भी बदल सकते हैं।</p></details>
-      <details><summary>भुगतान कैसे करें?</summary><p>Telegram Stars से, सीधे चैट में। पहले 5 हल मुफ़्त हैं; इसके बाद आप एक हल या पैक खरीद सकते हैं।</p></details>
-      <details><summary>क्या कुछ इंस्टॉल करना पड़ेगा?</summary><p>नहीं। यह Telegram के अंदर ही चलता है — फ़ोन या कंप्यूटर पर।</p></details>
-      <details><summary>Telegram Stars क्या हैं?</summary><p>स्टार्स (⭐) Telegram की अंदरूनी मुद्रा हैं। इन्हें Telegram के अंदर ही एक बार टॉप-अप करें — ऐप सामान्य भुगतान के तरीक़े (कार्ड, App Store या Google Play) सुझाता है — और फिर चैट में सीधे हल के लिए भुगतान करें। कोई सब्सक्रिप्शन नहीं और कोई ऑटो-रिन्यूअल नहीं: भुगतान तभी, जब आप चाहें।</p></details>
-      <details><summary>स्टार्स कहाँ से मिलेंगे?</summary><p>सीधे चैट में: जब आप हल खरीदने के लिए टैप करेंगे, Telegram भुगतान विंडो खोलेगा और स्टार्स कम हों तो बैलेंस टॉप-अप करने का विकल्प देगा। यह बैलेंस आपके Telegram अकाउंट में रहता है और हर उस बॉट में चलता है जो स्टार्स लेता है।</p></details>
+      <details class="rv"><summary>क्या यह नकल करना है?</summary><p>नहीं। बॉट समझाता और सिखाता है: हर स्टेप और उसके पीछे का नियम दिखाता है, ताकि अगला सवाल आप खुद हल कर सकें।</p></details>
+      <details class="rv"><summary>कौन-कौन से विषय हैं?</summary><p>गणित, रूसी भाषा, भौतिकी, रसायन विज्ञान और इतिहास — और सामान्य तौर पर कोई भी स्कूली सवाल, जहाँ आप अटक जाएँ।</p></details>
+      <details class="rv"><summary>यह किन भाषाओं में बात करता है?</summary><p>रूसी और अंग्रेज़ी। /lang से कभी भी बदल सकते हैं।</p></details>
+      <details class="rv"><summary>भुगतान कैसे करें?</summary><p>Telegram Stars से, सीधे चैट में। पहले 5 हल मुफ़्त हैं; इसके बाद आप एक हल या पैक खरीद सकते हैं।</p></details>
+      <details class="rv"><summary>क्या कुछ इंस्टॉल करना पड़ेगा?</summary><p>नहीं। यह Telegram के अंदर ही चलता है — फ़ोन या कंप्यूटर पर।</p></details>
+      <details class="rv"><summary>Telegram Stars क्या हैं?</summary><p>स्टार्स (⭐) Telegram की अंदरूनी मुद्रा हैं। इन्हें Telegram के अंदर ही एक बार टॉप-अप करें — ऐप सामान्य भुगतान के तरीक़े (कार्ड, App Store या Google Play) सुझाता है — और फिर चैट में सीधे हल के लिए भुगतान करें। कोई सब्सक्रिप्शन नहीं और कोई ऑटो-रिन्यूअल नहीं: भुगतान तभी, जब आप चाहें।</p></details>
+      <details class="rv"><summary>स्टार्स कहाँ से मिलेंगे?</summary><p>सीधे चैट में: जब आप हल खरीदने के लिए टैप करेंगे, Telegram भुगतान विंडो खोलेगा और स्टार्स कम हों तो बैलेंस टॉप-अप करने का विकल्प देगा। यह बैलेंस आपके Telegram अकाउंट में रहता है और हर उस बॉट में चलता है जो स्टार्स लेता है।</p></details>
     </div>
   </div>
 </section>
 
 <section class="sec">
   <div class="wrap">
-    <div class="band">
+    <div class="band rv">
       <h2>अभी किसी सवाल पर अटके हैं?</h2>
       <p>इसे बॉट को भेजें — पहले 5 हल मुफ़्त हैं।</p>
       <a class="btn light" href="https://t.me/UchiSamBot?start=src_landing" target="_blank" rel="noopener">
@@ -352,7 +363,7 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 
 <section class="sec" id="contact">
   <div class="wrap">
-    <div class="contact">
+    <div class="contact rv">
       <h2>कोई सवाल या सुझाव है?</h2>
       <p class="contact-sub">हमें लिखें — आपका संदेश हमारी टीम तक पहुँचता है, और हम आपके ईमेल पर जवाब देते हैं। कोई स्पैम नहीं, कोई मेलिंग लिस्ट नहीं।</p>
       <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
@@ -412,6 +423,23 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
   try { save = !!(navigator.connection && navigator.connection.saveData); } catch(e){}
   if (reduce || save) { v.removeAttribute('autoplay'); v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
+})();
+</script>
+<script>
+(function(){
+  // Reveal при прокрутке (микровзаимодействие): только opacity, контент всегда в DOM.
+  // Отключается при reduced-motion; без IntersectionObserver ничего не прячется.
+  try { if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch(e){}
+  if (!('IntersectionObserver' in window)) return;
+  var els = document.querySelectorAll('.rv');
+  if (!els.length) return;
+  document.documentElement.classList.add('js');
+  var io = new IntersectionObserver(function(entries){
+    for (var i = 0; i < entries.length; i++){
+      if (entries[i].isIntersecting){ entries[i].target.classList.add('rv-in'); io.unobserve(entries[i].target); }
+    }
+  }, {rootMargin: '0px 0px -8% 0px', threshold: 0.06});
+  for (var j = 0; j < els.length; j++) io.observe(els[j]);
 })();
 </script>
 <script>
