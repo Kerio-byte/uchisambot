@@ -82,6 +82,13 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .lang button{border:0;background:transparent;border-radius:999px;padding:4px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
 .lang button.on{background:var(--brand);color:#fff}
 @media(max-width:760px){.nav{display:none}}
+/* Тач-устройства: зоны нажатия не меньше 44px (WCAG), десктоп не затрагивается */
+@media(pointer:coarse){
+  .nav a,.lang button,.lang-dd summary,.lang-list a{min-height:44px;display:inline-flex;align-items:center}
+  .lang button{padding:10px 12px}
+  .lang-list a{padding:8px 14px}
+  .cta-row a,a.btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+}
 
 .hero{padding:48px 0 8px}
 .hero-in{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center}
