@@ -33,6 +33,7 @@ VIDEO_ALT = {
     "id": "Demo: bot menyelesaikan tugas langkah demi langkah.",
     "tr": "Demo: bot bir soruyu adım adım çözüyor.",
     "vi": "Bản demo: bot giải bài từng bước.",
+    "uk": "Демонстрація: бот розбирає задачу крок за кроком.",
 }
 
 

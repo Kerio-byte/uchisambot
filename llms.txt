@@ -1,19 +1,20 @@
 # UchiSamBot
 
-> Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.
+> Homework help bot in Telegram: step-by-step breakdowns, photo tasks, solution checks and flashcards. First 5 breakdowns free, no app to install.
 
 Open the bot: https://t.me/UchiSamBot
 
 ## Pages
 
-- [🇬🇧 English: UchiSamBot — Study Helper for school students](https://kerio-byte.github.io/uchisambot/)
-- [🇷🇺 Русский: UchiSamBot — учебный помощник для школьников](https://kerio-byte.github.io/uchisambot/ru/)
+- [🇬🇧 English: UchiSamBot — Step-by-Step Homework Help in Telegram](https://kerio-byte.github.io/uchisambot/)
+- [🇷🇺 Русский: UchiSamBot — разбор домашних заданий по шагам в Telegram](https://kerio-byte.github.io/uchisambot/ru/)
 - [🇪🇸 Español: UchiSamBot — Ayudante de estudio para escolares](https://kerio-byte.github.io/uchisambot/es/)
 - [🇧🇷 Português: UchiSamBot — Assistente de estudos para alunos](https://kerio-byte.github.io/uchisambot/pt/)
 - [🇮🇳 हिन्दी: UchiSamBot — स्कूली बच्चों के लिए पढ़ाई में मददगार](https://kerio-byte.github.io/uchisambot/hi/)
 - [🇮🇩 Bahasa Indonesia: UchiSamBot — Asisten belajar untuk siswa sekolah](https://kerio-byte.github.io/uchisambot/id/)
 - [🇹🇷 Türkçe: UchiSamBot — okul öğrencileri için ders yardımcısı](https://kerio-byte.github.io/uchisambot/tr/)
 - [🇻🇳 Tiếng Việt: UchiSamBot — Trợ lý học tập cho học sinh](https://kerio-byte.github.io/uchisambot/vi/)
+- [🇺🇦 Українська: UchiSamBot — навчальний помічник для школярів](https://kerio-byte.github.io/uchisambot/uk/)
 - [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html)
 
