@@ -1,21 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kerio-byte.github.io/uchisambot/</loc>
     <lastmod>2026-10-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/ru/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/es/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/pt/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/hi/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/id/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/tr/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
+  </url>
+  <url>
+    <loc>https://kerio-byte.github.io/uchisambot/vi/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/"/>
   </url>
   <url>
     <loc>https://kerio-byte.github.io/uchisambot/privacy.html</loc>
     <lastmod>2026-10-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kerio-byte.github.io/uchisambot/terms.html</loc>
     <lastmod>2026-10-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
 </urlset>

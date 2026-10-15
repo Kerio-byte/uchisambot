@@ -1,17 +1,22 @@
 # UchiSamBot
 
-> UchiSamBot (Study Helper) is a Telegram bot that helps school students understand their homework: it breaks every task down step by step, explains the topic in simple words, checks the student's own solution, and makes revision notes and flashcards. It works in Russian and English, right inside Telegram, with no app to install.
-
-UchiSamBot is built for school students and their parents. The first 5 breakdowns are free; after that, breakdowns are paid with Telegram Stars: 30 Stars for a single breakdown, 120 Stars for a pack of 5, 300 Stars for a pack of 15. No sign-up and no personal details are required in the bot. All AI processing runs on the team's own infrastructure in the European Union; task content is not sent to third-party AI services.
+> Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.
 
 Open the bot: https://t.me/UchiSamBot
 
 ## Pages
 
-- [UchiSamBot — Study Helper for school students](https://kerio-byte.github.io/uchisambot/): landing page — features, how it works, pricing, FAQ.
-- [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html): what data the bot handles, and how to have it deleted.
-- [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html): pricing, refunds, usage rules.
+- [🇬🇧 English: UchiSamBot — Study Helper for school students](https://kerio-byte.github.io/uchisambot/)
+- [🇷🇺 Русский: UchiSamBot — учебный помощник для школьников](https://kerio-byte.github.io/uchisambot/ru/)
+- [🇪🇸 Español: UchiSamBot — Ayudante de estudio para escolares](https://kerio-byte.github.io/uchisambot/es/)
+- [🇧🇷 Português: UchiSamBot — Assistente de estudos para alunos](https://kerio-byte.github.io/uchisambot/pt/)
+- [🇮🇳 हिन्दी: UchiSamBot — स्कूली बच्चों के लिए पढ़ाई में मददगार](https://kerio-byte.github.io/uchisambot/hi/)
+- [🇮🇩 Bahasa Indonesia: UchiSamBot — Asisten belajar untuk siswa sekolah](https://kerio-byte.github.io/uchisambot/id/)
+- [🇹🇷 Türkçe: UchiSamBot — okul öğrencileri için ders yardımcısı](https://kerio-byte.github.io/uchisambot/tr/)
+- [🇻🇳 Tiếng Việt: UchiSamBot — Trợ lý học tập cho học sinh](https://kerio-byte.github.io/uchisambot/vi/)
+- [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html)
 
 ## Optional
 
-- [Demo video (35 s, English)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo.mp4): a real chat session — task, step-by-step breakdown, solution check.
+- [Demo video (35 s, English)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo.mp4)
