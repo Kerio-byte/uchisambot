@@ -77,6 +77,15 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .lang{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px}
 .lang button{border:0;background:transparent;border-radius:999px;padding:4px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer}
 .lang button.on{background:var(--brand);color:#fff}
+.lang-dd{position:relative;margin-left:10px}
+.lang-dd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:10px;user-select:none}
+.lang-dd summary::-webkit-details-marker{display:none}
+.lang-dd summary:hover{background:var(--brand-soft);color:var(--brand)}
+.lang-dd[open] summary{background:var(--brand-soft);color:var(--brand)}
+.lang-list{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px rgba(20,40,90,.16);padding:8px;z-index:60;min-width:200px;display:grid;gap:2px}
+.lang-list a{display:flex;align-items:center;padding:9px 12px;border-radius:9px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500}
+.lang-list a:hover{background:var(--brand-soft);color:var(--brand)}
+.lang-list a.on{background:var(--brand-soft);color:var(--brand);font-weight:700}
 @media(max-width:760px){.nav{display:none}}
 /* Тач-устройства: зоны нажатия не меньше 44px (WCAG), десктоп не затрагивается */
 @media(pointer:coarse){
