@@ -125,6 +125,9 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .contact textarea{resize:vertical;min-height:96px}
 .contact button.btn{align-self:flex-start;border:0;cursor:pointer;font:inherit;font-weight:600}
 .contact-note{font-size:13px;line-height:1.5;color:#5C6E90;margin:14px 0 0}
+.contact .hp{display:none!important}
+.contact .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.contact-ok{color:#1B7F4B;font-weight:600;margin:14px 0 0}
 </style>
 </head>
 <body>
@@ -295,13 +298,20 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   <div class="wrap">
     <div class="contact">
       <h2 data-i18n="contact.title">Questions or feedback?</h2>
-      <p class="contact-sub" data-i18n="contact.sub">Write to us — the message goes straight to our team, and we reply to your email. No spam, no mailing lists.</p>
-      <form id="contact-form" novalidate>
+      <p class="contact-sub" data-i18n="contact.sub">Write to us — your message goes to our team, and we reply to your email. No spam, no mailing lists.</p>
+      <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
+        <input type="hidden" name="subject" value="UchiSamBot contact form" />
+        <input type="hidden" name="from_name" value="UchiSamBot website" />
+        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/?sent=1#contact" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <label class="sr-only" for="cf-email" data-i18n="contact.l_email">Your email</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" data-i18n-ph="contact.ph_email" />
-        <textarea id="cf-msg" name="message" rows="4" placeholder="Your question, feedback or complaint…" data-i18n-ph="contact.ph_msg"></textarea>
+        <label class="sr-only" for="cf-msg" data-i18n="contact.l_msg">Your message</label>
+        <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Your question, feedback or complaint…" data-i18n-ph="contact.ph_msg"></textarea>
         <button type="submit" class="btn" data-i18n="contact.btn">Send message</button>
       </form>
-      <p class="contact-note" data-i18n="contact.note">The button opens Telegram: your message is copied — paste it into the chat (long-press → Paste) and send. We will reply to your email.</p>
+      <p class="contact-note"><span data-i18n="contact.note">We use your email only to reply to this message.</span> <a href="privacy.html" data-i18n="contact.privacy">Privacy Policy</a></p>
     </div>
   </div>
 </section>
@@ -356,9 +366,11 @@ en: {
  'foot.privacy':'Privacy Policy','foot.terms':'Terms of Service',
  'meta.title':'UchiSamBot — Study Helper for school students',
  'meta.desc':'Telegram bot that breaks down homework step by step, explains topics in simple words, checks solutions and makes flashcards. First 5 breakdowns free. Russian and English.',
- 'contact.title':'Questions or feedback?','contact.sub':'Write to us — the message goes straight to our team, and we reply to your email. No spam, no mailing lists.',
+ 'contact.title':'Questions or feedback?','contact.sub':'Write to us — your message goes to our team, and we reply to your email. No spam, no mailing lists.',
  'contact.ph_email':'you@example.com','contact.ph_msg':'Your question, feedback or complaint…',
- 'contact.btn':'Send message','contact.note':'The button opens Telegram: your message is copied — paste it into the chat (long-press → Paste) and send. We will reply to your email.'
+ 'contact.l_email':'Your email','contact.l_msg':'Your message',
+ 'contact.btn':'Send message','contact.note':'We use your email only to reply to this message.','contact.privacy':'Privacy Policy',
+ 'contact.ok':'Thank you! We received your message and will reply to your email.'
 },
 ru: {
  'nav.how':'Как это работает','nav.features':'Возможности','nav.pricing':'Тарифы','nav.faq':'Вопросы',
@@ -398,9 +410,11 @@ ru: {
  'foot.privacy':'Политика конфиденциальности','foot.terms':'Условия использования',
  'meta.title':'UchiSamBot — учебный помощник для школьников',
  'meta.desc':'Telegram-бот, который разбирает домашние задания по шагам, объясняет темы простыми словами, проверяет решения и делает карточки. Первые 5 разборов бесплатно. Русский и английский.',
- 'contact.title':'Есть вопрос или отзыв?','contact.sub':'Напишите нам — сообщение уйдёт прямо команде, ответим на вашу почту. Без спама и рассылок.',
+ 'contact.title':'Есть вопрос или отзыв?','contact.sub':'Напишите нам — сообщение уйдёт команде, ответим на вашу почту. Без спама и рассылок.',
  'contact.ph_email':'you@example.com','contact.ph_msg':'Ваш вопрос, отзыв или жалоба…',
- 'contact.btn':'Отправить','contact.note':'Кнопка открывает Telegram: текст скопирован — вставьте его в чат (долгое нажатие → Вставить) и отправьте. Ответим на почту.'
+ 'contact.l_email':'Ваш e-mail','contact.l_msg':'Ваше сообщение',
+ 'contact.btn':'Отправить','contact.note':'Используем ваш e-mail только чтобы ответить на обращение.','contact.privacy':'Политика конфиденциальности',
+ 'contact.ok':'Спасибо! Мы получили ваше сообщение и ответим на указанный e-mail.'
 }
 };
 (function(){
@@ -436,21 +450,16 @@ ru: {
 </script>
 <script>
 (function(){
+  // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact — показываем подтверждение.
+  if (!/[?&]sent=1/.test(location.search)) return;
   var f = document.getElementById('contact-form');
   if (!f) return;
-  f.addEventListener('submit', function(ev){
-    ev.preventDefault();
-    var email = (document.getElementById('cf-email').value || '').trim();
-    var msg = (document.getElementById('cf-msg').value || '').trim();
-    if (!email || email.indexOf('@') < 1 || email.indexOf('.') < 0) { document.getElementById('cf-email').focus(); return; }
-    var code = '';
-    try { code = btoa(unescape(encodeURIComponent(email))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); } catch(e){ code = ''; }
-    if (msg && navigator.clipboard && navigator.clipboard.writeText) {
-      try { navigator.clipboard.writeText(msg).catch(function(){}); } catch(e){}
-    }
-    var payload = (code && code.length <= 61) ? ('ct_' + code) : 'ct_none';
-    window.open('https://t.me/UchiSamBot?start=' + payload, '_blank', 'noopener');
-  });
+  var d = (window.I18N && (I18N[document.documentElement.lang] || I18N.en)) || {};
+  var ok = document.createElement('p');
+  ok.className = 'contact-ok';
+  ok.textContent = d['contact.ok'] || 'Thank you! We received your message and will reply to your email.';
+  f.parentNode.insertBefore(ok, f.nextSibling);
+  f.style.display = 'none';
 })();
 </script>
 </body>
