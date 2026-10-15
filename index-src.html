@@ -144,6 +144,12 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 
 .center{justify-content:center}
 
+/* Полоса-принцип: один тезис, без новой карточной сетки */
+.principle-band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px;padding:22px 4px;border-top:2px solid var(--brand);border-bottom:1px solid var(--line)}
+.principle-band h2{font-size:clamp(20px,2.5vw,26px);color:var(--brand);max-width:20ch}
+.principle-band p{color:var(--ink);font-size:15px;max-width:56ch}
+@media(max-width:680px){.principle-band{grid-template-columns:1fr;gap:8px}}
+
 .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
 .shots img{width:100%;border-radius:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
 
@@ -298,6 +304,15 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   </div>
 </section>
 
+<section class="sec principle-sec" aria-labelledby="principle-title">
+  <div class="wrap">
+    <div class="principle-band rv">
+      <h2 id="principle-title" data-i18n="principle.title">Not just answers. Learn how to solve the next one.</h2>
+      <p data-i18n="principle.sub">Step-by-step explanations show why each move works, so you can tackle a similar problem yourself.</p>
+    </div>
+  </div>
+</section>
+
 <section class="sec" id="subjects">
   <div class="wrap">
     <div class="sec-head">
@@ -429,6 +444,7 @@ en: {
  'how.s4t':'Check yourself','how.s4d':'Ask to check your solution, or get a summary and flashcards.',
  'feat.title':"What's inside",
  'f1t':'Step-by-step breakdowns','f1d':'Every move explained — not just the final answer.',
+ 'principle.title':'Not just answers. Learn how to solve the next one.','principle.sub':'Step-by-step explanations show why each move works, so you can tackle a similar problem yourself.',
  'f2t':'Photo tasks','f2d':'Snap the problem straight from the textbook.',
  'f3t':'Simple language','f3d':'From simple to complex, like a patient tutor.',
  'f4t':'Solution check','f4d':'Finds exactly where the mistake is.',
@@ -475,6 +491,7 @@ ru: {
  'how.s4t':'Проверь себя','how.s4d':'Попроси проверить твоё решение или сделать конспект и карточки.',
  'feat.title':'Что внутри',
  'f1t':'Разбор по шагам','f1d':'Каждое действие объясняется — не только ответ.',
+ 'principle.title':'Не просто ответы. Научись решать следующие задачи сам.','principle.sub':'Бот объясняет каждый шаг и его смысл, чтобы ты мог самостоятельно решить похожую задачу.',
  'f2t':'Задачи с фото','f2d':'Сфотографируй условие прямо из учебника.',
  'f3t':'Простые объяснения','f3d':'От простого к сложному, как терпеливый репетитор.',
  'f4t':'Проверка решения','f4d':'Найдёт, где именно ошибка.',
