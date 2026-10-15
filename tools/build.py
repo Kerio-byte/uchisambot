@@ -189,6 +189,13 @@ def bake(src: str, lang: str, dicts: dict) -> str:
         out = out.replace('href="terms.html', 'href="../terms.html')
         out = out.replace('href="index.html"', 'href="../"')
 
+    # 8b) шрифты: preload под письменность страницы, пути — для подпапок
+    if lang in ("ru", "uk"):
+        out = out.replace('href="fonts/manrope-latin.woff2"', 'href="fonts/manrope-cyrillic.woff2"')
+    if lang != "en":
+        out = out.replace('href="fonts/', 'href="../fonts/')
+        out = out.replace('url("fonts/', 'url("../fonts/')
+
     # 9) скриншоты по языку
     prefix = "../img/" if lang != "en" else "img/"
     out = re.sub(r'src="(?:\.\./)?img/shot(\d)(?:-\w+)?\.webp"',
