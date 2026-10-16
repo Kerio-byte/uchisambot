@@ -53,7 +53,10 @@ Search's favicon pipeline supports; SVG is not in its format list) and
 Sticky CTA (mobile only, viewport ≤860px): fixed bottom bar with the main Telegram
 button (`?start=src_landing_sticky`). Appears after ~700px of scroll, hides when the
 contact form (`#contact`) or the footer is in view (IntersectionObserver; without JS
-it stays hidden). Safe-area aware. Markup + inline script live in `index-src.html`.
+it stays hidden). Safe-area aware via the two-declaration pattern (`padding:6px 14px;`
+fallback, then `calc(6px + env(safe-area-inset-bottom))`) — browsers without `env()`
+support still get sane padding; modern browsers are unaffected (second declaration wins).
+Markup + inline script live in `index-src.html`.
 
 Micro-interactions: keyboard focus ring (`:focus-visible`, 2px brand, offset — everywhere
 interactive), press feedback on buttons (`:active`), smooth FAQ open/close (~180 ms via

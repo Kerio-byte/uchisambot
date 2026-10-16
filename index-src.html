@@ -221,7 +221,7 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 /* Липкая кнопка снизу на телефоне: видна после 700px, прячется у формы и подвала */
 .sticky-cta{display:none}
 @media(max-width:860px){
-  .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);box-shadow:0 -10px 26px rgba(30,60,140,.10);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
+  .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 14px;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);box-shadow:0 -10px 26px rgba(30,60,140,.10);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
   .sticky-cta.show{transform:none;visibility:visible}
   .sticky-cta .btn{width:100%;min-height:44px;padding:10px 18px;font-size:16px;border-radius:12px}
 }
