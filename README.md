@@ -120,6 +120,13 @@ unchanged — the attributes only affect the pre-load reservation. Hover `title`
 badge links were dropped: they duplicated the alt text in English on every language
 page.
 
+Screen-reader labels: the header logo `alt` and the language-switcher summary
+`aria-label` are localised via the `logo.alt` / `lang.aria` dictionary keys on all
+nine language pages (both were the same English string on every page before, so a
+screen reader on `/ru/`, `/hi/`, `/es/` … announced English). The build asserts the
+logo replacement hits exactly one `<img>` per page. `privacy.html` / `terms.html`
+keep the English wording, like their badges — bilingual EN-first pages.
+
 Connections: the head warms up the third-party origins the pages actually use —
 `preconnect` to `launchigniter.com` (the hero badge is the only eager external image)
 and `dns-prefetch` to the seven footer badge hosts plus the form API

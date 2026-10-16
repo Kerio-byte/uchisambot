@@ -82,7 +82,7 @@ def hreflang_block() -> str:
     return "\n".join(lines)
 
 
-def switcher_html(lang: str) -> str:
+def switcher_html(lang: str, aria: str) -> str:
     links = []
     for l in LANGS:
         if l == lang:
@@ -94,7 +94,7 @@ def switcher_html(lang: str) -> str:
                 href = "../" if l == "en" else f"../{l}/"
             links.append(f'<a href="{href}">{LABELS[l]}</a>')
     return (
-        '<details class="lang-dd"><summary aria-label="Language">🌐 '
+        f'<details class="lang-dd"><summary aria-label="{esc_attr(aria)}">🌐 '
         + LABELS[lang].split(" ", 1)[1]
         + '</summary><div class="lang-list">' + "".join(links) + "</div></details>"
     )
@@ -213,8 +213,9 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     # 5) JSON-LD
     out = re.sub(r'<script type="application/ld\+json">.*?</script>', jsonld(d, lang), out, flags=re.S)
 
-    # 6) переключатель языка
-    out = re.sub(r'<div class="lang" role="group"[^>]*>.*?</div>', switcher_html(lang), out, flags=re.S)
+    # 6) переключатель языка (aria-подпись — из словаря языка)
+    out = re.sub(r'<div class="lang" role="group"[^>]*>.*?</div>',
+                 switcher_html(lang, d["lang.aria"]), out, flags=re.S)
 
     # 7) вырезать JS-i18n (тексты уже запечены)
     out = re.sub(r'<script>\s*\nvar I18N = \{.*?\n\}\)\(\);\n</script>\n', "", out, flags=re.S)
@@ -269,6 +270,14 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     assert out.count('aria-label="Featured on"') == 1, f"{lang}: группа бейджей не однозначна"
     out = out.replace('aria-label="Featured on"',
                       f'aria-label="{esc_attr(d["badge.group"])}"')
+
+    # 9f) альт логотипа — по языку (до 16.10 на всех 9 страницах стоял англ. «UchiSamBot logo»;
+    #     на языковой странице img/logo.svg ровно один — header-логотип)
+    out, _n_logo = re.subn(
+        r'(<img src="(?:\.\./)?img/logo\.svg"[^>]*? alt=")[^"]*(")',
+        lambda m: m.group(1) + esc_attr(d["logo.alt"]) + m.group(2),
+        out)
+    assert _n_logo == 1, f"{lang}: логотип — совпадений {_n_logo}"
 
     # 9b) hero-видео: у RU своя версия (у каждого языка свои ассеты; остальным — EN-фолбэк)
     if lang == "ru":

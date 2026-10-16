@@ -108,5 +108,7 @@
  "contact.ok": "Cảm ơn bạn! Chúng tôi đã nhận được tin nhắn và sẽ trả lời qua email của bạn.",
  "a11y.skip": "Chuyển đến nội dung",
  "badge.alt": "Nổi bật trên {name}",
- "badge.group": "Nổi bật trên các nền tảng"
+ "badge.group": "Nổi bật trên các nền tảng",
+ "logo.alt": "Logo của UchiSamBot",
+ "lang.aria": "Ngôn ngữ"
 }

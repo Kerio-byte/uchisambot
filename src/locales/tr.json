@@ -108,5 +108,7 @@
  "contact.ok": "Teşekkürler! Mesajınızı aldık ve e-posta adresinize yanıt vereceğiz.",
  "a11y.skip": "İçeriğe geç",
  "badge.alt": "{name} üzerinde öne çıkan uygulama",
- "badge.group": "Platformlarda öne çıkan uygulama"
+ "badge.group": "Platformlarda öne çıkan uygulama",
+ "logo.alt": "UchiSamBot logosu",
+ "lang.aria": "Dil"
 }

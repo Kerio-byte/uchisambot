@@ -108,5 +108,7 @@
   "contact.ok": "Terima kasih! Kami sudah menerima pesanmu dan akan membalas ke emailmu.",
  "a11y.skip": "Lewati ke konten",
  "badge.alt": "Unggulan di {name}",
- "badge.group": "Unggulan di platform"
+ "badge.group": "Unggulan di platform",
+ "logo.alt": "Logo UchiSamBot",
+ "lang.aria": "Bahasa"
 }

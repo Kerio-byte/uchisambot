@@ -108,5 +108,7 @@
  "contact.ok": "Thank you! We received your message and will reply to your email.",
  "a11y.skip": "Skip to content",
  "badge.alt": "Featured on {name}",
- "badge.group": "Featured on"
+ "badge.group": "Featured on",
+ "logo.alt": "UchiSamBot logo",
+ "lang.aria": "Language"
 }

@@ -108,5 +108,7 @@
   "contact.ok": "Obrigado! Recebemos sua mensagem e vamos responder no seu e-mail.",
  "a11y.skip": "Ir para o conteúdo",
  "badge.alt": "Destacado em {name}",
- "badge.group": "Destacado em plataformas"
+ "badge.group": "Destacado em plataformas",
+ "logo.alt": "Logotipo do UchiSamBot",
+ "lang.aria": "Idioma"
 }
