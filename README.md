@@ -12,7 +12,9 @@ Live: https://kerio-byte.github.io/uchisambot/
 - `src/locales/*.json` — text dictionaries for 9 languages (en, ru, es, pt, hi, id, tr, vi, uk).
 - `tools/build.py` — static site generator (stdlib only): bakes the template into
   `index.html` (EN) + `ru/`, `es/`, `pt/`, `hi/`, `id/`, `tr/`, `vi/`, `uk/` pages, plus
-  `sitemap.xml` and `llms.txt`. No runtime, no dependencies, no tracking.
+  `sitemap.xml` and `llms.txt`; every language page carries its own `og:locale`
+  plus `og:locale:alternate` for the other eight languages (social-preview locale
+  linking). No runtime, no dependencies, no tracking.
 - `img/` — logo (SVG), favicons, app screenshots (WebP, EN + RU variants), social
   preview image (`og.png`), hero video posters (`demo-poster*.webp`).
 - `demo/` — demo videos: full 35 s (EN/RU) and web-optimized hero loops (`*-web.mp4`).

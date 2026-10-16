@@ -172,8 +172,12 @@ def bake(src: str, lang: str, dicts: dict) -> str:
                  f'<meta property="og:description" content="{esc_attr(d["meta.desc"])}">', out)
     out = re.sub(r'<meta property="og:locale" content="[^"]*">',
                  f'<meta property="og:locale" content="{OG_LOCALE[lang]}">', out)
+    # alternates — все ОСТАЛЬНЫЕ языки (ogp.me: массив локалей; до 16.10 было жёстко ru_RU
+    # на всех страницах, из-за чего на /ru/ локаль сама себе «альтернатива»)
+    alt_lines = "\n".join(f'<meta property="og:locale:alternate" content="{OG_LOCALE[l]}">'
+                          for l in LANGS if l != lang)
     out = re.sub(r'<meta property="og:locale:alternate" content="[^"]*">',
-                 f'<meta property="og:locale:alternate" content="{OG_LOCALE["ru"]}">', out)
+                 lambda _m: alt_lines, out)
     out = re.sub(r'<meta name="twitter:title" content="[^"]*">',
                  f'<meta name="twitter:title" content="{esc_attr(d["meta.title"])}">', out)
     out = re.sub(r'<meta name="twitter:description" content="[^"]*">',
