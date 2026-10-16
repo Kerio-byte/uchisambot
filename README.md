@@ -11,7 +11,8 @@ Live: https://kerio-byte.github.io/uchisambot/
 - `index-src.html` — source template with `data-i18n` keys (EN texts inside).
 - `src/locales/*.json` — text dictionaries for 9 languages (en, ru, es, pt, hi, id, tr, vi, uk).
 - `tools/build.py` — static site generator (stdlib only): bakes the template into
-  `index.html` (EN) + `ru/`, `es/`, `pt/`, `hi/`, `id/`, `tr/`, `vi/`, `uk/` pages, plus
+  `index.html` (EN) + `ru/`, `es/`, `pt/`, `hi/`, `id/`, `tr/`, `vi/`, `uk/` pages and their
+  markdown twins (`index.html.md` next to each page), plus
   `sitemap.xml` and `llms.txt`; every language page carries its own `og:locale`
   plus `og:locale:alternate` for the other eight languages (social-preview locale
   linking), and the sitemap mirrors the hreflang set per URL — all nine languages
@@ -27,7 +28,8 @@ Live: https://kerio-byte.github.io/uchisambot/
 ## Editing
 
 1. Edit texts/styles in `index-src.html` (translations in `src/locales/*.json`).
-2. Run `python3 tools/build.py` — regenerates all 9 language pages, sitemap and llms.txt.
+2. Run `python3 tools/build.py` — regenerates all 9 language pages, their markdown
+   twins (`index.html.md`), sitemap and llms.txt.
 3. Commit the template + locales + generated pages together and push to `main`;
    GitHub Pages serves the site from the repository root.
 
