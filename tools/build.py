@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import datetime
 import json
 import re
 from pathlib import Path
@@ -229,10 +230,11 @@ def sitemap() -> str:
     alts = "\n".join(
         f'    <xhtml:link rel="alternate" hreflang="{x}" href="{url_for(x)}"/>' for x in LANGS
     )
+    today = datetime.date.today().isoformat()
     for lang in LANGS:
-        parts.append(f'  <url>\n    <loc>{url_for(lang)}</loc>\n    <lastmod>2026-10-15</lastmod>\n{alts}\n  </url>')
+        parts.append(f'  <url>\n    <loc>{url_for(lang)}</loc>\n    <lastmod>{today}</lastmod>\n{alts}\n  </url>')
     for page in ("privacy.html", "terms.html"):
-        parts.append(f'  <url>\n    <loc>{BASE}{page}</loc>\n    <lastmod>2026-10-15</lastmod>\n  </url>')
+        parts.append(f'  <url>\n    <loc>{BASE}{page}</loc>\n    <lastmod>{today}</lastmod>\n  </url>')
     parts.append("</urlset>\n")
     return "\n".join(parts)
 

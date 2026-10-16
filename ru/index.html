@@ -165,6 +165,16 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .faq details[open]::details-content{height:auto;opacity:1}
 .faq details p{padding:0 20px 16px;color:var(--muted);font-size:15px}
 
+/* Блок «Родителям»: проверяемые факты о данных — из политики конфиденциальности */
+.parents-band{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr);gap:32px;align-items:start;background:linear-gradient(180deg,#F2F7FF,#fff);border:1px solid #D7E1FF;border-radius:var(--r);padding:30px 30px 26px;box-shadow:var(--shadow)}
+.parents-head h2{font-size:clamp(22px,2.6vw,27px)}
+.parents-head p{color:var(--muted);font-size:15px;margin-top:10px;max-width:44ch}
+.parents-head .privacy-link{display:inline-block;margin-top:14px;font-size:14.5px;font-weight:600}
+.parents-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.parents-list li{display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.5}
+.parents-list svg{flex:0 0 auto;margin-top:3px;color:var(--brand)}
+@media(max-width:760px){.parents-band{grid-template-columns:1fr;gap:20px;padding:26px 22px 22px}}
+
 .band{background:linear-gradient(135deg,var(--brand) 0%,#2F49D8 55%,#4FC3F7 130%);border-radius:24px;padding:44px 30px;text-align:center;color:#fff;box-shadow:0 18px 44px rgba(61,90,254,.35)}
 .band h2{color:#fff}
 .band p{color:#DCE6FF;margin:12px 0 24px;font-size:17px}
@@ -359,6 +369,25 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <details class="rv"><summary>Нужно что-то устанавливать?</summary><p>Нет. Всё работает внутри Telegram — на телефоне или компьютере.</p></details>
       <details class="rv"><summary>Что такое звёзды Telegram?</summary><p>Звёзды (⭐) — внутренняя валюта Telegram. Пополняются прямо в приложении обычной оплатой (карта, App Store или Google Play), а потом ими платишь за разборы прямо в чате. Подписки и автосписаний нет — платишь только когда сам решишь.</p></details>
       <details class="rv"><summary>Где взять звёзды?</summary><p>Прямо в чате: когда нажмёшь «купить разбор», Telegram откроет окно оплаты и предложит пополнить баланс звёзд, если их не хватает. Баланс хранится в твоём аккаунте Telegram и работает в любом боте, который принимает звёзды.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="parents" aria-labelledby="parents-title">
+  <div class="wrap">
+    <div class="parents-band rv">
+      <div class="parents-head">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4.5V13c0 4.6-3.2 8-8 9.5C7.2 21 4 17.6 4 13V6.5L12 2z"/><path d="M9.2 12.2l2 2 3.8-4.5"/></svg></div>
+        <h2 id="parents-title">Родителям</h2>
+        <p>Коротко: как мы бережём данные вашего ребёнка.</p>
+        <a class="privacy-link" href="../privacy.html">Подробнее — в Политике конфиденциальности</a>
+      </div>
+      <ul class="parents-list">
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Регистрация не нужна — личные данные мы не запрашиваем.</span></li>
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Работает на нашем собственном сервере в Европейском союзе (Финляндия).</span></li>
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Вся ИИ-обработка идёт на нашей собственной инфраструктуре — задачи не передаются сторонним ИИ-сервисам.</span></li>
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Данные можно удалить в любой момент по запросу — родители могут сделать это за ребёнка.</span></li>
+      </ul>
     </div>
   </div>
 </section>
