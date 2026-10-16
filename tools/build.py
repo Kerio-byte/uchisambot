@@ -2,8 +2,8 @@
 """Генератор языковых страниц лендинга UchiSamBot (только статические файлы, без рантайма).
 
 Источник:  index-src.html — страница с разметкой data-i18n (EN-тексты внутри, как база)
-Словари:   src/locales/*.json (en, ru + es, pt, hi, id, tr, vi)
-Выход:     index.html (EN, корень) + <lang>/index.html для 7 языков + sitemap.xml + llms.txt
+Словари:   src/locales/*.json (en, ru + es, pt, hi, id, tr, vi, uk)
+Выход:     index.html (EN, корень) + <lang>/index.html для 8 языков + sitemap.xml + llms.txt
 Запуск:    python3 tools/build.py     (правки контента: меняешь словарь → пересборка)
 """
 from __future__ import annotations
@@ -82,6 +82,17 @@ def switcher_html(lang: str) -> str:
     )
 
 
+def faq_entities(d: dict, lang: str) -> list:
+    """FAQ-разметка: вопросы q1..qN с ответами q1a..qNa (сколько есть в словаре)."""
+    out, i = [], 1
+    while f"q{i}" in d:
+        assert f"q{i}a" in d, f"{lang}: нет ответа для вопроса q{i}"
+        out.append({"@type": "Question", "name": d[f"q{i}"],
+                    "acceptedAnswer": {"@type": "Answer", "text": d[f"q{i}a"]}})
+        i += 1
+    return out
+
+
 def jsonld(d: dict, lang: str) -> str:
     graph = [
         {"@type": "Organization", "@id": BASE + "#org", "name": "UchiSamBot",
@@ -90,7 +101,7 @@ def jsonld(d: dict, lang: str) -> str:
          "inLanguage": lang, "publisher": {"@id": BASE + "#org"}},
         {"@type": "SoftwareApplication", "@id": BASE + "#app", "name": "UchiSamBot (Study Helper)",
          "applicationCategory": "EducationalApplication", "operatingSystem": "Telegram",
-         "url": "https://t.me/UchiSamBot", "inLanguage": ["en", "ru", "es", "pt", "hi", "id", "tr", "vi"],
+         "url": "https://t.me/UchiSamBot", "inLanguage": LANGS,
          "description": d.get("meta.desc", ""),
          "offers": [
              {"@type": "Offer", "name": "First 5 breakdowns", "price": "0", "priceCurrency": "XTR"},
@@ -100,11 +111,7 @@ def jsonld(d: dict, lang: str) -> str:
          ]},
         {"@type": "FAQPage", "@id": BASE + "#faq",
          "inLanguage": lang,
-         "mainEntity": [
-             {"@type": "Question", "name": d[f"q{i}"],
-              "acceptedAnswer": {"@type": "Answer", "text": d[f"q{i}a"]}}
-             for i in range(1, 8) if f"q{i}" in d
-         ]},
+         "mainEntity": faq_entities(d, lang)},
     ]
     return '<script type="application/ld+json">\n' + json.dumps(
         {"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False) + "\n</script>"
