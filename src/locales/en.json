@@ -101,5 +101,6 @@
  "contact.btn": "Send message",
  "contact.note": "We use your email only to reply to this message.",
  "contact.privacy": "Privacy Policy",
- "contact.ok": "Thank you! We received your message and will reply to your email."
+ "contact.ok": "Thank you! We received your message and will reply to your email.",
+ "a11y.skip": "Skip to content"
 }

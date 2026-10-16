@@ -38,9 +38,14 @@ footer .sep{margin:0 8px;color:#B9C6DD}
 footer .foot-badges{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:14px}
 footer .foot-badges a{display:inline-flex;align-items:center;line-height:0}
 footer .foot-badges img{height:46px;width:auto;display:block}
+.skip{position:fixed;left:10px;top:-60px;z-index:70;background:#14203A;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
+.skip:focus{top:10px}
+main:focus{outline:none}
 </style>
 </head>
 <body>
+
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="top">
   <div class="wrap top-in">
@@ -48,7 +53,7 @@ footer .foot-badges img{height:46px;width:auto;display:block}
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main" tabindex="-1">
   <h1>Terms of Service</h1>
   <p class="meta">UchiSamBot (Study Helper) &middot; Last updated: 15 October 2026</p>
 

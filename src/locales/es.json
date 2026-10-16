@@ -101,5 +101,6 @@
   "contact.btn": "Enviar mensaje",
   "contact.note": "Usamos tu correo solo para responder a este mensaje.",
   "contact.privacy": "Política de privacidad",
-  "contact.ok": "¡Gracias! Hemos recibido tu mensaje y te responderemos a tu correo."
+  "contact.ok": "¡Gracias! Hemos recibido tu mensaje y te responderemos a tu correo.",
+ "a11y.skip": "Ir al contenido"
 }

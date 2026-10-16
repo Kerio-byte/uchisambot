@@ -82,6 +82,10 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 
 .top{position:sticky;top:0;z-index:10;background:rgba(247,250,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top-in{display:flex;align-items:center;gap:22px;height:62px}
+.skip{position:fixed;left:10px;top:-60px;z-index:70;background:#0E1526;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
+.skip:focus{top:10px}
+main:focus{outline:none}
+main{display:block}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--ink)}
 .brand img{border-radius:9px}
 .nav{display:flex;gap:20px;margin-left:auto}
@@ -229,6 +233,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 </head>
 <body>
 
+<a class="skip" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="#top">
@@ -247,6 +253,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     </div>
   </div>
 </header>
+
+<main id="main" tabindex="-1">
 
 <section class="hero" id="top">
   <div class="wrap hero-in">
@@ -436,7 +444,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
         <input type="hidden" name="from_name" value="UchiSamBot website" />
         <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/?sent=1#contact" />
-        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
         <label class="sr-only" for="cf-email" data-i18n="contact.l_email">Your email</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" data-i18n-ph="contact.ph_email" />
         <label class="sr-only" for="cf-msg" data-i18n="contact.l_msg">Your message</label>
@@ -455,6 +463,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     <span data-i18n="hero.cta">Open in Telegram</span>
   </a>
 </div>
+
+</main>
 
 <footer>
   <div class="wrap foot">
@@ -527,7 +537,8 @@ en: {
  'contact.ph_email':'you@example.com','contact.ph_msg':'Your question, feedback or complaint…',
  'contact.l_email':'Your email','contact.l_msg':'Your message',
  'contact.btn':'Send message','contact.note':'We use your email only to reply to this message.','contact.privacy':'Privacy Policy',
- 'contact.ok':'Thank you! We received your message and will reply to your email.'
+ 'contact.ok':'Thank you! We received your message and will reply to your email.',
+ 'a11y.skip':'Skip to content'
 },
 ru: {
  'nav.how':'Как это работает','nav.features':'Возможности','nav.pricing':'Тарифы','nav.faq':'Вопросы',
@@ -580,7 +591,8 @@ ru: {
  'contact.ph_email':'you@example.com','contact.ph_msg':'Ваш вопрос, отзыв или жалоба…',
  'contact.l_email':'Ваш e-mail','contact.l_msg':'Ваше сообщение',
  'contact.btn':'Отправить','contact.note':'Используем ваш e-mail только чтобы ответить на обращение.','contact.privacy':'Политика конфиденциальности',
- 'contact.ok':'Спасибо! Мы получили ваше сообщение и ответим на указанный e-mail.'
+ 'contact.ok':'Спасибо! Мы получили ваше сообщение и ответим на указанный e-mail.',
+ 'a11y.skip':'Перейти к содержимому'
 }
 };
 (function(){

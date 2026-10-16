@@ -71,6 +71,10 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 
 .top{position:sticky;top:0;z-index:10;background:rgba(247,250,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top-in{display:flex;align-items:center;gap:22px;height:62px}
+.skip{position:fixed;left:10px;top:-60px;z-index:70;background:#0E1526;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
+.skip:focus{top:10px}
+main:focus{outline:none}
+main{display:block}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--ink)}
 .brand img{border-radius:9px}
 .nav{display:flex;gap:20px;margin-left:auto}
@@ -218,6 +222,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 </head>
 <body>
 
+<a class="skip" href="#main">Перейти к содержимому</a>
+
 <header class="top">
   <div class="wrap top-in">
     <a class="brand" href="#top">
@@ -233,6 +239,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     <details class="lang-dd"><summary aria-label="Language">🌐 Русский</summary><div class="lang-list"><a href="../">🇬🇧 English</a><a href="#" aria-current="page" class="on">🇷🇺 Русский</a><a href="../es/">🇪🇸 Español</a><a href="../pt/">🇧🇷 Português</a><a href="../hi/">🇮🇳 हिन्दी</a><a href="../id/">🇮🇩 Bahasa Indonesia</a><a href="../tr/">🇹🇷 Türkçe</a><a href="../vi/">🇻🇳 Tiếng Việt</a><a href="../uk/">🇺🇦 Українська</a></div></details>
   </div>
 </header>
+
+<main id="main" tabindex="-1">
 
 <section class="hero" id="top">
   <div class="wrap hero-in">
@@ -422,7 +430,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
         <input type="hidden" name="from_name" value="UchiSamBot website" />
         <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/ru/?sent=1#contact" />
-        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
         <label class="sr-only" for="cf-email">Ваш e-mail</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
         <label class="sr-only" for="cf-msg">Ваше сообщение</label>
@@ -441,6 +449,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     <span>Открыть в Telegram</span>
   </a>
 </div>
+
+</main>
 
 <footer>
   <div class="wrap foot">

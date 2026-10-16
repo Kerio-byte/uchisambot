@@ -57,6 +57,15 @@ headline 18:1, `#EAF0FF` body line 15.9:1, white Telegram button 5.1:1; the foot
 secondary lines use `#5C6E90` (4.9:1 on the page background instead of the former
 `#8194B4` at 2.9:1).
 
+Accessibility: each page is a single `<main id="main">` landmark (header and footer
+sit outside it; the mobile sticky CTA bar lives inside `main`). Every page opens with
+a keyboard skip link (`.skip` → `#main`, label localised through the `a11y.skip`
+dictionary key) that slides in at the top-left on focus; the `main:focus` outline is
+suppressed because the skip jump itself is the cue. Audited with axe-core
+(WCAG 2.0-2.2 A/AA + best practice): 0 violations across all 11 pages. The W3C Nu
+validator reports only `interpolate-size` / `transition:allow-discrete` (modern CSS
+it does not know yet) — both are intentional progressive enhancements.
+
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
