@@ -63,3 +63,14 @@ badge sits in the hero, as its platform requires). Uniform 46 px height (40 px o
 screens), lazy-loaded hotlinked official assets, links open in a new tab with
 `rel="noopener"`. `privacy.html` / `terms.html` carry the required LiftOff + Startup
 Fame badges in the same style.
+
+Contact form: `#contact` posts straight to Web3Forms — no Telegram step. After a
+successful submit Web3Forms returns the visitor to the **same language page**
+(`?sent=1#contact`, rewritten per language by the build), where the form is replaced
+by a localized confirmation message that is baked into the page (one string per
+language, no JS dictionary; without JS the visitor simply keeps seeing the form).
+
+Privacy / terms: bilingual single pages (EN, then the Russian section marked
+`id="ru"`). Links from `/ru/` carry the `#ru` anchor, so Russian visitors land
+directly on the Russian text; links from the other languages open the page top (EN).
+The hashes are added by `tools/build.py`.

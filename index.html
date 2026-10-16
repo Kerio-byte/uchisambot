@@ -429,6 +429,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Your question, feedback or complaint…"></textarea>
         <button type="submit" class="btn">Send message</button>
       </form>
+      <p class="contact-ok" id="contact-ok" hidden>Thank you! We received your message and will reply to your email.</p>
       <p class="contact-note"><span>We use your email only to reply to this message.</span> <a href="privacy.html">Privacy Policy</a></p>
     </div>
   </div>
@@ -464,13 +465,10 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact — показываем подтверждение.
   if (!/[?&]sent=1/.test(location.search)) return;
   var f = document.getElementById('contact-form');
-  if (!f) return;
-  var d = (window.I18N && (I18N[document.documentElement.lang] || I18N.en)) || {};
-  var ok = document.createElement('p');
-  ok.className = 'contact-ok';
-  ok.textContent = d['contact.ok'] || 'Thank you! We received your message and will reply to your email.';
-  f.parentNode.insertBefore(ok, f.nextSibling);
+  var ok = document.getElementById('contact-ok');
+  if (!f || !ok) return;
   f.style.display = 'none';
+  ok.hidden = false;
 })();
 </script>
 <script>

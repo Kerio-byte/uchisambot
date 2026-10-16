@@ -387,7 +387,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4.5V13c0 4.6-3.2 8-8 9.5C7.2 21 4 17.6 4 13V6.5L12 2z"/><path d="M9.2 12.2l2 2 3.8-4.5"/></svg></div>
         <h2 id="parents-title">Родителям</h2>
         <p>Коротко: как мы бережём данные вашего ребёнка.</p>
-        <a class="privacy-link" href="../privacy.html">Подробнее — в Политике конфиденциальности</a>
+        <a class="privacy-link" href="../privacy.html#ru">Подробнее — в Политике конфиденциальности</a>
       </div>
       <ul class="parents-list">
         <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Регистрация не нужна — личные данные мы не запрашиваем.</span></li>
@@ -421,7 +421,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
         <input type="hidden" name="from_name" value="UchiSamBot website" />
-        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/?sent=1#contact" />
+        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/ru/?sent=1#contact" />
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <label class="sr-only" for="cf-email">Ваш e-mail</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
@@ -429,7 +429,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Ваш вопрос, отзыв или жалоба…"></textarea>
         <button type="submit" class="btn">Отправить</button>
       </form>
-      <p class="contact-note"><span>Используем ваш e-mail только чтобы ответить на обращение.</span> <a href="../privacy.html">Политика конфиденциальности</a></p>
+      <p class="contact-ok" id="contact-ok" hidden>Спасибо! Мы получили ваше сообщение и ответим на указанный e-mail.</p>
+      <p class="contact-note"><span>Используем ваш e-mail только чтобы ответить на обращение.</span> <a href="../privacy.html#ru">Политика конфиденциальности</a></p>
     </div>
   </div>
 </section>
@@ -445,7 +446,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   <div class="wrap foot">
     <p><strong>UchiSamBot</strong> — <span>Учебный помощник для школьников</span></p>
     <p class="dim"><span>Оплата проходит через звёзды Telegram.</span></p>
-    <p class="dim"><a href="../privacy.html">Политика конфиденциальности</a> &middot; <a href="../terms.html">Условия использования</a></p>
+    <p class="dim"><a href="../privacy.html#ru">Политика конфиденциальности</a> &middot; <a href="../terms.html#ru">Условия использования</a></p>
     <p class="dim foot-partners"><a href="https://realisticai.io">Realistic AI</a> &middot; <a href="https://aitooltrek.com">AI Tool Trek</a> &middot; <a href="https://www.basedtools.ai/">Based Tools AI</a></p>
     <div class="foot-badges" role="group" aria-label="Featured on">
       <a href="https://fazier.com" target="_blank" rel="noopener"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge" loading="lazy" decoding="async" /></a>
@@ -464,13 +465,10 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact — показываем подтверждение.
   if (!/[?&]sent=1/.test(location.search)) return;
   var f = document.getElementById('contact-form');
-  if (!f) return;
-  var d = (window.I18N && (I18N[document.documentElement.lang] || I18N.en)) || {};
-  var ok = document.createElement('p');
-  ok.className = 'contact-ok';
-  ok.textContent = d['contact.ok'] || 'Thank you! We received your message and will reply to your email.';
-  f.parentNode.insertBefore(ok, f.nextSibling);
+  var ok = document.getElementById('contact-ok');
+  if (!f || !ok) return;
   f.style.display = 'none';
+  ok.hidden = false;
 })();
 </script>
 <script>

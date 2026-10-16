@@ -421,7 +421,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
         <input type="hidden" name="from_name" value="UchiSamBot website" />
-        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/?sent=1#contact" />
+        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/id/?sent=1#contact" />
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <label class="sr-only" for="cf-email">Email kamu</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
@@ -429,6 +429,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Pertanyaan, masukan, atau keluhanmu…"></textarea>
         <button type="submit" class="btn">Kirim pesan</button>
       </form>
+      <p class="contact-ok" id="contact-ok" hidden>Terima kasih! Kami sudah menerima pesanmu dan akan membalas ke emailmu.</p>
       <p class="contact-note"><span>Kami memakai emailmu hanya untuk membalas pesan ini.</span> <a href="../privacy.html">Kebijakan Privasi</a></p>
     </div>
   </div>
@@ -464,13 +465,10 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact — показываем подтверждение.
   if (!/[?&]sent=1/.test(location.search)) return;
   var f = document.getElementById('contact-form');
-  if (!f) return;
-  var d = (window.I18N && (I18N[document.documentElement.lang] || I18N.en)) || {};
-  var ok = document.createElement('p');
-  ok.className = 'contact-ok';
-  ok.textContent = d['contact.ok'] || 'Thank you! We received your message and will reply to your email.';
-  f.parentNode.insertBefore(ok, f.nextSibling);
+  var ok = document.getElementById('contact-ok');
+  if (!f || !ok) return;
   f.style.display = 'none';
+  ok.hidden = false;
 })();
 </script>
 <script>
