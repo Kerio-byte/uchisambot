@@ -89,7 +89,7 @@ Usually under a minute: send your task and the breakdown comes back in the chat 
 
 ### What if a breakdown fails?
 
-If something goes wrong on our side and a breakdown can't be finished, the Stars for it are refunded — write to us and we'll return them within 24 hours.
+Try again in a few minutes — brief overloads happen. If it keeps failing, write to us via the Help button in the bot — we will look into it.
 
 ### How is it different from a general AI chatbot?
 

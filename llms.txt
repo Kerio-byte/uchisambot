@@ -16,7 +16,7 @@ Open the bot: https://t.me/UchiSamBot
 - [🇻🇳 Tiếng Việt: UchiSamBot — Trợ lý học tập cho học sinh](https://kerio-byte.github.io/uchisambot/vi/index.html.md): landing page — features, how it works, pricing, FAQ.
 - [🇺🇦 Українська: UchiSamBot — навчальний помічник для школярів](https://kerio-byte.github.io/uchisambot/uk/index.html.md): landing page — features, how it works, pricing, FAQ.
 - [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html.md): what data the bot handles, and how to have it deleted.
-- [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html.md): pricing, refunds and usage rules.
+- [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html.md): pricing and usage rules.
 
 ## Optional
 

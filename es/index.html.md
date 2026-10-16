@@ -89,7 +89,7 @@ Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat 
 
 ### ¿Qué pasa si un desglose falla?
 
-Si algo falla de nuestro lado y el desglose no se puede completar, las Stars se devuelven — escríbenos y te las devolvemos en menos de 24 horas.
+Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue fallando, escríbenos con el botón de Ayuda del bot — lo revisamos.
 
 ### ¿En qué se diferencia de un chatbot de IA común?
 

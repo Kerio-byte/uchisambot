@@ -1,6 +1,6 @@
 # Privacy Policy
 
-UchiSamBot (Study Helper) · Last updated: 15 October 2026
+UchiSamBot (Study Helper) · Last updated: 16 October 2026
 
 UchiSamBot (Study Helper) is a Telegram bot that helps school students understand their homework: it breaks tasks down step by step, explains topics in simple language, checks solutions, and makes revision notes. This policy explains what data the bot handles and how. It covers the bot (t.me/UchiSamBot) and its website (kerio-byte.github.io/uchisambot). In this policy, "we" means the team operating UchiSamBot.
 
@@ -17,7 +17,7 @@ We do not ask for or store your name, phone number, email address, postal addres
 ## 2. Why we process it
 
 - To run the service: generate breakdowns, explanations, solution checks, and revision notes; keep track of free and paid breakdown balances; credit referral bonuses.
-- To support you: answer payment questions and process refunds.
+- To support you: answer payment questions and help with issues.
 - To prevent abuse and keep the service reliable.
 - To improve quality using aggregated, de-identified statistics (for example, how many tasks were solved in total).
 
@@ -55,7 +55,7 @@ Use the Help button inside the bot or the contact form on our website — we res
 
 ## Политика конфиденциальности
 
-UchiSamBot (Учебный помощник) · Обновлено: 15 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 16 октября 2026
 
 UchiSamBot (Учебный помощник) — телеграм-бот, который помогает школьникам разбираться с домашними заданиями: разбирает задачи по шагам, объясняет темы простыми словами, проверяет решения и делает конспекты для повторения. Здесь описано, какие данные обрабатывает бот и как. Политика относится к боту (t.me/UchiSamBot) и его сайту (kerio-byte.github.io/uchisambot). В этой политике «мы» — команда, которая ведёт UchiSamBot.
 
@@ -72,7 +72,7 @@ UchiSamBot (Учебный помощник) — телеграм-бот, кот
 ### 2. Зачем мы обрабатываем данные
 
 - Для работы сервиса: генерация разборов, объяснений, проверок решений и конспектов; учёт бесплатных и оплаченных разборов; начисление реферальных бонусов.
-- Для поддержки: ответы на вопросы об оплате и возвраты.
+- Для поддержки: ответы на вопросы об оплате и помощь с обращениями.
 - Для защиты от злоупотреблений и стабильной работы сервиса.
 - Для улучшения качества — по обезличенной статистике (например, сколько всего задач решено).
 

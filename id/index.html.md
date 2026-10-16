@@ -89,7 +89,7 @@ Biasanya kurang dari satu menit: kamu kirim soalnya, lalu pembahasannya masuk ke
 
 ### Bagaimana kalau pembahasannya gagal?
 
-Kalau ada masalah di sisi kami dan pembahasan tidak bisa diselesaikan, Stars-nya dikembalikan — tulis ke kami dan kami kembalikan dalam 24 jam.
+Coba lagi beberapa menit lagi — kadang ada beban singkat. Kalau terus gagal, hubungi kami lewat tombol Bantuan di dalam bot — kami akan cek.
 
 ### Apa bedanya dengan chatbot AI biasa?
 

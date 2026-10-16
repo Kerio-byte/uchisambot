@@ -89,7 +89,7 @@ Genellikle bir dakikadan kısa: ödevini gönderirsin, çözüm sohbete gelir �
 
 ### Çözüm başarısız olursa ne olur?
 
-Bizim tarafımızda bir sorun olur da çözüm tamamlanamazsa, o çözümün Stars'ı iade edilir — bize yaz, geri ödemesini 24 saat içinde yaparız.
+Birkaç dakika sonra yeniden deneyin — bazen kısa süreli yoğunluk olur. Sorun sürerse bottaki Yardım düğmesinden bize yazın — ilgilenelim.
 
 ### Sıradan bir yapay zekâ sohbet botundan farkı ne?
 

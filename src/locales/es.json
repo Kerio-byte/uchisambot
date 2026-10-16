@@ -77,7 +77,7 @@
   "q8": "¿Cuánto tarda un desglose?",
   "q8a": "Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat — por lo general, en 10–60 segundos.",
   "q9": "¿Qué pasa si un desglose falla?",
-  "q9a": "Si algo falla de nuestro lado y el desglose no se puede completar, las Stars se devuelven — escríbenos y te las devolvemos en menos de 24 horas.",
+  "q9a": "Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue fallando, escríbenos con el botón de Ayuda del bot — lo revisamos.",
   "q10": "¿En qué se diferencia de un chatbot de IA común?",
   "q10a": "A diferencia de un chatbot común, aquí hay un método de enseñanza: cada desglose explica los pasos y, al resolver, el bot se detiene un paso antes de la respuesta para que la completes tú. Además, tus tareas se quedan en nuestro propio servidor — no se envían a servicios de IA de terceros.",
   "parents.title": "Para padres",

@@ -89,7 +89,7 @@ Normalmente em menos de um minuto: você envia a tarefa e a explicação chega n
 
 ### E se uma explicação falhar?
 
-Se algo der errado do nosso lado e a explicação não puder ser concluída, as Stars são devolvidas — escreva para nós e devolvemos em até 24 horas.
+Tente de novo em alguns minutos — às vezes há sobrecargas curtas. Se continuar falhando, fale conosco pelo botão Ajuda no bot — vamos verificar.
 
 ### Qual é a diferença para um chatbot de IA comum?
 

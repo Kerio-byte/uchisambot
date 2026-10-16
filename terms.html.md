@@ -1,6 +1,6 @@
 # Terms of Service
 
-UchiSamBot (Study Helper) · Last updated: 15 October 2026
+UchiSamBot (Study Helper) · Last updated: 16 October 2026
 
 These terms describe the rules for using UchiSamBot (Study Helper), a Telegram bot for school students. By using the bot, you agree to these terms.
 
@@ -22,9 +22,9 @@ The service is intended for school students and their parents. If you are a mino
 
 The first 5 breakdowns are free for every user. After that, breakdown packs can be purchased with Telegram Stars: 1 breakdown — 30 Stars; a pack of 5 — 120 Stars; a pack of 15 — 300 Stars. There are no subscriptions and no auto-renewals. Payments are processed by Telegram — we never see your card or bank details.
 
-## 5. Refunds
+## 5. Support
 
-If a breakdown fails for a technical reason, the Stars are refunded — typically within 24 hours. For any payment issue, use the Help button inside the bot or the contact form on our website.
+For any problem — a failed breakdown or a payment question — use the Help button inside the bot or the contact form on our website; we will look into it.
 
 ## 6. Referral bonus
 
@@ -58,7 +58,7 @@ Use the Help button inside the bot or the contact form on our website — we res
 
 ## Условия использования
 
-UchiSamBot (Учебный помощник) · Обновлено: 15 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 16 октября 2026
 
 Эти условия описывают правила использования UchiSamBot (Учебный помощник) — телеграм-бота для школьников. Пользуясь ботом, вы соглашаетесь с этими условиями.
 
@@ -80,9 +80,9 @@ UchiSamBot помогает разбираться с домашними зад�
 
 Первые 5 разборов — бесплатно для каждого пользователя. Дальше пакеты разборов покупаются за звёзды Telegram: 1 разбор — 30 звёзд; пакет из 5 — 120 звёзд; пакет из 15 — 300 звёзд. Подписок и автосписаний нет. Платежи обрабатывает Telegram — данные ваших карт и счетов к нам не попадают.
 
-### 5. Возвраты
+### 5. Поддержка
 
-Если разбор не удался по технической причине, звёзды возвращаются — как правило, в течение 24 часов. По любым вопросам оплаты воспользуйтесь кнопкой «Помощь» в боте или контактной формой на нашем сайте.
+С любым вопросом — неудачный разбор или оплата — пишите через кнопку «Помощь» в боте или контактную форму на сайте; разберёмся.
 
 ### 6. Реферальный бонус
 

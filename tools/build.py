@@ -453,7 +453,7 @@ def llms(dicts: dict) -> str:
                      f'({url_for(lang)}index.html.md): landing page — features, how it works, pricing, FAQ.')
     lines += [
         f"- [Privacy Policy]({BASE}privacy.html.md): what data the bot handles, and how to have it deleted.",
-        f"- [Terms of Service]({BASE}terms.html.md): pricing, refunds and usage rules.",
+        f"- [Terms of Service]({BASE}terms.html.md): pricing and usage rules.",
         "",
         "## Optional",
         "",

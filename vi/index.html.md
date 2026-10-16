@@ -89,7 +89,7 @@ Thường dưới một phút: bạn gửi bài tập và phần phân tích hi�
 
 ### Nếu lần phân tích không thành công thì sao?
 
-Nếu có lỗi từ phía chúng tôi và không thể hoàn thành phân tích, Stars sẽ được hoàn lại — hãy viết cho chúng tôi, chúng tôi sẽ hoàn lại trong vòng 24 giờ.
+Hãy thử lại sau vài phút — đôi khi có quá tải ngắn. Nếu vẫn lỗi, nhắn cho chúng tôi qua nút Trợ giúp trong bot — chúng mình sẽ kiểm tra.
 
 ### Bot khác gì một chatbot AI thông thường?
 

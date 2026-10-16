@@ -77,7 +77,7 @@
   "q8": "Berapa lama satu pembahasan?",
   "q8a": "Biasanya kurang dari satu menit: kamu kirim soalnya, lalu pembahasannya masuk ke chat — umumnya dalam 10–60 detik.",
   "q9": "Bagaimana kalau pembahasannya gagal?",
-  "q9a": "Kalau ada masalah di sisi kami dan pembahasan tidak bisa diselesaikan, Stars-nya dikembalikan — tulis ke kami dan kami kembalikan dalam 24 jam.",
+  "q9a": "Coba lagi beberapa menit lagi — kadang ada beban singkat. Kalau terus gagal, hubungi kami lewat tombol Bantuan di dalam bot — kami akan cek.",
   "q10": "Apa bedanya dengan chatbot AI biasa?",
   "q10a": "Berbeda dari chatbot biasa, di sini ada metode belajar: setiap pembahasan menjelaskan langkah-langkahnya, dan saat menyelesaikan soal bot berhenti satu langkah sebelum jawaban supaya kamu menyelesaikannya sendiri. Selain itu, soalnya tersimpan di server kami sendiri — tidak dikirim ke layanan AI pihak ketiga.",
   "parents.title": "Untuk orang tua",
