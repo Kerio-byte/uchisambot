@@ -59,7 +59,9 @@ anchor jumps clear the sticky header. Smooth scrolling is turned off under
 
 Screenshots: each of the three chat shots in the "Real chats" section carries a small
 caption naming the how-it-works step it shows (the `how.s1t`-`how.s3t` texts), baked
-into all 9 language pages.
+into all 9 language pages. The shots' `alt` texts are localised per language (dictionary
+keys `shot1.alt`-`shot3.alt`); `og:image:alt` / `twitter:image:alt` reuse the page title,
+and the JSON-LD `Offer` names reuse the pricing texts (`p1t`, `price.single`, `p2t`, `p3t`).
 
 Contrast (WCAG AA): the closing CTA band is a solid ink plate (`#0E1526`) — white
 headline 18:1, `#EAF0FF` body line 15.9:1, white Telegram button 5.1:1; the footer

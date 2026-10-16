@@ -104,10 +104,10 @@ def jsonld(d: dict, lang: str) -> str:
          "url": "https://t.me/UchiSamBot", "inLanguage": LANGS,
          "description": d.get("meta.desc", ""),
          "offers": [
-             {"@type": "Offer", "name": "First 5 breakdowns", "price": "0", "priceCurrency": "XTR"},
-             {"@type": "Offer", "name": "Single breakdown", "price": "30", "priceCurrency": "XTR"},
-             {"@type": "Offer", "name": "Pack of 5 breakdowns", "price": "120", "priceCurrency": "XTR"},
-             {"@type": "Offer", "name": "Pack of 15 breakdowns", "price": "300", "priceCurrency": "XTR"},
+             {"@type": "Offer", "name": d["p1t"], "price": "0", "priceCurrency": "XTR"},
+             {"@type": "Offer", "name": d["price.single"], "price": "30", "priceCurrency": "XTR"},
+             {"@type": "Offer", "name": d["p2t"], "price": "120", "priceCurrency": "XTR"},
+             {"@type": "Offer", "name": d["p3t"], "price": "300", "priceCurrency": "XTR"},
          ]},
         {"@type": "FAQPage", "@id": BASE + "#faq",
          "inLanguage": lang,
@@ -182,6 +182,11 @@ def bake(src: str, lang: str, dicts: dict) -> str:
                  f'<meta name="twitter:title" content="{esc_attr(d["meta.title"])}">', out)
     out = re.sub(r'<meta name="twitter:description" content="[^"]*">',
                  f'<meta name="twitter:description" content="{esc_attr(d["meta.desc"])}">', out)
+    # альты превью-картинки (og/twitter) — по языку (до 16.10 были статичные англ. на всех страницах)
+    out = re.sub(r'<meta property="og:image:alt" content="[^"]*">',
+                 f'<meta property="og:image:alt" content="{esc_attr(d["meta.title"])}">', out)
+    out = re.sub(r'<meta name="twitter:image:alt" content="[^"]*">',
+                 f'<meta name="twitter:image:alt" content="{esc_attr(d["meta.title"])}">', out)
 
     # 5) JSON-LD
     out = re.sub(r'<script type="application/ld\+json">.*?</script>', jsonld(d, lang), out, flags=re.S)
@@ -219,6 +224,14 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     prefix = "../img/" if lang != "en" else "img/"
     out = re.sub(r'src="(?:\.\./)?img/shot(\d)(?:-\w+)?\.webp"',
                  lambda m: f'src="{prefix}{shot_src(m.group(1), lang)}"', out)
+
+    # 9c) альты скриншотов — по языку (до 16.10 оставались англ. на всех 9 страницах;
+    #     атрибуты data-shot/data-alt-* были мертвы после отказа от JS-i18n и удалены)
+    for _i in ("1", "2", "3"):
+        out = re.sub(
+            rf'(<img src="(?:\.\./)?img/shot{_i}(?:-\w+)?\.webp"[^>]*? alt=")[^"]*(")',
+            lambda m, _i=_i: m.group(1) + esc_attr(d[f"shot{_i}.alt"]) + m.group(2),
+            out)
 
     # 9b) hero-видео: у RU своя версия (у каждого языка свои ассеты; остальным — EN-фолбэк)
     if lang == "ru":
