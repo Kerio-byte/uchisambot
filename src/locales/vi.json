@@ -106,5 +106,7 @@
  "contact.note": "Chúng tôi chỉ dùng email của bạn để trả lời tin nhắn này.",
  "contact.privacy": "Chính sách bảo mật",
  "contact.ok": "Cảm ơn bạn! Chúng tôi đã nhận được tin nhắn và sẽ trả lời qua email của bạn.",
- "a11y.skip": "Chuyển đến nội dung"
+ "a11y.skip": "Chuyển đến nội dung",
+ "badge.alt": "Nổi bật trên {name}",
+ "badge.group": "Nổi bật trên các nền tảng"
 }

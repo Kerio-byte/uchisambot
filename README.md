@@ -98,6 +98,20 @@ screens), lazy-loaded hotlinked official assets, links open in a new tab with
 `rel="noopener"`. `privacy.html` / `terms.html` carry the required LiftOff + Startup
 Fame badges in the same style.
 
+Badge accessibility / layout-shift: badge `alt` texts are localised per language — the
+`badge.alt` dictionary template ("Featured on {name}" / "Отмечен на {name}" …) is baked
+with the platform name, and the strip's group label comes from `badge.group`; the
+`privacy.html` / `terms.html` badges use the English wording. Every badge (and every
+other `img` on the site) declares both `width` and `height`, and those values must keep
+the asset's **true aspect ratio** — measured from the served file (`naturalWidth` /
+`naturalHeight` in a browser), not copied from embed snippets: with a one-sided or
+wrong ratio the browser reserves the wrong slot before the lazy image loads and the
+strip visibly jumps (measured up to ~53 px per badge before the fix; now the reserved
+width equals the final width). The CSS `height:46px;width:auto` rule keeps rendering
+unchanged — the attributes only affect the pre-load reservation. Hover `title`s on
+badge links were dropped: they duplicated the alt text in English on every language
+page.
+
 Connections: the head warms up the third-party origins the pages actually use —
 `preconnect` to `launchigniter.com` (the hero badge is the only eager external image)
 and `dns-prefetch` to the seven footer badge hosts plus the form API

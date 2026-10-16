@@ -106,5 +106,7 @@
   "contact.note": "Kami memakai emailmu hanya untuk membalas pesan ini.",
   "contact.privacy": "Kebijakan Privasi",
   "contact.ok": "Terima kasih! Kami sudah menerima pesanmu dan akan membalas ke emailmu.",
- "a11y.skip": "Lewati ke konten"
+ "a11y.skip": "Lewati ke konten",
+ "badge.alt": "Unggulan di {name}",
+ "badge.group": "Unggulan di platform"
 }

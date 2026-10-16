@@ -40,6 +40,20 @@ VIDEO_ALT = {
     "vi": "Bản demo: bot giải bài từng bước.",
     "uk": "Демонстрація: бот розбирає задачу крок за кроком.",
 }
+# Бейджи (герой + футер): фрагмент src -> имя площадки. Альт = шаблон словаря
+# badge.alt («отмечен на {name}»), подпись группы бейджей = badge.group.
+# До 16.10 альты были захардкожены по-английски и лежали ОДИНАКОВО на всех 9
+# страницах (утечка чужого языка для скринридеров); см. блок «бейджи».
+BADGE_ALTS = [
+    ("launchigniter.com/api/badge/", "LaunchIgniter"),
+    ("fazier.com/api/v1/", "Fazier"),
+    ("statics.startupbase.io/site/badges/", "StartupBase"),
+    ("showmebest.ai/badge/", "ShowMeBestAI"),
+    ("lift-off.sh/images/badges/", "LiftOff"),
+    ("startupfa.me/badge?", "Startup Fame"),
+    ("cdn.openhunts.com/badges/", "OpenHunts Club"),
+    ("auraplusplus.com/images/badges/", "Aura++"),
+]
 
 
 def url_for(lang: str) -> str:
@@ -240,6 +254,21 @@ def bake(src: str, lang: str, dicts: dict) -> str:
             rf'(<img src="(?:\.\./)?img/shot{_i}(?:-\w+)?\.webp"[^>]*? alt=")[^"]*(")',
             lambda m, _i=_i: m.group(1) + esc_attr(d[f"shot{_i}.alt"]) + m.group(2),
             out)
+
+    # 9e) альты бейджей + подпись группы бейджей — по языку (до 16.10 были англ. на всех
+    #     9 страницах: бейдж героя + 7 бейджей футера). Шаблон — badge.alt словаря,
+    #     имя площадки подставляется; каждое совпадение обязано быть ровно одно.
+    tpl = d["badge.alt"]
+    assert "{name}" in tpl, f"{lang}: badge.alt без {{name}}"
+    for frag, nm in BADGE_ALTS:
+        pat = re.compile(
+            r'(<img src="https://' + re.escape(frag) + r'[^"]*"[^>]*?alt=")[^"]*(")')
+        out, n = pat.subn(
+            lambda m, _a=esc_attr(tpl.format(name=nm)): m.group(1) + _a + m.group(2), out)
+        assert n == 1, f"{lang}: бейдж {nm} — совпадений {n}"
+    assert out.count('aria-label="Featured on"') == 1, f"{lang}: группа бейджей не однозначна"
+    out = out.replace('aria-label="Featured on"',
+                      f'aria-label="{esc_attr(d["badge.group"])}"')
 
     # 9b) hero-видео: у RU своя версия (у каждого языка свои ассеты; остальным — EN-фолбэк)
     if lang == "ru":

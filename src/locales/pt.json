@@ -106,5 +106,7 @@
   "contact.note": "Usamos seu e-mail apenas para responder a esta mensagem.",
   "contact.privacy": "Política de Privacidade",
   "contact.ok": "Obrigado! Recebemos sua mensagem e vamos responder no seu e-mail.",
- "a11y.skip": "Ir para o conteúdo"
+ "a11y.skip": "Ir para o conteúdo",
+ "badge.alt": "Destacado em {name}",
+ "badge.group": "Destacado em plataformas"
 }

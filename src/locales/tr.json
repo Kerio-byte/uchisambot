@@ -106,5 +106,7 @@
  "contact.note": "E-postanızı yalnızca bu mesaja yanıt vermek için kullanırız.",
  "contact.privacy": "Gizlilik Politikası",
  "contact.ok": "Teşekkürler! Mesajınızı aldık ve e-posta adresinize yanıt vereceğiz.",
- "a11y.skip": "İçeriğe geç"
+ "a11y.skip": "İçeriğe geç",
+ "badge.alt": "{name} üzerinde öne çıkan uygulama",
+ "badge.group": "Platformlarda öne çıkan uygulama"
 }
