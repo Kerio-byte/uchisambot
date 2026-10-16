@@ -12,7 +12,9 @@ Live: https://kerio-byte.github.io/uchisambot/
 - `src/locales/*.json` — text dictionaries for 9 languages (en, ru, es, pt, hi, id, tr, vi, uk).
 - `tools/build.py` — static site generator (stdlib only): bakes the template into
   `index.html` (EN) + `ru/`, `es/`, `pt/`, `hi/`, `id/`, `tr/`, `vi/`, `uk/` pages and their
-  markdown twins (`index.html.md` next to each page), plus
+  markdown twins (`index.html.md` next to each page), and converts the `main`
+  content of the legal pages into their markdown twins (`privacy.html.md` /
+  `terms.html.md`), plus
   `sitemap.xml` and `llms.txt`; every language page carries its own `og:locale`
   plus `og:locale:alternate` for the other eight languages (social-preview locale
   linking), and the sitemap mirrors the hreflang set per URL — all nine languages
@@ -27,9 +29,12 @@ Live: https://kerio-byte.github.io/uchisambot/
 
 ## Editing
 
-1. Edit texts/styles in `index-src.html` (translations in `src/locales/*.json`).
+1. Edit texts/styles in `index-src.html` (translations in `src/locales/*.json`);
+   legal texts — directly in `privacy.html` / `terms.html`.
 2. Run `python3 tools/build.py` — regenerates all 9 language pages, their markdown
-   twins (`index.html.md`), sitemap and llms.txt.
+   twins (`index.html.md`), the legal-page markdown twins (`privacy.html.md` /
+   `terms.html.md` — converted from the legal pages' own `main` content), sitemap
+   and llms.txt.
 3. Commit the template + locales + generated pages together and push to `main`;
    GitHub Pages serves the site from the repository root.
 
@@ -102,13 +107,14 @@ self-canonical URL and a full social-preview set — `og` and `twitter` title,
 description, the shared `img/og.png` (1200×630, image alt = page title) — so
 shared links get a proper preview card. The hashes are added by `tools/build.py`.
 
-AI layer (llms.txt v2): every language page has a clean markdown twin next to it
-(`index.html.md`, `ru/index.html.md`, …), generated from the same locale
-dictionaries by `tools/build.py` — title, summary, how it works, features,
-subjects, pricing, parents, FAQ and contact links. Each page declares two link
-relations in the head: `rel="describedby"` → `llms.txt` (the site-wide overview,
-which lists all nine markdown twins, the legal pages and the demo videos) and
-`rel="alternate" type="text/markdown"` → that page's markdown twin.
-`privacy.html` / `terms.html` declare `rel="describedby"` as well (they have no
-markdown twin). The links in `llms.txt` point to the markdown versions — the
-convention of llms.txt v2 (llmstxt.org): markdown twin at the page URL + `.md`.
+AI layer (llms.txt v2): every page has a clean markdown twin next to it —
+`index.html.md` / `ru/index.html.md` … for the nine language pages (generated from
+the locale dictionaries by `tools/build.py`) and `privacy.html.md` /
+`terms.html.md` for the legal pages (converted from the `main` content of the
+hand-written HTML, their single source of truth; a strict converter — unexpected
+markup fails the build). Each page declares two link relations in the head:
+`rel="describedby"` → `llms.txt` (the site-wide overview, which lists all eleven
+markdown twins and the demo videos) and `rel="alternate" type="text/markdown"` →
+that page's markdown twin. The links in `llms.txt` point to the markdown
+versions — the convention of llms.txt v2 (llmstxt.org): markdown twin at the page
+URL + `.md`.

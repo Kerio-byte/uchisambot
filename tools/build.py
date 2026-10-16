@@ -4,7 +4,9 @@
 Источник:  index-src.html — страница с разметкой data-i18n (EN-тексты внутри, как база)
 Словари:   src/locales/*.json (en, ru + es, pt, hi, id, tr, vi, uk)
 Выход:     index.html (EN, корень) + <lang>/index.html для 8 языков (md-двойники
-           index.html.md рядом с каждой страницей) + sitemap.xml + llms.txt
+           index.html.md рядом с каждой страницей), md-двойники legal-страниц
+           (privacy.html.md / terms.html.md — конвертация main-контента их html),
+           sitemap.xml + llms.txt
 Запуск:    python3 tools/build.py     (правки контента: меняешь словарь → пересборка)
 """
 from __future__ import annotations
@@ -12,6 +14,7 @@ from __future__ import annotations
 import datetime
 import json
 import re
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -306,6 +309,115 @@ def page_md(d: dict, lang: str) -> str:
     return "\n".join(L)
 
 
+class _LegalParser(HTMLParser):
+    """Мини-конвертер main-контента privacy/terms в markdown.
+
+    Структура этих страниц известна и контролируется: h1/h2/h3, p, ul>li, hr,
+    прозрачный section, инлайн b/strong/em/i/a, br. Неожиданная разметка — ошибка
+    сборки (лучше упасть, чем выпустить испорченный md).
+    """
+
+    INLINE = {"b": "**", "strong": "**", "em": "*", "i": "*"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.blocks = []
+        self.buf = []
+        self.ul = None
+        self.sub = None      # открытый инлайн: ("a", href, buf) | ("fmt", marker, buf)
+        self.expect = None   # открытый контейнер: h1/h2/h3/p/li
+        self.err = []
+
+    def handle_data(self, data):
+        if self.sub:
+            self.sub[2].append(data)
+        elif self.expect:
+            self.buf.append(data)
+        elif data.strip():
+            self.err.append(f"текст вне блока: {data.strip()[:40]!r}")
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "section":
+            return
+        if tag == "hr":
+            self.blocks.append("---")
+            return
+        if tag == "br":
+            self.handle_data(" ")
+            return
+        if tag in ("h1", "h2", "h3", "p", "li"):
+            if self.expect:
+                self.err.append(f"вложенный <{tag}> внутри <{self.expect}>")
+            self.expect = tag
+            self.buf = []
+            return
+        if tag == "ul":
+            if self.ul is not None:
+                self.err.append("вложенный <ul>")
+            self.ul = []
+            return
+        if tag == "a":
+            if self.sub:
+                self.err.append("вложенный инлайн <a>")
+            self.sub = ("a", dict(attrs).get("href", ""), [])
+            return
+        if tag in self.INLINE:
+            if self.sub:
+                self.err.append(f"вложенный инлайн <{tag}>")
+            self.sub = ("fmt", self.INLINE[tag], [])
+            return
+        self.err.append(f"неожиданный тег <{tag}>")
+
+    def handle_endtag(self, tag):
+        if tag in ("section", "hr", "br"):
+            return
+        if tag == "a" or tag in self.INLINE:
+            if not self.sub:
+                self.err.append(f"</{tag}> без открытия")
+                return
+            kind, val, buf = self.sub
+            self.sub = None
+            text = " ".join("".join(buf).split())
+            self.buf.append(f"[{text}]({val})" if kind == "a" else f"{val}{text}{val}")
+            return
+        if tag in ("h1", "h2", "h3", "p", "li"):
+            if self.expect != tag:
+                self.err.append(f"</{tag}> не совпал с <{self.expect}>")
+            text = " ".join("".join(self.buf).split())
+            self.buf = []
+            self.expect = None
+            if tag == "li":
+                if self.ul is None:
+                    self.err.append("</li> вне <ul>")
+                else:
+                    self.ul.append(text)
+            elif tag == "p":
+                self.blocks.append(text)
+            else:
+                self.blocks.append({"h1": "# ", "h2": "## ", "h3": "### "}[tag] + text)
+            return
+        if tag == "ul":
+            self.blocks.append("\n".join("- " + x for x in (self.ul or [])))
+            self.ul = None
+            return
+        self.err.append(f"неожиданный </{tag}>")
+
+
+def legal_md(src_text: str, name: str) -> str:
+    """Markdown-двойник privacy/terms: main-контент (EN-часть + RU-секция) в markdown."""
+    m = re.search(r'<main[^>]*id="main"[^>]*>(.*?)</main>', src_text, re.S)
+    assert m, f"{name}: не найден main"
+    p = _LegalParser()
+    p.feed(m.group(1))
+    p.close()
+    assert not p.err, f"{name}: конвертер md: {p.err[:5]}"
+    assert p.expect is None and p.sub is None and p.ul is None, f"{name}: незакрытые блоки"
+    out = "\n\n".join(b for b in p.blocks if b) + "\n"
+    assert out.startswith("# ") and "<" not in out and ">" not in out, f"{name}: плохой md"
+    assert "\n---\n" in out, f"{name}: нет разделителя EN/RU"
+    return out
+
+
 def sitemap() -> str:
     parts = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
@@ -340,8 +452,8 @@ def llms(dicts: dict) -> str:
         lines.append(f'- [{LABELS[lang]}: {dicts[lang]["meta.title"]}]'
                      f'({url_for(lang)}index.html.md): landing page — features, how it works, pricing, FAQ.')
     lines += [
-        f"- [Privacy Policy]({BASE}privacy.html): what data the bot handles, and how to have it deleted.",
-        f"- [Terms of Service]({BASE}terms.html): pricing, refunds and usage rules.",
+        f"- [Privacy Policy]({BASE}privacy.html.md): what data the bot handles, and how to have it deleted.",
+        f"- [Terms of Service]({BASE}terms.html.md): pricing, refunds and usage rules.",
         "",
         "## Optional",
         "",
@@ -370,6 +482,11 @@ def main() -> None:
         assert md.startswith("# ") and "data-i18n" not in md, f"{lang}: плохой md-двойник"
         (outdir / "index.html.md").write_text(md, encoding="utf-8")
         print(f"{lang}: {outdir / 'index.html.md'} ({len(md.encode('utf-8'))} байт)")
+
+    for name in ("privacy.html", "terms.html"):
+        md = legal_md((ROOT / name).read_text(encoding="utf-8"), name)
+        (ROOT / (name + ".md")).write_text(md, encoding="utf-8")
+        print(f"{name}.md ({len(md.encode('utf-8'))} байт)")
 
     (ROOT / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (ROOT / "llms.txt").write_text(llms(dicts), encoding="utf-8")
