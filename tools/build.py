@@ -245,8 +245,11 @@ def bake(src: str, lang: str, dicts: dict) -> str:
 def sitemap() -> str:
     parts = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    # alternates: каждый язык + x-default (фолбэк для несовпавших языков; соответствует
+    # hreflang x-default в шапках страниц и «Guidelines for all methods» Google)
     alts = "\n".join(
-        f'    <xhtml:link rel="alternate" hreflang="{x}" href="{url_for(x)}"/>' for x in LANGS
+        [f'    <xhtml:link rel="alternate" hreflang="{x}" href="{url_for(x)}"/>' for x in LANGS]
+        + [f'    <xhtml:link rel="alternate" hreflang="x-default" href="{BASE}"/>']
     )
     today = datetime.date.today().isoformat()
     for lang in LANGS:
@@ -296,7 +299,7 @@ def main() -> None:
         outdir = ROOT if lang == "en" else ROOT / lang
         outdir.mkdir(exist_ok=True)
         (outdir / "index.html").write_text(page, encoding="utf-8")
-        print(f"{lang}: {outdir / 'index.html'} ({len(page)} байт)")
+        print(f"{lang}: {outdir / 'index.html'} ({len(page)} символов, {len(page.encode('utf-8'))} байт)")
 
     (ROOT / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (ROOT / "llms.txt").write_text(llms(dicts), encoding="utf-8")

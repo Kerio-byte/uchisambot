@@ -14,7 +14,9 @@ Live: https://kerio-byte.github.io/uchisambot/
   `index.html` (EN) + `ru/`, `es/`, `pt/`, `hi/`, `id/`, `tr/`, `vi/`, `uk/` pages, plus
   `sitemap.xml` and `llms.txt`; every language page carries its own `og:locale`
   plus `og:locale:alternate` for the other eight languages (social-preview locale
-  linking). No runtime, no dependencies, no tracking.
+  linking), and the sitemap mirrors the hreflang set per URL — all nine languages
+  plus `x-default` pointing at the English root. No runtime, no dependencies, no
+  tracking.
 - `img/` — logo (SVG), favicons, app screenshots (WebP, EN + RU variants), social
   preview image (`og.png`), hero video posters (`demo-poster*.webp`).
 - `demo/` — demo videos: full 35 s (EN/RU) and web-optimized hero loops (`*-web.mp4`).
@@ -35,6 +37,11 @@ poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`.
 Typography: Manrope variable, self-hosted in `fonts/` (5 subsets). Pages preload the
 subset matching the language (latin by default, cyrillic for `/ru/` and `/uk/`);
 `privacy.html` / `terms.html` load fonts from the same folder.
+
+Favicons: every page (landing, privacy, terms) declares `img/logo.svg` (SVG, for
+browsers that support it), `img/icon-64.png` (PNG, 64×64 — the format Google
+Search's favicon pipeline supports; SVG is not in its format list) and
+`img/icon-180.png` (iOS touch icon).
 
 Sticky CTA (mobile only, viewport ≤860px): fixed bottom bar with the main Telegram
 button (`?start=src_landing_sticky`). Appears after ~700px of scroll, hides when the
