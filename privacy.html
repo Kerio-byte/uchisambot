@@ -35,6 +35,9 @@ hr{border:0;border-top:1px solid var(--line);margin:46px 0}
 footer{border-top:1px solid var(--line);margin-top:44px;padding:26px 0 36px;color:var(--muted);font-size:14px}
 footer a{color:var(--muted)}
 footer .sep{margin:0 8px;color:#B9C6DD}
+footer .foot-badges{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:14px}
+footer .foot-badges a{display:inline-flex;align-items:center;line-height:0}
+footer .foot-badges img{height:46px;width:auto;display:block}
 </style>
 </head>
 <body>
@@ -144,7 +147,10 @@ footer .sep{margin:0 8px;color:#B9C6DD}
 <footer>
   <div class="wrap">
     <a href="index.html">Home</a><span class="sep">&middot;</span><a href="privacy.html">Privacy Policy</a><span class="sep">&middot;</span><a href="terms.html">Terms of Service</a>
-    <p style="margin-top:14px"><a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" title="LiftOff launch badge"><img src="https://lift-off.sh/images/badges/badgeLaunchedLight.webp" alt="LiftOff launch badge" width="200" height="auto" style="height:55px;width:auto;vertical-align:middle;" /></a> <a href="https://startupfa.me/s/-51?utm_source=kerio-byte.github.io" target="_blank" rel="noopener"><img src="https://startupfa.me/badge?t=classic&theme=default" alt="UchiSamBot - Featured on Startup Fame" width="171" height="54" style="height:55px;width:auto;vertical-align:middle;" /></a></p>
+    <div class="foot-badges" role="group" aria-label="Featured on">
+      <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" rel="noopener" title="LiftOff launch badge"><img src="https://lift-off.sh/images/badges/badgeLaunchedLight.webp" alt="LiftOff launch badge" width="200" loading="lazy" decoding="async" /></a>
+      <a href="https://startupfa.me/s/-51?utm_source=kerio-byte.github.io" target="_blank" rel="noopener"><img src="https://startupfa.me/badge?t=classic&theme=default" alt="UchiSamBot - Featured on Startup Fame" width="171" height="54" loading="lazy" decoding="async" /></a>
+    </div>
   </div>
 </footer>
 

@@ -183,8 +183,10 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .foot{text-align:center;color:var(--muted);font-size:14px}
 .foot .dim{color:#8194B4;margin-top:8px;font-size:13px}
-.foot-badge{margin-top:16px}
-.foot-badge img{display:inline-block}
+.foot-badges{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 20px;margin-top:18px}
+.foot-badges a{display:inline-flex;align-items:center;line-height:0}
+.foot-badges img{height:46px;width:auto;display:block}
+@media(max-width:700px){.foot-badges{gap:10px 14px}.foot-badges img{height:40px}}
 .contact{max-width:640px;margin:0 auto;text-align:left;background:#fff;border:1px solid #E3EAF7;border-radius:18px;padding:28px 26px}
 .contact h2{margin:0 0 8px}
 .contact-sub{margin:0 0 18px}
@@ -440,10 +442,18 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 <footer>
   <div class="wrap foot">
     <p><strong>UchiSamBot</strong> — <span>Study Helper for school students</span></p>
-    <p class="dim"><span>Payments are processed via Telegram Stars.</span> &middot;</p>
+    <p class="dim"><span>Payments are processed via Telegram Stars.</span></p>
     <p class="dim"><a href="privacy.html">Privacy Policy</a> &middot; <a href="terms.html">Terms of Service</a></p>
-    <p class="dim foot-partners"><a href="https://realisticai.io">Realistic AI</a> &middot; <a href='https://aitooltrek.com'>AI Tool Trek</a> &middot; <a href='https://www.basedtools.ai/'> Based Tools AI </a></p>
-    <p class="foot-badge"><a href="https://fazier.com" target="_blank"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width=120 alt="Fazier badge" /></a> <a href="https://startupbase.io/products/uchisambot-study-helper?utm_source=startupbase&utm_medium=badge&utm_campaign=launch-badge-light" target="_blank" rel="noopener noreferrer"><img src="https://statics.startupbase.io/site/badges/launched-on-sb.svg" alt="Launched on StartupBase" height="55" style="height:55px;width:auto;vertical-align:middle;" /></a> <a href="https://showmebest.ai" target="_blank" rel="noopener"><img src="https://showmebest.ai/badge/feature-badge-white.webp" alt="Featured on ShowMeBestAI" width="220" height="60" style="height:55px;width:auto;vertical-align:middle;" /></a> <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" title="LiftOff launch badge"><img src="https://lift-off.sh/images/badges/badgeLaunchedLight.webp" alt="LiftOff launch badge" width="200" height="auto" style="height:55px;width:auto;vertical-align:middle;" /></a> <a href="https://startupfa.me/s/-51?utm_source=kerio-byte.github.io" target="_blank" rel="noopener"><img src="https://startupfa.me/badge?t=classic&theme=default" alt="UchiSamBot - Featured on Startup Fame" width="171" height="54" style="height:55px;width:auto;vertical-align:middle;" /></a> <a href="https://openhunts.com" target="_blank" title="OpenHunts Club"><img alt="OpenHunts Club Member" height="105" src="https://cdn.openhunts.com/badges/club.webp" style="width: 195px; height: auto;" width="486"></a> <a href="https://auraplusplus.com/projects/uchisambot-study-helper" target="_blank" rel="noopener" title="View this project on Aura++"><img src="https://auraplusplus.com/images/badges/featured-on-light.svg" alt="Featured on Aura++" width="265" height="58" style="height:55px;width:auto;vertical-align:middle;" /></a></p>
+    <p class="dim foot-partners"><a href="https://realisticai.io">Realistic AI</a> &middot; <a href="https://aitooltrek.com">AI Tool Trek</a> &middot; <a href="https://www.basedtools.ai/">Based Tools AI</a></p>
+    <div class="foot-badges" role="group" aria-label="Featured on">
+      <a href="https://fazier.com" target="_blank" rel="noopener"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width="120" alt="Fazier badge" loading="lazy" decoding="async" /></a>
+      <a href="https://startupbase.io/products/uchisambot-study-helper?utm_source=startupbase&utm_medium=badge&utm_campaign=launch-badge-light" target="_blank" rel="noopener noreferrer"><img src="https://statics.startupbase.io/site/badges/launched-on-sb.svg" alt="Launched on StartupBase" height="55" loading="lazy" decoding="async" /></a>
+      <a href="https://showmebest.ai" target="_blank" rel="noopener"><img src="https://showmebest.ai/badge/feature-badge-white.webp" alt="Featured on ShowMeBestAI" width="220" height="60" loading="lazy" decoding="async" /></a>
+      <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" rel="noopener" title="LiftOff launch badge"><img src="https://lift-off.sh/images/badges/badgeLaunchedLight.webp" alt="LiftOff launch badge" width="200" loading="lazy" decoding="async" /></a>
+      <a href="https://startupfa.me/s/-51?utm_source=kerio-byte.github.io" target="_blank" rel="noopener"><img src="https://startupfa.me/badge?t=classic&theme=default" alt="UchiSamBot - Featured on Startup Fame" width="171" height="54" loading="lazy" decoding="async" /></a>
+      <a href="https://openhunts.com" target="_blank" rel="noopener" title="OpenHunts Club"><img src="https://cdn.openhunts.com/badges/club.webp" alt="OpenHunts Club Member" width="486" height="105" loading="lazy" decoding="async" /></a>
+      <a href="https://auraplusplus.com/projects/uchisambot-study-helper" target="_blank" rel="noopener" title="View this project on Aura++"><img src="https://auraplusplus.com/images/badges/featured-on-light.svg" alt="Featured on Aura++" width="265" height="58" loading="lazy" decoding="async" /></a>
+    </div>
   </div>
 </footer>
 

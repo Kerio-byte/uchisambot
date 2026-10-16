@@ -47,3 +47,10 @@ disabled under `prefers-reduced-motion`; without JS everything stays visible), s
 transition polish on nav/lang/FAQ-summary hovers, and `scroll-padding-top: 84px` so
 anchor jumps clear the sticky header. Smooth scrolling is turned off under
 `prefers-reduced-motion`.
+
+Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
+StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
+badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
+screens), lazy-loaded hotlinked official assets, links open in a new tab with
+`rel="noopener"`. `privacy.html` / `terms.html` carry the required LiftOff + Startup
+Fame badges in the same style.
