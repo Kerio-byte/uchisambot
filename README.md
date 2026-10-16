@@ -95,5 +95,7 @@ Privacy / terms: bilingual single pages (EN, then the Russian section marked
 section title is an `H2` styled like the page title (`.pg-ttl`), and its
 numbered sections are `H3` — one clean heading outline per page. Links from
 `/ru/` carry the `#ru` anchor, so Russian visitors land directly on the Russian
-text; links from the other languages open the page top (EN). The hashes are
-added by `tools/build.py`.
+text; links from the other languages open the page top (EN). Both pages carry a
+self-canonical URL and a full social-preview set — `og` and `twitter` title,
+description, the shared `img/og.png` (1200×630, image alt = page title) — so
+shared links get a proper preview card. The hashes are added by `tools/build.py`.
