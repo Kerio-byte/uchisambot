@@ -41,6 +41,10 @@ Live: https://kerio-byte.github.io/uchisambot/
 Hero video: `demo/uchiambot-demo-web.mp4` (EN) / `demo/uchiambot-demo-web-ru.mp4` (RU),
 poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`.
 
+Keep `meta.desc` at ≤160 characters per language: the same string feeds
+`meta description`, `og:description`, `twitter:description` and the JSON-LD
+description, and longer text gets truncated in search results.
+
 Typography: Manrope variable, self-hosted in `fonts/` (5 subsets). Pages preload the
 subset matching the language (latin by default, cyrillic for `/ru/` and `/uk/`);
 `privacy.html` / `terms.html` load fonts from the same folder.
@@ -93,6 +97,13 @@ badge sits in the hero, as its platform requires). Uniform 46 px height (40 px o
 screens), lazy-loaded hotlinked official assets, links open in a new tab with
 `rel="noopener"`. `privacy.html` / `terms.html` carry the required LiftOff + Startup
 Fame badges in the same style.
+
+Connections: the head warms up the third-party origins the pages actually use —
+`preconnect` to `launchigniter.com` (the hero badge is the only eager external image)
+and `dns-prefetch` to the seven footer badge hosts plus the form API
+(`api.web3forms.com`). Footer badge assets are lazy, so a full preconnect there would
+only burn sockets — DNS warm-up is the right level. `privacy.html` / `terms.html`
+carry `dns-prefetch` for their two badge hosts.
 
 Contact form: `#contact` posts straight to Web3Forms — no Telegram step. After a
 successful submit Web3Forms returns the visitor to the **same language page**

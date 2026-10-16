@@ -1,6 +1,6 @@
 # UchiSamBot — okul öğrencileri için ders yardımcısı
 
-> Ödevleri adım adım çözen, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve tekrar kartları hazırlayan bir Telegram botu. İlk 5 çözüm ücretsiz. 9 dilde kullanılabilir.
+> Ödevleri adım adım çözen, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve tekrar kartları hazırlayan bir Telegram botu. İlk 5 çözüm ücretsiz.
 
 UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, cevaplarını kontrol eder ve tekrar kartları hazırlar — tam da Telegram'ın içinde, günün her saati.
 

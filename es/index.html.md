@@ -1,6 +1,6 @@
 # UchiSamBot — Ayudante de estudio para escolares
 
-> Bot de Telegram que desglosa las tareas paso a paso, explica los temas con palabras sencillas, revisa las soluciones y crea tarjetas de repaso. Los primeros 5 desgloses gratis. 9 idiomas disponibles.
+> Bot de Telegram que desglosa las tareas paso a paso, explica los temas con palabras sencillas y crea tarjetas de repaso. Primeros 5 desgloses gratis.
 
 UchiSamBot desglosa tus tareas paso a paso, explica el tema con palabras sencillas, revisa tus respuestas y crea tarjetas de repaso — directamente en Telegram, a cualquier hora del día.
 

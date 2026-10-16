@@ -1,6 +1,6 @@
 # UchiSamBot — Assistente de estudos para alunos
 
-> Bot de Telegram que divide a tarefa em passos, explica os conteúdos em palavras simples, confere as resoluções e faz flashcards. Primeiras 5 explicações grátis. 9 idiomas disponíveis.
+> Bot de Telegram que divide a tarefa em passos, explica os conteúdos em palavras simples e faz flashcards. Primeiras 5 explicações grátis.
 
 O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples, confere suas respostas e faz flashcards — direto no Telegram, a qualquer hora do dia.
 

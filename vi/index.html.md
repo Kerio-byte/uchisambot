@@ -1,6 +1,6 @@
 # UchiSamBot — Trợ lý học tập cho học sinh
 
-> Bot Telegram phân tích bài tập về nhà từng bước, giải thích chủ đề bằng những từ đơn giản, kiểm tra bài giải và tạo thẻ ghi nhớ. 5 lần phân tích đầu tiên miễn phí. Hỗ trợ 9 ngôn ngữ.
+> Bot Telegram phân tích bài tập về nhà từng bước, giải thích chủ đề bằng từ đơn giản, kiểm tra bài giải và tạo thẻ ghi nhớ. 5 lần phân tích đầu tiên miễn phí.
 
 UchiSamBot phân tích bài tập về nhà của bạn từng bước một, giải thích chủ đề bằng những từ đơn giản, kiểm tra câu trả lời và tạo thẻ ghi nhớ — ngay trong Telegram, bất cứ lúc nào trong ngày.
 
