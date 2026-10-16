@@ -22,7 +22,9 @@ Live: https://kerio-byte.github.io/uchisambot/
   tracking.
 - `img/` — logo (SVG), favicons, app screenshots (WebP, EN + RU variants), social
   preview image (`og.png`), hero video posters (`demo-poster*.webp`).
-- `demo/` — demo videos: full 35 s (EN/RU) and web-optimized hero loops (`*-web.mp4`).
+- `demo/` — demo videos: full 35 s (EN/RU, H.264 720×1560 30 fps, compressed to
+  ≤1 MiB / ≤1.5 MiB, direct-linked from `llms.txt` and external platforms) and
+  web-optimized hero loops (`*-web.mp4`, ≤768 KB / ≤900 KB).
 - `fonts/` — self-hosted Manrope variable font (OFL, `LICENSE-OFL.txt`): latin,
   latin-ext, cyrillic, cyrillic-ext, vietnamese subsets (~64 KB total); preload +
   `font-display: swap`, system fallback. No CDN.
@@ -40,6 +42,12 @@ Live: https://kerio-byte.github.io/uchisambot/
 
 Hero video: `demo/uchiambot-demo-web.mp4` (EN) / `demo/uchiambot-demo-web-ru.mp4` (RU),
 poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`.
+
+Demo video weights: the four `demo/` files have soft budgets enforced by the QA sweep —
+full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, web loops ≤768 KB
+and ≤900 KB. Re-encode with x264 (`-crf`, preset `veryslow`, H.264 High, 720×1560,
+30 fps, `-movflags +faststart`) and keep the exact file names — external platforms and
+`llms.txt` link these URLs directly.
 
 Keep `meta.desc` at ≤160 characters per language: the same string feeds
 `meta description`, `og:description`, `twitter:description` and the JSON-LD
