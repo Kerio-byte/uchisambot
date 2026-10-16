@@ -49,6 +49,13 @@ and ≤900 KB. Re-encode with x264 (`-crf`, preset `veryslow`, H.264 High, 720×
 30 fps, `-movflags +faststart`) and keep the exact file names — external platforms and
 `llms.txt` link these URLs directly.
 
+Page weight: the QA sweep also enforces a per-language budget — the page plus every
+local asset it references (chat shots, hero loop, posters, fonts) must stay ≤1.25 MiB
+(measured worst case ~1.1 MiB). External links and third-party-hosted badge assets are
+checked by a separate network-bound audit (`landing-external-links.py` in the
+stars-bots-ops skill scripts) during site passes — not part of the headless sweep,
+because third-party sites can be slow or timeout.
+
 Keep `meta.desc` at ≤160 characters per language: the same string feeds
 `meta description`, `og:description`, `twitter:description` and the JSON-LD
 description, and longer text gets truncated in search results.
