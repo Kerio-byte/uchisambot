@@ -71,6 +71,9 @@ by a localized confirmation message that is baked into the page (one string per
 language, no JS dictionary; without JS the visitor simply keeps seeing the form).
 
 Privacy / terms: bilingual single pages (EN, then the Russian section marked
-`id="ru"`). Links from `/ru/` carry the `#ru` anchor, so Russian visitors land
-directly on the Russian text; links from the other languages open the page top (EN).
-The hashes are added by `tools/build.py`.
+`id="ru"`). Each page keeps exactly one `H1` (the English title): the Russian
+section title is an `H2` styled like the page title (`.pg-ttl`), and its
+numbered sections are `H3` — one clean heading outline per page. Links from
+`/ru/` carry the `#ru` anchor, so Russian visitors land directly on the Russian
+text; links from the other languages open the page top (EN). The hashes are
+added by `tools/build.py`.
