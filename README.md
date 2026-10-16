@@ -99,3 +99,14 @@ text; links from the other languages open the page top (EN). Both pages carry a
 self-canonical URL and a full social-preview set — `og` and `twitter` title,
 description, the shared `img/og.png` (1200×630, image alt = page title) — so
 shared links get a proper preview card. The hashes are added by `tools/build.py`.
+
+AI layer (llms.txt v2): every language page has a clean markdown twin next to it
+(`index.html.md`, `ru/index.html.md`, …), generated from the same locale
+dictionaries by `tools/build.py` — title, summary, how it works, features,
+subjects, pricing, parents, FAQ and contact links. Each page declares two link
+relations in the head: `rel="describedby"` → `llms.txt` (the site-wide overview,
+which lists all nine markdown twins, the legal pages and the demo videos) and
+`rel="alternate" type="text/markdown"` → that page's markdown twin.
+`privacy.html` / `terms.html` declare `rel="describedby"` as well (they have no
+markdown twin). The links in `llms.txt` point to the markdown versions — the
+convention of llms.txt v2 (llmstxt.org): markdown twin at the page URL + `.md`.

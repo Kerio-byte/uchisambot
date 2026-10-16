@@ -1,0 +1,106 @@
+# UchiSamBot — Step-by-Step Homework Help in Telegram
+
+> Homework help bot in Telegram: step-by-step breakdowns, photo tasks, solution checks and flashcards. First 5 breakdowns free, no app to install.
+
+UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.
+
+[Open in Telegram](https://t.me/UchiSamBot)
+
+## How it works
+
+1. **Open the bot** — Tap the button and press Start — nothing to install.
+2. **Send a task** — Type your question or snap a photo of the problem.
+3. **Get a breakdown** — The bot solves it step by step and explains every move.
+4. **Check yourself** — Ask to check your solution, or get a summary and flashcards.
+
+## What's inside
+
+- **Step-by-step breakdowns** — Every move explained — not just the final answer.
+- **Photo tasks** — Snap the problem straight from the textbook.
+- **Simple language** — From simple to complex, like a patient tutor.
+- **Solution check** — Finds exactly where the mistake is.
+- **Summaries and flashcards** — Short revision cards before a test.
+- **Any time of day** — No waiting for a tutor when you are stuck.
+
+**Not just answers. Learn how to solve the next one.** Step-by-step explanations show why each move works, so you can tackle a similar problem yourself.
+
+## School subjects
+
+- Mathematics
+- English
+- Physics
+- Chemistry
+- History
+
+And any other school question you are stuck on.
+
+## Pricing
+
+Payment via Telegram Stars, right in the chat.
+
+- **First 5 breakdowns — Free**: Try the bot — no payment needed.
+- **Pack of 5 breakdowns — 120 Stars**: About 24 Stars per breakdown — save 20%.
+- **Pack of 15 breakdowns — 300 Stars**: About 20 Stars per breakdown — save 33%.
+
+Single breakdown — 30 Stars.
+
+Invite a friend — when they solve their first task, you get one more free breakdown.
+
+## For parents
+
+- No sign-up and no personal details required.
+- Runs on our own server in the European Union (Finland).
+- All AI processing runs on our own infrastructure — tasks are not sent to third-party AI services.
+- Ask us to delete the data at any time — parents can make this request for their child.
+
+## FAQ
+
+### Is this cheating?
+
+No. The bot explains and teaches: it shows every step and the rule behind it, so you can solve the next problem yourself.
+
+### Which subjects does it cover?
+
+Mathematics, English, physics, chemistry and history — and in general any school question you are stuck on.
+
+### What languages does it speak?
+
+Nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkish, Vietnamese and Ukrainian. Switch any time with /lang.
+
+### How do I pay?
+
+With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack.
+
+### Do I need to install anything?
+
+No. It works inside Telegram — on your phone or computer.
+
+### What are Telegram Stars?
+
+Stars (⭐) are Telegram's built-in currency. You top them up once inside Telegram — the app offers the usual payment (card, App Store or Google Play) — and then pay for breakdowns right in the chat. No subscription and no auto-renewal: you only pay when you choose to.
+
+### Where do I get Stars?
+
+Right in the chat: when you tap to buy a breakdown, Telegram opens the payment window and offers to top up your Stars balance if it's low. The balance stays in your Telegram account and works in any bot that accepts Stars.
+
+### How long does a breakdown take?
+
+Usually under a minute: send your task and the breakdown comes back in the chat — typically in 10–60 seconds.
+
+### What if a breakdown fails?
+
+If something goes wrong on our side and a breakdown can't be finished, the Stars for it are refunded — write to us and we'll return them within 24 hours.
+
+### How is it different from a general AI chatbot?
+
+Unlike a general chatbot, it follows a teaching method: every breakdown explains the steps, and for solutions the bot stops one step before the answer so you finish it yourself. Your tasks also stay on our own server — they are not sent to third-party AI services.
+
+## Questions or feedback?
+
+Write to us — your message goes to our team, and we reply to your email. No spam, no mailing lists.
+
+We use your email only to reply to this message.
+
+- [Send message](https://kerio-byte.github.io/uchisambot/#contact)
+- [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html)

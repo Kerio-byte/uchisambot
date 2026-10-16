@@ -3,7 +3,8 @@
 
 Источник:  index-src.html — страница с разметкой data-i18n (EN-тексты внутри, как база)
 Словари:   src/locales/*.json (en, ru + es, pt, hi, id, tr, vi, uk)
-Выход:     index.html (EN, корень) + <lang>/index.html для 8 языков + sitemap.xml + llms.txt
+Выход:     index.html (EN, корень) + <lang>/index.html для 8 языков (md-двойники
+           index.html.md рядом с каждой страницей) + sitemap.xml + llms.txt
 Запуск:    python3 tools/build.py     (правки контента: меняешь словарь → пересборка)
 """
 from __future__ import annotations
@@ -159,9 +160,13 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     out = re.sub(r'<meta name="description" content="[^"]*"',
                  f'<meta name="description" content="{esc_attr(d["meta.desc"])}"', out)
 
-    # 3) canonical + hreflang
+    # 3) canonical + hreflang + rel-ссылки ИИ-слоя (llms.txt v2): describedby -> llms.txt,
+    #    alternate type=text/markdown -> md-двойник страницы (лежит рядом со страницей)
     out = re.sub(r'<link rel="canonical" href="[^"]*">',
-                 f'<link rel="canonical" href="{url_for(lang)}">\n' + hreflang_block(), out)
+                 f'<link rel="canonical" href="{url_for(lang)}">\n' + hreflang_block() + '\n'
+                 + f'<link rel="describedby" href="{BASE}llms.txt">\n'
+                 + f'<link rel="alternate" type="text/markdown" href="{url_for(lang)}index.html.md">',
+                 out)
 
     # 4) OG / Twitter
     out = re.sub(r'<meta property="og:url" content="[^"]*">',
@@ -255,6 +260,52 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     return out
 
 
+def page_md(d: dict, lang: str) -> str:
+    """Markdown-двойник страницы (llms.txt v2): index.html.md рядом со страницей.
+
+    Содержимое — из того же словаря языка, что и страница (единый источник правды):
+    описание, шаги, возможности, предметы, цены, родителям, FAQ, контакты и ссылки.
+    """
+    bot = "https://t.me/UchiSamBot"
+    page_url = url_for(lang)
+    pp = BASE + "privacy.html" + ("#ru" if lang == "ru" else "")
+    tt = BASE + "terms.html" + ("#ru" if lang == "ru" else "")
+    L = [f"# {d['meta.title']}", "", f"> {d['meta.desc']}", "", d["hero.sub"], "",
+         f"[{d['hero.cta']}]({bot})", "", f"## {d['how.title']}", ""]
+    i = 1
+    while f"how.s{i}t" in d:
+        L.append(f"{i}. **{d[f'how.s{i}t']}** — {d[f'how.s{i}d']}")
+        i += 1
+    L += ["", f"## {d['feat.title']}", ""]
+    i = 1
+    while f"f{i}t" in d:
+        L.append(f"- **{d[f'f{i}t']}** — {d[f'f{i}d']}")
+        i += 1
+    L += ["", f"**{d['principle.title']}** {d['principle.sub']}",
+          "", f"## {d['subj.title']}", ""]
+    i = 1
+    while f"subj.c{i}" in d:
+        L.append(f"- {d[f'subj.c{i}']}")
+        i += 1
+    L += ["", d["subj.note"], "", f"## {d['price.title']}", "", d["price.note"], "",
+          f"- **{d['p1t']} — {d['p1p']}**: {d['p1d']}",
+          f"- **{d['p2t']} — {d['p2p']}**: {d['p2d']}",
+          f"- **{d['p3t']} — {d['p3p']}**: {d['p3d']}",
+          "", d["price.fine"], "", d["ref.text"], "", f"## {d['parents.title']}", ""]
+    for b in ("b1", "b2", "b3", "b4"):
+        L.append(f"- {d[f'parents.{b}']}")
+    L += ["", f"## {d['faq.title']}", ""]
+    i = 1
+    while f"q{i}" in d:
+        L += [f"### {d[f'q{i}']}", "", d[f"q{i}a"], ""]
+        i += 1
+    L += [f"## {d['contact.title']}", "", d["contact.sub"], "", d["contact.note"], "",
+          f"- [{d['contact.btn']}]({page_url}#contact)",
+          f"- [{d['foot.privacy']}]({pp})",
+          f"- [{d['foot.terms']}]({tt})", ""]
+    return "\n".join(L)
+
+
 def sitemap() -> str:
     parts = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
@@ -286,14 +337,16 @@ def llms(dicts: dict) -> str:
         "",
     ]
     for lang in LANGS:
-        lines.append(f'- [{LABELS[lang]}: {dicts[lang]["meta.title"]}]({url_for(lang)})')
+        lines.append(f'- [{LABELS[lang]}: {dicts[lang]["meta.title"]}]'
+                     f'({url_for(lang)}index.html.md): landing page — features, how it works, pricing, FAQ.')
     lines += [
-        f"- [Privacy Policy]({BASE}privacy.html)",
-        f"- [Terms of Service]({BASE}terms.html)",
+        f"- [Privacy Policy]({BASE}privacy.html): what data the bot handles, and how to have it deleted.",
+        f"- [Terms of Service]({BASE}terms.html): pricing, refunds and usage rules.",
         "",
         "## Optional",
         "",
         f"- [Demo video (35 s, English)]({BASE}demo/uchiambot-demo.mp4)",
+        f"- [Demo video (35 s, Russian)]({BASE}demo/uchiambot-demo-ru.mp4)",
         "",
     ]
     return "\n".join(lines)
@@ -313,6 +366,10 @@ def main() -> None:
         outdir.mkdir(exist_ok=True)
         (outdir / "index.html").write_text(page, encoding="utf-8")
         print(f"{lang}: {outdir / 'index.html'} ({len(page)} символов, {len(page.encode('utf-8'))} байт)")
+        md = page_md(dicts[lang], lang)
+        assert md.startswith("# ") and "data-i18n" not in md, f"{lang}: плохой md-двойник"
+        (outdir / "index.html.md").write_text(md, encoding="utf-8")
+        print(f"{lang}: {outdir / 'index.html.md'} ({len(md.encode('utf-8'))} байт)")
 
     (ROOT / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (ROOT / "llms.txt").write_text(llms(dicts), encoding="utf-8")
