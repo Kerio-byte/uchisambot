@@ -52,6 +52,11 @@ Screenshots: each of the three chat shots in the "Real chats" section carries a 
 caption naming the how-it-works step it shows (the `how.s1t`-`how.s3t` texts), baked
 into all 9 language pages.
 
+Contrast (WCAG AA): the closing CTA band is a solid ink plate (`#0E1526`) — white
+headline 18:1, `#EAF0FF` body line 15.9:1, white Telegram button 5.1:1; the footer
+secondary lines use `#5C6E90` (4.9:1 on the page background instead of the former
+`#8194B4` at 2.9:1).
+
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
