@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>shot {{SHOT}} — {{LANG}}</title>
+<style>
+/* Шрифт Inter (сабсеты Google Fonts, OFL) — локально, см. assets/fonts/OFL.txt */
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:block;
+  src:url('assets/fonts/inter-cyrillic.woff2') format('woff2');
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:block;
+  src:url('assets/fonts/inter-vietnamese.woff2') format('woff2');
+  unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:block;
+  src:url('assets/fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:block;
+  src:url('assets/fonts/inter-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:1080px;height:2340px;overflow:hidden;}
+body{font-family:'Inter','Noto Sans Devanagari',sans-serif;background:#FFFFFF;color:#0E1621;}
+.screen{position:relative;width:1080px;height:2340px;}
+
+/* статус-бар */
+.statusbar{position:absolute;top:0;left:0;width:1080px;height:88px;}
+.time{position:absolute;left:86px;top:24px;font-size:40px;font-weight:600;}
+.statusicons{position:absolute;right:84px;top:24px;height:40px;}
+
+/* шапка */
+.header{position:absolute;top:88px;left:0;width:1080px;height:178px;}
+.chevron{position:absolute;left:42px;top:83px;width:19px;}
+.avatar{position:absolute;left:365px;top:49px;width:89px;height:91px;border-radius:50%;}
+.title{position:absolute;left:477px;top:53px;}
+.title .name{font-size:38px;font-weight:700;letter-spacing:-0.2px;line-height:44px;}
+.title .uname{font-size:28px;font-weight:400;color:#8B98A5;margin-top:4px;line-height:32px;}
+.dots{position:absolute;right:56px;top:89px;width:57px;}
+
+/* чат */
+.chat{position:absolute;left:0;top:266px;width:1080px;height:1904px;background:#E4ECF2;padding-top:28px;}
+.msg{width:fit-content;max-width:840px;border-radius:36px;padding:25px 32px 14px;}
+.msg.user{padding:25px 30px 15px 28px;}
+.msg + .msg,.msg + .kb,.kb + .msg{margin-top:23px;}
+.msg.user{margin-left:auto;margin-right:30px;background:#EFFFDF;}
+.msg.bot{margin-left:30px;background:#FFFFFF;}
+.msg .body{font-size:34px;line-height:45px;white-space:pre-wrap;}
+.msg .ts{font-size:25px;color:#A6B0BB;margin-top:11px;text-align:right;}
+.msg.user .ts{color:#8FA391;}
+
+/* инлайн-клавиатура */
+.kb{margin-left:30px;width:840px;background:#FFFFFF;border-radius:36px;overflow:hidden;}
+.kb .row{display:flex;align-items:center;justify-content:center;height:113.83px;
+  font-size:34px;font-weight:700;color:#3390EC;letter-spacing:-0.1px;}
+.kb .row + .row{border-top:1px solid #F0F0F0;}
+
+/* нижняя панель */
+.inputbar{position:absolute;left:0;bottom:0;width:1080px;height:170px;background:#FFFFFF;}
+.clip{position:absolute;left:56px;top:43px;width:24px;}
+.pill{position:absolute;left:124px;top:38px;width:913px;height:94px;background:#F0F4F7;border-radius:47px;}
+.pill .ph{font-size:33px;color:#989EA7;line-height:94px;padding-left:42px;}
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="statusbar">
+    <div class="time">12:02</div>
+    <img class="statusicons" src="assets/status.png" alt="">
+  </div>
+  <div class="header">
+    <img class="chevron" src="assets/chevron.png" alt="">
+    <img class="avatar" src="assets/avatar.png" alt="">
+    <div class="title">
+      <div class="name">{{NAME}}</div>
+      <div class="uname">@UchiSamBot</div>
+    </div>
+    <img class="dots" src="assets/dots.png" alt="">
+  </div>
+  <div class="chat">{{MESSAGES}}</div>
+  <div class="inputbar">
+    <img class="clip" src="assets/clip.png" alt="">
+    <div class="pill"><div class="ph">{{PLACEHOLDER}}</div></div>
+  </div>
+</div>
+</body>
+</html>
