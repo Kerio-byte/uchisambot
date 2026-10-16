@@ -48,6 +48,10 @@ transition polish on nav/lang/FAQ-summary hovers, and `scroll-padding-top: 84px`
 anchor jumps clear the sticky header. Smooth scrolling is turned off under
 `prefers-reduced-motion`.
 
+Screenshots: each of the three chat shots in the "Real chats" section carries a small
+caption naming the how-it-works step it shows (the `how.s1t`-`how.s3t` texts), baked
+into all 9 language pages.
+
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small

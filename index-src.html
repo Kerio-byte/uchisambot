@@ -39,8 +39,8 @@
             {"@type":"Offer","name":"Pack of 15 breakdowns","price":"300","priceCurrency":"XTR"}]},
  {"@type":"FAQPage","@id":"https://kerio-byte.github.io/uchisambot/#faq","mainEntity":[
   {"@type":"Question","name":"Is this cheating?","acceptedAnswer":{"@type":"Answer","text":"No. The bot explains and teaches: it shows every step and the rule behind it, so you can solve the next problem yourself."}},
-  {"@type":"Question","name":"Which subjects does it cover?","acceptedAnswer":{"@type":"Answer","text":"Mathematics, Russian, physics, chemistry and history — and in general any school question you are stuck on."}},
-  {"@type":"Question","name":"What languages does it speak?","acceptedAnswer":{"@type":"Answer","text":"Russian and English. Switch any time with /lang."}},
+  {"@type":"Question","name":"Which subjects does it cover?","acceptedAnswer":{"@type":"Answer","text":"Mathematics, English, physics, chemistry and history — and in general any school question you are stuck on."}},
+  {"@type":"Question","name":"What languages does it speak?","acceptedAnswer":{"@type":"Answer","text":"Nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkish, Vietnamese and Ukrainian. Switch any time with /lang."}},
   {"@type":"Question","name":"How do I pay?","acceptedAnswer":{"@type":"Answer","text":"With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack."}},
   {"@type":"Question","name":"Do I need to install anything?","acceptedAnswer":{"@type":"Answer","text":"No. It works inside Telegram — on your phone or computer."}},
   {"@type":"Question","name":"What are Telegram Stars?","acceptedAnswer":{"@type":"Answer","text":"Stars are Telegram's built-in currency. You top them up once inside Telegram — the app offers the usual payment (card, App Store or Google Play) — and then pay for breakdowns right in the chat. No subscription and no auto-renewal."}},
@@ -152,6 +152,8 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 
 .shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
 .shots img{width:100%;border-radius:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.shots figure{margin:0}
+.shots figcaption{margin-top:9px;text-align:center;font-size:13.5px;font-weight:600;color:var(--muted)}
 
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:14px}
 .price h3{font-size:16px;color:var(--muted);font-weight:600}
@@ -259,7 +261,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       </div>
       <div class="chips">
         <span class="chip" data-i18n="hero.chip1">First 5 breakdowns free</span>
-        <span class="chip" data-i18n="hero.chip2">Nothing to install</span>
+        <span class="chip" data-i18n="hero.chip2">No new app — works right in Telegram</span>
         <span class="chip" data-i18n="hero.chip3">9 languages</span>
       </div>
       <p class="hero-badge"><a href="https://launchigniter.com/product/uchisambot-study-helper?ref=badge-uchisambot-study-helper" target="_blank" rel="noopener"><img src="https://launchigniter.com/api/badge/uchisambot-study-helper?theme=light" alt="Featured on LaunchIgniter" width="212" height="55"></a></p>
@@ -333,7 +335,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     </div>
     <div class="chips center">
       <span class="chip big rv" data-i18n="subj.c1">Mathematics</span>
-      <span class="chip big rv" data-i18n="subj.c2">Russian</span>
+      <span class="chip big rv" data-i18n="subj.c2">English</span>
       <span class="chip big rv" data-i18n="subj.c3">Physics</span>
       <span class="chip big rv" data-i18n="subj.c4">Chemistry</span>
       <span class="chip big rv" data-i18n="subj.c5">History</span>
@@ -348,9 +350,9 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <p data-i18n="shots.cap">Screenshots in Russian and English — the bot works in 9 languages.</p>
     </div>
     <div class="shots">
-      <img class="rv" src="img/shot1.webp" width="540" height="1170" data-shot="1" data-alt-en="UchiSamBot welcome screen" data-alt-ru="Приветственное окно UchiSamBot" alt="UchiSamBot welcome screen" loading="lazy">
-      <img class="rv" src="img/shot2.webp" width="540" height="1170" data-shot="2" data-alt-en="Sending a homework task to UchiSamBot" data-alt-ru="Отправка задания боту UchiSamBot" alt="Sending a homework task to UchiSamBot" loading="lazy">
-      <img class="rv" src="img/shot3.webp" width="540" height="1170" data-shot="3" data-alt-en="Step-by-step breakdown from UchiSamBot" data-alt-ru="Пошаговый разбор от UchiSamBot" alt="Step-by-step breakdown from UchiSamBot" loading="lazy">
+      <figure class="shot rv"><img src="img/shot1.webp" width="540" height="1170" data-shot="1" data-alt-en="UchiSamBot welcome screen" data-alt-ru="Приветственное окно UchiSamBot" alt="UchiSamBot welcome screen" loading="lazy"><figcaption data-i18n="how.s1t">Open the bot</figcaption></figure>
+      <figure class="shot rv"><img src="img/shot2.webp" width="540" height="1170" data-shot="2" data-alt-en="Sending a homework task to UchiSamBot" data-alt-ru="Отправка задания боту UchiSamBot" alt="Sending a homework task to UchiSamBot" loading="lazy"><figcaption data-i18n="how.s2t">Send a task</figcaption></figure>
+      <figure class="shot rv"><img src="img/shot3.webp" width="540" height="1170" data-shot="3" data-alt-en="Step-by-step breakdown from UchiSamBot" data-alt-ru="Пошаговый разбор от UchiSamBot" alt="Step-by-step breakdown from UchiSamBot" loading="lazy"><figcaption data-i18n="how.s3t">Get a breakdown</figcaption></figure>
     </div>
   </div>
 </section>
@@ -379,7 +381,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     <div class="sec-head"><h2 data-i18n="faq.title">FAQ</h2></div>
     <div class="faq">
       <details class="rv"><summary data-i18n="q1">Is this cheating?</summary><p data-i18n="q1a">No. The bot explains and teaches: it shows every step and the rule behind it, so you can solve the next problem yourself.</p></details>
-      <details class="rv"><summary data-i18n="q2">Which subjects does it cover?</summary><p data-i18n="q2a">Mathematics, Russian, physics, chemistry and history — and in general any school question you are stuck on.</p></details>
+      <details class="rv"><summary data-i18n="q2">Which subjects does it cover?</summary><p data-i18n="q2a">Mathematics, English, physics, chemistry and history — and in general any school question you are stuck on.</p></details>
       <details class="rv"><summary data-i18n="q3">What languages does it speak?</summary><p data-i18n="q3a">Nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkish, Vietnamese and Ukrainian. Switch any time with /lang.</p></details>
       <details class="rv"><summary data-i18n="q4">How do I pay?</summary><p data-i18n="q4a">With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack.</p></details>
       <details class="rv"><summary data-i18n="q5">Do I need to install anything?</summary><p data-i18n="q5a">No. It works inside Telegram — on your phone or computer.</p></details>
@@ -478,7 +480,7 @@ en: {
  'hero.title':'Homework that finally makes sense',
  'hero.sub':'UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.',
  'hero.cta':'Open in Telegram',
- 'hero.chip1':'First 5 breakdowns free','hero.chip2':'Nothing to install','hero.chip3':'9 languages',
+ 'hero.chip1':'First 5 breakdowns free','hero.chip2':'No new app — works right in Telegram','hero.chip3':'9 languages',
  'how.title':'How it works',
  'how.s1t':'Open the bot','how.s1d':'Tap the button and press Start — nothing to install.',
  'how.s2t':'Send a task','how.s2d':'Type your question or snap a photo of the problem.',
@@ -493,7 +495,7 @@ en: {
  'f5t':'Summaries and flashcards','f5d':'Short revision cards before a test.',
  'f6t':'Any time of day','f6d':'No waiting for a tutor when you are stuck.',
  'subj.title':'School subjects','subj.note':'And any other school question you are stuck on.',
- 'subj.c1':'Mathematics','subj.c2':'Russian','subj.c3':'Physics','subj.c4':'Chemistry','subj.c5':'History',
+ 'subj.c1':'Mathematics','subj.c2':'English','subj.c3':'Physics','subj.c4':'Chemistry','subj.c5':'History',
  'shots.title':'Real chats with the bot','shots.cap':'Screenshots in Russian and English — the bot works in 9 languages.',
  'price.title':'Pricing','price.note':'Payment via Telegram Stars, right in the chat.',
  'p1t':'First 5 breakdowns','p1p':'Free','p1d':'Try the bot — no payment needed.',
@@ -503,7 +505,7 @@ en: {
  'ref.text':'Invite a friend — when they solve their first task, you get one more free breakdown.',
  'faq.title':'FAQ',
  'q1':'Is this cheating?','q1a':'No. The bot explains and teaches: it shows every step and the rule behind it, so you can solve the next problem yourself.',
- 'q2':'Which subjects does it cover?','q2a':'Mathematics, Russian, physics, chemistry and history — and in general any school question you are stuck on.',
+ 'q2':'Which subjects does it cover?','q2a':'Mathematics, English, physics, chemistry and history — and in general any school question you are stuck on.',
  'q3':'What languages does it speak?','q3a':'Nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkish, Vietnamese and Ukrainian. Switch any time with /lang.',
  'q4':'How do I pay?','q4a':'With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack.',
  'q5':'Do I need to install anything?','q5a':'No. It works inside Telegram — on your phone or computer.',
@@ -531,7 +533,7 @@ ru: {
  'hero.title':'Домашка, которая наконец понятна',
  'hero.sub':'UchiSamBot разбирает задачу по шагам, объясняет тему простыми словами, проверяет решение и делает карточки для повторения — прямо в Telegram, в любое время дня.',
  'hero.cta':'Открыть в Telegram',
- 'hero.chip1':'Первые 5 разборов бесплатно','hero.chip2':'Ничего не надо устанавливать','hero.chip3':'9 языков',
+ 'hero.chip1':'Первые 5 разборов бесплатно','hero.chip2':'Без нового приложения — всё прямо в Telegram','hero.chip3':'9 языков',
  'how.title':'Как это работает',
  'how.s1t':'Открой бота','how.s1d':'Нажми кнопку и Start — устанавливать ничего не нужно.',
  'how.s2t':'Отправь задачу','how.s2d':'Напиши вопрос или сфотографируй условие.',
