@@ -77,7 +77,7 @@ No. Funciona dentro de Telegram — en tu teléfono o computadora.
 
 ### ¿Qué son Telegram Stars?
 
-Stars (⭐) son la moneda interna de Telegram. Se recargan una vez dentro de Telegram — la app ofrece el pago habitual (tarjeta, App Store o Google Play) — y luego pagas los desgloses directamente en el chat. Sin suscripción ni renovación automática: solo pagas cuando tú decides.
+Stars (⭐) son la moneda interna de Telegram. Se recargan una vez dentro de Telegram — la app ofrece el pago habitual (tarjeta, App Store o Google Play) — y luego pagas los desgloses directamente en el chat. Sin suscripción ni renovación automática: solo pagas cuando tú decides. No hace falta Telegram Premium.
 
 ### ¿Dónde consigo Stars?
 
@@ -89,7 +89,7 @@ Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat 
 
 ### ¿Qué pasa si un desglose falla?
 
-Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue fallando, escríbenos con el botón de Ayuda del bot — lo revisamos.
+Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue fallando, escríbenos con el formulario de contacto que hay más abajo — lo revisamos.
 
 ### ¿En qué se diferencia de un chatbot de IA común?
 

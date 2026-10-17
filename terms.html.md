@@ -1,6 +1,6 @@
 # Terms of Service
 
-UchiSamBot (Study Helper) · Last updated: 16 October 2026
+UchiSamBot (Study Helper) · Last updated: 17 October 2026
 
 These terms describe the rules for using UchiSamBot (Study Helper), a Telegram bot for school students. By using the bot, you agree to these terms.
 
@@ -24,7 +24,7 @@ The first 5 breakdowns are free for every user. After that, breakdown packs can 
 
 ## 5. Support
 
-For any problem — a failed breakdown or a payment question — use the Help button inside the bot or the contact form on our website; we will look into it.
+For any problem — a failed breakdown or a payment question — use the contact form on our website; we will look into it.
 
 ## 6. Referral bonus
 
@@ -52,13 +52,13 @@ We may update these terms as the service evolves. The current version is always 
 
 ## 12. Contact
 
-Use the Help button inside the bot or the contact form on our website — we respond there and by email.
+Use the contact form on our website — we reply by email.
 
 ---
 
 ## Условия использования
 
-UchiSamBot (Учебный помощник) · Обновлено: 16 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 17 октября 2026
 
 Эти условия описывают правила использования UchiSamBot (Учебный помощник) — телеграм-бота для школьников. Пользуясь ботом, вы соглашаетесь с этими условиями.
 
@@ -82,7 +82,7 @@ UchiSamBot помогает разбираться с домашними зад�
 
 ### 5. Поддержка
 
-С любым вопросом — неудачный разбор или оплата — пишите через кнопку «Помощь» в боте или контактную форму на сайте; разберёмся.
+С любым вопросом — неудачный разбор или оплата — пишите через контактную форму на сайте; разберёмся.
 
 ### 6. Реферальный бонус
 
@@ -110,4 +110,4 @@ UchiSamBot помогает разбираться с домашними зад�
 
 ### 12. Контакты
 
-Кнопка «Помощь» в боте или контактная форма на нашем сайте — отвечаем там и по e-mail.
+Контактная форма на нашем сайте — отвечаем по e-mail.

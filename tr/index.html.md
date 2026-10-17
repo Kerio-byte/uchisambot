@@ -77,7 +77,7 @@ Hayır. Telegram'ın içinde çalışır — telefonunda ya da bilgisayarında.
 
 ### Telegram Stars nedir?
 
-Stars (⭐), Telegram'ın kendi para birimidir. Telegram içinde bir kez bakiye yüklersin — uygulama alışıldık ödeme yöntemlerini sunar (kart, App Store ya da Google Play) — sonra çözümlerin parasını doğrudan sohbette ödersin. Abonelik ve otomatik yenileme yok: yalnızca sen istediğinde ödersin.
+Stars (⭐), Telegram'ın kendi para birimidir. Telegram içinde bir kez bakiye yüklersin — uygulama alışıldık ödeme yöntemlerini sunar (kart, App Store ya da Google Play) — sonra çözümlerin parasını doğrudan sohbette ödersin. Abonelik ve otomatik yenileme yok: yalnızca sen istediğinde ödersin. Bunun için Telegram Premium gerekmez.
 
 ### Stars'ı nereden alırım?
 
@@ -89,7 +89,7 @@ Genellikle bir dakikadan kısa: ödevini gönderirsin, çözüm sohbete gelir �
 
 ### Çözüm başarısız olursa ne olur?
 
-Birkaç dakika sonra yeniden deneyin — bazen kısa süreli yoğunluk olur. Sorun sürerse bottaki Yardım düğmesinden bize yazın — ilgilenelim.
+Birkaç dakika sonra yeniden dene — bazen kısa süreli yoğunluk olur. Sorun sürerse aşağıdaki formdan bize yaz — ilgilenelim.
 
 ### Sıradan bir yapay zekâ sohbet botundan farkı ne?
 

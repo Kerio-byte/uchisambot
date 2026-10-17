@@ -86,6 +86,11 @@ fallback, then `calc(6px + env(safe-area-inset-bottom))`) — browsers without `
 support still get sane padding; modern browsers are unaffected (second declaration wins).
 Markup + inline script live in `index-src.html`.
 
+CTA tags: the hero button keeps `?start=src_landing`, the closing band button uses
+`?start=src_landing_band`, the sticky bar `?start=src_landing_sticky` (the bot records
+the first touch per user and accepts any `src_*` payload). The sweep pins all three —
+exactly one plain `src_landing` link must remain (the hero).
+
 Micro-interactions: keyboard focus ring (`:focus-visible`, 2px brand, offset — everywhere
 interactive), press feedback on buttons (`:active`), smooth FAQ open/close (~180 ms via
 `::details-content` + `interpolate-size`; browsers without support get the old instant
@@ -143,8 +148,10 @@ Footer: one centered "Featured on" strip of official launch-platform badges — 
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
 screens), lazy-loaded hotlinked official assets, links open in a new tab with
-`rel="noopener"`. `privacy.html` / `terms.html` carry the required LiftOff + Startup
-Fame badges in the same style.
+`rel="noopener"`. Badge links point at the platform's product page where one exists
+(Fazier: `fazier.com/launches/uchisambot-study-helper`; the hotlinked badge asset uses
+the canonical single-slash path `fazier.com/api/v1/public/…`). `privacy.html` /
+`terms.html` carry the required LiftOff + Startup Fame badges in the same style.
 
 Badge accessibility / layout-shift: badge `alt` texts are localised per language — the
 `badge.alt` dictionary template ("Featured on {name}" / "Отмечен на {name}" …) is baked
@@ -179,6 +186,10 @@ successful submit Web3Forms returns the visitor to the **same language page**
 (`?sent=1#contact`, rewritten per language by the build), where the form is replaced
 by a localized confirmation message that is baked into the page (one string per
 language, no JS dictionary; without JS the visitor simply keeps seeing the form).
+This form is the site's single support channel: the FAQ answer about failed
+breakdowns, privacy and terms all point visitors here — no page promises an in-bot
+message-to-team path (the bot's Help button only shows payment guidance), and the
+sweep fails any page that references one.
 
 Privacy / terms: bilingual single pages (EN, then the Russian section marked
 `id="ru"`). Each page keeps exactly one `H1` (the English title): the Russian

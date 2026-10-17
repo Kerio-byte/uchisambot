@@ -77,7 +77,7 @@ No. It works inside Telegram — on your phone or computer.
 
 ### What are Telegram Stars?
 
-Stars (⭐) are Telegram's built-in currency. You top them up once inside Telegram — the app offers the usual payment (card, App Store or Google Play) — and then pay for breakdowns right in the chat. No subscription and no auto-renewal: you only pay when you choose to.
+Stars (⭐) are Telegram's built-in currency. You top them up once inside Telegram — the app offers the usual payment (card, App Store or Google Play) — and then pay for breakdowns right in the chat. No subscription and no auto-renewal: you only pay when you choose to. Telegram Premium is not required.
 
 ### Where do I get Stars?
 
@@ -89,7 +89,7 @@ Usually under a minute: send your task and the breakdown comes back in the chat 
 
 ### What if a breakdown fails?
 
-Try again in a few minutes — brief overloads happen. If it keeps failing, write to us via the Help button in the bot — we will look into it.
+Try again in a few minutes — brief overloads happen. If it keeps failing, write to us via the contact form below — we will look into it.
 
 ### How is it different from a general AI chatbot?
 
