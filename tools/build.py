@@ -279,10 +279,12 @@ def bake(src: str, lang: str, dicts: dict) -> str:
         out)
     assert _n_logo == 1, f"{lang}: логотип — совпадений {_n_logo}"
 
-    # 9b) hero-видео: у RU своя версия (у каждого языка свои ассеты; остальным — EN-фолбэк)
-    if lang == "ru":
-        out = out.replace("demo/uchiambot-demo-web.mp4", "demo/uchiambot-demo-web-ru.mp4")
-        out = out.replace("img/demo-poster.webp", "img/demo-poster-ru.webp")
+    # 9b) hero-видео и постер: у КАЖДОГО языка своя версия лупа (свои ассеты; EN-фолбэк — только
+    #     у EN). До 17.10 (хвост ПРОХОДА 2) свои ассеты были только у RU; остальные 7 языков
+    #     получили свои ролики в demo/uchiambot-demo-web-<lang>.mp4 (build-web-loop-langs.sh)
+    if lang != "en":
+        out = out.replace("demo/uchiambot-demo-web.mp4", f"demo/uchiambot-demo-web-{lang}.mp4")
+        out = out.replace("img/demo-poster.webp", f"img/demo-poster-{lang}.webp")
     out = out.replace(VIDEO_ALT["en"], VIDEO_ALT[lang])
 
     # 10) CSS переключателя (один раз)
