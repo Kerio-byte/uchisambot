@@ -178,6 +178,19 @@ it does not know yet) and the `scroll-snap-*` properties in media contexts / pai
 `landing-qa.md`, "Сверка с решениями совета") — all intentional progressive
 enhancements.
 
+User environment preferences: the hero video and the reveal animation respect
+`prefers-reduced-motion: reduce` (poster instead of the loop, every `.rv` visible from
+the start, `scroll-behavior: auto`, no sticky-bar transition) and
+`navigator.connection.saveData` (same video fallback; the reveal intentionally stays on).
+Windows high-contrast mode (`forced-colors: active`) drops author backgrounds, so a small
+media rule restores a 1 px border on the interactive nodes that would otherwise render as
+plain text: `.btn` (hero, band, sticky), the contact submit (its `border:0` comes from
+`.contact button.btn`, so that higher-specificity selector is repeated inside the rule)
+and the language-switcher summary. The light design does not react to
+`prefers-color-scheme` (delta-checked under a dark system preference; no `color-scheme`
+declaration). Covered by `landing-env-prefs.py` (45 checks, forced-colors screenshots
+included) and by the sweep's `fc btn border` marker on every language page.
+
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
