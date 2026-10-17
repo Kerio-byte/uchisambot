@@ -46,7 +46,11 @@ Live: https://kerio-byte.github.io/uchisambot/
    GitHub Pages serves the site from the repository root.
 
 Hero video: `demo/uchiambot-demo-web.mp4` (EN) / `demo/uchiambot-demo-web-ru.mp4` (RU),
-poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`.
+poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`. Step captions are localized —
+the RU loop carries Russian captions (`2 · Отправь задачу — текстом или фото`,
+`3 · Пошаговый разбор`); rebuild it with `demo/build-web-loop-ru.sh` (same zoompan/drawtext
+pipeline as the kit build, 13.0 s, 720×1560). Rebuilt 17 Oct 2026: the loop previously
+inherited the English captions of the kit's full RU demo.
 
 Demo video weights: the four `demo/` files have soft budgets enforced by the QA sweep —
 full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, web loops ≤768 KB
