@@ -77,7 +77,7 @@ Não. Funciona dentro do Telegram — no celular ou no computador.
 
 ### O que são Telegram Stars?
 
-Stars (⭐) são a moeda interna do Telegram. Você adiciona uma vez dentro do Telegram — o app oferece o pagamento de sempre (cartão, App Store ou Google Play) — e depois paga pelas explicações direto no chat. Sem assinatura e sem cobrança automática: você só paga quando quiser.
+Stars (⭐) são a moeda interna do Telegram. Você adiciona uma vez dentro do Telegram — o app oferece o pagamento de sempre (cartão, App Store ou Google Play) — e depois paga pelas explicações direto no chat. Sem assinatura e sem cobrança automática: você só paga quando quiser. Não precisa de Telegram Premium.
 
 ### Onde eu consigo Stars?
 
@@ -89,7 +89,7 @@ Normalmente em menos de um minuto: você envia a tarefa e a explicação chega n
 
 ### E se uma explicação falhar?
 
-Tente de novo em alguns minutos — às vezes há sobrecargas curtas. Se continuar falhando, fale conosco pelo botão Ajuda no bot — vamos verificar.
+Tente de novo em alguns minutos — às vezes há sobrecargas curtas. Se continuar falhando, fale conosco pelo formulário de contato no fim da página — vamos verificar.
 
 ### Qual é a diferença para um chatbot de IA comum?
 
