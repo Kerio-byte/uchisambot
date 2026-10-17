@@ -73,6 +73,15 @@ Typography: Manrope variable, self-hosted in `fonts/` (5 subsets). Pages preload
 subset matching the language (latin by default, cyrillic for `/ru/` and `/uk/`);
 `privacy.html` / `terms.html` load fonts from the same folder.
 
+Headline scale: `h1` runs `clamp(30px, 5.4vw, 56px)` at weight 800, letter-spacing −.03em
+(desktop cap 56px — council round-1 typographic scale); section heads and cards keep the
+existing clamp steps.
+
+Surfaces (de-SaaS tail, council round 1): flat `#F7FAFF` page background (the former top
+radial tint is gone), flat brand buttons (hover = tone shift `#2F49D8` + 1px lift, no glow),
+exactly two shadow tokens (`--shadow`, `--shadow-2`) and a four-value radius scale
+(12 / 18 / 24 / 999 — tokens `--sky`/`--tg` removed).
+
 Favicons: every page (landing, privacy, terms) declares `img/logo.svg` (SVG, for
 browsers that support it), `img/icon-64.png` (PNG, 64×64 — the format Google
 Search's favicon pipeline supports; SVG is not in its format list) and
@@ -105,6 +114,16 @@ caption naming the how-it-works step it shows (the `how.s1t`-`how.s3t` texts), b
 into all 9 language pages. The shots' `alt` texts are localised per language (dictionary
 keys `shot1.alt`-`shot3.alt`); `og:image:alt` / `twitter:image:alt` reuse the page title,
 and the JSON-LD `Offer` names reuse the pricing texts (`p1t`, `price.single`, `p2t`, `p3t`).
+
+Screenshots rail: on viewports ≤860px the three cards form a horizontal scroll-snap rail
+(each card ≈86% wide with the next one peeking; `scroll-snap-type: x mandatory`, hidden
+scrollbar) — the section no longer stacks into ~2600 px of vertical scroll on phones. On
+desktop the grid is `1.2fr 1fr 1fr`, so the first card reads larger (council round-1 fix).
+
+Section numbers: the six main sections (How it works … FAQ) carry a decorative `01`–`06`
+kicker above the headline (`.sec-num`, small brand-blue). It is a plain `aria-hidden`
+`<p>` outside the `H2` — the numbers never enter the heading text (SEO requirement,
+council round 1) and stay out of the markdown twins.
 
 Chat shots (per-language mockups): every language page shows its OWN chat mockups —
 `shot1-3.webp` (EN) and `shotN-<lang>.webp` for ru, es, pt, hi, id, tr, vi, uk. The
@@ -142,7 +161,10 @@ dictionary key) that slides in at the top-left on focus; the `main:focus` outlin
 suppressed because the skip jump itself is the cue. Audited with axe-core
 (WCAG 2.0-2.2 A/AA + best practice): 0 violations across all 11 pages. The W3C Nu
 validator reports only `interpolate-size` / `transition:allow-discrete` (modern CSS
-it does not know yet) — both are intentional progressive enhancements.
+it does not know yet) and the `scroll-snap-*` properties in media contexts / pairs
+(validator parser bug, proven by a minimal-HTML bisect on 17 Oct — see
+`landing-qa.md`, "Сверка с решениями совета") — all intentional progressive
+enhancements.
 
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
