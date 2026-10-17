@@ -1,0 +1,43 @@
+PASS 2 (visual) — coverage summary. Landing 20261012. 17.10.2026, night block.
+
+CAPTURED (evidence/pass2/, gitignored archive)
+- 18 full-page screenshots: 9 languages (en/ru/es/pt/hi/id/tr/vi/uk) x (mobile 420x915, desktop 1440x900).
+- 9 mobile sticky-CTA shots (scroll ~1600), 3 interactive-state shots (EN desktop lang dropdown open,
+  RU mobile lang dropdown open, RU FAQ first item open — re-shot after the first attempt caught a
+  mid-smooth-scroll frame).
+- Metrics JSON per render (horizontal overflow per element, leaf text overflow, min font-size,
+  unloaded images, section offsets). Viewing slices: evidence/pass2/view/ (mobile 3400px strips),
+  evidence/pass2/chunks/ (2400px strips both viewports).
+
+METRICS (all 18 renders)
+- Horizontal overflow: 0 elements beyond viewport on every page/viewport.
+- textOver=2 everywhere = false positive on .sr-only labels (1px-width visually-hidden utility by design).
+- Unloaded images: startupfa.me badge failed on uk during the capture run only; retested 3x (en+uk)
+  => HTTP 200 / naturalWidth 171 — transient CDN; not a defect.
+- min text size 13px (form privacy note); sticky CTA visible at scroll on all 9.
+
+EYE REVIEW COVERAGE
+- Mobile: en (m0/m1/m2 + hero 2x zoom), ru (m0/m1/m2), es, pt, id, tr, vi, uk (m0/m2 each) + uk zooms
+  (how cards, footer badges), sticky (en/ru/hi), interactive (lang dropdowns, FAQ open).
+- Desktop: en (c0/c1/c2), ru (c0/c2), es/pt/hi/id/tr/vi/uk (c0 each) + hero-top 2x zoom (en).
+- Sources 1:1 / OCR: shot1-3 EN + shot2 RU/HI + shot2-3 RU loop frames; RU/EN posters; localised
+  shots spot checks (hi via view; vi/uk/tr/id/pt metadata).
+- Devanagari (hi) and Vietnamese diacritics render correctly; Vietnamese/Ukrainian wraps clean.
+
+FINDING (real, fixed, regression-checked) — commit a876953 (pushed origin + forgejo)
+- RU hero loop had English step captions (inherited from the submission-kit build) — see
+  evidence/pass2-ru-loop-captions-20261017.txt. Rebuilt: demo/build-web-loop-ru.sh;
+  sweep 704/0; browser + OCR verified.
+
+FALSE ALARMS (vision-pipeline artefacts, disproven by full-res crops / OCR / pixel scans)
+- "Alex chat" read on .webp files (demo-poster.webp, shot2.webp) — the vision pipeline fabricated
+  content on direct webp reads; PNG conversion + OCR show our own chat, intact.
+- "Text clipped in mockups" / "status bar cut" / "button overlapping input" — downscale artefacts
+  of tiny on-page mockups; sources verified clean at 1080x2340 / 540x1170.
+- "rozv'yazannya bad break" (uk), "LIFT-OFF overlaps ShowMeBest" (uk footer) — disproven by zooms.
+- "Heading cut at bottom" (pt-m0) — my slice boundary, not a page defect.
+
+OPEN TAIL (next blocks)
+- PASS 3 (meaning/wording) not started.
+- 7 languages still play the EN hero loop (localised loops buildable from img/shot2-3-<lang>.webp
+  + RU loop script as the template); full 35 s RU demo keeps EN captions by kit design — owner note.
