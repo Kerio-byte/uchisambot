@@ -29,7 +29,9 @@ Live: https://kerio-byte.github.io/uchisambot/
   the other seven languages.
 - `demo/` — demo videos: full 35 s (EN/RU, H.264 720×1560 30 fps, compressed to
   ≤1 MiB / ≤1.5 MiB, direct-linked from `llms.txt` and external platforms) and
-  web-optimized hero loops (`*-web.mp4`, ≤768 KB / ≤900 KB).
+  web-optimized hero loops — one per language, each carrying step captions in the
+  page language: `*-web.mp4` (EN) / `*-web-<lang>.mp4` for the other eight. Loop
+  weight budgets (QA sweep): EN ≤768 KB, RU ≤900 KB, the seven others ≤512 KB.
 - `fonts/` — self-hosted Manrope variable font (OFL, `LICENSE-OFL.txt`): latin,
   latin-ext, cyrillic, cyrillic-ext, vietnamese subsets (~64 KB total); preload +
   `font-display: swap`, system fallback. No CDN.
@@ -45,16 +47,26 @@ Live: https://kerio-byte.github.io/uchisambot/
 3. Commit the template + locales + generated pages together and push to `main`;
    GitHub Pages serves the site from the repository root.
 
-Hero video: `demo/uchiambot-demo-web.mp4` (EN) / `demo/uchiambot-demo-web-ru.mp4` (RU),
-poster `img/demo-poster.webp` / `img/demo-poster-ru.webp`. Step captions are localized —
-the RU loop carries Russian captions (`2 · Отправь задачу — текстом или фото`,
-`3 · Пошаговый разбор`); rebuild it with `demo/build-web-loop-ru.sh` (same zoompan/drawtext
-pipeline as the kit build, 13.0 s, 720×1560). Rebuilt 17 Oct 2026: the loop previously
-inherited the English captions of the kit's full RU demo.
+Hero video (per-language loops): every language page plays its OWN 13 s loop with the
+two step captions in the page language — `demo/uchiambot-demo-web.mp4` (EN, the kit
+build) and `demo/uchiambot-demo-web-<lang>.mp4` for the other eight (RU rebuilt; the
+seven es/pt/hi/id/tr/vi/uk loops added 17 Oct 2026), poster `img/demo-poster[-<lang>].webp`
+(last frame of the loop). Captions are the site dictionary terms (`how.s2t` /
+`shot3.alt` core), e.g. RU `2 · Отправь задачу — текстом или фото` / `3 · Пошаговый
+разбор`, ES `2 · Envía tu tarea — texto o foto` / `3 · Desglose paso a paso`. RU:
+rebuild with `demo/build-web-loop-ru.sh`; the other seven loops and the poster of any
+language: `demo/build-web-loop-langs.sh [lang …]` — same zoompan/drawtext pipeline as
+the kit build (13.0 s, 720×1560, x264 veryslow crf30; poster = frame 389 → 540×1170
+WebP). Sources are the per-language chat-shot PNG renders from `tools/shots-gen` —
+regenerate them first if the scratch workdir is gone (`gen_shots.py --langs …`). Two
+deliberate render notes: the hi loop uses Noto Sans Devanagari Bold, whose glyph set
+has no `·` (U+00B7), so its step separator is `.`; drawtext `text_shaping` (on by
+default) shapes the Devanagari conjuncts.
 
-Demo video weights: the four `demo/` files have soft budgets enforced by the QA sweep —
-full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, web loops ≤768 KB
-and ≤900 KB. Re-encode with x264 (`-crf`, preset `veryslow`, H.264 High, 720×1560,
+Demo video weights: the eleven `demo/` files have soft budgets enforced by the QA sweep —
+full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, the nine hero loops:
+EN ≤768 KB, RU ≤900 KB, the other seven ≤512 KB. Re-encode with x264 (`-crf`, preset
+`veryslow`, H.264 High, 720×1560,
 30 fps, `-movflags +faststart`) and keep the exact file names — external platforms and
 `llms.txt` link these URLs directly.
 
