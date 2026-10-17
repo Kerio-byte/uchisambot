@@ -248,6 +248,9 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 html.js .rv{opacity:0}
 html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 @media(prefers-reduced-motion:reduce){html.js .rv{opacity:1!important;transition:none!important}}
+/* Тема высокой контрастности снимает авторские фоны: возвращаем рамку нажимаемым узлам
+   (submit имел border:0 через .contact button.btn — селектор повторяем, иначе проигрыш по специфичности) */
+@media(forced-colors:active){.btn,.contact button.btn,.lang-dd summary{border:1px solid}}
 </style>
 </head>
 <body>
