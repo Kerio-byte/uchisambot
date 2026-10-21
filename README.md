@@ -193,6 +193,23 @@ it does not know yet) and the `scroll-snap-*` properties in media contexts / pai
 `landing-qa.md`, "Сверка с решениями совета") — all intentional progressive
 enhancements.
 
+WCAG 2.2 AA extras — target size (2.5.8) and focus not obscured (2.4.11): a dedicated
+battery, `landing-wcag22-targets.py` (43 checks), measures every non-inline pointer
+target on all 11 pages at 390 and 1440 px and walks the tab order with real `Tab` presses
+(no synthetic `focus()`, which would park each element mid-screen and hide the defect).
+It found four gaps, all closed: the LaunchIgniter hero badge link was 212×22 px
+(`min-height: 24px` on the link), the `.privacy-link` under the parents block was 23.2 px
+tall (1 px vertical padding), the legal-page footer links were 19 px tall
+(`display: inline-block; padding: 3px 0` → 29 px hit area), and on a phone the browser
+scrolled a focused FAQ question flush to the bottom edge, where the 59 px sticky CTA bar
+covered it completely (5 of 5 sample points landed on the bar). `scroll-padding-bottom:
+calc(78px + env(safe-area-inset-bottom))` in the mobile media query reserves that room,
+so the question now lands 19 px above the bar. Links inside a sentence keep the standard
+inline exception; the anchor landings (`#how`, `#pricing`, …) are re-checked against the
+63 px sticky header on top of the existing `scroll-padding-top: 84px`. Measured
+failed-first: 31 of 43 checks failed before the fix, 0 after; each fix also has a static
+marker in the sweep (993 checks).
+
 User environment preferences: the hero video and the reveal animation respect
 `prefers-reduced-motion: reduce` (poster instead of the loop, every `.rv` visible from
 the start, `scroll-behavior: auto`, no sticky-bar transition) and

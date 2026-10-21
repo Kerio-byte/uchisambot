@@ -135,6 +135,7 @@ main{display:block}
 .btn svg{flex:0 0 auto}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .hero-badge{margin-top:22px}
+.hero-badge a{display:inline-flex;align-items:center;min-height:24px}
 .hero-badge img{display:inline-block}
 .chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
 .chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
@@ -204,7 +205,7 @@ main{display:block}
 .parents-band{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr);gap:32px;align-items:start;background:linear-gradient(180deg,#F2F7FF,#fff);border:1px solid #D7E1FF;border-radius:var(--r);padding:30px 30px 26px;box-shadow:var(--shadow)}
 .parents-head h2{font-size:clamp(22px,2.6vw,27px)}
 .parents-head p{color:var(--muted);font-size:15px;margin-top:10px;max-width:44ch}
-.parents-head .privacy-link{display:inline-block;margin-top:14px;font-size:14.5px;font-weight:600}
+.parents-head .privacy-link{display:inline-block;margin-top:14px;font-size:14.5px;font-weight:600;padding:1px 0;min-height:24px}
 .parents-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .parents-list li{display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.5}
 .parents-list svg{flex:0 0 auto;margin-top:3px;color:var(--brand)}
@@ -239,6 +240,9 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 /* Липкая кнопка снизу на телефоне: видна после 700px, прячется у формы и подвала */
 .sticky-cta{display:none}
 @media(max-width:860px){
+  /* Нижняя липкая кнопка (59 px) перекрывала сфокусированный вопрос FAQ: браузер докручивал
+     элемент ровно к нижней кромке экрана. Резерв снизу = высота кнопки + запас (WCAG 2.4.11). */
+  html{scroll-padding-bottom:calc(78px + env(safe-area-inset-bottom))}
   .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 14px;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
   .sticky-cta.show{transform:none;visibility:visible}
   .sticky-cta .btn{width:100%;min-height:44px;padding:10px 18px;font-size:16px;border-radius:12px}
