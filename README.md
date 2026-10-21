@@ -296,6 +296,18 @@ unchanged — the attributes only affect the pre-load reservation. Hover `title`
 badge links were dropped: they duplicated the alt text in English on every language
 page.
 
+Badge failure fallback (21.10.2026): every badge is a hotlink to the platform's own
+asset, and those edges do throttle. A fresh 9-language × 2-viewport capture found at
+least one badge request with `naturalWidth=0` in 5 of 18 renders; an 18-page browser
+smoke run saw `startupfa.me` fail on 10 pages while a single request to the same URL
+returned 200. A visitor on such a render saw the browser's broken-image glyph plus alt
+text. Each of the nine external badges (one in the hero, eight in the footer) now
+carries `onerror="(this.closest('a')||this).style.display='none'"`: an asset that
+cannot load removes its own link from the strip and the remaining badges reflow.
+Nothing changes when the asset loads. The QA sweep asserts the fallback on all nine
+language pages, and the browser smoke blocks every badge host at the network layer and
+requires 9 of 9 links hidden, 0 visible broken images and no horizontal overflow.
+
 Social preview cards (`og:image`): every language page points at its OWN 1200×630
 card, `img/og-<lang>.png` (`og-en.png` for the root page). Until 21 Oct 2026 all nine
 pages shared one English `og.png`, so a link to `/hi/` or `/es/` shared in Telegram or
