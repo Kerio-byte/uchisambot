@@ -102,5 +102,5 @@ Escreva para nós — sua mensagem vai direto para a nossa equipe e respondemos 
 Usamos seu e-mail apenas para responder a esta mensagem.
 
 - [Enviar mensagem](https://kerio-byte.github.io/uchisambot/pt/#contact)
-- [Política de Privacidade](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [Termos de Uso](https://kerio-byte.github.io/uchisambot/terms.html)
+- [Política de Privacidade (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Termos de Uso (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)

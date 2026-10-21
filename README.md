@@ -259,7 +259,7 @@ so the question now lands 19 px above the bar. Links inside a sentence keep the 
 inline exception; the anchor landings (`#how`, `#pricing`, …) are re-checked against the
 63 px sticky header on top of the existing `scroll-padding-top: 84px`. Measured
 failed-first: 31 of 43 checks failed before the fix, 0 after; each fix also has a static
-marker in the sweep (the sweep is the running count — 1309 checks as of 21 Oct 2026).
+marker in the sweep (the sweep is the running count — 1336 checks as of 21 Oct 2026).
 
 User environment preferences: the hero video and the reveal animation respect
 `prefers-reduced-motion: reduce` (poster instead of the loop, every `.rv` visible from
@@ -353,7 +353,27 @@ Screen-reader labels: the header logo `alt` and the language-switcher summary
 `aria-label` are localised via the `logo.alt` / `lang.aria` dictionary keys on all
 nine language pages (both were the same English string on every page before, so a
 screen reader on `/ru/`, `/hi/`, `/es/` … announced English). The build asserts the
-logo replacement hits exactly one `<img>` per page. `privacy.html` / `terms.html`
+logo replacement hits exactly one `<img>` per page.
+
+Language switcher (21 Oct 2026): every entry now carries its own `lang`/`hreflang`, so
+«Русский» is pronounced as Russian on an English page (WCAG 3.1.2 — the same rule the
+404 chips got earlier that day). The summary `aria-label` ends with the current
+language name (`lang.aria` + `": English"`), because `aria-label` overrides the
+visible text and used to say only "Language". Three more fixes rode along: the flag
+emoji are gone (Windows has no flag glyphs and draws bare `GB`/`RU` boxes, and a flag
+is a country, not a language — 🇮🇳 for Hindi, 🇧🇷 for Portuguese, 🇬🇧 for English all
+read wrong on a page sold worldwide); the summary shows an inline SVG globe instead,
+and the nine entries use native names exactly like the 404 chips. The current language
+is a `<span aria-current="page">`, not an `<a href="#">` that jumped to the top and
+claimed to be a link. Nothing else moved: section offsets and page height are
+unchanged at 1280, 768 and 420 px.
+
+Legal pages exist in English and Russian only, so on the other seven languages every
+link to them ends with "(EN/RU)" — one rule in `legal_label()` covering
+`parents.link`, `foot.privacy`, `foot.terms` and `contact.privacy` — and the pages
+themselves open with a two-line notice naming the sections that exist. Until 21 Oct
+2026 `/hi/` promised «गोपनीयता नीति पढ़ें» ("read the privacy policy") and delivered
+English text. The suffix is repeated in the `.md` twins. `privacy.html` / `terms.html`
 keep the English wording, like their badges — bilingual EN-first pages.
 
 Connections: the head warms up the third-party origins the pages actually use —

@@ -111,13 +111,14 @@ main{display:block}
 .lang-dd summary:hover{background:var(--brand-soft);color:var(--brand)}
 .lang-dd[open] summary{background:var(--brand-soft);color:var(--brand)}
 .lang-list{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-2);padding:8px;z-index:60;min-width:200px;display:grid;gap:2px}
-.lang-list a{display:flex;align-items:center;padding:9px 12px;border-radius:12px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500;transition:background .12s ease,color .12s ease}
+.lang-list>*{display:flex;align-items:center;padding:9px 12px;border-radius:12px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500;transition:background .12s ease,color .12s ease}
 .lang-list a:hover{background:var(--brand-soft);color:var(--brand)}
-.lang-list a.on{background:var(--brand-soft);color:var(--brand);font-weight:700}
+/* .on объявлен ниже и с меньшей специфичностью базового селектора: текущий пункт — жирный и брендовый */
+.lang-list .on{background:var(--brand-soft);color:var(--brand);font-weight:700;cursor:default}
 @media(max-width:760px){.nav{display:none}}
 /* Тач-устройства: зоны нажатия не меньше 44px (WCAG), десктоп не затрагивается */
 @media(pointer:coarse){
-  .nav a,.lang button,.lang-dd summary,.lang-list a,.brand{min-height:44px;display:inline-flex;align-items:center}
+  .nav a,.lang button,.lang-dd summary,.lang-list a,.lang-list span.on,.brand{min-height:44px;display:inline-flex;align-items:center}
   .lang button{padding:10px 12px}
   .lang-list a{padding:8px 14px}
   .cta-row a,a.btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
@@ -283,7 +284,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <a href="#pricing">Fiyatlar</a>
       <a href="#faq">Sorular</a>
     </nav>
-    <details class="lang-dd"><summary aria-label="Dil">🌐 Türkçe</summary><div class="lang-list"><a href="../">🇬🇧 English</a><a href="../ru/">🇷🇺 Русский</a><a href="../es/">🇪🇸 Español</a><a href="../pt/">🇧🇷 Português</a><a href="../hi/">🇮🇳 हिन्दी</a><a href="../id/">🇮🇩 Bahasa Indonesia</a><a href="#" aria-current="page" class="on">🇹🇷 Türkçe</a><a href="../vi/">🇻🇳 Tiếng Việt</a><a href="../uk/">🇺🇦 Українська</a></div></details>
+    <details class="lang-dd"><summary aria-label="Dil: Türkçe"><svg class="globe" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><ellipse cx="8" cy="8" rx="2.9" ry="6.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M1.9 5.9h12.2M1.9 10.1h12.2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span lang="tr">Türkçe</span></summary><div class="lang-list"><a href="../" lang="en" hreflang="en">English</a><a href="../ru/" lang="ru" hreflang="ru">Русский</a><a href="../es/" lang="es" hreflang="es">Español</a><a href="../pt/" lang="pt" hreflang="pt">Português</a><a href="../hi/" lang="hi" hreflang="hi">हिन्दी</a><a href="../id/" lang="id" hreflang="id">Bahasa Indonesia</a><span class="on" aria-current="page" lang="tr">Türkçe</span><a href="../vi/" lang="vi" hreflang="vi">Tiếng Việt</a><a href="../uk/" lang="uk" hreflang="uk">Українська</a></div></details>
   </div>
 </header>
 
@@ -445,7 +446,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4.5V13c0 4.6-3.2 8-8 9.5C7.2 21 4 17.6 4 13V6.5L12 2z"/><path d="M9.2 12.2l2 2 3.8-4.5"/></svg></div>
         <h2 id="parents-title">Ebeveynler için</h2>
         <p>Kısaca: çocuğunuzun verilerini nasıl koruyoruz.</p>
-        <a class="privacy-link" href="../privacy.html">Gizlilik Politikası'nı okuyun</a>
+        <a class="privacy-link" href="../privacy.html">Gizlilik Politikası'nı okuyun (EN/RU)</a>
       </div>
       <ul class="parents-list">
         <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Kayıt yok, kişisel bilgi istenmiyor.</span></li>
@@ -488,7 +489,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Sorunuz, geri bildiriminiz ya da şikayetiniz…"></textarea>
         <button type="submit" class="btn">Mesaj gönder</button>
       </form>
-      <p class="contact-note"><span>E-postanızı yalnızca bu mesaja yanıt vermek için kullanırız.</span> <a href="../privacy.html">Gizlilik Politikası</a></p>
+      <p class="contact-note"><span>E-postanızı yalnızca bu mesaja yanıt vermek için kullanırız.</span> <a href="../privacy.html">Gizlilik Politikası (EN/RU)</a></p>
     </div>
   </div>
 </section>
@@ -506,7 +507,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   <div class="wrap foot">
     <p><strong>UchiSamBot</strong> — <span>Okul öğrencileri için ders yardımcısı</span></p>
     <p class="dim"><span>Ödemeler Telegram Stars üzerinden işlenir.</span></p>
-    <p class="dim"><a href="../privacy.html">Gizlilik Politikası</a> &middot; <a href="../terms.html">Kullanım Koşulları</a></p>
+    <p class="dim"><a href="../privacy.html">Gizlilik Politikası (EN/RU)</a> &middot; <a href="../terms.html">Kullanım Koşulları (EN/RU)</a></p>
     <p class="dim foot-partners"><a href="https://realisticai.io">Realistic AI</a> &middot; <a href="https://aitooltrek.com">AI Tool Trek</a> &middot; <a href="https://www.basedtools.ai/">Based Tools AI</a></p>
     <div class="foot-badges" role="group" aria-label="Platformlarda öne çıkan uygulama">
       <a href="https://fazier.com/launches/uchisambot-study-helper" target="_blank" rel="noopener"><img src="https://fazier.com/api/v1/public/badges/launch_badges.svg?badge_type=launched&theme=light" width="103" height="44" alt="Fazier üzerinde öne çıkan uygulama" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>

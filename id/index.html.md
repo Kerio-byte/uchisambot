@@ -102,5 +102,5 @@ Tulis kepada kami — pesanmu sampai ke tim kami, dan kami balas ke emailmu. Tan
 Kami memakai emailmu hanya untuk membalas pesan ini.
 
 - [Kirim pesan](https://kerio-byte.github.io/uchisambot/id/#contact)
-- [Kebijakan Privasi](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [Ketentuan Layanan](https://kerio-byte.github.io/uchisambot/terms.html)
+- [Kebijakan Privasi (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Ketentuan Layanan (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)

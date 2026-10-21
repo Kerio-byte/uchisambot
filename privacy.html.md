@@ -2,6 +2,10 @@
 
 UchiSamBot (Study Helper) · Last updated: 21 October 2026
 
+**Language:** this document is published in English (this section) and Russian (the section below). There are no other language versions; on the other language pages the link here is marked “(EN/RU)”.
+
+**Язык:** документ опубликован на английском (этот раздел) и русском (раздел ниже). Других языковых версий нет; на страницах остальных языков ссылка сюда помечена «(EN/RU)».
+
 UchiSamBot (Study Helper) is a Telegram bot that helps school students understand their homework: it breaks tasks down step by step, explains topics in simple language, checks solutions, and makes revision notes. This policy explains what data the bot handles and how. It covers the bot (t.me/UchiSamBot) and its website (kerio-byte.github.io/uchisambot). In this policy, "we" means the team operating UchiSamBot.
 
 ## 1. What we collect

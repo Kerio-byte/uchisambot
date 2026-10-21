@@ -102,5 +102,5 @@ Bize yazın — mesajınız ekibimize ulaşır, size e-postayla yanıt veririz. 
 E-postanızı yalnızca bu mesaja yanıt vermek için kullanırız.
 
 - [Mesaj gönder](https://kerio-byte.github.io/uchisambot/tr/#contact)
-- [Gizlilik Politikası](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [Kullanım Koşulları](https://kerio-byte.github.io/uchisambot/terms.html)
+- [Gizlilik Politikası (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Kullanım Koşulları (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
