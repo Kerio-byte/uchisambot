@@ -36,7 +36,10 @@ Live: https://kerio-byte.github.io/uchisambot/
   move on a throwaway copy — canonical, `og:url`, `og:image`, the site address in
   the policy prose (EN and RU), the form `redirect` per language, `robots.txt`,
   `sitemap.xml`, `404.html`, `llms.txt` — 17 checks; and the sweep fails if any
-  old address survives or a literal returns to the template.
+  old address survives or a literal returns to the template. The build itself also
+  audits its own output after writing (22 Oct 2026, added by the reviewer): if any
+  file still carries a foreign `https://<host>/uchisambot/` address, it exits 1 and
+  names the files — a half-done move cannot be committed even without the sweep.
 - `tools/prices.json` — single source of the prices (`free_breakdowns`, `single`,
   `pack5` / `pack15` as `{size, price}`, `currency`): `tools/build.py` writes these
   numbers into the JSON-LD `Offer` nodes, and the QA sweep checks every language page
