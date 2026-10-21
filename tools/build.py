@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import datetime
+import hashlib
 import json
 import re
 from html.parser import HTMLParser
@@ -458,7 +459,34 @@ def legal_md(src_text: str, name: str) -> str:
     return out
 
 
-def sitemap() -> str:
+def _sha256(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def load_lastmods() -> dict:
+    """Прошлые штампы {url: {"sha", "date"}} из tools/lastmod.json.
+
+    Зачем: lastmod в sitemap обязан означать «когда контент реально изменился».
+    Раньше туда писался datetime.date.today() — сборка была НЕ воспроизводима
+    (любой перезапуск менял sitemap) и дата врала при неизменном контенте.
+    """
+    try:
+        data = json.loads((ROOT / "tools" / "lastmod.json").read_text(encoding="utf-8"))
+        assert isinstance(data, dict)
+        return data
+    except (OSError, ValueError, AssertionError):
+        return {}
+
+
+def stamp(prev: dict, url: str, content: str, today: str) -> dict:
+    """Штамп страницы: дата остаётся прежней, пока байты контента те же."""
+    sha = _sha256(content)
+    old = prev.get(url) or {}
+    date = old.get("date") if old.get("sha") == sha and old.get("date") else today
+    return {"sha": sha, "date": date}
+
+
+def sitemap(dates: dict) -> str:
     parts = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
     # alternates: каждый язык + x-default (фолбэк для несовпавших языков; соответствует
@@ -467,11 +495,12 @@ def sitemap() -> str:
         [f'    <xhtml:link rel="alternate" hreflang="{x}" href="{url_for(x)}"/>' for x in LANGS]
         + [f'    <xhtml:link rel="alternate" hreflang="x-default" href="{BASE}"/>']
     )
-    today = datetime.date.today().isoformat()
     for lang in LANGS:
-        parts.append(f'  <url>\n    <loc>{url_for(lang)}</loc>\n    <lastmod>{today}</lastmod>\n{alts}\n  </url>')
+        url = url_for(lang)
+        parts.append(f'  <url>\n    <loc>{url}</loc>\n    <lastmod>{dates[url]}</lastmod>\n{alts}\n  </url>')
     for page in ("privacy.html", "terms.html"):
-        parts.append(f'  <url>\n    <loc>{BASE}{page}</loc>\n    <lastmod>{today}</lastmod>\n  </url>')
+        url = BASE + page
+        parts.append(f'  <url>\n    <loc>{url}</loc>\n    <lastmod>{dates[url]}</lastmod>\n  </url>')
     parts.append("</urlset>\n")
     return "\n".join(parts)
 
@@ -508,6 +537,9 @@ def main() -> None:
     dicts = load_dicts()
     src = (ROOT / "index-src.html").read_text(encoding="utf-8")
     assert "data-i18n" in src and "var I18N" in src, "источник не похож на index-src.html"
+    today = datetime.date.today().isoformat()
+    prev = load_lastmods()
+    stamps: dict = {}
 
     for lang in LANGS:
         page = bake(src, lang, dicts)
@@ -522,15 +554,21 @@ def main() -> None:
         assert md.startswith("# ") and "data-i18n" not in md, f"{lang}: плохой md-двойник"
         (outdir / "index.html.md").write_text(md, encoding="utf-8")
         print(f"{lang}: {outdir / 'index.html.md'} ({len(md.encode('utf-8'))} байт)")
+        stamps[url_for(lang)] = stamp(prev, url_for(lang), page, today)
 
     for name in ("privacy.html", "terms.html"):
-        md = legal_md((ROOT / name).read_text(encoding="utf-8"), name)
+        raw = (ROOT / name).read_text(encoding="utf-8")
+        md = legal_md(raw, name)
         (ROOT / (name + ".md")).write_text(md, encoding="utf-8")
         print(f"{name}.md ({len(md.encode('utf-8'))} байт)")
+        stamps[BASE + name] = stamp(prev, BASE + name, raw, today)
 
-    (ROOT / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
+    (ROOT / "sitemap.xml").write_text(sitemap({u: s["date"] for u, s in stamps.items()}), encoding="utf-8")
+    (ROOT / "tools" / "lastmod.json").write_text(
+        json.dumps(stamps, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (ROOT / "llms.txt").write_text(llms(dicts), encoding="utf-8")
-    print("sitemap.xml + llms.txt обновлены")
+    fresh = sum(1 for u, s in stamps.items() if s["date"] == today)
+    print(f"sitemap.xml (lastmod: изменено сегодня {fresh} из {len(stamps)}) + llms.txt + tools/lastmod.json")
 
 
 if __name__ == "__main__":
