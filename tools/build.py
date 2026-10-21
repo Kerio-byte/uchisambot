@@ -20,7 +20,41 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LOCALES = ROOT / "src" / "locales"
-BASE = "https://kerio-byte.github.io/uchisambot/"
+SITE_FILE = ROOT / "tools" / "site.json"
+
+
+def load_site() -> tuple:
+    """Единственный источник адреса сайта (22.10.2026).
+
+    До этого адрес жил в трёх местах: литерал здесь, литералы в index-src.html
+    (canonical, og:url, JSON-LD, redirect формы) и руками написанные privacy.html /
+    terms.html / robots.txt. При переезде на свой домен build.py переписывал canonical
+    и og:url регулярками, а строка redirect формы сравнивалась с литералом шаблона —
+    совпадения не было, и посетитель после отправки формы уезжал на СТАРЫЙ адрес.
+    Теперь адрес один: tools/site.json. Шаблон несёт токен {{BASE}}, руками
+    написанные файлы нормализует сборка по списку previous (старые адреса сайта).
+    """
+    try:
+        data = json.loads(SITE_FILE.read_text(encoding="utf-8"))
+    except OSError as e:
+        raise SystemExit(f"нет {SITE_FILE}: адрес сайта обязан быть в tools/site.json ({e})")
+    base = str(data.get("base", ""))
+    if not (base.startswith("https://") and base.endswith("/")):
+        raise SystemExit(f"site.json: base должен быть https-адресом со слэшем на конце, получено {base!r}")
+    prev = []
+    for p in data.get("previous", []):
+        p = str(p)
+        if not (p.startswith("https://") and p.endswith("/")):
+            raise SystemExit(f"site.json: previous-адрес должен быть https и со слэшем: {p!r}")
+        if p != base:
+            prev.append(p)
+    return base, prev
+
+
+BASE, PREV_BASES = load_site()
+# Файлы, которые пишутся руками и потому не могут получить адрес из шаблона:
+# их нормализует normalize_hand_written() при каждой сборке.
+HAND_WRITTEN = ("privacy.html", "terms.html", "robots.txt")
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 PRICES_FILE = ROOT / "tools" / "prices.json"
 # Ссылка на бота для ИИ-слоя (llms.txt + md-двойники страниц). Правило владельца:
@@ -259,9 +293,40 @@ def shot_src(n: str, lang: str) -> str:
     return f"shot{n}.webp"
 
 
+def normalize_hand_written() -> list:
+    """Переписать адрес сайта в руками написанных файлах под текущий BASE.
+
+    privacy.html / terms.html / robots.txt не генерируются из шаблона, но содержат
+    абсолютные адреса сайта: canonical, og:url, og:image, twitter:image, describedby,
+    ссылку на md-двойник, сам адрес сайта в тексте политики (EN и RU) и Sitemap в
+    robots.txt. Без этого шага переезд на домен оставил бы canonical на старом хосте
+    (страница снимает себя с индекса) и карту сайта по старому адресу.
+    """
+    changed = []
+    for name in HAND_WRITTEN:
+        p = ROOT / name
+        text = p.read_text(encoding="utf-8")
+        new = text
+        for old in PREV_BASES:
+            new = new.replace(old, BASE)                                       # https://host/path/
+            bare_old = old.split("://", 1)[1].rstrip("/")
+            bare_new = BASE.split("://", 1)[1].rstrip("/")
+            new = new.replace(bare_old, bare_new)   # host/path без схемы: текст политики «сайт (host/path)»
+        if new != text:
+            p.write_text(new, encoding="utf-8")
+            changed.append(name)
+        left = [o for o in PREV_BASES
+                if o in new or o.split("://", 1)[1].rstrip("/") in new]
+        if left:
+            raise SystemExit(f"{name}: остался старый адрес сайта {left} — уберите руками")
+    return changed
+
+
 def bake(src: str, lang: str, dicts: dict) -> str:
     d = dicts[lang]
-    out = src
+    # 0) адрес сайта: шаблон несёт токен {{BASE}}, значение — только из tools/site.json
+    #    (см. load_site: литерал в шаблоне раньше ломал redirect формы при переезде)
+    out = src.replace("{{BASE}}", BASE)
 
     # 1) тексты data-i18n и placeholders data-i18n-ph
     def rep_i18n(m: re.Match) -> str:
@@ -753,8 +818,13 @@ footer a{{color:var(--muted)}}
 
 def main() -> None:
     dicts = load_dicts()
+    changed = normalize_hand_written()
+    if changed:
+        print(f"адрес сайта нормализован в: {', '.join(changed)}")
     src = (ROOT / "index-src.html").read_text(encoding="utf-8")
     assert "data-i18n" in src and "var I18N" in src, "источник не похож на index-src.html"
+    assert BASE not in src, ("index-src.html содержит литерал адреса сайта — "
+                             "в шаблоне должен быть только токен {{BASE}}")
     # Ключи шаблона обязаны иметь перевод в КАЖДОМ языке: иначе rep_i18n молча
     # оставит английский текст шаблона (см. validate_dicts).
     tmpl_keys = set(re.findall(r'data-i18n(?:-ph)?="([\w.]+)"', src))
@@ -768,6 +838,7 @@ def main() -> None:
         page = bake(src, lang, dicts)
         assert 'data-i18n="' not in page, f"{lang}: остались незапечённые ключи"
         assert "data-i18n-ph=" not in page, f"{lang}: остались placeholder-ключи"
+        assert "{{BASE}}" not in page, f"{lang}: токен адреса сайта не заменён"
         assert "var I18N" not in page, f"{lang}: не вырезан JS-i18n"
         outdir = ROOT if lang == "en" else ROOT / lang
         outdir.mkdir(exist_ok=True)

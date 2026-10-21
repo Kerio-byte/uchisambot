@@ -20,6 +20,23 @@ Live: https://kerio-byte.github.io/uchisambot/
   linking), and the sitemap mirrors the hreflang set per URL — all nine languages
   plus `x-default` pointing at the English root. No runtime, no dependencies, no
   tracking.
+- `tools/site.json` — single source of the site address (`base`, plus `previous`:
+  older addresses of this site). Added 22 Oct 2026, before the move to an own
+  domain: the address used to live in three independent places — a literal in
+  `tools/build.py`, literals in `index-src.html` (canonical, `og:url`, JSON-LD,
+  the contact form's `redirect`) and the hand-written `privacy.html`, `terms.html`
+  and `robots.txt`. The build rewrote canonical/`og:url` with regexes but matched
+  the form `redirect` against the template literal, so on a domain change the
+  redirect would silently keep the **old** host: a visitor submits the form and
+  lands on the previous site. Now the template carries a `{{BASE}}` token, the
+  build substitutes it (and fails if a literal comes back), and the hand-written
+  files are normalized on every build by replacing each address from `previous`.
+  Moving to a domain is: set `base`, move the old value into `previous`, run
+  `tools/build.py`. `landing-site-move-test.py` (stars-bots-ops skill) proves the
+  move on a throwaway copy — canonical, `og:url`, `og:image`, the site address in
+  the policy prose (EN and RU), the form `redirect` per language, `robots.txt`,
+  `sitemap.xml`, `404.html`, `llms.txt` — 17 checks; and the sweep fails if any
+  old address survives or a literal returns to the template.
 - `tools/prices.json` — single source of the prices (`free_breakdowns`, `single`,
   `pack5` / `pack15` as `{size, price}`, `currency`): `tools/build.py` writes these
   numbers into the JSON-LD `Offer` nodes, and the QA sweep checks every language page
@@ -65,7 +82,9 @@ Live: https://kerio-byte.github.io/uchisambot/
 ## Editing
 
 1. Edit texts/styles in `index-src.html` (translations in `src/locales/*.json`);
-   legal texts — directly in `privacy.html` / `terms.html`.
+   legal texts — directly in `privacy.html` / `terms.html`. Never type the site
+   address into any of them: the template carries `{{BASE}}` and the value lives
+   only in `tools/site.json` (the build refuses a literal in the template).
 2. Run `python3 tools/build.py` — regenerates all 9 language pages, their markdown
    twins (`index.html.md`), the legal-page markdown twins (`privacy.html.md` /
    `terms.html.md` — converted from the legal pages' own `main` content), `404.html`,
