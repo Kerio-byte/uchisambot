@@ -322,13 +322,26 @@ Lighthouse TBT threshold does not describe this page.
 
 Contact form: `#contact` posts straight to Web3Forms — no Telegram step. After a
 successful submit Web3Forms returns the visitor to the **same language page**
-(`?sent=1#contact`, rewritten per language by the build), where the form is replaced
-by a localized confirmation message that is baked into the page (one string per
-language, no JS dictionary; without JS the visitor simply keeps seeing the form).
+(`?sent=1#contact-card`, rewritten per language by the build), where the form is
+replaced by a localized confirmation message baked into the page (one string per
+language, no JS dictionary). The confirmation survives **without JavaScript** too:
+the redirect anchor points at the form card, and `#contact-card:target` CSS shows
+the message while hiding the form (`:target` + descendant selector, so it works in
+every browser — an earlier `:has()` variant was rejected by the Nu validator's CSS
+parser and would have needed a modern engine for nothing).
 This form is the site's single support channel: the FAQ answer about failed
 breakdowns, privacy and terms all point visitors here — no page promises an in-bot
 message-to-team path (the bot's Help button only shows payment guidance), and the
 sweep fails any page that references one.
+
+The path is verified end to end, not just in markup: `landing-contact-e2e.py`
+(default: 333 offline checks across nine languages — fields, labels, autocomplete,
+honeypot out of the tab order, native validation, `?sent=1` state with and without
+JS) and `--live`, which submits one real message through a **real Chrome over CDP**
+and asserts a 3xx from Web3Forms, the return to the same language page and the
+localized confirmation. Do not try this with headless browsers or a server-side
+POST: `api.web3forms.com` sits behind Cloudflare and answers 403 "Just a moment",
+so an automated probe proves nothing about real visitors.
 
 Privacy / terms: bilingual single pages (EN, then the Russian section marked
 `id="ru"`). Each page keeps exactly one `H1` (the English title): the Russian

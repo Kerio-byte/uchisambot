@@ -253,8 +253,9 @@ def bake(src: str, lang: str, dicts: dict) -> str:
             out = out.replace('href="../privacy.html"', 'href="../privacy.html#ru"')
             out = out.replace('href="../terms.html"', 'href="../terms.html#ru"')
 
-    # 8а-2) форма: после отправки Web3Forms возврат на страницу того же языка (?sent=1#contact)
-    out = out.replace(BASE + "?sent=1#contact", url_for(lang) + "?sent=1#contact")
+    # 8а-2) форма: после отправки Web3Forms возврат на страницу того же языка (?sent=1#contact-card;
+    # якорь на блок формы — по нему CSS показывает подтверждение и без JS)
+    out = out.replace(BASE + "?sent=1#contact-card", url_for(lang) + "?sent=1#contact-card")
 
     # 8b) шрифты: preload под письменность страницы, пути — для подпапок
     if lang in ("ru", "uk"):
