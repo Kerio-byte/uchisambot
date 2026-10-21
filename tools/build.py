@@ -96,11 +96,49 @@ def url_for(lang: str) -> str:
     return BASE if lang == "en" else f"{BASE}{lang}/"
 
 
+# Ключи, у которых текст совпадает с английским НАМЕРЕННО (пример в поле — не перевод).
+SAME_AS_EN_OK = {"contact.ph_email"}
+
+
+def validate_dicts(out: dict) -> None:
+    """Словари обязаны быть одинаковыми по набору ключей (21.10.2026).
+
+    Зачем: `rep_i18n` при отсутствии ключа молча оставляет английский текст из
+    шаблона — страница уезжает в свет с английской строкой, а сборка зелёная.
+    Проверка ловит оба случая: (а) ключ добавили в en и забыли в другом языке,
+    (б) в шаблоне новый data-i18n, которого нет ни в одном словаре.
+    """
+    en = set(out["en"])
+    problems = []
+    for lang in LANGS[1:]:
+        missing = sorted(en - set(out[lang]))
+        extra = sorted(set(out[lang]) - en)
+        if missing:
+            problems.append(f"{lang}: нет ключей {missing[:4]}{' …' if len(missing) > 4 else ''}")
+        if extra:
+            problems.append(f"{lang}: лишние ключи {extra[:4]}{' …' if len(extra) > 4 else ''}")
+    if problems:
+        raise SystemExit("СЛОВАРИ РАСХОДЯТСЯ по набору ключей "
+                         "(добавь переводы в src/locales/*.json):\n  " + "\n  ".join(problems))
+    for lang in LANGS:
+        empty = sorted(k for k, v in out[lang].items() if not str(v).strip())
+        if empty:
+            raise SystemExit(f"{lang}: пустые значения в словаре: {empty}")
+    # Мягкий сигнал (не валит сборку): ключ есть, но перевода нет — текст английский.
+    for lang in LANGS[1:]:
+        same = sorted(k for k in out[lang]
+                      if k in out["en"] and out[lang][k] == out["en"][k]
+                      and len(str(out[lang][k])) >= 12 and k not in SAME_AS_EN_OK)
+        if same:
+            print(f"  ВНИМАНИЕ {lang}: английский текст без перевода — {same}")
+
+
 def load_dicts() -> dict:
     out = {}
     for lang in LANGS:
         out[lang] = json.loads((LOCALES / f"{lang}.json").read_text(encoding="utf-8"))
         assert len(out[lang]) >= 80, f"{lang}: мало ключей"
+    validate_dicts(out)
     return out
 
 
@@ -678,6 +716,11 @@ def main() -> None:
     dicts = load_dicts()
     src = (ROOT / "index-src.html").read_text(encoding="utf-8")
     assert "data-i18n" in src and "var I18N" in src, "источник не похож на index-src.html"
+    # Ключи шаблона обязаны иметь перевод в КАЖДОМ языке: иначе rep_i18n молча
+    # оставит английский текст шаблона (см. validate_dicts).
+    tmpl_keys = set(re.findall(r'data-i18n(?:-ph)?="([\w.]+)"', src))
+    uncovered = sorted(k for k in tmpl_keys if any(k not in dicts[l] for l in LANGS))
+    assert not uncovered, f"в шаблоне ключи без перевода: {uncovered}"
     today = datetime.date.today().isoformat()
     prev = load_lastmods()
     stamps: dict = {}

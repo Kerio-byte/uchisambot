@@ -123,6 +123,17 @@ price change never rebuilds the site. The sweep also pins the JSON-LD shape (the
 node types and ten FAQ answers with non-empty text): a broken graph does not break the
 page, search engines just drop the rich result silently.
 
+Dictionaries are strictly parallel: every locale must carry exactly the key set of
+`en.json`, values must be non-empty, and every `data-i18n` / `data-i18n-ph` key used in
+`index-src.html` must exist in all nine dictionaries — `tools/build.py` refuses to build
+otherwise (gate added 21 Oct 2026). Before it, a missing key was invisible: `rep_i18n`
+keeps the English text from the template when the dictionary has no entry, so a forgotten
+translation shipped as an English line on `/hi/` while the build and the sweep stayed
+green (every check ran on key names it already knew, and a brand-new key was nobody's
+expectation). `contact.ph_email` (`you@example.com`) is the single deliberate English
+value — a format example, not copy; a long English value anywhere else fails the sweep
+(`dict no EN copy`).
+
 Typography: Manrope variable, self-hosted in `fonts/` (5 subsets). Pages preload the
 subset matching the language (latin by default, cyrillic for `/ru/` and `/uk/`);
 `privacy.html` / `terms.html` load fonts from the same folder.
@@ -235,7 +246,7 @@ so the question now lands 19 px above the bar. Links inside a sentence keep the 
 inline exception; the anchor landings (`#how`, `#pricing`, …) are re-checked against the
 63 px sticky header on top of the existing `scroll-padding-top: 84px`. Measured
 failed-first: 31 of 43 checks failed before the fix, 0 after; each fix also has a static
-marker in the sweep (993 checks).
+marker in the sweep (the sweep is the running count — 1283 checks as of 21 Oct 2026).
 
 User environment preferences: the hero video and the reveal animation respect
 `prefers-reduced-motion: reduce` (poster instead of the loop, every `.rv` visible from
