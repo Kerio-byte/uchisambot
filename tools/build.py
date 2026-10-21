@@ -22,6 +22,30 @@ ROOT = Path(__file__).resolve().parent.parent
 LOCALES = ROOT / "src" / "locales"
 BASE = "https://kerio-byte.github.io/uchisambot/"
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
+PRICES_FILE = ROOT / "tools" / "prices.json"
+
+
+def load_prices() -> dict:
+    """Единственный источник цен (21.10.2026).
+
+    До этого числа числа JSON-LD были литералами здесь, а видимые цены — строками в 9
+    словарях: правка одной стороны оставляла вторую врать молча (поисковик показывал старую
+    цену, человек — новую, и ни одна проверка этого не видела). Теперь JSON-LD собирается
+    из этого файла, а свип сверяет с ним тексты всех языков.
+    """
+    p = json.loads(PRICES_FILE.read_text(encoding="utf-8"))
+    assert isinstance(p.get("free_breakdowns"), int) and p["free_breakdowns"] >= 0, "prices: free_breakdowns"
+    assert isinstance(p.get("single"), int) and p["single"] > 0, "prices: single"
+    for name in ("pack5", "pack15"):
+        pack = p.get(name) or {}
+        assert isinstance(pack.get("size"), int) and pack["size"] > 1, f"prices: {name}.size"
+        assert isinstance(pack.get("price"), int) and pack["price"] > 0, f"prices: {name}.price"
+        assert pack["price"] < p["single"] * pack["size"], f"prices: {name} не выгоднее поштучной покупки"
+    assert isinstance(p.get("currency"), str) and p["currency"], "prices: currency"
+    return p
+
+
+PRICES = load_prices()
 LABELS = {
     "en": "🇬🇧 English", "ru": "🇷🇺 Русский", "es": "🇪🇸 Español", "pt": "🇧🇷 Português",
     "hi": "🇮🇳 हिन्दी", "id": "🇮🇩 Bahasa Indonesia", "tr": "🇹🇷 Türkçe", "vi": "🇻🇳 Tiếng Việt",
@@ -134,10 +158,13 @@ def jsonld(d: dict, lang: str) -> str:
          "url": "https://t.me/UchiSamBot", "inLanguage": LANGS,
          "description": d.get("meta.desc", ""),
          "offers": [
-             {"@type": "Offer", "name": d["p1t"], "price": "0", "priceCurrency": "XTR"},
-             {"@type": "Offer", "name": d["price.single"], "price": "30", "priceCurrency": "XTR"},
-             {"@type": "Offer", "name": d["p2t"], "price": "120", "priceCurrency": "XTR"},
-             {"@type": "Offer", "name": d["p3t"], "price": "300", "priceCurrency": "XTR"},
+             {"@type": "Offer", "name": d["p1t"], "price": "0", "priceCurrency": PRICES["currency"]},
+             {"@type": "Offer", "name": d["price.single"], "price": str(PRICES["single"]),
+              "priceCurrency": PRICES["currency"]},
+             {"@type": "Offer", "name": d["p2t"], "price": str(PRICES["pack5"]["price"]),
+              "priceCurrency": PRICES["currency"]},
+             {"@type": "Offer", "name": d["p3t"], "price": str(PRICES["pack15"]["price"]),
+              "priceCurrency": PRICES["currency"]},
          ]},
         {"@type": "FAQPage", "@id": BASE + "#faq",
          "inLanguage": lang,
