@@ -1,6 +1,6 @@
 # UchiSamBot — Asisten belajar untuk siswa sekolah
 
-> Bot Telegram yang membahas PR langkah demi langkah, menjelaskan topik dengan kata sederhana, memeriksa jawaban, dan membuat kartu belajar. 5 pembahasan gratis.
+> Bot Telegram yang membahas PR langkah demi langkah, menjelaskan topik dengan kata sederhana, memeriksa jawaban, dan membuat kartu belajar. 2 pembahasan gratis.
 
 UchiSamBot membahas PR kamu langkah demi langkah, menjelaskan topiknya dengan kata-kata sederhana, memeriksa jawabanmu, dan membuat kartu belajar — langsung di Telegram, kapan saja.
 
@@ -38,7 +38,7 @@ Dan pertanyaan sekolah lain apa pun yang membuatmu buntu.
 
 Pembayaran lewat Telegram Stars, langsung di chat.
 
-- **5 pembahasan pertama — Gratis**: Coba botnya — tanpa perlu bayar.
+- **2 pembahasan pertama — Gratis**: Coba botnya — tanpa perlu bayar.
 - **Paket 5 pembahasan — 120 Stars**: Sekitar 24 Stars per pembahasan — hemat 20%.
 - **Paket 15 pembahasan — 300 Stars**: Sekitar 20 Stars per pembahasan — hemat 33%.
 
@@ -69,7 +69,7 @@ Sembilan bahasa: Rusia, Inggris, Spanyol, Portugis, Hindi, Indonesia, Turki, Vie
 
 ### Bagaimana cara membayar?
 
-Dengan Telegram Stars, langsung di chat. 5 pembahasan pertama gratis; setelah itu kamu bisa membeli satu pembahasan atau paket.
+Dengan Telegram Stars, langsung di chat. 2 pembahasan pertama gratis; setelah itu kamu bisa membeli satu pembahasan atau paket.
 
 ### Apakah perlu instal sesuatu?
 

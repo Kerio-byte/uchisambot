@@ -20,7 +20,7 @@ The service is intended for school students and their parents. If you are a mino
 
 ## 4. Free and paid
 
-The first 5 breakdowns are free for every user. After that, breakdown packs can be purchased with Telegram Stars: 1 breakdown — 30 Stars; a pack of 5 — 120 Stars; a pack of 15 — 300 Stars. There are no subscriptions and no auto-renewals. Payments are processed by Telegram — we never see your card or bank details.
+The first 2 breakdowns are free for every user. After that, breakdown packs can be purchased with Telegram Stars: 1 breakdown — 30 Stars; a pack of 5 — 120 Stars; a pack of 15 — 300 Stars. There are no subscriptions and no auto-renewals. Payments are processed by Telegram — we never see your card or bank details.
 
 ## 5. Support
 
@@ -78,7 +78,7 @@ UchiSamBot помогает разбираться с домашними зад�
 
 ### 4. Бесплатно и платно
 
-Первые 5 разборов — бесплатно для каждого пользователя. Дальше пакеты разборов покупаются за звёзды Telegram: 1 разбор — 30 звёзд; пакет из 5 — 120 звёзд; пакет из 15 — 300 звёзд. Подписок и автосписаний нет. Платежи обрабатывает Telegram — данные ваших карт и счетов к нам не попадают.
+Первые 2 разбора — бесплатно для каждого пользователя. Дальше пакеты разборов покупаются за звёзды Telegram: 1 разбор — 30 звёзд; пакет из 5 — 120 звёзд; пакет из 15 — 300 звёзд. Подписок и автосписаний нет. Платежи обрабатывает Telegram — данные ваших карт и счетов к нам не попадают.
 
 ### 5. Поддержка
 

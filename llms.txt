@@ -1,6 +1,6 @@
 # UchiSamBot
 
-> Homework help bot in Telegram: step-by-step breakdowns, photo tasks, solution checks and flashcards. First 5 breakdowns free, no app to install.
+> Homework help bot in Telegram: step-by-step breakdowns, photo tasks, solution checks and flashcards. First 2 breakdowns free, no app to install.
 
 Open the bot: https://t.me/UchiSamBot
 
