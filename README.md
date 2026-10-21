@@ -22,7 +22,13 @@ Live: https://kerio-byte.github.io/uchisambot/
   tracking.
 - `img/` — logo (SVG), favicons, chat-shot mockups (WebP; `shot1-3.webp` = EN,
   `shotN-<lang>.webp` = each of the other eight languages, see "Chat shots" below),
-  social preview image (`og.png`), hero video posters (`demo-poster*.webp`).
+  social preview cards (`og-<lang>.png`, 1200×630 — one per language, see "Social
+  preview cards" below; `og.png` is the earlier English card, kept for already-shared
+  links and the two legal pages), hero video posters (`demo-poster*.webp`).
+- `tools/og-cards.py` — renders the per-language social preview cards from
+  `src/locales/*.json` with Playwright/Chromium (one 1200×630 template: icon, name,
+  `foot.tag` tagline, `f1t · f2t · f5t` feature line, `t.me/UchiSamBot`); see
+  "Social preview cards" below.
 - `tools/shots-gen/` — generator for the per-language chat-shot mockups
   (`gen_shots.py` + `mockup.html` + Inter subsets under `assets/fonts/`); see
   "Chat shots" below. EN/RU shots are frozen references — the generator renders
@@ -234,6 +240,27 @@ width equals the final width). The CSS `height:46px;width:auto` rule keeps rende
 unchanged — the attributes only affect the pre-load reservation. Hover `title`s on
 badge links were dropped: they duplicated the alt text in English on every language
 page.
+
+Social preview cards (`og:image`): every language page points at its OWN 1200×630
+card, `img/og-<lang>.png` (`og-en.png` for the root page). Until 21 Oct 2026 all nine
+pages shared one English `og.png`, so a link to `/hi/` or `/es/` shared in Telegram or
+WhatsApp previewed with English text — the same gap the screenshots and hero loops had
+before their per-language pass. The cards are rendered from the same dictionaries:
+
+    python3 tools/og-cards.py              # all nine
+    python3 tools/og-cards.py --langs ru,es
+    python3 tools/og-cards.py --check      # only verify size/resolution of existing files
+
+One template (light-blue gradient, app icon, name, `foot.tag` tagline,
+`f1t · f2t · f5t` feature line, `t.me/UchiSamBot`). The tagline auto-shrinks to fit the
+column; the feature line may wrap only BETWEEN features (each is a `nowrap` segment) —
+a plain wrap broke Russian as "Задачи с / фото" and Spanish as "Tareas con / foto".
+`hi` falls back to the system Noto Sans Devanagari (Manrope has no Devanagari subset);
+the rendered conjuncts and matras were reviewed on the produced PNG. The old `og.png`
+is never overwritten — already-shared links and the two legal pages keep it. The build
+bakes the per-language absolute URL into both `og:image` and `twitter:image`, and the
+QA sweep asserts per language that the page points at its own file, that the file
+exists on disk, and that no page still references `og.png`.
 
 Screen-reader labels: the header logo `alt` and the language-switcher summary
 `aria-label` are localised via the `logo.alt` / `lang.aria` dictionary keys on all

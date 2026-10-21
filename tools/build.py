@@ -210,6 +210,14 @@ def bake(src: str, lang: str, dicts: dict) -> str:
                  f'<meta property="og:image:alt" content="{esc_attr(d["meta.title"])}">', out)
     out = re.sub(r'<meta name="twitter:image:alt" content="[^"]*">',
                  f'<meta name="twitter:image:alt" content="{esc_attr(d["meta.title"])}">', out)
+    # картинка превью — своя на каждый язык (до 21.10 на всех 9 страницах был один английский
+    # og.png: шаринг /hi/ показывал английскую карточку). Файлы собирает tools/og-cards.py;
+    # старый og.png не перезаписывается — английская карточка называется og-en.png.
+    og_img = BASE + "img/" + ("og-en.png" if lang == "en" else f"og-{lang}.png")
+    out = re.sub(r'<meta property="og:image" content="[^"]*">',
+                 f'<meta property="og:image" content="{og_img}">', out)
+    out = re.sub(r'<meta name="twitter:image" content="[^"]*">',
+                 f'<meta name="twitter:image" content="{og_img}">', out)
 
     # 5) JSON-LD
     out = re.sub(r'<script type="application/ld\+json">.*?</script>', jsonld(d, lang), out, flags=re.S)
