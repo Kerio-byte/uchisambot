@@ -6,7 +6,7 @@
 Выход:     index.html (EN, корень) + <lang>/index.html для 8 языков (md-двойники
            index.html.md рядом с каждой страницей), md-двойники legal-страниц
            (privacy.html.md / terms.html.md — конвертация main-контента их html),
-           sitemap.xml + llms.txt
+           404.html (одна страница на весь сайт), sitemap.xml + llms.txt
 Запуск:    python3 tools/build.py     (правки контента: меняешь словарь → пересборка)
 """
 from __future__ import annotations
@@ -45,6 +45,17 @@ VIDEO_ALT = {
 # badge.alt («отмечен на {name}»), подпись группы бейджей = badge.group.
 # До 16.10 альты были захардкожены по-английски и лежали ОДИНАКОВО на всех 9
 # страницах (утечка чужого языка для скринридеров); см. блок «бейджи».
+FONT_SUBSETS = [
+    ("cyrillic-ext", "U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F"),
+    ("cyrillic", "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"),
+    ("vietnamese", "U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,"
+                   "U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB"),
+    ("latin-ext", "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,"
+                  "U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,"
+                  "U+2113,U+2C60-2C7F,U+A720-A7FF"),
+    ("latin", "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,"
+              "U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
+]
 BADGE_ALTS = [
     ("launchigniter.com/api/badge/", "LaunchIgniter"),
     ("fazier.com/api/v1/", "Fazier"),
@@ -550,6 +561,87 @@ def llms(dicts: dict) -> str:
     return "\n".join(lines)
 
 
+def page_404() -> str:
+    """Страница 404 (одна на весь сайт, EN + чипы языков).
+
+    Зачем: без неё GitHub Pages отдаёт свою стандартную английскую заглушку на любой
+    несуществующий адрес — посетитель уходит, а конверсия теряется. Своя 404 возвращает
+    человека к языку и к боту.
+
+    Все URL — АБСОЛЮТНЫЕ (BASE+...): 404 отдаётся по ЛЮБОМУ пути, поэтому относительные
+    ссылки/ассеты считались бы от запрошенного адреса и ломались (стили, шрифты, ссылки).
+    Никаких дат и случайных значений — сборка воспроизводима.
+    """
+    chips = []
+    for lang in LANGS:
+        label = LABELS[lang].split(" ", 1)[1]  # без эмодзи-флага
+        cur = ' aria-current="page"' if lang == "en" else ""
+        chips.append(f'<li><a href="{url_for(lang)}"{cur}>{esc_text(label)}</a></li>')
+    faces = "".join(
+        f'@font-face{{font-family:\'Manrope\';font-style:normal;font-weight:200 800;'
+        f'font-display:swap;src:url("{BASE}fonts/manrope-{s}.woff2") format(\'woff2\');'
+        f'unicode-range:{r}}}\n'
+        for s, r in FONT_SUBSETS
+    )
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — UchiSamBot</title>
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#3D5AFE">
+<link rel="icon" href="{BASE}img/logo.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="64x64" href="{BASE}img/icon-64.png">
+<style>
+/* Manrope (variable, self-hosted, OFL) — те же 5 сабсетов, что и на основных страницах */
+{faces}:root{{--brand:#3D5AFE;--brand-deep:#2338A8;--brand-soft:#EAF0FF;--ink:#14203A;--muted:#50617F;--bg:#F7FAFF;--card:#fff;--line:#E3EAF7;--r:18px}}
+*{{box-sizing:border-box}}
+body{{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--ink);
+  font:16px/1.6 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}}
+.card{{width:100%;max-width:620px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:0 10px 30px rgba(30,60,140,.08);padding:32px}}
+.brand{{display:flex;align-items:center;gap:10px;margin-bottom:20px;font-weight:800;letter-spacing:-.02em}}
+.code{{font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--brand);margin:0 0 8px}}
+h1{{font-size:clamp(22px,4.6vw,30px);line-height:1.25;letter-spacing:-.02em;margin:0 0 10px}}
+p{{margin:0 0 20px;color:var(--muted)}}
+.langs{{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0;list-style:none}}
+.langs a{{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--line);
+  border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600}}
+.langs a:hover{{border-color:var(--brand);color:var(--brand)}}
+.langs a[aria-current]{{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-deep)}}
+.acts{{display:flex;flex-wrap:wrap;align-items:center;gap:12px}}
+.btn{{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;border-radius:12px;
+  background:var(--brand);color:#fff;font-weight:700;text-decoration:none}}
+.btn:hover{{background:#2F49D6}}
+.alt{{font-weight:600;color:var(--ink)}}
+footer{{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}}
+footer a{{color:var(--muted)}}
+:focus-visible{{outline:3px solid var(--brand);outline-offset:2px}}
+@media (forced-colors:active){{.btn,.langs a{{border:1px solid}}}}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="brand"><img src="{BASE}img/logo.svg" alt="" width="34" height="34">UchiSamBot</div>
+  <p class="code">404</p>
+  <h1>This page doesn't exist</h1>
+  <p>The link may be out of date, or the address has a typo. Pick your language — the site is the same in all nine.</p>
+  <ul class="langs">
+    {"".join(chips)}
+  </ul>
+  <div class="acts">
+    <a class="btn" href="https://t.me/UchiSamBot?start=src_landing_404">Open UchiSamBot in Telegram</a>
+    <a class="alt" href="{BASE}">Go to the home page</a>
+  </div>
+  <footer>UchiSamBot — step-by-step homework help in Telegram ·
+    <a href="{BASE}privacy.html">Privacy</a> · <a href="{BASE}terms.html">Terms</a></footer>
+</main>
+</body>
+</html>
+"""
+
+
 def main() -> None:
     dicts = load_dicts()
     src = (ROOT / "index-src.html").read_text(encoding="utf-8")
@@ -579,6 +671,13 @@ def main() -> None:
         (ROOT / (name + ".md")).write_text(md, encoding="utf-8")
         print(f"{name}.md ({len(md.encode('utf-8'))} байт)")
         stamps[BASE + name] = stamp(prev, BASE + name, raw, today)
+
+    # 404 (21.10): своя страница вместо стандартной заглушки GitHub Pages.
+    # В sitemap НЕ идёт (её не индексируют), в lastmod-реестр не попадает.
+    p404 = page_404()
+    assert p404.count('<a href="' + BASE) >= 10, "404: не все ссылки абсолютные"
+    (ROOT / "404.html").write_text(p404, encoding="utf-8")
+    print(f"404.html ({len(p404.encode('utf-8'))} байт)")
 
     (ROOT / "sitemap.xml").write_text(sitemap({u: s["date"] for u, s in stamps.items()}), encoding="utf-8")
     (ROOT / "tools" / "lastmod.json").write_text(
