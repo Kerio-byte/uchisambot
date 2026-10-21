@@ -1,6 +1,6 @@
 # UchiSamBot — okul öğrencileri için ders yardımcısı
 
-> Ödevleri adım adım çözen, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve tekrar kartları hazırlayan bir Telegram botu. İlk 5 çözüm ücretsiz.
+> Ödevleri adım adım çözen, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve tekrar kartları hazırlayan bir Telegram botu. İlk 2 çözüm ücretsiz.
 
 UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, cevaplarını kontrol eder ve tekrar kartları hazırlar — tam da Telegram'ın içinde, günün her saati.
 
@@ -38,7 +38,7 @@ Ve takıldığın diğer tüm okul soruları.
 
 Ödeme, doğrudan sohbet içinde Telegram Stars ile yapılır.
 
-- **İlk 5 çözüm — Ücretsiz**: Botu dene — ödeme gerekmez.
+- **İlk 2 çözüm — Ücretsiz**: Botu dene — ödeme gerekmez.
 - **5 çözümlük paket — 120 Stars**: Çözüm başına yaklaşık 24 Stars — %20 tasarruf.
 - **15 çözümlük paket — 300 Stars**: Çözüm başına yaklaşık 20 Stars — %33 tasarruf.
 
@@ -69,7 +69,7 @@ Dokuz dil: Rusça, İngilizce, İspanyolca, Portekizce, Hintçe, Endonezce, Tür
 
 ### Nasıl ödeme yaparım?
 
-Sohbetin içinde Telegram Stars ile. İlk 5 çözüm ücretsiz; sonrasında tek çözüm ya da paket satın alabilirsin.
+Sohbetin içinde Telegram Stars ile. İlk 2 çözüm ücretsiz; sonrasında tek çözüm ya da paket satın alabilirsin.
 
 ### Bir şey kurmam gerekiyor mu?
 

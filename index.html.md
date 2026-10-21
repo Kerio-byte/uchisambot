@@ -1,6 +1,6 @@
 # UchiSamBot — Step-by-Step Homework Help in Telegram
 
-> Homework help bot in Telegram: step-by-step breakdowns, photo tasks, solution checks and flashcards. First 5 breakdowns free, no app to install.
+> Homework help bot in Telegram: step-by-step breakdowns, photo tasks, solution checks and flashcards. First 2 breakdowns free, no app to install.
 
 UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.
 
@@ -38,7 +38,7 @@ And any other school question you are stuck on.
 
 Payment via Telegram Stars, right in the chat.
 
-- **First 5 breakdowns — Free**: Try the bot — no payment needed.
+- **First 2 breakdowns — Free**: Try the bot — no payment needed.
 - **Pack of 5 breakdowns — 120 Stars**: About 24 Stars per breakdown — save 20%.
 - **Pack of 15 breakdowns — 300 Stars**: About 20 Stars per breakdown — save 33%.
 
@@ -69,7 +69,7 @@ Nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkis
 
 ### How do I pay?
 
-With Telegram Stars, right in the chat. The first 5 breakdowns are free; after that you can buy a single breakdown or a pack.
+With Telegram Stars, right in the chat. The first 2 breakdowns are free; after that you can buy a single breakdown or a pack.
 
 ### Do I need to install anything?
 

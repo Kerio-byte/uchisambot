@@ -1,6 +1,6 @@
 # UchiSamBot — Ayudante de estudio para escolares
 
-> Bot de Telegram que desglosa las tareas paso a paso, explica los temas con palabras sencillas y crea tarjetas de repaso. Primeros 5 desgloses gratis.
+> Bot de Telegram que desglosa las tareas paso a paso, explica los temas con palabras sencillas y crea tarjetas de repaso. Primeros 2 desgloses gratis.
 
 UchiSamBot desglosa tus tareas paso a paso, explica el tema con palabras sencillas, revisa tus respuestas y crea tarjetas de repaso — directamente en Telegram, a cualquier hora del día.
 
@@ -38,7 +38,7 @@ Y cualquier otra pregunta escolar con la que te quedes atascado.
 
 Pago con Telegram Stars, directamente en el chat.
 
-- **Los primeros 5 desgloses — Gratis**: Prueba el bot — no hace falta pagar.
+- **Los primeros 2 desgloses — Gratis**: Prueba el bot — no hace falta pagar.
 - **Paquete de 5 desgloses — 120 Stars**: Unos 24 Stars por desglose — ahorras un 20%.
 - **Paquete de 15 desgloses — 300 Stars**: Unos 20 Stars por desglose — ahorras un 33%.
 
@@ -69,7 +69,7 @@ Nueve idiomas: ruso, inglés, español, portugués, hindi, indonesio, turco, vie
 
 ### ¿Cómo pago?
 
-Con Telegram Stars, directamente en el chat. Los primeros 5 desgloses son gratis; después puedes comprar un desglose suelto o un paquete.
+Con Telegram Stars, directamente en el chat. Los primeros 2 desgloses son gratis; después puedes comprar un desglose suelto o un paquete.
 
 ### ¿Tengo que instalar algo?
 

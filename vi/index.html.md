@@ -1,6 +1,6 @@
 # UchiSamBot — Trợ lý học tập cho học sinh
 
-> Bot Telegram phân tích bài tập về nhà từng bước, giải thích chủ đề bằng từ đơn giản, kiểm tra bài giải và tạo thẻ ghi nhớ. 5 lần phân tích đầu tiên miễn phí.
+> Bot Telegram phân tích bài tập về nhà từng bước, giải thích chủ đề bằng từ đơn giản, kiểm tra bài giải và tạo thẻ ghi nhớ. 2 lần phân tích đầu tiên miễn phí.
 
 UchiSamBot phân tích bài tập về nhà của bạn từng bước một, giải thích chủ đề bằng những từ đơn giản, kiểm tra câu trả lời và tạo thẻ ghi nhớ — ngay trong Telegram, bất cứ lúc nào trong ngày.
 
@@ -38,7 +38,7 @@ Và bất kỳ câu hỏi nào ở trường khiến bạn bí.
 
 Thanh toán bằng Telegram Stars, ngay trong cuộc trò chuyện.
 
-- **5 lần phân tích đầu tiên — Miễn phí**: Dùng thử bot — không cần thanh toán.
+- **2 lần phân tích đầu tiên — Miễn phí**: Dùng thử bot — không cần thanh toán.
 - **Gói 5 lần phân tích — 120 Stars**: Khoảng 24 Stars mỗi lần phân tích — tiết kiệm 20%.
 - **Gói 15 lần phân tích — 300 Stars**: Khoảng 20 Stars mỗi lần phân tích — tiết kiệm 33%.
 
@@ -69,7 +69,7 @@ Chín ngôn ngữ: tiếng Nga, tiếng Anh, tiếng Tây Ban Nha, tiếng Bồ 
 
 ### Thanh toán thế nào?
 
-Bằng Telegram Stars, ngay trong cuộc trò chuyện. 5 lần phân tích đầu tiên miễn phí; sau đó bạn có thể mua một lần phân tích hoặc một gói.
+Bằng Telegram Stars, ngay trong cuộc trò chuyện. 2 lần phân tích đầu tiên miễn phí; sau đó bạn có thể mua một lần phân tích hoặc một gói.
 
 ### Có cần cài đặt gì không?
 
