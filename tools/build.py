@@ -816,6 +816,39 @@ footer a{{color:var(--muted)}}
 """
 
 
+def audit_site_address() -> None:
+    """После сборки: чужого адреса сайта не осталось ни в одном файле (22.10.2026).
+
+    Зачем отдельно от load_site: сборка приводит к текущему адресу только те файлы,
+    что перечислены в previous. Если адрес сменили, а старый в previous не внесли,
+    нормализация молча ничего не делает — и страницы уезжают в свет со старым
+    canonical/og:url, то есть сами себя выкидывают из поиска. Свип это ловит, но
+    ловит ПОСЛЕ сборки; здесь сборка падает сама (код 1), называет файлы и не даёт
+    закоммитить половинчатый переезд.
+    """
+    pat = re.compile(r"https://([A-Za-z0-9.-]+)/uchisambot/")
+    files = ["index.html", "index.html.md", "privacy.html", "privacy.html.md",
+             "terms.html", "terms.html.md", "sitemap.xml", "robots.txt",
+             "llms.txt", "404.html"]
+    files += [f"{lang}/index.html" for lang in LANGS[1:]]
+    files += [f"{lang}/index.html.md" for lang in LANGS[1:]]
+    bad = set()
+    for name in files:
+        p = ROOT / name
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        for host in pat.findall(text):
+            url = f"https://{host}/uchisambot/"
+            if url != BASE:
+                bad.add(f"{name}: {url}")
+    if bad:
+        raise SystemExit(
+            "СБОРКА ОТМЕНЕНА: в файлах остался чужой адрес сайта — переезд сделан наполовину.\n"
+            "  Либо верни старый адрес в previous в tools/site.json, либо почини нормализацию:\n  "
+            + "\n  ".join(sorted(bad)[:10]))
+
+
 def main() -> None:
     dicts = load_dicts()
     changed = normalize_hand_written()
@@ -870,6 +903,7 @@ def main() -> None:
     (ROOT / "llms.txt").write_text(llms(dicts), encoding="utf-8")
     fresh = sum(1 for u, s in stamps.items() if s["date"] == today)
     print(f"sitemap.xml (lastmod: изменено сегодня {fresh} из {len(stamps)}) + llms.txt + tools/lastmod.json")
+    audit_site_address()
 
 
 if __name__ == "__main__":
