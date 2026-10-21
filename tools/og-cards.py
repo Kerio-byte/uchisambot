@@ -12,12 +12,15 @@
 новые файлы называются og-<lang>.png, английская карточка — og-en.png.
 
 Запуск:  python3 tools/og-cards.py [--langs es,pt] [--check]
-Выход:   img/og-<lang>.png (1200x630)
---check  только измерить существующие файлы (размер, разрешение), ничего не рендерить.
+Выход:   img/og-<lang>.png (1200x630) + tools/og-cards.lock.json (реестр отпечатков:
+         текста словаря и самого PNG — свип сверяет его и ловит «карточка устарела»)
+--check  только измерить существующие файлы (размер, разрешение, совпадение с реестром),
+         ничего не рендерить.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -30,6 +33,7 @@ ROOT = HERE.parent
 LOCALES = ROOT / "src" / "locales"
 FONTS = ROOT / "fonts"
 IMG = ROOT / "img"
+LOCK = ROOT / "tools" / "og-cards.lock.json"
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 
 W, H = 1200, 630
@@ -103,6 +107,41 @@ window.__fit = () => {{
 """
 
 
+def text_sha(lang: str) -> str:
+    """Отпечаток текста карточки — ровно те четыре строки, что попадают на картинку."""
+    d = json.loads((LOCALES / f"{lang}.json").read_text(encoding="utf-8"))
+    s = "\x1f".join(str(d[k]) for k in ("foot.tag", "f1t", "f2t", "f5t"))
+    return hashlib.sha256(s.encode("utf-8")).hexdigest()
+
+
+def file_sha(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 16), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def write_lock(langs: list[str]) -> None:
+    """Реестр для свипа: text_sha + img_sha.
+
+    Зачем: карточки — готовые PNG в git, сборка их не перерисовывает. Если завтра
+    поправить строку в src/locales, картинка останется старой и превью в Telegram
+    будет врать. Реестр делает такой дрейф машинно-видимым.
+    """
+    try:
+        lock = json.loads(LOCK.read_text(encoding="utf-8"))
+        if not isinstance(lock, dict):
+            lock = {}
+    except Exception:
+        lock = {}
+    for lang in langs:
+        p = IMG / f"og-{lang}.png"
+        lock[lang] = {"text_sha": text_sha(lang), "img_sha": file_sha(p), "bytes": p.stat().st_size}
+    LOCK.write_text(json.dumps(lock, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"реестр: tools/og-cards.lock.json ({len(langs)} языков)")
+
+
 def strings(lang: str) -> tuple[str, str]:
     """Подзаголовок и HTML-строка возможностей.
 
@@ -152,6 +191,7 @@ def render(langs: list[str]) -> int:
     if any(m["descH"] > 2 * (m["descSize"] * 1.3) + 2 for m in meta.values()):
         print("ОШИБКА: описание заняло больше двух строк", file=sys.stderr)
         return 1
+    write_lock(langs)
     return 0
 
 
@@ -168,7 +208,15 @@ def check() -> int:
         with Image.open(p) as im:
             size = im.size
         ok = size == (W, H) and p.stat().st_size > 15000
-        print(f"{'OK   ' if ok else 'ПЛОХО'} {p.name} {size[0]}x{size[1]} {p.stat().st_size} B")
+        try:
+            lock = json.loads(LOCK.read_text(encoding="utf-8"))
+            ent = lock.get(lang) or {}
+            lock_ok = ent.get("text_sha") == text_sha(lang) and ent.get("img_sha") == file_sha(p)
+        except Exception:
+            lock_ok = False
+        ok = ok and lock_ok
+        print(f"{'OK   ' if ok else 'ПЛОХО'} {p.name} {size[0]}x{size[1]} {p.stat().st_size} B"
+              + ("" if lock_ok else "  ДРЕЙФ: карточка не совпадает с текстом словаря — перерендерить"))
         bad += 0 if ok else 1
     return 1 if bad else 0
 
