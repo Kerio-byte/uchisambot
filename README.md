@@ -251,6 +251,13 @@ before their per-language pass. The cards are rendered from the same dictionarie
     python3 tools/og-cards.py --langs ru,es
     python3 tools/og-cards.py --check      # only verify size/resolution of existing files
 
+The renderer also writes `tools/og-cards.lock.json` — a fingerprint of the four
+dictionary strings that go on each card plus a SHA-256 of the PNG. Cards are committed
+artifacts and the build never re-renders them, so editing a locale string would
+otherwise leave a stale picture behind; the QA sweep compares the lock against the
+current dictionaries and the file on disk and fails with "og card text in sync" until
+the card is re-rendered (`--check` reports the same drift).
+
 One template (light-blue gradient, app icon, name, `foot.tag` tagline,
 `f1t · f2t · f5t` feature line, `t.me/UchiSamBot`). The tagline auto-shrinks to fit the
 column; the feature line may wrap only BETWEEN features (each is a `nowrap` segment) —
