@@ -4,7 +4,7 @@
 
 UchiSamBot desglosa tus tareas paso a paso, explica el tema con palabras sencillas, revisa tus respuestas y crea tarjetas de repaso — directamente en Telegram, a cualquier hora del día.
 
-[Abrir en Telegram](https://t.me/UchiSamBot)
+[Abrir en Telegram](https://t.me/UchiSamBot?start=src_llms)
 
 ## Cómo funciona
 

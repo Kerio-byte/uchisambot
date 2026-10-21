@@ -4,7 +4,7 @@
 
 UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, cevaplarını kontrol eder ve tekrar kartları hazırlar — tam da Telegram'ın içinde, günün her saati.
 
-[Telegram'da aç](https://t.me/UchiSamBot)
+[Telegram'da aç](https://t.me/UchiSamBot?start=src_llms)
 
 ## Nasıl çalışır
 

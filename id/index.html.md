@@ -4,7 +4,7 @@
 
 UchiSamBot membahas PR kamu langkah demi langkah, menjelaskan topiknya dengan kata-kata sederhana, memeriksa jawabanmu, dan membuat kartu belajar — langsung di Telegram, kapan saja.
 
-[Buka di Telegram](https://t.me/UchiSamBot)
+[Buka di Telegram](https://t.me/UchiSamBot?start=src_llms)
 
 ## Cara kerja
 

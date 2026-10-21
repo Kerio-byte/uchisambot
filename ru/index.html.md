@@ -4,7 +4,7 @@
 
 UchiSamBot разбирает задачу по шагам, объясняет тему простыми словами, проверяет решение и делает карточки для повторения — прямо в Telegram, в любое время дня.
 
-[Открыть в Telegram](https://t.me/UchiSamBot)
+[Открыть в Telegram](https://t.me/UchiSamBot?start=src_llms)
 
 ## Как это работает
 

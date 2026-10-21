@@ -4,7 +4,7 @@
 
 UchiSamBot phân tích bài tập về nhà của bạn từng bước một, giải thích chủ đề bằng những từ đơn giản, kiểm tra câu trả lời và tạo thẻ ghi nhớ — ngay trong Telegram, bất cứ lúc nào trong ngày.
 
-[Mở trong Telegram](https://t.me/UchiSamBot)
+[Mở trong Telegram](https://t.me/UchiSamBot?start=src_llms)
 
 ## Cách hoạt động
 

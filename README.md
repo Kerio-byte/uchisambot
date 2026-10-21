@@ -410,3 +410,13 @@ markdown twins and the demo videos) and `rel="alternate" type="text/markdown"` �
 that page's markdown twin. The links in `llms.txt` point to the markdown
 versions — the convention of llms.txt v2 (llmstxt.org): markdown twin at the page
 URL + `.md`.
+
+The bot link in the AI layer carries its own source tag. `llms.txt` (the
+`Open the bot` line) and the `Open in Telegram` line of every markdown twin point
+to `https://t.me/UchiSamBot?start=src_llms` — the constant `BOT_LLMS` in
+`tools/build.py`. The page keeps its three landing tags (`src_landing`,
+`src_landing_band`, `src_landing_sticky`); the AI layer is a separate channel, and
+without its own tag a reader who arrives from an AI answer lands in the bot's
+statistics as "(no tag)" and cannot be told apart from any other untagged source.
+The QA sweep checks the tag in all nine twins and in `llms.txt` and fails if the
+bare link comes back.

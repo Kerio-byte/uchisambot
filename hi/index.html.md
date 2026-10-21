@@ -4,7 +4,7 @@
 
 UchiSamBot आपके होमवर्क को एक-एक स्टेप में समझाता है, विषय को आसान शब्दों में बताता है, आपके जवाब जाँचता है और फ्लैशकार्ड बनाता है — सीधे Telegram में, दिन के किसी भी समय।
 
-[Telegram में खोलें](https://t.me/UchiSamBot)
+[Telegram में खोलें](https://t.me/UchiSamBot?start=src_llms)
 
 ## यह कैसे काम करता है
 

@@ -4,7 +4,7 @@
 
 UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.
 
-[Open in Telegram](https://t.me/UchiSamBot)
+[Open in Telegram](https://t.me/UchiSamBot?start=src_llms)
 
 ## How it works
 

@@ -23,6 +23,10 @@ LOCALES = ROOT / "src" / "locales"
 BASE = "https://kerio-byte.github.io/uchisambot/"
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 PRICES_FILE = ROOT / "tools" / "prices.json"
+# Ссылка на бота для ИИ-слоя (llms.txt + md-двойники страниц). Правило владельца:
+# каждая ссылка на бота несёт метку источника (реестр — ~/.hermes/state/money/link-tags.md);
+# без метки переход из ИИ-канала падает в статистике в «(без метки)» и неразличим по площадкам.
+BOT_LLMS = "https://t.me/UchiSamBot?start=src_llms"
 
 
 def load_prices() -> dict:
@@ -404,7 +408,7 @@ def page_md(d: dict, lang: str) -> str:
     Содержимое — из того же словаря языка, что и страница (единый источник правды):
     описание, шаги, возможности, предметы, цены, родителям, FAQ, контакты и ссылки.
     """
-    bot = "https://t.me/UchiSamBot"
+    bot = BOT_LLMS
     page_url = url_for(lang)
     pp = BASE + "privacy.html" + ("#ru" if lang == "ru" else "")
     tt = BASE + "terms.html" + ("#ru" if lang == "ru" else "")
@@ -606,7 +610,7 @@ def llms(dicts: dict) -> str:
         "",
         "> " + d["meta.desc"],
         "",
-        "Open the bot: https://t.me/UchiSamBot",
+        "Open the bot: " + BOT_LLMS,
         "",
         "## Pages",
         "",
