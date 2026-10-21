@@ -1,12 +1,12 @@
 # Terms of Service
 
-UchiSamBot (Study Helper) · Last updated: 17 October 2026
+UchiSamBot (Study Helper) · Last updated: 21 October 2026
 
 These terms describe the rules for using UchiSamBot (Study Helper), a Telegram bot for school students. By using the bot, you agree to these terms.
 
 ## 1. The service
 
-UchiSamBot helps students understand their homework: it gives step-by-step breakdowns, explains topics in simple language, checks solutions, and makes summaries and flashcards for revision. Subjects: mathematics, Russian language, physics, chemistry, history. The interface works in nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkish, Vietnamese and Ukrainian.
+UchiSamBot helps students understand their homework: it gives step-by-step breakdowns, explains topics in simple language, checks solutions, and makes summaries and flashcards for revision. Subjects: mathematics, English, physics, chemistry, history. The interface works in nine languages: Russian, English, Spanish, Portuguese, Hindi, Indonesian, Turkish, Vietnamese and Ukrainian.
 
 ## 2. How to use it
 
@@ -58,7 +58,7 @@ Use the contact form on our website — we reply by email.
 
 ## Условия использования
 
-UchiSamBot (Учебный помощник) · Обновлено: 17 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 21 октября 2026
 
 Эти условия описывают правила использования UchiSamBot (Учебный помощник) — телеграм-бота для школьников. Пользуясь ботом, вы соглашаетесь с этими условиями.
 
