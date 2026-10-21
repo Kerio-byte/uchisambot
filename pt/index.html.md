@@ -4,7 +4,7 @@
 
 O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples, confere suas respostas e faz flashcards — direto no Telegram, a qualquer hora do dia.
 
-[Abrir no Telegram](https://t.me/UchiSamBot)
+[Abrir no Telegram](https://t.me/UchiSamBot?start=src_llms)
 
 ## Como funciona
 
