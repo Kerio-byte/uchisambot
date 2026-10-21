@@ -307,6 +307,19 @@ and `dns-prefetch` to the seven footer badge hosts plus the form API
 only burn sockets — DNS warm-up is the right level. `privacy.html` / `terms.html`
 carry `dns-prefetch` for their two badge hosts.
 
+The largest contentful paint on every page is the hero `<video>`'s poster, so the head
+preloads that image (`<link rel="preload" href="img/demo-poster.webp" as="image"
+type="image/webp">`; the build rewrites the href per language exactly like the `poster`
+attribute, and the QA sweep fails if a page preloads another language's poster or a file
+that does not exist). Measured on the Core Web Vitals battery (`landing-cwv.py`,
+Lighthouse-mobile profile: 390×844, DPR 2, CPU ×4, Slow 4G) it is worth 40–70 ms of LCP
+with no second download — the media element reuses the preloaded response, and the
+battery asserts exactly one poster request per page. Current numbers, all nine
+languages: LCP 912–1256 ms, CLS 0.000, `video` as the LCP element above the fold, first
+FAQ tap → painted frame 7–18 ms. TBT is reported for information only: on a static page
+without a JS runtime the single long task is the initial parse/style of the HTML, so the
+Lighthouse TBT threshold does not describe this page.
+
 Contact form: `#contact` posts straight to Web3Forms — no Telegram step. After a
 successful submit Web3Forms returns the visitor to the **same language page**
 (`?sent=1#contact`, rewritten per language by the build), where the form is replaced
