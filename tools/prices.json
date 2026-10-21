@@ -1,0 +1,14 @@
+{
+  "_note": "Единственный источник цен лендинга (21.10.2026). Меняешь цену — правишь ЗДЕСЬ, затем видимые строки p1t/p2t/p3t/p2p/p3p/p2d/p3d/price.fine в 9 словарях и bot/payments.py. Свип сверяет с этим файлом JSON-LD и тексты всех языков; landing-price-parity.py — с ботом.",
+  "free_breakdowns": 2,
+  "single": 30,
+  "pack5": {
+    "size": 5,
+    "price": 120
+  },
+  "pack15": {
+    "size": 15,
+    "price": 300
+  },
+  "currency": "XTR"
+}

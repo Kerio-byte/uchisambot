@@ -20,6 +20,13 @@ Live: https://kerio-byte.github.io/uchisambot/
   linking), and the sitemap mirrors the hreflang set per URL — all nine languages
   plus `x-default` pointing at the English root. No runtime, no dependencies, no
   tracking.
+- `tools/prices.json` — single source of the prices (`free_breakdowns`, `single`,
+  `pack5` / `pack15` as `{size, price}`, `currency`): `tools/build.py` writes these
+  numbers into the JSON-LD `Offer` nodes, and the QA sweep checks every language page
+  against the same file (see the prices paragraph under "Editing"). Added 21 Oct 2026 — before that the
+  JSON-LD numbers were literals inside `build.py` and the visible prices were strings
+  in nine dictionaries, so a one-sided price edit could silently make the structured
+  data and the page disagree.
 - `img/` — logo (SVG), favicons, chat-shot mockups (WebP; `shot1-3.webp` = EN,
   `shotN-<lang>.webp` = each of the other eight languages, see "Chat shots" below),
   social preview cards (`og-<lang>.png`, 1200×630 — one per language, see "Social
@@ -102,6 +109,19 @@ because third-party sites can be slow or timeout.
 Keep `meta.desc` at ≤160 characters per language: the same string feeds
 `meta description`, `og:description`, `twitter:description` and the JSON-LD
 description, and longer text gets truncated in search results.
+
+Prices have one source, `tools/prices.json`. The build writes those numbers into the
+JSON-LD `Offer` nodes, and the QA sweep re-reads the file to check all nine language
+pages: the structured-data prices must equal the file, and the visible strings must
+carry the same numbers — pack prices (`p2p` / `p3p`), pack sizes (`p2t` / `p3t`), the
+free count (`p1t`), the single price (`price.fine`), and the per-breakdown figure and
+discount percentage (`p2d` / `p3d`) computed from those same numbers. A price change
+is therefore: `tools/prices.json` → the nine dictionaries → `bot/payments.py` (the
+product) → rebuild. The cross-repo check `landing-price-parity.py` (stars-bots-ops
+skill) compares the file with the bot's `Plan` tuples and `FREE_TRIALS`, because a bot
+price change never rebuilds the site. The sweep also pins the JSON-LD shape (the four
+node types and ten FAQ answers with non-empty text): a broken graph does not break the
+page, search engines just drop the rich result silently.
 
 Typography: Manrope variable, self-hosted in `fonts/` (5 subsets). Pages preload the
 subset matching the language (latin by default, cyrillic for `/ru/` and `/uk/`);
