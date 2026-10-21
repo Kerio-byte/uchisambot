@@ -1,6 +1,6 @@
 # UchiSamBot — Assistente de estudos para alunos
 
-> Bot de Telegram que divide a tarefa em passos, explica os conteúdos em palavras simples e faz flashcards. Primeiras 5 explicações grátis.
+> Bot de Telegram que divide a tarefa em passos, explica os conteúdos em palavras simples e faz flashcards. Primeiras 2 explicações grátis.
 
 O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples, confere suas respostas e faz flashcards — direto no Telegram, a qualquer hora do dia.
 
@@ -38,7 +38,7 @@ E qualquer outra dúvida escolar em que você ficar preso.
 
 Pagamento via Telegram Stars, direto no chat.
 
-- **Primeiras 5 explicações — Grátis**: Experimente o bot — não precisa pagar.
+- **Primeiras 2 explicações — Grátis**: Experimente o bot — não precisa pagar.
 - **Pacote com 5 explicações — 120 Stars**: Cerca de 24 Stars por explicação — economize 20%.
 - **Pacote com 15 explicações — 300 Stars**: Cerca de 20 Stars por explicação — economize 33%.
 
@@ -69,7 +69,7 @@ Nove idiomas: russo, inglês, espanhol, português, hindi, indonésio, turco, vi
 
 ### Como eu pago?
 
-Com Telegram Stars, direto no chat. As primeiras 5 explicações são grátis; depois disso, você pode comprar uma explicação avulsa ou um pacote.
+Com Telegram Stars, direto no chat. As primeiras 2 explicações são grátis; depois disso, você pode comprar uma explicação avulsa ou um pacote.
 
 ### Preciso instalar alguma coisa?
 
