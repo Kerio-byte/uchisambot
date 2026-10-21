@@ -234,13 +234,18 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .contact-note{font-size:13px;line-height:1.5;color:#5C6E90;margin:14px 0 0}
 .contact .hp{display:none!important}
 .contact .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.contact-ok{color:#1B7F4B;font-weight:600;margin:14px 0 0}
+/* Подтверждение стоит ВЫШЕ формы (22.10): без JS сообщение и форма видны одновременно,
+   и человек должен прочитать «отправлено» до формы, а не после кнопки. */
+.contact-ok{color:#1B7F4B;font-weight:600;margin:0 0 16px}
 /* Подтверждение после отправки формы БЕЗ JS (21.10): Web3Forms возвращает посетителя
-   на ?sent=1#contact-card, и целевой блок сам показывает подтверждение и убирает форму.
+   на ?sent=1#contact-card, и целевой блок сам показывает подтверждение.
    Раньше атрибут hidden снимал только скрипт — человек без JS видел пустую форму заново.
-   Потомки :target понимает любой браузер (в отличие от :has, которого нет в старых). */
-#contact-card:target #contact-ok{display:block}
-#contact-card:target #contact-form{display:none}
+   Потомки :target понимает любой браузер (в отличие от :has, которого нет в старых).
+   22.10: правило показывает ТОЛЬКО сообщение. Форму больше не прячем: адрес подтверждения
+   можно скопировать и переслать, и тогда чужой человек остался бы без формы и без связи.
+   Класс .stale (ставит скрипт при чужом/подделанном адресе) снимает и само сообщение —
+   чтобы не обещать «мы получили ваше сообщение» тому, кто ничего не отправлял. */
+#contact-card:target:not(.stale) #contact-ok{display:block}
 
 /* Липкая кнопка снизу на телефоне: видна после 700px, прячется у формы и подвала */
 .sticky-cta{display:none}
@@ -470,6 +475,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     <div class="contact rv" id="contact-card">
       <h2>Ada pertanyaan atau masukan?</h2>
       <p class="contact-sub">Tulis kepada kami — pesanmu sampai ke tim kami, dan kami balas ke emailmu. Tanpa spam, tanpa milis.</p>
+      <p class="contact-ok" id="contact-ok" tabindex="-1" hidden>Terima kasih! Kami sudah menerima pesanmu dan akan membalas ke emailmu.</p>
       <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
@@ -482,7 +488,6 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Pertanyaan, masukan, atau keluhanmu…"></textarea>
         <button type="submit" class="btn">Kirim pesan</button>
       </form>
-      <p class="contact-ok" id="contact-ok" hidden>Terima kasih! Kami sudah menerima pesanmu dan akan membalas ke emailmu.</p>
       <p class="contact-note"><span>Kami memakai emailmu hanya untuk membalas pesan ini.</span> <a href="../privacy.html">Kebijakan Privasi</a></p>
     </div>
   </div>
@@ -518,14 +523,54 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 
 <script>
 (function(){
-  // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact-card — показываем
-  // подтверждение и убираем форму. Без JS то же самое делает CSS по :target (см. стили выше).
-  if (!/[?&]sent=1/.test(location.search)) return;
-  var f = document.getElementById('contact-form');
+  // После отправки Web3Forms возвращает на ?sent=1&t=<токен>#contact-card.
+  // Токен выдаём сами в момент отправки и держим в sessionStorage: адрес подтверждения
+  // можно скопировать, переслать или открыть в другой вкладке — тогда человек ничего не
+  // отправлял, и врать ему «мы получили сообщение» нельзя, а форму прятать тем более.
+  // Без JS работает CSS по :target (см. стили выше): сообщение видно, форма остаётся.
+  var form = document.getElementById('contact-form');
   var ok = document.getElementById('contact-ok');
-  if (!f || !ok) return;
-  f.style.display = 'none';
+  var card = document.getElementById('contact-card');
+  if (!form || !ok || !card) return;
+
+  function stored(){ try { return sessionStorage.getItem('ucs_sent') || ''; } catch(e){ return ''; } }
+
+  form.addEventListener('submit', function(){
+    var redir = form.querySelector('input[name="redirect"]');
+    if (!redir || redir.value.indexOf('#contact-card') < 0) return;
+    var t = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    try { sessionStorage.setItem('ucs_sent', t); } catch(e){}
+    redir.value = redir.value.replace(/[?&]t=[^&#]*/g, '').replace('#contact-card', '&t=' + t + '#contact-card');
+  });
+
+  var hasCard = location.hash === '#contact-card';
+  var sent = /[?&]sent=1/.test(location.search);
+  if (!hasCard && !sent) return;
+  var q = (location.search.match(/[?&]t=([^&#]*)/) || [])[1] || '';
+  if (!sent || !q || q !== stored()) {
+    // Чужой/подделанный адрес: показываем форму, подтверждение не подсовываем.
+    card.classList.add('stale');
+    return;
+  }
+  form.style.display = 'none';
   ok.hidden = false;
+  // Из адреса убираем ?sent=1&t=… вместе с якорем: «ссылка на спасибо» не должна
+  // оставаться в строке браузера. После очистки браузер прыгает наверх, поэтому
+  // ставим карточку на место якоря вручную (мгновенно, без плавной прокрутки) — иначе
+  // человек после отправки видит верх страницы и не знает, что сообщение ушло.
+  try { history.replaceState(null, '', location.pathname); } catch(e){}
+  try {
+    var de = document.documentElement, prev = de.style.scrollBehavior;
+    de.style.scrollBehavior = 'auto';
+    card.scrollIntoView({ block: 'start' });
+    de.style.scrollBehavior = prev;
+  } catch(e){}
+  // Фокус объявляет подтверждение скринридеру (без него чтение начинается с начала
+  // страницы). Firefox ставит фокус на документ уже ПОСЛЕ нашего скрипта (шаг «перейти
+  // к якорю»), поэтому повторяем — иначе там фокус остаётся на body.
+  var announce = function(){ try { ok.focus({ preventScroll: true }); } catch(e){} };
+  announce();
+  setTimeout(announce, 150);
 })();
 </script>
 <script>
