@@ -445,3 +445,26 @@ without its own tag a reader who arrives from an AI answer lands in the bot's
 statistics as "(no tag)" and cannot be told apart from any other untagged source.
 The QA sweep checks the tag in all nine twins and in `llms.txt` and fails if the
 bare link comes back.
+
+Privacy policy vs the site's real data flows (21.10.2026): the policy named
+GitHub Pages and Web3Forms only, while every page loads nine hotlinked badge
+images from eight launch platforms — the visitor's browser asks each platform for
+the picture, so that platform sees the visitor's IP address and the site it came
+from — and the contact form keeps a token in `sessionStorage`, which the policy
+never mentioned. Section 7 of `privacy.html` (EN and RU) now lists the eight
+platforms with their domains, says what the platform sees and that the rest is
+covered by its own policy, states that the site itself sets no cookies and runs
+no analytics, advertising or third-party scripts, and explains the session token;
+"Last updated" moved to 21 October 2026 in both language parts. The sweep now ties
+the policy to the fact instead of to a wish: a `BADGE_PLATFORMS` registry, every
+external image host on the nine language pages plus the two legal pages and
+`404.html` must be registered *and* named in the policy, the registry may not list
+a platform that has left the pages (a stale promise), no remote `<script src>` or
+stylesheet, no `document.cookie` / `localStorage`, the only `sessionStorage` key is
+`ucs_sent`, and both new paragraphs must survive into `privacy.html.md` — 18
+checks, 1309 → 1327. Seven mutations (a platform label without its domain, an
+injected third-party script, a cookie write, a renamed session key, a removed
+token sentence, "may set cookies", an unmapped badge host) each fail the sweep and
+leave the file restored afterwards. Screenshots at 420 and 1440 px in EN and RU
+(`evidence/privacy-disclosure-20261021/`) and the measured layout show no
+horizontal overflow, 16 px text and a document exactly as wide as the viewport.
