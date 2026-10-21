@@ -235,6 +235,12 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .contact .hp{display:none!important}
 .contact .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .contact-ok{color:#1B7F4B;font-weight:600;margin:14px 0 0}
+/* Подтверждение после отправки формы БЕЗ JS (21.10): Web3Forms возвращает посетителя
+   на ?sent=1#contact-card, и целевой блок сам показывает подтверждение и убирает форму.
+   Раньше атрибут hidden снимал только скрипт — человек без JS видел пустую форму заново.
+   Потомки :target понимает любой браузер (в отличие от :has, которого нет в старых). */
+#contact-card:target #contact-ok{display:block}
+#contact-card:target #contact-form{display:none}
 
 /* Липкая кнопка снизу на телефоне: видна после 700px, прячется у формы и подвала */
 .sticky-cta{display:none}
@@ -461,14 +467,14 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 
 <section class="sec" id="contact">
   <div class="wrap">
-    <div class="contact rv">
+    <div class="contact rv" id="contact-card">
       <h2>Є питання чи відгук?</h2>
       <p class="contact-sub">Напишіть нам — повідомлення потрапить до команди, а ми відповімо на вашу пошту. Без спаму й розсилок.</p>
       <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
         <input type="hidden" name="from_name" value="UchiSamBot website" />
-        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/uk/?sent=1#contact" />
+        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/uk/?sent=1#contact-card" />
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
         <label class="sr-only" for="cf-email">Ваш email</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
@@ -512,7 +518,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 
 <script>
 (function(){
-  // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact — показываем подтверждение.
+  // После успешной отправки формы Web3Forms возвращает на ?sent=1#contact-card — показываем
+  // подтверждение и убираем форму. Без JS то же самое делает CSS по :target (см. стили выше).
   if (!/[?&]sent=1/.test(location.search)) return;
   var f = document.getElementById('contact-form');
   var ok = document.getElementById('contact-ok');
