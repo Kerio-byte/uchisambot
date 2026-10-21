@@ -1,6 +1,6 @@
 # Privacy Policy
 
-UchiSamBot (Study Helper) · Last updated: 17 October 2026
+UchiSamBot (Study Helper) · Last updated: 21 October 2026
 
 UchiSamBot (Study Helper) is a Telegram bot that helps school students understand their homework: it breaks tasks down step by step, explains topics in simple language, checks solutions, and makes revision notes. This policy explains what data the bot handles and how. It covers the bot (t.me/UchiSamBot) and its website (kerio-byte.github.io/uchisambot). In this policy, "we" means the team operating UchiSamBot.
 
@@ -43,6 +43,12 @@ The bot is designed for school students. We recommend that younger students use 
 
 Our website is hosted on GitHub Pages. GitHub may keep standard technical logs (such as IP addresses) under its own privacy statement. If you send us a message through the contact form, the form is processed by Web3Forms (web3forms.com), which forwards your email address and message to us. We use them only to reply to you; you can ask us to delete them at any time (see section 5).
 
+The “Featured on” strip at the bottom of our pages shows pictures that the launch platforms serve from their own servers: LiftOff (lift-off.sh), Startup Fame (startupfa.me), StartupBase (startupbase.io), Fazier (fazier.com), ShowMeBestAI (showmebest.ai), OpenHunts Club (openhunts.com), Aura++ (auraplusplus.com) and LaunchIgniter (launchigniter.com). When a page opens, your browser asks that platform for the picture, so the platform sees your IP address and that the request came from our site; what it does with that is described in its own privacy policy. We pass nothing else to them.
+
+The site itself sets no cookies and runs no analytics, advertising or other third-party scripts.
+
+The contact form keeps one technical token in your browser's session storage so that the confirmation belongs to your own submission — the token disappears when you close the tab.
+
 ## 8. Changes
 
 We may update this policy as the service evolves. The current version is always available on this page.
@@ -55,7 +61,7 @@ Use the contact form on our website — we reply by email.
 
 ## Политика конфиденциальности
 
-UchiSamBot (Учебный помощник) · Обновлено: 17 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 21 октября 2026
 
 UchiSamBot (Учебный помощник) — телеграм-бот, который помогает школьникам разбираться с домашними заданиями: разбирает задачи по шагам, объясняет темы простыми словами, проверяет решения и делает конспекты для повторения. Здесь описано, какие данные обрабатывает бот и как. Политика относится к боту (t.me/UchiSamBot) и его сайту (kerio-byte.github.io/uchisambot). В этой политике «мы» — команда, которая ведёт UchiSamBot.
 
@@ -97,6 +103,12 @@ UchiSamBot (Учебный помощник) — телеграм-бот, кот
 ### 7. Сайт
 
 Наш сайт размещён на GitHub Pages. GitHub может вести стандартные технические журналы (например, IP-адреса) в рамках своей политики конфиденциальности. Если вы отправите сообщение через контактную форму, её обработку выполняет сервис Web3Forms (web3forms.com), который пересылает нам ваш e-mail и текст сообщения. Мы используем их только для ответа; удалить их можно в любой момент по запросу (см. раздел 5).
+
+Полоса «Featured on» внизу страниц показывает картинки, которые площадки запусков отдают со своих серверов: LiftOff (lift-off.sh), Startup Fame (startupfa.me), StartupBase (startupbase.io), Fazier (fazier.com), ShowMeBestAI (showmebest.ai), OpenHunts Club (openhunts.com), Aura++ (auraplusplus.com) и LaunchIgniter (launchigniter.com). Когда страница открывается, браузер запрашивает картинку у площадки, поэтому площадка видит ваш IP-адрес и то, что запрос пришёл с нашего сайта; что она с этими данными делает, описано в её собственной политике конфиденциальности. Больше мы им ничего не передаём.
+
+Сам сайт не ставит cookie и не использует аналитику, рекламу и сторонние скрипты.
+
+Контактная форма хранит один технический токен в памяти вкладки, чтобы подтверждение относилось именно к вашей отправке; токен исчезает, когда вкладка закрывается.
 
 ### 8. Изменения
 
