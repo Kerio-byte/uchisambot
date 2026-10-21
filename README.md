@@ -526,3 +526,49 @@ token sentence, "may set cookies", an unmapped badge host) each fail the sweep a
 leave the file restored afterwards. Screenshots at 420 and 1440 px in EN and RU
 (`evidence/privacy-disclosure-20261021/`) and the measured layout show no
 horizontal overflow, 16 px text and a document exactly as wide as the viewport.
+
+## Claims against the product (22.10.2026)
+
+Every earlier gate compared the shop window with itself: dictionaries against
+dictionaries, prices against `prices.json`, prices against `bot/payments.py`. The
+promises themselves — nine languages, five abilities — were never compared with
+what the bot actually does. This pass did that, and it found the window ahead of
+the product.
+
+**Answer language.** `bot/handlers.py` (`build_prompt`) writes the response
+language as `'русский' if lang == LANG_RU else 'english'`, so seven of the nine
+languages get English answers even though the visitor picked their language and
+the system prompt asks for the language of the request. Measured on the live
+model with the bot's exact prompt (thinking off, temperature 0.2): a Spanish,
+Hindi and Vietnamese task each came back in English under the current line, and
+in Spanish, Hindi and Vietnamese once the language was named. The model can do
+it; the prompt forbids it. Five lines in the bot fix it — recorded with the
+measurement in `evidence/block-20261022-claims-vs-product.txt`. It is not done
+here: this block's working folder is the landing alone, and the bot fix needs
+`study-bot.service` restarted, which cron is not allowed to do.
+
+**Product reachability.** At the same hour the bot's endpoint
+(`http://[адрес]:8080/v1`, the `gpu-queue-[GPU]` proxy in front of
+llama-server) answered nothing at all: five requests between 02:41 and 02:57,
+waits of 15 to 130 seconds, not one byte back, while the model behind it on
+`[локальный порт]` answered the same request in 1.2 s. The bot has no second provider, so a
+visitor waits out `LLM_TIMEOUT=120` and gets an error. One command restores it
+(`systemctl restart gpu-queue-[GPU].service`, `Restart=always`); cron is barred
+from touching services.
+
+**Two gates added** so neither class slips again, 1392 → 1394 checks:
+
+- *Numbers in translations.* Prices, "first 2 breakdowns", "9 languages" and pack
+  sizes live in the nine dictionaries as text, so a translator writing "3" made
+  one page promise what the other eight deny. Every key's set of numbers must now
+  match English (Devanagari and Arabic-Indic digits are normalized — `२` is not a
+  defect). 0 mismatches across 113 keys × 8 languages.
+- *Site languages = bot languages.* The council's rule was checked by hand once;
+  the sweep now reads `SUPPORTED` from `bot/i18n.py` (expanding the `LANG_*`
+  constants) and fails if the two sets differ.
+
+Both were proven by mutation: `hero.chip1` 2 → 3 in Spanish fails with
+`es:hero.chip1`; dropping `uk` from the bot's tuple fails with `bot 8 vs site 9`;
+restored, the sweep is 1394 checks, 0 failed. This is a documentation-and-gates
+pass — the site's own markup did not change, so the build output is byte-identical.
+
