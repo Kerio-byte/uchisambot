@@ -102,5 +102,5 @@ Hãy viết cho chúng tôi — tin nhắn của bạn sẽ đến với đội 
 Chúng tôi chỉ dùng email của bạn để trả lời tin nhắn này.
 
 - [Gửi tin nhắn](https://kerio-byte.github.io/uchisambot/vi/#contact)
-- [Chính sách bảo mật](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [Điều khoản sử dụng](https://kerio-byte.github.io/uchisambot/terms.html)
+- [Chính sách bảo mật (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Điều khoản sử dụng (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)

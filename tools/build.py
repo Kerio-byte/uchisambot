@@ -50,11 +50,39 @@ def load_prices() -> dict:
 
 
 PRICES = load_prices()
+# Названия языков — БЕЗ флагов-эмодзи (21.10.2026): Windows не рисует региональные
+# флаги (вместо них «GB»/«RU»-квадраты), а флаг — это страна, не язык (🇮🇳 для хинди,
+# 🇧🇷 для португальского, 🇬🇧 для английского читаются как ошибка на мировом рынке).
+# Страница 404 давно использует чистые названия — теперь один стиль на всём сайте.
 LABELS = {
-    "en": "🇬🇧 English", "ru": "🇷🇺 Русский", "es": "🇪🇸 Español", "pt": "🇧🇷 Português",
-    "hi": "🇮🇳 हिन्दी", "id": "🇮🇩 Bahasa Indonesia", "tr": "🇹🇷 Türkçe", "vi": "🇻🇳 Tiếng Việt",
-    "uk": "🇺🇦 Українська",
+    "en": "English", "ru": "Русский", "es": "Español", "pt": "Português",
+    "hi": "हिन्दी", "id": "Bahasa Indonesia", "tr": "Türkçe", "vi": "Tiếng Việt",
+    "uk": "Українська",
 }
+# privacy.html и terms.html существуют только на английском и русском (решение совета 15.10).
+# На остальных 7 языках подпись ссылки честно говорит, на каком языке откроется документ:
+# иначе /hi/ обещает «गोपनीयता नीति पढ़ें», а показывает английский текст.
+LEGAL_KEYS = {"parents.link", "foot.privacy", "foot.terms", "contact.privacy"}
+LEGAL_SUFFIX = " (EN/RU)"
+
+
+def legal_label(val, key: str, lang: str):
+    """Подпись ссылки на юридический документ: добавляет язык, если перевода нет."""
+    if val is not None and key in LEGAL_KEYS and lang not in ("en", "ru"):
+        return val + LEGAL_SUFFIX
+    return val
+
+
+# Иконка «глобус» вместо эмодзи 🌐: эмодзи рисуется по-разному в каждой ОС (а на части
+# систем подменяется цветным шрифтом), SVG наследует цвет текста и выглядит одинаково везде.
+GLOBE_SVG = (
+    '<svg class="globe" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">'
+    '<circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/>'
+    '<ellipse cx="8" cy="8" rx="2.9" ry="6.4" fill="none" stroke="currentColor" stroke-width="1.2"/>'
+    '<path d="M1.9 5.9h12.2M1.9 10.1h12.2" fill="none" stroke="currentColor" stroke-width="1.2"/>'
+    '</svg>'
+)
+
 OG_LOCALE = {"en": "en_US", "ru": "ru_RU", "es": "es_ES", "pt": "pt_BR",
              "hi": "hi_IN", "id": "id_ID", "tr": "tr_TR", "vi": "vi_VN", "uk": "uk_UA"}
 NO_TRANSLATE = ["UchiSamBot", "Telegram Stars", "Stars", "/lang", "you@example.com"]
@@ -161,20 +189,27 @@ def hreflang_block() -> str:
 
 
 def switcher_html(lang: str, aria: str) -> str:
-    links = []
+    """Переключатель языка: реальные ссылки на /xx/, текущий язык — не ссылка.
+
+    lang="" на каждом пункте — WCAG 3.1.2 (скринридер читает «हिन्दी» хинди, а не
+    по правилам английского); так же сделана страница 404.
+    """
+    items = []
     for l in LANGS:
         if l == lang:
-            links.append(f'<a href="#" aria-current="page" class="on">{LABELS[l]}</a>')
+            # Текущий язык — span, а не <a href="#">: ссылка «в никуда» ломала клик
+            # (прыжок наверх) и врала разметкой о переходе.
+            items.append(f'<span class="on" aria-current="page" lang="{l}">{LABELS[l]}</span>')
         else:
             if lang == "en":
                 href = "./" if l == "en" else f"{l}/"
             else:
                 href = "../" if l == "en" else f"../{l}/"
-            links.append(f'<a href="{href}">{LABELS[l]}</a>')
+            items.append(f'<a href="{href}" lang="{l}" hreflang="{l}">{LABELS[l]}</a>')
     return (
-        f'<details class="lang-dd"><summary aria-label="{esc_attr(aria)}">🌐 '
-        + LABELS[lang].split(" ", 1)[1]
-        + '</summary><div class="lang-list">' + "".join(links) + "</div></details>"
+        f'<details class="lang-dd"><summary aria-label="{esc_attr(aria)}: {esc_attr(LABELS[lang])}">'
+        + GLOBE_SVG + f'<span lang="{lang}">{LABELS[lang]}</span>'
+        + '</summary><div class="lang-list">' + "".join(items) + "</div></details>"
     )
 
 
@@ -231,7 +266,7 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     # 1) тексты data-i18n и placeholders data-i18n-ph
     def rep_i18n(m: re.Match) -> str:
         key = m.group(2)
-        val = d.get(key)
+        val = legal_label(d.get(key), key, lang)
         tag = re.sub(r'\sdata-i18n="[\w.]+"', "", m.group(1))
         return tag + (esc_text(val) if val is not None else m.group(3)) + m.group(4)
 
@@ -443,8 +478,8 @@ def page_md(d: dict, lang: str) -> str:
         i += 1
     L += [f"## {d['contact.title']}", "", d["contact.sub"], "", d["contact.note"], "",
           f"- [{d['contact.btn']}]({page_url}#contact)",
-          f"- [{d['foot.privacy']}]({pp})",
-          f"- [{d['foot.terms']}]({tt})", ""]
+          f"- [{legal_label(d['foot.privacy'], 'foot.privacy', lang)}]({pp})",
+          f"- [{legal_label(d['foot.terms'], 'foot.terms', lang)}]({tt})", ""]
     return "\n".join(L)
 
 
@@ -644,7 +679,7 @@ def page_404() -> str:
     """
     chips = []
     for lang in LANGS:
-        label = LABELS[lang].split(" ", 1)[1]  # без эмодзи-флага
+        label = LABELS[lang]  # чистое название языка, без флага
         # lang/hreflang — чтобы скринридер читал «Русский» по-русски (WCAG 3.1.2),
         # aria-current="true" — «текущий пункт набора» (это не текущая страница:
         # чип ведёт на главную другого языка, а не на эту 404).

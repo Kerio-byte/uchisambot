@@ -2,6 +2,10 @@
 
 UchiSamBot (Study Helper) · Last updated: 21 October 2026
 
+**Language:** this document is published in English (this section) and Russian (the section below). There are no other language versions; on the other language pages the link here is marked “(EN/RU)”.
+
+**Язык:** документ опубликован на английском (этот раздел) и русском (раздел ниже). Других языковых версий нет; на страницах остальных языков ссылка сюда помечена «(EN/RU)».
+
 These terms describe the rules for using UchiSamBot (Study Helper), a Telegram bot for school students. By using the bot, you agree to these terms.
 
 ## 1. The service

@@ -102,5 +102,5 @@ Escríbenos — tu mensaje llega a nuestro equipo y te respondemos a tu correo. 
 Usamos tu correo solo para responder a este mensaje.
 
 - [Enviar mensaje](https://kerio-byte.github.io/uchisambot/es/#contact)
-- [Política de privacidad](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [Términos de servicio](https://kerio-byte.github.io/uchisambot/terms.html)
+- [Política de privacidad (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Términos de servicio (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)

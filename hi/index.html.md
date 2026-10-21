@@ -102,5 +102,5 @@ Telegram Stars से, सीधे चैट में। पहले 2 हल
 हम आपका ईमेल सिर्फ़ इस संदेश का जवाब देने के लिए इस्तेमाल करते हैं।
 
 - [संदेश भेजें](https://kerio-byte.github.io/uchisambot/hi/#contact)
-- [गोपनीयता नीति](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [सेवा की शर्तें](https://kerio-byte.github.io/uchisambot/terms.html)
+- [गोपनीयता नीति (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [सेवा की शर्तें (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)

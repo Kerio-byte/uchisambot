@@ -6,15 +6,15 @@ Open the bot: https://t.me/UchiSamBot?start=src_llms
 
 ## Pages
 
-- [🇬🇧 English: UchiSamBot — Step-by-Step Homework Help in Telegram](https://kerio-byte.github.io/uchisambot/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇷🇺 Русский: UchiSamBot — разбор домашних заданий по шагам в Telegram](https://kerio-byte.github.io/uchisambot/ru/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇪🇸 Español: UchiSamBot — Ayudante de estudio para escolares](https://kerio-byte.github.io/uchisambot/es/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇧🇷 Português: UchiSamBot — Assistente de estudos para alunos](https://kerio-byte.github.io/uchisambot/pt/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇮🇳 हिन्दी: UchiSamBot — स्कूली बच्चों के लिए पढ़ाई में मददगार](https://kerio-byte.github.io/uchisambot/hi/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇮🇩 Bahasa Indonesia: UchiSamBot — Asisten belajar untuk siswa sekolah](https://kerio-byte.github.io/uchisambot/id/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇹🇷 Türkçe: UchiSamBot — okul öğrencileri için ders yardımcısı](https://kerio-byte.github.io/uchisambot/tr/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇻🇳 Tiếng Việt: UchiSamBot — Trợ lý học tập cho học sinh](https://kerio-byte.github.io/uchisambot/vi/index.html.md): landing page — features, how it works, pricing, FAQ.
-- [🇺🇦 Українська: UchiSamBot — навчальний помічник для школярів](https://kerio-byte.github.io/uchisambot/uk/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [English: UchiSamBot — Step-by-Step Homework Help in Telegram](https://kerio-byte.github.io/uchisambot/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Русский: UchiSamBot — разбор домашних заданий по шагам в Telegram](https://kerio-byte.github.io/uchisambot/ru/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Español: UchiSamBot — Ayudante de estudio para escolares](https://kerio-byte.github.io/uchisambot/es/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Português: UchiSamBot — Assistente de estudos para alunos](https://kerio-byte.github.io/uchisambot/pt/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [हिन्दी: UchiSamBot — स्कूली बच्चों के लिए पढ़ाई में मददगार](https://kerio-byte.github.io/uchisambot/hi/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Bahasa Indonesia: UchiSamBot — Asisten belajar untuk siswa sekolah](https://kerio-byte.github.io/uchisambot/id/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Türkçe: UchiSamBot — okul öğrencileri için ders yardımcısı](https://kerio-byte.github.io/uchisambot/tr/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Tiếng Việt: UchiSamBot — Trợ lý học tập cho học sinh](https://kerio-byte.github.io/uchisambot/vi/index.html.md): landing page — features, how it works, pricing, FAQ.
+- [Українська: UchiSamBot — навчальний помічник для школярів](https://kerio-byte.github.io/uchisambot/uk/index.html.md): landing page — features, how it works, pricing, FAQ.
 - [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html.md): what data the bot handles, and how to have it deleted.
 - [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html.md): pricing and usage rules.
 

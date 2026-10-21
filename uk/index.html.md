@@ -102,5 +102,5 @@ Stars (⭐) — внутрішня валюта Telegram. Поповнюютьс
 Використовуємо ваш email лише щоб відповісти на це повідомлення.
 
 - [Надіслати повідомлення](https://kerio-byte.github.io/uchisambot/uk/#contact)
-- [Політика конфіденційності](https://kerio-byte.github.io/uchisambot/privacy.html)
-- [Умови використання](https://kerio-byte.github.io/uchisambot/terms.html)
+- [Політика конфіденційності (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
+- [Умови використання (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
