@@ -47,6 +47,15 @@ Live: https://kerio-byte.github.io/uchisambot/
 3. Commit the template + locales + generated pages together and push to `main`;
    GitHub Pages serves the site from the repository root.
 
+Reproducible build: `tools/build.py` is deterministic — a second run on unchanged
+sources leaves the worktree clean. `sitemap.xml`’s `<lastmod>` comes from a content
+ledger, `tools/lastmod.json` (`{url: {sha, date}}`, sha256 of the page bytes): a date
+only moves when that page’s content actually changes, so a plain rebuild no longer
+rewrites all eleven dates to the build day and the date never claims an edit that did
+not happen. Commit `tools/lastmod.json` with the generated pages; the QA sweep
+re-hashes every page and fails when the ledger is stale (page edited without a
+rebuild, or sitemap date ≠ ledger date).
+
 Hero video (per-language loops): every language page plays its OWN 13 s loop with the
 two step captions in the page language — `demo/uchiambot-demo-web.mp4` (EN, the kit
 build) and `demo/uchiambot-demo-web-<lang>.mp4` for the other eight (RU rebuilt; the
