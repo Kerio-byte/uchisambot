@@ -322,26 +322,41 @@ Lighthouse TBT threshold does not describe this page.
 
 Contact form: `#contact` posts straight to Web3Forms — no Telegram step. After a
 successful submit Web3Forms returns the visitor to the **same language page**
-(`?sent=1#contact-card`, rewritten per language by the build), where the form is
-replaced by a localized confirmation message baked into the page (one string per
-language, no JS dictionary). The confirmation survives **without JavaScript** too:
-the redirect anchor points at the form card, and `#contact-card:target` CSS shows
-the message while hiding the form (`:target` + descendant selector, so it works in
-every browser — an earlier `:has()` variant was rejected by the Nu validator's CSS
-parser and would have needed a modern engine for nothing).
+(`?sent=1&t=<token>#contact-card`, rewritten per language by the build), where the
+form is replaced by a localized confirmation message baked into the page (one
+string per language, no JS dictionary).
+
+The confirmation is tied to the submission, not to the URL: on `submit` the page
+mints a random token, keeps it in `sessionStorage` and appends it to the redirect
+field. A `?sent=1` URL with a foreign or missing token — a copied "thank you" link,
+another tab, an old bookmark — gets the form back and **no** false "we received your
+message". After a genuine return the address is stripped to the plain page, so the
+address bar never keeps a shareable "thanks" link. The page also stays on the form
+card: clearing the query and the anchor makes the browser jump to the top, so the
+card is scrolled back into place before focus lands on the message.
+
+The confirmation survives **without JavaScript** too: the redirect anchor points at
+the form card, and `#contact-card:target:not(.stale)` CSS reveals the message
+(`:target` + descendant selector, so it works in every browser — an earlier
+`:has()` variant was rejected by the Nu validator's CSS parser). Two rules learned
+the hard way: the form is **not** hidden in that state (a forwarded URL must not
+lock a visitor out of the only support channel), and the message sits **above** the
+form, so it is read before the fields, not after the button.
 This form is the site's single support channel: the FAQ answer about failed
 breakdowns, privacy and terms all point visitors here — no page promises an in-bot
 message-to-team path (the bot's Help button only shows payment guidance), and the
 sweep fails any page that references one.
 
 The path is verified end to end, not just in markup: `landing-contact-e2e.py`
-(default: 333 offline checks across nine languages — fields, labels, autocomplete,
-honeypot out of the tab order, native validation, `?sent=1` state with and without
-JS) and `--live`, which submits one real message through a **real Chrome over CDP**
-and asserts a 3xx from Web3Forms, the return to the same language page and the
-localized confirmation. Do not try this with headless browsers or a server-side
-POST: `api.web3forms.com` sits behind Cloudflare and answers 403 "Just a moment",
-so an automated probe proves nothing about real visitors.
+(default: 468 offline checks across nine languages — fields, labels, autocomplete,
+honeypot out of the tab order, native validation, the token minted on submit, the
+own/foreign `?sent=1` states, the bare `#contact-card` link, landing position and
+reveal, and the no-JS state) and `--live`, which submits one real message through a
+**real Chrome over CDP** and asserts a 3xx from Web3Forms, that the redirect kept
+the token, the return to the same language page, the localized confirmation, a
+cleaned address and focus on the message. Do not try this with headless browsers or
+a server-side POST: `api.web3forms.com` sits behind Cloudflare and answers 403 "Just
+a moment", so an automated probe proves nothing about real visitors.
 
 Privacy / terms: bilingual single pages (EN, then the Russian section marked
 `id="ru"`). Each page keeps exactly one `H1` (the English title): the Russian
