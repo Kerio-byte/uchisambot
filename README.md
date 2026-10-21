@@ -209,6 +209,18 @@ screens), lazy-loaded hotlinked official assets, links open in a new tab with
 the canonical single-slash path `fazier.com/api/v1/public/…`). `privacy.html` /
 `terms.html` carry the required LiftOff + Startup Fame badges in the same style.
 
+Earned award badge (21.10.2026): on 19 Oct 2026 LiftOff placed UchiSamBot (Study Helper)
+#1 in its daily competition and issued a proof badge for it. It is the platform's own
+asset, hotlinked like the rest — `/images/badges/day/badge1DayLight.webp`, 360×120 — and
+sits next to the LiftOff launch badge in the same strip, on the nine language pages and on
+both legal pages. Because it is not a "Featured on" badge it gets its own dictionary line,
+`badge.award` ("No. 1 of the Day on LiftOff" / "Продукт дня №1 на LiftOff" …): `tools/build.py`
+bakes it per language and asserts exactly one match per page, and the sweep pins the asset
+path, the localised alt and the do-follow link on every page. The link stays a plain
+`rel="noopener"` (no `nofollow` / `sponsored` / `ugc`): `lift-off.sh/legal/badge-policy`
+requires a crawlable do-follow link and forbids self-made "earned proof" badges or custom
+variants, so nothing here is drawn, re-typeset or recoloured locally.
+
 Badge accessibility / layout-shift: badge `alt` texts are localised per language — the
 `badge.alt` dictionary template ("Featured on {name}" / "Отмечен на {name}" …) is baked
 with the platform name, and the strip's group label comes from `badge.group`; the

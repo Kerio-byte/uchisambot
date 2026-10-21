@@ -50,7 +50,7 @@ BADGE_ALTS = [
     ("fazier.com/api/v1/", "Fazier"),
     ("statics.startupbase.io/site/badges/", "StartupBase"),
     ("showmebest.ai/badge/", "ShowMeBestAI"),
-    ("lift-off.sh/images/badges/", "LiftOff"),
+    ("lift-off.sh/images/badges/badgeLaunched", "LiftOff"),
     ("startupfa.me/badge?", "Startup Fame"),
     ("cdn.openhunts.com/badges/", "OpenHunts Club"),
     ("auraplusplus.com/images/badges/", "Aura++"),
@@ -268,6 +268,15 @@ def bake(src: str, lang: str, dicts: dict) -> str:
         out, n = pat.subn(
             lambda m, _a=esc_attr(tpl.format(name=nm)): m.group(1) + _a + m.group(2), out)
         assert n == 1, f"{lang}: бейдж {nm} — совпадений {n}"
+
+    # 9e2) бейдж-награда LiftOff "No. 1 of the Day" — отдельный альт по языку (выдан площадкой,
+    #      ссылка та же; не «Featured on», поэтому не в BADGE_ALTS) — 21.10
+    assert "badge.award" in d, f"{lang}: нет badge.award"
+    pat_award = re.compile(
+        r'(<img src="https://lift-off\.sh/images/badges/day/[^"]*"[^>]*?alt=")[^"]*(")')
+    out, n_award = pat_award.subn(
+        lambda m: m.group(1) + esc_attr(d["badge.award"]) + m.group(2), out)
+    assert n_award == 1, f"{lang}: бейдж-награда LiftOff — совпадений {n_award}"
     assert out.count('aria-label="Featured on"') == 1, f"{lang}: группа бейджей не однозначна"
     out = out.replace('aria-label="Featured on"',
                       f'aria-label="{esc_attr(d["badge.group"])}"')
