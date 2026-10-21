@@ -123,6 +123,19 @@ price change never rebuilds the site. The sweep also pins the JSON-LD shape (the
 node types and ten FAQ answers with non-empty text): a broken graph does not break the
 page, search engines just drop the rich result silently.
 
+Legal pages are hand-written and live outside the generator, so their numbers are checked
+too (added 21 Oct 2026). The sweep parses both language sections of `terms.html` and
+compares the free count and the three prices with `tools/prices.json`, the subject list
+with the `subj.c1`…`subj.c5` chips of the matching dictionary, and the nine-language list;
+the referral numbers must agree between the English and Russian halves, and
+`landing-price-parity.py` compares them with the bot's `REFERRAL_BONUS` /
+`REFERRAL_MAX_CREDITS`. This closed a real defect: the English section said “Subjects:
+mathematics, **Russian language**, …” while the English page and its chips say “English” —
+the legal text had been copied from the Russian half and nobody checked meaning, only
+markup. Legal dates are a per-page ledger in the sweep: both language halves must name the
+same day, that day must not be in the future, and a text change bumps that page's date
+(Terms: 21 October 2026; Privacy unchanged at 17 October 2026).
+
 Dictionaries are strictly parallel: every locale must carry exactly the key set of
 `en.json`, values must be non-empty, and every `data-i18n` / `data-i18n-ph` key used in
 `index-src.html` must exist in all nine dictionaries — `tools/build.py` refuses to build
@@ -246,7 +259,7 @@ so the question now lands 19 px above the bar. Links inside a sentence keep the 
 inline exception; the anchor landings (`#how`, `#pricing`, …) are re-checked against the
 63 px sticky header on top of the existing `scroll-padding-top: 84px`. Measured
 failed-first: 31 of 43 checks failed before the fix, 0 after; each fix also has a static
-marker in the sweep (the sweep is the running count — 1283 checks as of 21 Oct 2026).
+marker in the sweep (the sweep is the running count — 1309 checks as of 21 Oct 2026).
 
 User environment preferences: the hero video and the reveal animation respect
 `prefers-reduced-motion: reduce` (poster instead of the loop, every `.rv` visible from
