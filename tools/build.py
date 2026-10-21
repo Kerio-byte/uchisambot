@@ -575,8 +575,12 @@ def page_404() -> str:
     chips = []
     for lang in LANGS:
         label = LABELS[lang].split(" ", 1)[1]  # без эмодзи-флага
-        cur = ' aria-current="page"' if lang == "en" else ""
-        chips.append(f'<li><a href="{url_for(lang)}"{cur}>{esc_text(label)}</a></li>')
+        # lang/hreflang — чтобы скринридер читал «Русский» по-русски (WCAG 3.1.2),
+        # aria-current="true" — «текущий пункт набора» (это не текущая страница:
+        # чип ведёт на главную другого языка, а не на эту 404).
+        cur = ' aria-current="true"' if lang == "en" else ""
+        chips.append(f'<li><a href="{url_for(lang)}" hreflang="{lang}" lang="{lang}"{cur}>'
+                     f'{esc_text(label)}</a></li>')
     faces = "".join(
         f'@font-face{{font-family:\'Manrope\';font-style:normal;font-weight:200 800;'
         f'font-display:swap;src:url("{BASE}fonts/manrope-{s}.woff2") format(\'woff2\');'
