@@ -944,8 +944,9 @@ Every file was restored byte-exact and the control run is 1607/0.
 parity 9/0, W3C validator 0 real findings, render-check ALL OK, viewports 94/0, axe 12
 pages/0, accessibility extras 68/0, WCAG 2.2 targets 43/0, system preferences 45/0, fonts
 39/0, build reproducible (`tools/build.py` then only the four expected files in
-`git status`). The Vietnamese page was also photographed at 420 px and 1440 px with the
-FAQ open: no overflow, no clipped text, and the changed sentence is the only difference.
+`git status`). The Vietnamese page was also photographed — the page sections at 420 px and
+1440 px, and the changed FAQ answer with the accordion open at 420 px: no overflow, no
+clipped text, and the changed sentence is the only difference.
 
 The lesson: structure gates prove that a page has ten questions, not that the tenth answer
 still tells the truth. Where a sentence is a promise, the promise itself is the assertion.
