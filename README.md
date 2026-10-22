@@ -227,15 +227,18 @@ Search's favicon pipeline supports; SVG is not in its format list) and
 Sticky CTA (mobile only, viewport ≤860px): fixed bottom bar with the main Telegram
 button (`?start=src_landing_sticky`). Appears after ~700px of scroll, hides when the
 contact form (`#contact`) or the footer is in view (IntersectionObserver; without JS
-it stays hidden). Safe-area aware via the two-declaration pattern (`padding:6px 14px;`
+it stays hidden) — and also while the screenshot section's own button (`.shots-cta`)
+is on screen, so two identical buttons never stand together. Safe-area aware via the
+two-declaration pattern (`padding:6px 14px;`
 fallback, then `calc(6px + env(safe-area-inset-bottom))`) — browsers without `env()`
 support still get sane padding; modern browsers are unaffected (second declaration wins).
 Markup + inline script live in `index-src.html`.
 
 CTA tags: the hero button keeps `?start=src_landing`, the closing band button uses
-`?start=src_landing_band`, the sticky bar `?start=src_landing_sticky` (the bot records
-the first touch per user and accepts any `src_*` payload). The sweep pins all three —
-exactly one plain `src_landing` link must remain (the hero).
+`?start=src_landing_band`, the sticky bar `?start=src_landing_sticky`, the button after
+the screenshots `?start=src_landing_shots` (the bot records the first touch per user and
+accepts any `src_*` payload). The sweep pins all four — exactly one plain `src_landing`
+link must remain (the hero).
 
 Micro-interactions: keyboard focus ring (`:focus-visible`, 2px brand, offset — everywhere
 interactive), press feedback on buttons (`:active`), smooth FAQ open/close (~180 ms via
@@ -1089,4 +1092,67 @@ no third-party host in the bot code, and a chat probe through that same queue an
 is a statement about ownership, not geography — a private IP on a rented cloud VM would pass. The
 gate catches the realistic failure (someone switches the provider to a cloud API and forgets the
 page), not every possible lie.
+
+## The screenshots ended and there was nothing to press (22.10.2026)
+
+Round 2 of the landing board (15 Oct, `~/.hermes/rooms/landing-modern-20261015`) agreed on six
+P0 items; five shipped. The sixth — *CTA after the screenshots* — did not, and nothing noticed,
+because no gate had been written for a decision: every check named a block that already existed.
+Measured before the fix at 1440 px: the shots section ended at y=3430 and the nearest button sat
+at y=5259 — **1829 px with nothing to press**; on a phone the sticky bar covered that stretch, on
+a desktop nothing did.
+
+The button itself is one paragraph of markup and one line of CSS: `.shots-cta` under the rail,
+centred, the dictionary's own `cta.btn` label (no new translations), its own tag
+`?start=src_landing_shots` so the bot's stats can tell this point from hero/band/sticky. Height
+55 px, width 199–244 px across the nine languages, 26 px below the captions on desktop and 6 px on
+a phone — measured in all nine, not assumed.
+
+**The second button created a third problem.** On a phone the sticky bar sits at the bottom, so
+when the section's own button entered the viewport the reader saw two identical blue buttons
+~100 px apart. The bar already hid itself at `#contact` and the footer; it now hides at
+`.shots-cta` too — via its own IntersectionObserver with no bottom margin (threshold 0), because
+the existing observer shrinks the viewport by 20 % and would have left the pair visible until the
+button was already halfway up the screen. Behaviour, measured in en/ru/hi at 420×900: shown at
+y=1400, hidden at the shots button, hidden at `#contact`, hidden at the footer.
+
+**Three checks per language, 1674 → 1701**: the tag appears exactly once inside an anchor with
+`rel="noopener"`; `.shots-cta` sits *after* the rail in the markup (so the button cannot drift
+back down the page); its label is the dictionary's `cta.btn`. **Proven by mutation**
+(`evidence/block-20261022-shots-cta.txt`): deleting the paragraph from `ru/index.html` failed
+three checks — the two new ones plus the `lastmod` sha guard — and the file was restored
+byte-exact. The full browser batteries after the change: a11y 68/0, viewports 94/0, sweep 1701/0.
+
+**What the static gate cannot prove** is that the bar disappears at the right moment — that is
+JavaScript and layout, so it stays in the browser batteries (`landing-a11y-extra.py`,
+`landing-viewports-extra.py`). The sweep guarantees the button exists, is reachable and keeps its
+tag; the browser runs guarantee the reader never sees two of them at once.
+
+## The stylesheet said Manrope; the browser said Liberation Sans (22.10.2026)
+
+Every font gate until today read *declarations*: the `@font-face` block exists, the file exists, the
+sha matches, and every character of the page's text falls inside some declared `unicode-range`. All
+true — and all silent when the file itself lacks a glyph. Then the browser quietly takes a system
+font for that character: the sentence stays complete, the typeface under it changes. That is exactly
+what had happened to the 404, where «हिन्दी» was painted by the system font because no Devanagari
+face was declared at all; the sweep was green through it.
+
+The new battery asks the browser what it actually used: CDP
+`CSS.getPlatformFontsForNode` on every element that owns text, aggregated per family. Twelve
+pages — nine languages, privacy, terms, 404 — **44,216 glyphs, zero painted by a system font**.
+Per page: en 2934, ru 2942, es 3338, pt 3317, hi 2790, id 3204, tr 3050, vi 3209, uk 3080,
+privacy 9624, terms 6381, 404 347.
+
+**Proven by mutation, each restored byte-exact**: pointing the 404's Devanagari mini at a missing
+file left 5 fallback glyphs (`Noto Sans Devanagari:'हिन्दी'`); pointing the RU page's Cyrillic face
+at a missing file left 2288 (`Liberation Sans`, starting with «Перейти к содержимому» and
+«Русский»); restored, the same run reported 2942/2942 and exit 0.
+
+It is a battery, not a sweep check: ~4–6 s per page, because each text node costs a CDP call.
+`stars-bots-ops/scripts/landing-glyph-fallback.py`, run in control passes.
+
+**What it cannot prove**: that the files contain glyphs for text that does not exist yet. A new
+language or a new sentence still needs the rebuild and the run; the check is a photograph, not a
+promise. It also reports what this machine's Chromium chose — a different fallback font on another
+OS would still be a fallback, which is the failure it is looking for.
 

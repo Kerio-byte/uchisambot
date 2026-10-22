@@ -166,6 +166,10 @@ main{display:block}
 .shots img{width:100%;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .shots figure{margin:0}
 .shots figcaption{margin-top:9px;text-align:center;font-size:13.5px;font-weight:600;color:var(--muted)}
+/* Кнопка сразу после кадров: закрывает разрыв «посмотрел — некуда нажать» (совет, P0-6, 22.10) */
+.shots-cta{margin:26px 0 0;text-align:center}
+.shots-cta .btn{min-height:48px}
+@media(max-width:860px){.shots-cta{margin-top:6px}}
 /* Мобильный рейл скриншотов (совет, раунд 1): карточка ~86%, снэп по краю; десктоп — три колонки, первый кадр крупнее */
 @media(max-width:860px){
   .shots{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:2px 2px 10px;scrollbar-width:none}
@@ -396,6 +400,9 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <figure class="shot rv"><img src="../img/shot2-tr.webp" width="540" height="1170" alt="UchiSamBot'a ödev gönderme" loading="lazy"><figcaption>Ödevini gönder</figcaption></figure>
       <figure class="shot rv"><img src="../img/shot3-tr.webp" width="540" height="1170" alt="UchiSamBot'tan adım adım çözüm" loading="lazy"><figcaption>Adım adım çözümünü al</figcaption></figure>
     </div>
+    <p class="shots-cta"><a class="btn" href="https://t.me/UchiSamBot?start=src_landing_shots" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      <span>Telegram'da aç</span></a></p>
   </div>
 </section>
 
@@ -605,12 +612,15 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 </script>
 <script>
 (function(){
-  // Липкая кнопка на телефоне: после 700px; прячется у #contact и подвала.
+  // Липкая кнопка на телефоне: после 700px; прячется там, где на экране уже есть
+  // своя кнопка — у формы (#contact), у подвала и у кнопки после скриншотов (22.10):
+  // иначе две одинаковые «Открыть в Telegram» стоят в 100 px друг от друга.
   var bar = document.getElementById('sticky-cta');
   if (!bar) return;
   var mq = window.matchMedia('(max-width:860px)');
   var contact = document.getElementById('contact');
   var foot = document.querySelector('footer');
+  var shotsCta = document.querySelector('.shots-cta');
   var scrolled = false, nearEnd = false;
   function sync(){
     if (bar.classList) bar.classList.toggle('show', !!(scrolled && !nearEnd && mq.matches));
@@ -620,7 +630,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     sync();
   }
   if ('IntersectionObserver' in window){
-    var vContact = false, vFoot = false;
+    var vContact = false, vFoot = false, vShots = false;
     var io = new IntersectionObserver(function(entries){
       for (var i = 0; i < entries.length; i++){
         var e = entries[i];
@@ -632,6 +642,17 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     }, {rootMargin: '0px 0px -20% 0px'});
     if (contact) io.observe(contact);
     if (foot) io.observe(foot);
+    // Своя кнопка после кадров: отдельный наблюдатель без нижнего отступа — прячем
+    // липкую, как только кнопка появилась в кадре хотя бы краем, иначе на коротком
+    // участке прокрутки на экране две одинаковые кнопки.
+    if (shotsCta){
+      var ioS = new IntersectionObserver(function(entries){
+        vShots = entries[0].isIntersecting;
+        nearEnd = vContact || vFoot || vShots;
+        sync();
+      }, {threshold: 0});
+      ioS.observe(shotsCta);
+    }
   }
   if (mq.addEventListener) mq.addEventListener('change', sync);
   else if (mq.addListener) mq.addListener(sync);
