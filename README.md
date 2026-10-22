@@ -901,3 +901,52 @@ stylesheet fails for the right reason at the wrong moment, and the fix is to nam
 property the value was standing for — here *which font the pixels come from* — not to
 update the literal.
 
+## The promises were translated, but nothing checked the meaning (22.10.2026)
+
+The meaning pass had gates for the things that can be counted — the number of free
+breakdowns and the prices against `tools/prices.json`, the FAQ count, a single H1, the
+refund wording on every surface — and no gate at all for the three sentences that carry
+legal weight. A translator could delete "tasks are not sent to third-party AI services"
+in one language and the page would keep promising what the privacy policy no longer
+guarantees: the text still had the right structure, the right keys and the right numbers.
+
+**What the read found.** The copy of the nine dictionaries is in good shape: 114 keys in
+each, no empty values, no English left behind except brand names (`Telegram Stars`, `FAQ`,
+the placeholder `you@example.com`), number sets identical to English (already gated),
+`हल` / `pembahasan` / `çözüm` / `phân tích` used for *breakdown* consistently. One real
+defect, and it was in Vietnamese: the FAQ answer to "what if the breakdown fails" said
+*chúng tôi* at the start of the sentence and *chúng mình* at the end — two different
+first-person plurals for "we" in one line, the second one appearing nowhere else in the
+114 strings. Now `chúng tôi` throughout; the page, its JSON-LD `FAQPage` twin and the
+markdown twin were rebuilt together, so the three faces of the answer still match.
+
+The localized media were checked as media, not as file names: the nine hero loops and the
+three screenshots per language have distinct hashes (no English copy posing as a
+translation), and a frame from the Hindi and Vietnamese loops shows the bot answering in
+those languages with only the step number and `@UchiSamBot` in Latin.
+
+**The gate.** Four anchors per language, 36 checks, in the QA sweep
+(`landing-sweep.py`): the parents block must still say the service runs on *our own server
+in the European Union (Finland)*, both the parents block and the FAQ must still say tasks
+are *not sent to third-party AI services*, and the Stars answer must still say there is
+*no subscription and no auto-renewal*. The anchors are substrings in the language of the
+page, not translations of an English phrase: weakening one is a deliberate act that has to
+travel with a change to the policy, which is exactly what the gate is for. The sweep went
+1571 → 1607 checks.
+
+Three mutations, each caught (`evidence/regress5-20261022/claim-mut-*.txt`): dropping
+"сторонним ИИ-сервисам" from the Russian parents block (1 fail, the new gate), turning
+"Sin suscripción" into "Con suscripción mensual" in Spanish (2 fails — the new gate and the
+older premium-note gate), removing Finland from the Vietnamese server sentence (1 fail).
+Every file was restored byte-exact and the control run is 1607/0.
+
+**Battery after the rebuild:** sweep 1607/0, links 11 pages/0, English leftovers 0, price
+parity 9/0, W3C validator 0 real findings, render-check ALL OK, viewports 94/0, axe 12
+pages/0, accessibility extras 68/0, WCAG 2.2 targets 43/0, system preferences 45/0, fonts
+39/0, build reproducible (`tools/build.py` then only the four expected files in
+`git status`). The Vietnamese page was also photographed at 420 px and 1440 px with the
+FAQ open: no overflow, no clipped text, and the changed sentence is the only difference.
+
+The lesson: structure gates prove that a page has ten questions, not that the tenth answer
+still tells the truth. Where a sentence is a promise, the promise itself is the assertion.
+
