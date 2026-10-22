@@ -1505,7 +1505,8 @@ badge as ORB (`ERR_BLOCKED_BY_ORB`), the `onerror` handler hid the link, and the
 seven platforms out of eight — silently.
 
 **What changed.** The platforms' own badge art is now stored in `img/badges/` and served from
-our origin: nine files, 172 KB in total, every one byte-identical to what the platform serves
+our origin: nine files, 148 KB in total — the same bytes the page used to pull from those
+servers, now from our own connection, and every one byte-identical to what the platform serves
 (no re-encoding — a brand mark is not the place to save a kilobyte). All badge URLs, and every
 `preconnect`/`dns-prefetch` hint to a third party, are gone; the only external host left in the
 markup is `api.web3forms.com`, and only because the contact form posts there. `privacy.html`
