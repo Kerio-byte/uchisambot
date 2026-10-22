@@ -599,13 +599,21 @@ def page_md(d: dict, lang: str) -> str:
     while f"f{i}t" in d:
         L.append(f"- **{d[f'f{i}t']}** — {d[f'f{i}d']}")
         i += 1
-    L += ["", f"**{d['principle.title']}** {d['principle.sub']}",
+    L += ["", f"## {d['principle.title']}", "", d["principle.sub"],
           "", f"## {d['subj.title']}", ""]
     i = 1
     while f"subj.c{i}" in d:
         L.append(f"- {d[f'subj.c{i}']}")
         i += 1
-    L += ["", d["subj.note"], "", f"## {d['price.title']}", "", d["price.note"], "",
+    # «Живые чаты» (22.10.2026): секция страницы с тремя настоящими скриншотами
+    # отсутствовала в двойнике ЦЕЛИКОМ — ни заголовка, ни подписи, ни кадров.
+    # Агент, цитирующий страницу, не знал, что продукт показан на реальных
+    # снимках, и не мог сказать, что на них видно. Каждый кадр — свой для языка
+    # (shot_src), alt — из словаря (тот же, что на странице).
+    L += ["", d["subj.note"], "", f"## {d['shots.title']}", "", d["shots.cap"], ""]
+    for n in ("1", "2", "3"):
+        L += [f"![{d[f'shot{n}.alt']}]({BASE}img/{shot_src(n, lang)})", ""]
+    L += [f"## {d['price.title']}", "", d["price.note"], "",
           f"- **{d['p1t']} — {d['p1p']}**: {d['p1d']}",
           f"- **{d['p2t']} — {d['p2p']}**: {d['p2d']}",
           f"- **{d['p3t']} — {d['p3p']}**: {d['p3d']}",

@@ -24,7 +24,9 @@ UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, ceva
 - **Özetler ve tekrar kartları** — Sınavdan önce kısa tekrar kartları.
 - **Günün her saati** — Takıldığında öğretmeni beklemen gerekmez.
 
-**Sadece cevaplar değil. Bir sonraki soruyu çözmeyi öğren.** Adım adım açıklamalar her işlemin neden işe yaradığını gösterir; böylece benzer bir soruyu kendin çözebilirsin.
+## Sadece cevaplar değil. Bir sonraki soruyu çözmeyi öğren.
+
+Adım adım açıklamalar her işlemin neden işe yaradığını gösterir; böylece benzer bir soruyu kendin çözebilirsin.
 
 ## Okul dersleri
 
@@ -35,6 +37,16 @@ UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, ceva
 - Tarih
 
 Ve takıldığın diğer tüm okul soruları.
+
+## Botla gerçek sohbetler
+
+Gerçek ekran görüntüleri — bot 9 dilde çalışıyor.
+
+![UchiSamBot karşılama ekranı](https://kerio-byte.github.io/uchisambot/img/shot1-tr.webp)
+
+![UchiSamBot'a ödev gönderme](https://kerio-byte.github.io/uchisambot/img/shot2-tr.webp)
+
+![UchiSamBot'tan adım adım çözüm](https://kerio-byte.github.io/uchisambot/img/shot3-tr.webp)
 
 ## Fiyatlar
 

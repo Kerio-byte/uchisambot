@@ -24,7 +24,9 @@ UchiSamBot membahas PR kamu langkah demi langkah, menjelaskan topiknya dengan ka
 - **Ringkasan dan kartu belajar** — Kartu singkat untuk mengulang sebelum ulangan.
 - **Kapan saja** — Tidak perlu menunggu guru les saat kamu buntu.
 
-**Bukan sekadar jawaban. Belajar mengerjakan soal berikutnya sendiri.** Penjelasan langkah demi langkah membantu memahami cara kerjanya, agar kamu bisa mengerjakan soal serupa sendiri.
+## Bukan sekadar jawaban. Belajar mengerjakan soal berikutnya sendiri.
+
+Penjelasan langkah demi langkah membantu memahami cara kerjanya, agar kamu bisa mengerjakan soal serupa sendiri.
 
 ## Mata pelajaran sekolah
 
@@ -35,6 +37,16 @@ UchiSamBot membahas PR kamu langkah demi langkah, menjelaskan topiknya dengan ka
 - Sejarah
 
 Dan pertanyaan sekolah lain apa pun yang membuatmu buntu.
+
+## Chat asli dengan botnya
+
+Tangkapan layar asli — bot bekerja dalam 9 bahasa.
+
+![Layar sambutan UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot1-id.webp)
+
+![Mengirim soal ke UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot2-id.webp)
+
+![Pembahasan langkah demi langkah dari UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot3-id.webp)
 
 ## Harga
 
