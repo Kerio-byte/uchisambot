@@ -1037,6 +1037,56 @@ reproducible. The English page was photographed at 420 and 1440 px after the swa
 poster renders, nothing is cut or overflowing.
 
 The lesson: a promise that lives in pixels has to be asserted from the pixels' own source.
-Deriving the strings from the dictionary closes the gap at the only place where it opens —
-the moment of encoding — and the ledger makes the next rebuild prove it.
+Deriving the strings from the dictionary closes the gap at the only place where it opens — the
+moment of encoding — and the ledger makes the next rebuild prove it.
+
+## The privacy promise was checked against the dictionaries, not the wiring (22.10.2026)
+
+Every language says it twice — in the parents block and in the FAQ: "Your tasks also stay on our
+own server — they are not sent to third-party AI services." The privacy policy says it a third
+time and adds "not used to train third-party models". Three surfaces, nine languages — and until
+this pass every one of those checks compared the shop window with itself: dictionary against
+dictionary, policy against the policy file. Not one of them looked at where the bot actually sends
+a task. That promise lives in `study-bot/.env`, not in `src/locales/`: point `LLM_BASE_URL` at a
+cloud address and the page lies while the sweep stays green.
+
+**Six checks on the wiring and eight on the legal text; 1660 → 1674.**
+
+Read from `.env`, and only these four keys: `LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_MODEL`,
+`LLM_TIMEOUT`. `BOT_TOKEN` and `LLM_API_KEY` are never read and never printed — a failing check
+prints the scheme and the host, never the URL, so a key in a query string cannot reach a log. The
+endpoint must be loopback or private (`127.0.0.1`, `::1`, `localhost`, `10/8`, `172.16/12`,
+`192.168/16`); a DNS name the gate cannot resolve offline fails closed, and adding one's own name
+is a single line in `_OWN_HOSTS`. The systemd unit is read too, because it can override the file:
+`EnvironmentFile=` must point at the same `.env`, `Environment=` is merged with the precedence
+systemd uses (the later one wins), and an override that disagrees with the file is a failure in its
+own right — two sources of truth is exactly what bit the site address that same morning. A scan of
+`bot/*.py` for eleven known inference hosts (OpenAI, Anthropic, Gemini, Groq, Mistral, DeepSeek,
+OpenRouter, Together, Fireworks, Perplexity, HF inference) closes the other door: a provider baked
+into code instead of configured.
+
+The legal text: three statements × two languages in `privacy.html`, plus the same three in
+`privacy.html.md` (the twin is what AI clients read). Until now the sweep looked at the policy for
+canonical, `og:`, one H1 and the badge strip — an edit that softened the AI paragraph, or a
+rebuild that dropped it, would have passed.
+
+**Proven by mutation, each restored byte-exact** (`evidence/block-20261022-claim-infra.txt`):
+`LLM_BASE_URL` → `api.openai.com` (1 fail: "endpoint is ours, not a third party"); an
+`Environment=LLM_BASE_URL=https://api.anthropic.com/v1` line appended to the unit (2 fails: the
+endpoint and the override); a file in `bot/` naming `api.groq.com` (1 fail: the code scan);
+`LLM_BASE_URL` → `192.168.1.50` (0 fails — a private LAN box is still "our infrastructure", and a
+gate that cries wolf gets switched off); "not sent to third-party AI services" → "handled with
+care" in `privacy.html` (1 fail, plus the `lastmod` sha check, which watches every page edit); the
+Russian training sentence softened in `privacy.html.md` (1 fail). After every restore: sha256
+equal, `git status` clean, sweep 1674/0.
+
+**Where the promise stands today**, measured rather than assumed: `LLM_PROVIDER=local`,
+`LLM_BASE_URL=http://127.0.0.1:8080/v1`, the queue in front of it routes `8080 → 9080` on this box,
+no third-party host in the bot code, and a chat probe through that same queue answered
+("работает") — the endpoint the page promises is the endpoint that answers.
+
+**What the gate cannot prove**, and why the wording does not need it to: "our own infrastructure"
+is a statement about ownership, not geography — a private IP on a rented cloud VM would pass. The
+gate catches the realistic failure (someone switches the provider to a cloud API and forgets the
+page), not every possible lie.
 
