@@ -515,8 +515,14 @@ def page_md(d: dict, lang: str) -> str:
     page_url = url_for(lang)
     pp = BASE + "privacy.html" + ("#ru" if lang == "ru" else "")
     tt = BASE + "terms.html" + ("#ru" if lang == "ru" else "")
+    # Демо-ролик языка: в md-двойнике ссылка на СВОЙ 13-секундный луп (у каждого языка
+    # он свой, EN-фолбэка у md быть не должно — как и у страницы). До 22.10 ИИ-слой
+    # знал только два полных ролика из llms.txt, поэтому на вопрос «покажи, как это
+    # работает» по-хинди отдать было нечего.
+    demo = BASE + "demo/uchiambot-demo-web" + ("" if lang == "en" else "-" + lang) + ".mp4"
     L = [f"# {d['meta.title']}", "", f"> {d['meta.desc']}", "", d["hero.sub"], "",
-         f"[{d['hero.cta']}]({bot})", "", f"## {d['how.title']}", ""]
+         f"[{d['hero.cta']}]({bot})", "", f"[{d['md.demo']}]({demo})", "",
+         f"## {d['how.title']}", ""]
     i = 1
     while f"how.s{i}t" in d:
         L.append(f"{i}. **{d[f'how.s{i}t']}** — {d[f'how.s{i}d']}")
@@ -547,7 +553,11 @@ def page_md(d: dict, lang: str) -> str:
     L += [f"## {d['contact.title']}", "", d["contact.sub"], "", d["contact.note"], "",
           f"- [{d['contact.btn']}]({page_url}#contact)",
           f"- [{legal_label(d['foot.privacy'], 'foot.privacy', lang)}]({pp})",
-          f"- [{legal_label(d['foot.terms'], 'foot.terms', lang)}]({tt})", ""]
+          f"- [{legal_label(d['foot.terms'], 'foot.terms', lang)}]({tt})", "",
+          # Финальная полоса страницы. Без неё md-двойник заканчивался списком
+          # документов: агент, цитирующий страницу, не доносил до читателя ни
+          # призыва, ни главного оффера «первые 2 разбора бесплатно».
+          f"## {d['cta.title']}", "", d["cta.sub"], "", f"[{d['cta.btn']}]({bot})", ""]
     return "\n".join(L)
 
 
@@ -730,7 +740,16 @@ def llms(dicts: dict) -> str:
         f"- [Demo video (35 s, English)]({BASE}demo/uchiambot-demo.mp4)",
         f"- [Demo video (35 s, Russian)]({BASE}demo/uchiambot-demo-ru.mp4)",
         "",
+        # Лупы героя: по одному на язык, 13 с, подписи шагов на языке страницы.
+        # До 22.10 llms.txt знал только два полных ролика, и на «покажи по-хинди»
+        # у агента не было ни одной ссылки, хотя файл лежал на сайте.
+        "Hero loops (13 s, step captions in the page language):",
+        "",
     ]
+    for lang in LANGS:
+        loop = "demo/uchiambot-demo-web" + ("" if lang == "en" else "-" + lang) + ".mp4"
+        lines.append(f"- [{LABELS[lang]}]({BASE}{loop})")
+    lines.append("")
     return "\n".join(lines)
 
 

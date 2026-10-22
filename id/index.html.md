@@ -6,6 +6,8 @@ UchiSamBot membahas PR kamu langkah demi langkah, menjelaskan topiknya dengan ka
 
 [Buka di Telegram](https://t.me/UchiSamBot?start=src_llms)
 
+[Video demo (13 detik, bahasa Indonesia)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-id.mp4)
+
 ## Cara kerja
 
 1. **Buka botnya** — Ketuk tombolnya dan tekan Start — tidak perlu instal apa pun.
@@ -104,3 +106,9 @@ Kami memakai emailmu hanya untuk membalas pesan ini.
 - [Kirim pesan](https://kerio-byte.github.io/uchisambot/id/#contact)
 - [Kebijakan Privasi (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Ketentuan Layanan (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## Sedang buntu dengan soal sekarang?
+
+Kirim ke botnya — 2 pembahasan pertama gratis.
+
+[Buka di Telegram](https://t.me/UchiSamBot?start=src_llms)

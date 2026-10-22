@@ -6,6 +6,8 @@ UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, ceva
 
 [Telegram'da aç](https://t.me/UchiSamBot?start=src_llms)
 
+[Tanıtım videosu (13 sn, Türkçe)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-tr.mp4)
+
 ## Nasıl çalışır
 
 1. **Botu aç** — Butona dokun ve Start'a bas — hiçbir şey kurmana gerek yok.
@@ -104,3 +106,9 @@ E-postanızı yalnızca bu mesaja yanıt vermek için kullanırız.
 - [Mesaj gönder](https://kerio-byte.github.io/uchisambot/tr/#contact)
 - [Gizlilik Politikası (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Kullanım Koşulları (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## Şu an bir soruda takıldın mı?
+
+Bota gönder — ilk 2 çözüm ücretsiz.
+
+[Telegram'da aç](https://t.me/UchiSamBot?start=src_llms)
