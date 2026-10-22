@@ -1,0 +1,26 @@
+{
+  "cyrillic": {
+    "bytes": 2932,
+    "file": "fonts/langs-cyrillic.woff2",
+    "names": "РусскийУкраїнська",
+    "range": "U+0420,U+0423,U+0430,U+0438,U+0439,U+043A,U+043D,U+0440,U+0441,U+0443,U+044C,U+0457",
+    "sha256": "022880ea8601ba4765b7b9e6b63b14fb68b992eef5691847ff189c3c3d096b74",
+    "source": "manrope-cyrillic.woff2"
+  },
+  "devanagari": {
+    "bytes": 5024,
+    "file": "fonts/langs-devanagari.woff2",
+    "names": "हिन्दी",
+    "range": "U+0926,U+0928,U+0939,U+093F,U+0940,U+094D",
+    "sha256": "4bbbb1988309fe667c006e1a19d190b573cfc7ae34f3c67052b05309c65281f6",
+    "source": "noto-sans-devanagari.woff2"
+  },
+  "vietnamese": {
+    "bytes": 1224,
+    "file": "fonts/langs-vietnamese.woff2",
+    "names": "TiếngViệt",
+    "range": "U+1EBF,U+1EC7",
+    "sha256": "a9451023b76cb0661ca9d91e75c86c0b761c5b3a70544db64816c0a8dfa46f78",
+    "source": "manrope-vietnamese.woff2"
+  }
+}
