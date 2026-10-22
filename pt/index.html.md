@@ -6,6 +6,8 @@ O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples,
 
 [Abrir no Telegram](https://t.me/UchiSamBot?start=src_llms)
 
+[Vídeo de demonstração (13 s, em português)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-pt.mp4)
+
 ## Como funciona
 
 1. **Abra o bot** — Toque no botão e aperte Start — não precisa instalar nada.
@@ -104,3 +106,9 @@ Usamos seu e-mail apenas para responder a esta mensagem.
 - [Enviar mensagem](https://kerio-byte.github.io/uchisambot/pt/#contact)
 - [Política de Privacidade (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Termos de Uso (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## Está preso numa tarefa agora mesmo?
+
+Envie para o bot — as primeiras 2 explicações são grátis.
+
+[Abrir no Telegram](https://t.me/UchiSamBot?start=src_llms)

@@ -6,6 +6,8 @@ UchiSamBot आपके होमवर्क को एक-एक स्टे�
 
 [Telegram में खोलें](https://t.me/UchiSamBot?start=src_llms)
 
+[डेमो वीडियो (13 सेकंड, हिन्दी में)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-hi.mp4)
+
 ## यह कैसे काम करता है
 
 1. **बॉट खोलें** — बटन पर टैप करें और Start दबाएँ — कुछ भी इंस्टॉल नहीं करना।
@@ -104,3 +106,9 @@ Telegram Stars से, सीधे चैट में। पहले 2 हल
 - [संदेश भेजें](https://kerio-byte.github.io/uchisambot/hi/#contact)
 - [गोपनीयता नीति (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [सेवा की शर्तें (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## अभी किसी सवाल पर अटके हैं?
+
+इसे बॉट को भेजें — पहले 2 हल मुफ़्त हैं।
+
+[Telegram में खोलें](https://t.me/UchiSamBot?start=src_llms)

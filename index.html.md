@@ -6,6 +6,8 @@ UchiSamBot breaks down your homework step by step, explains the topic in simple 
 
 [Open in Telegram](https://t.me/UchiSamBot?start=src_llms)
 
+[Demo video (13 s, English)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web.mp4)
+
 ## How it works
 
 1. **Open the bot** — Tap the button and press Start — nothing to install.
@@ -104,3 +106,9 @@ We use your email only to reply to this message.
 - [Send message](https://kerio-byte.github.io/uchisambot/#contact)
 - [Privacy Policy](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Terms of Service](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## Stuck on a problem right now?
+
+Send it to the bot — the first 2 breakdowns are free.
+
+[Open in Telegram](https://t.me/UchiSamBot?start=src_llms)
