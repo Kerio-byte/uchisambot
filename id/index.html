@@ -140,7 +140,11 @@ main{display:block}
 /* Кнопка «пауза/играть» на демо (22.10.2026): WCAG 2.2.2 требует механизм остановки
    авто-движущегося контента. Кнопка в разметке СКРЫТА (hidden) и показывается только
    скриптом: без JS она была бы мёртвой. 44x44 — размер тач-цели. */
-.video-toggle{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;padding:0;margin:0;border-radius:50%;display:grid;place-items:center;background:rgba(14,21,38,.72);color:#fff;cursor:pointer;box-shadow:0 2px 10px rgba(11,16,32,.4);transition:background .15s ease,transform .15s ease}
+.video-toggle{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;padding:0;margin:0;border-radius:50%;display:none;place-items:center;background:rgba(14,21,38,.72);color:#fff;cursor:pointer;box-shadow:0 2px 10px rgba(11,16,32,.4);transition:background .15s ease,transform .15s ease}
+/* hidden обязан реально скрывать: прежний display:grid перебивал UA-правило
+   [hidden]{display:none}, и кнопка «пауза» висела на кадре без скрипта — мёртвый
+   элемент управления (найдено 23.10.2026 при проверке страницы с выключенным JS). */
+.video-toggle:not([hidden]){display:grid}
 .video-toggle:hover{background:rgba(14,21,38,.92)}
 .video-toggle:active{transform:scale(.96)}
 .video-toggle:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
@@ -324,7 +328,11 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     </div>
     <div class="hero-phone">
       <div class="phone-frame">
-        <video id="hero-video" width="540" height="1170" muted loop playsinline autoplay preload="metadata" poster="../img/demo-poster-id.webp" aria-label="Demo: bot menyelesaikan tugas langkah demi langkah.">
+        <!-- autoplay в разметке НЕТ намеренно (23.10.2026): движение стартует только из
+             скрипта, который САМ создаёт кнопку остановки. Без JS или при падении скрипта
+             посетитель видит постер: ни ролика без механизма остановки (WCAG 2.2.2), ни
+             мёртвой кнопки «пауза». Заодно prefers-reduced-motion честно работает и без JS. -->
+        <video id="hero-video" width="540" height="1170" muted loop playsinline preload="metadata" poster="../img/demo-poster-id.webp" aria-label="Demo: bot menyelesaikan tugas langkah demi langkah.">
           <source src="../demo/uchiambot-demo-web-id.mp4" type="video/mp4">
         </video>
         <!-- WCAG 2.2.2: авто-движущийся ролик обязан иметь механизм остановки.
@@ -612,7 +620,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   var reduce = false, save = false;
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
   try { save = !!(navigator.connection && navigator.connection.saveData); } catch(e){}
-  if (reduce || save) { v.removeAttribute('autoplay'); v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
+  if (reduce || save) { v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
   // Кнопка остановки (WCAG 2.2.2). Появляется только здесь: без скрипта это был бы
   // мёртвый элемент управления. Обе подписи (пауза и играть) приходят из словаря
   // языка при сборке страницы: data-play-label — вторая сторона.
@@ -655,6 +663,10 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     if (document.hidden) { try { v.pause(); } catch(e){} }
     else if (canPlay()) play();
   });
+  // Автозапуска в разметке НЕТ: ролик стартует только здесь — после того как найден
+  // механизм остановки (btn выше) и с оглядкой на настройки человека. Так выключенный
+  // или упавший JS не оставляет ни движения без кнопки, ни мёртвой кнопки.
+  if (!reduce && !save) play();
   sync();
 })();
 </script>
