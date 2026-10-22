@@ -527,6 +527,40 @@ leave the file restored afterwards. Screenshots at 420 and 1440 px in EN and RU
 (`evidence/privacy-disclosure-20261021/`) and the measured layout show no
 horizontal overflow, 16 px text and a document exactly as wide as the viewport.
 
+## One copy of the texts, and no refund promises (22.10.2026)
+
+**A second copy of the texts is gone.** The template carried a client-side dictionary
+(`var I18N`, 99 English and 104 Russian strings) for the old two-language switcher —
+dead code, which the build stripped from every page. Dead did not mean harmless: the
+copy had drifted. Its Russian `cta.sub` still promised **five** free breakdowns while
+the pages, the dictionaries and the bot said **two**, and its `shots.cap` still said
+"screenshots in Russian and English" long after every language got its own shots. A
+price promise was sitting in code nobody looked at, one revert away from the live page.
+The block is deleted (template −13.7 KB; the build output is byte-identical, which is
+the proof it was dead), `tools/build.py` refuses a template that carries `var I18N`
+again, and the sweep fails if the dictionary returns to the template or appears on any
+page. Texts now live in exactly one place: `src/locales/*.json`.
+
+**The "no refunds" rule has a guard.** Since 16 Oct (owner) no surface promises money
+back — the bot's own texts were cleaned that day. On the site the rule was kept by
+memory only: nothing in the sweep looked for the word. The sweep now fails on any
+refund phrase in nine languages across every surface — the eleven pages, their markdown
+twins, `privacy.html` / `terms.html` (both twins), `404.html`, `llms.txt`, the template
+and the nine dictionaries. Current state: zero mentions. Strict by design: if the legal
+texts ever need an explicit "no refunds are provided", that file:phrase pair goes into
+`REFUND_ALLOW` in the sweep consciously — the guard must not be weakened silently.
+
+Both guards were proven by mutation, not by a green run alone: injecting «Возврат средств
+по запросу» into the Russian `q9a` fails with `ru/index.html:возврат`,
+`ru/index.html.md:возврат`, `src/locales/ru.json:возврат`; putting `var I18N` back into
+the template fails the sweep and the build. Sweep 1394 → **1397 checks**.
+
+**Copy fixes in two languages.** Turkish `cta.sub` said "Bot'a gönder" — an apostrophe
+before a case suffix belongs to proper nouns only, so it is now "Bota gönder" (the
+product name keeps its apostrophe: `UchiSamBot'a`). Ukrainian used the ASCII apostrophe
+in two strings (`Дев'ять`, `розв'язаннях`) while the rest of the file uses `’` — the
+same word root appeared with two different marks on one page; both now use `’`.
+
 ## Claims against the product (22.10.2026)
 
 Every earlier gate compared the shop window with itself: dictionaries against
