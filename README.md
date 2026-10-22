@@ -812,3 +812,41 @@ confined to the chip row (`evidence/fontdiff/`). The mini renders «हिन्
 of the full Noto at 40 px — same outlines, the shaping features `half`/`pres`/`cjct` survive
 subsetting. Timing did not move (mobile LCP 0.9–1.3 s, CLS ≤0.002 — 69/0), the W3C validator
 reports no real findings, and the link audit stays at 0 problems.
+
+## The AI copy was missing a whole section, not just a line (22.10.2026)
+
+**What was found.** The page has ten sections; each of the nine markdown twins had eight.
+The missing one was "Real chats with the bot" — the page's only proof that the product is
+real: three screenshots in the reader's own language, each with a localised alt and a
+caption. None of it reached the AI layer: no heading, no caption, no frames. The principle
+band ("Not just answers…") was present as a bold paragraph although the page marks it as
+an `H2`, so the twin's structure did not match the page either.
+
+**Why no gate saw it.** Every AI-layer gate named a block it already knew — the final CTA,
+the three price lines, the language's own demo loop. A section that was never written is
+not a wrong value, so no value check could fail: nothing looked at the *set* of sections.
+The same lesson as the badge rows and the price title — a gate that only verifies what the
+author remembered cannot see what the author forgot.
+
+**Fixed in the generator.** `page_md()` writes the principle band as a heading (matching the
+page) and the shots section after the subjects: the caption plus
+`![alt](BASE img/shotN-<lang>.webp)` for the three frames, picked by `shot_src()` exactly
+like the page — so the Hindi twin points at the Hindi screenshots, not the English ones.
+
+**Gates: 1544 → 1571, three per language.** All ten section headings are present in the
+twin (one list, used for both copies — a new section on the page now has to be answered for
+in the twin); the caption is the dictionary line exactly and each alt opens its image; the
+three image files are the language's own (the English `shotN.webp` may not appear on the
+other eight). A missing image is still caught by the existing global "every BASE link in
+the AI layer resolves" check, so no duplicate gate was added for it.
+
+**Proven by five mutations**, each caught by exactly its gate
+(`evidence/block-20261022-ai-sections-mutations.txt`): deleting the heading from the
+English twin; pointing a Russian image at the English file; putting the English caption on
+the Spanish twin; dropping one Hindi alt; pointing the Ukrainian twin at a missing image.
+The first version of the caption gate used a substring test and stayed green when the
+caption was merely appended to — it now compares the whole line. Control run afterwards:
+1571/0, link audit 11 pages / 0 problems.
+
+The HTML did not change: the commit touches the nine twins and `build.py`, so the browser
+batteries of the previous pass remain valid for it.

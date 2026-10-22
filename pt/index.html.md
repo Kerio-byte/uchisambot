@@ -24,7 +24,9 @@ O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples,
 - **Resumos e flashcards** — Flashcards curtos para revisar antes da prova.
 - **A qualquer hora do dia** — Sem esperar por um professor particular quando você ficar preso.
 
-**Não só respostas. Aprenda a resolver o próximo exercício.** As explicações passo a passo mostram por que cada etapa funciona, para você resolver um exercício parecido por conta própria.
+## Não só respostas. Aprenda a resolver o próximo exercício.
+
+As explicações passo a passo mostram por que cada etapa funciona, para você resolver um exercício parecido por conta própria.
 
 ## Matérias escolares
 
@@ -35,6 +37,16 @@ O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples,
 - História
 
 E qualquer outra dúvida escolar em que você ficar preso.
+
+## Conversas reais com o bot
+
+Capturas reais — o bot funciona em 9 idiomas.
+
+![Tela de boas-vindas do UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot1-pt.webp)
+
+![Envio de uma tarefa para o UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot2-pt.webp)
+
+![Explicação passo a passo do UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot3-pt.webp)
 
 ## Preços
 

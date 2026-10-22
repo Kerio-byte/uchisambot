@@ -24,7 +24,9 @@ UchiSamBot breaks down your homework step by step, explains the topic in simple 
 - **Summaries and flashcards** — Short revision cards before a test.
 - **Any time of day** — No waiting for a tutor when you are stuck.
 
-**Not just answers. Learn how to solve the next one.** Step-by-step explanations show why each move works, so you can tackle a similar problem yourself.
+## Not just answers. Learn how to solve the next one.
+
+Step-by-step explanations show why each move works, so you can tackle a similar problem yourself.
 
 ## School subjects
 
@@ -35,6 +37,16 @@ UchiSamBot breaks down your homework step by step, explains the topic in simple 
 - History
 
 And any other school question you are stuck on.
+
+## Real chats with the bot
+
+Real screenshots — the bot works in 9 languages.
+
+![UchiSamBot welcome screen](https://kerio-byte.github.io/uchisambot/img/shot1.webp)
+
+![Sending a homework task to UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot2.webp)
+
+![Step-by-step breakdown from UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot3.webp)
 
 ## Pricing
 
