@@ -1040,7 +1040,7 @@ The lesson: a promise that lives in pixels has to be asserted from the pixels' o
 Deriving the strings from the dictionary closes the gap at the only place where it opens — the
 moment of encoding — and the ledger makes the next rebuild prove it.
 
-## The privacy promise was checked against the dictionaries, not the wiring (22.10.2026)
+## The privacy promise is now checked against the wiring, not just the dictionaries (22.10.2026)
 
 Every language says it twice — in the parents block and in the FAQ: "Your tasks also stay on our
 own server — they are not sent to third-party AI services." The privacy policy says it a third
