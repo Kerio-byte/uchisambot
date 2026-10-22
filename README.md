@@ -602,6 +602,20 @@ promises themselves — nine languages, five abilities — were never compared w
 what the bot actually does. This pass did that, and it found the window ahead of
 the product.
 
+**Status: both issues below are FIXED (22 Oct, 03:13, main session).** The answer
+language was rewritten to a per-locale map (`ANSWER_LANG`: English + native name,
+directive as the last prompt line) and `study-bot.service` was restarted with it;
+measured through the same `:8080` queue afterwards — hi/es/uk/tr/vi answer in their
+own language. The "endpoint answered nothing" case was not a wedged proxy: the TTS
+server was pinned to GPU 0 and held 2.2 GB, leaving ~2.4 GB free against the queue's
+3 GB reserve, so `wait_vram()` stalled every request. The TTS unit now runs on GPU 1
+(`CUDA_VISIBLE_DEVICES=1`), the queue answers in ~0.9 s, and both bot fixes are
+committed (`7a98389`, `e3d67ff`). The paragraphs below are the original findings,
+kept as history.
+
+> УСТАРЕВШЕЕ (на момент блока 22.10, до фикса): «Answer language» и «Product
+> reachability» ниже описывают СОСТОЯНИЕ ДО исправления.
+
 **Answer language.** `bot/handlers.py` (`build_prompt`) writes the response
 language as `'русский' if lang == LANG_RU else 'english'`, so seven of the nine
 languages get English answers even though the visitor picked their language and
