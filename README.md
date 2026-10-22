@@ -315,7 +315,8 @@ included) and by the sweep's `fc btn border` marker on every language page.
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
-screens), lazy-loaded hotlinked official assets, links open in a new tab with
+screens), lazy-loaded official assets (all hotlinked from the platforms except the
+Startup Fame one — see below), links open in a new tab with
 `rel="noopener"`. Badge links point at the platform's product page where one exists
 (Fazier: `fazier.com/launches/uchisambot-study-helper`; the hotlinked badge asset uses
 the canonical single-slash path `fazier.com/api/v1/public/…`). `privacy.html` /
@@ -347,7 +348,21 @@ unchanged — the attributes only affect the pre-load reservation. Hover `title`
 badge links were dropped: they duplicated the alt text in English on every language
 page.
 
-Badge failure fallback (21.10.2026): every badge is a hotlink to the platform's own
+Startup Fame badge: served from our own domain (22.10.2026): the platform's
+`https://startupfa.me/badge?t=classic&theme=default` answers `HTTP 200` with a valid,
+self-contained SVG (10 KB, text converted to paths, logo inlined as `data:`) — and
+Chromium still refuses it with `net::ERR_BLOCKED_BY_ORB` on every page, and in a bare
+`<img>` test outside the site, so the `onerror` fallback below silently hid the link and
+every language page showed **7 platforms instead of 8**. `curl` sees 200, the browser sees
+nothing: only a browser check catches this class of failure, a status-code audit never
+will. The exact bytes now live at `img/badges/startupfa.svg` (10 258 bytes, sha256
+`ef22f5c2…`), the link still points at `startupfa.me/s/-51`, and `tools/build.py` fails
+the build (`audit_local_assets`) when any `src|href|poster="img/…"` reference has no file
+on disk — so a missing local badge breaks CI instead of vanishing from the page. The sweep
+pins the local path on all nine pages plus the file itself, and the browser smoke treats
+it as the one badge that must stay visible and loaded while every platform host is blocked.
+
+Badge failure fallback (21.10.2026): every badge but Startup Fame is a hotlink to the platform's own
 asset, and those edges do throttle. A fresh 9-language × 2-viewport capture found at
 least one badge request with `naturalWidth=0` in 5 of 18 renders; an 18-page browser
 smoke run saw `startupfa.me` fail on 10 pages while a single request to the same URL
