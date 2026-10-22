@@ -1179,8 +1179,9 @@ address in the email field. Proven with a negative control: a fresh letter from 
 rejected (exit 1), so "a letter exists" cannot pass for "this letter arrived". Exit 2 means the
 mailbox could not be checked at all — the run is then not a pass.
 
-Numbers for the day: offline 468 checks / 0 failed across nine languages; live 11 / 0 in ru and
-uk; delivery confirmed twice. Evidence: `evidence/block-20261022-contact-delivery.txt`.
+Numbers for the day: offline 468 checks / 0 failed across nine languages; live 10 / 0 in ru (before
+the fix) and 11 / 0 in uk (after it); delivery confirmed twice. Evidence:
+`evidence/block-20261022-contact-delivery.txt`.
 
 **What it still cannot prove**: that a human reads the inbox and answers. Delivery is measured
 now; answering is a process, not code.
