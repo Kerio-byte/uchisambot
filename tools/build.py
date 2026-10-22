@@ -218,16 +218,19 @@ LANGS_FAMILY = "UchiSam Langs"
 NOTO_RANGE = ("U+0900-097F,U+1CD0-1CF4,U+1CF7-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,"
               "U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B0A")
 BADGE_ALTS = [
-    (r"https://launchigniter\.com/api/badge/", "LaunchIgniter"),
-    (r"https://fazier\.com/api/v1/", "Fazier"),
-    (r"https://statics\.startupbase\.io/site/badges/", "StartupBase"),
-    (r"https://showmebest\.ai/badge/", "ShowMeBestAI"),
-    (r"https://lift-off\.sh/images/badges/badgeLaunched", "LiftOff"),
+    # 23.10.2026: все значки лежат у нас (img/badges/), чужих адресов на страницах больше нет.
+    # Старые адреса оставлены в образцах как второй вариант: так сборка понимает и архивную
+    # страницу из git, и новый локальный файл, а не падает «совпадений 0» на пустом месте.
+    (r"(?:https://launchigniter\.com/api/badge/|(?:\.\./)?img/badges/launchigniter\.svg)", "LaunchIgniter"),
+    (r"(?:https://fazier\.com/api/v1/|(?:\.\./)?img/badges/fazier\.svg)", "Fazier"),
+    (r"(?:https://statics\.startupbase\.io/site/badges/|(?:\.\./)?img/badges/startupbase\.svg)", "StartupBase"),
+    (r"(?:https://showmebest\.ai/badge/|(?:\.\./)?img/badges/showmebest\.webp)", "ShowMeBestAI"),
+    (r"(?:https://lift-off\.sh/images/badges/badgeLaunched|(?:\.\./)?img/badges/liftoff-launched\.webp)", "LiftOff"),
     # 22.10.2026: значок Startup Fame отдаётся с нашего домена (ORB резал горячую ссылку),
     # поэтому здесь два варианта src: свой файл и старый чужой адрес.
     (r"(?:https://startupfa\.me/badge\?|(?:\.\./)?img/badges/startupfa\.svg)", "Startup Fame"),
-    (r"https://cdn\.openhunts\.com/badges/", "OpenHunts Club"),
-    (r"https://auraplusplus\.com/images/badges/", "Aura++"),
+    (r"(?:https://cdn\.openhunts\.com/badges/|(?:\.\./)?img/badges/openhunts\.webp)", "OpenHunts Club"),
+    (r"(?:https://auraplusplus\.com/images/badges/|(?:\.\./)?img/badges/auraplusplus\.svg)", "Aura++"),
 ]
 
 
@@ -600,7 +603,7 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     #      ссылка та же; не «Featured on», поэтому не в BADGE_ALTS) — 21.10
     assert "badge.award" in d, f"{lang}: нет badge.award"
     pat_award = re.compile(
-        r'(<img src="https://lift-off\.sh/images/badges/day/[^"]*"[^>]*?alt=")[^"]*(")')
+        r'(<img src="(?:https://lift-off\.sh/images/badges/day/|(?:\.\./)?img/badges/liftoff-day\.webp)[^"]*"[^>]*?alt=")[^"]*(")')
     out, n_award = pat_award.subn(
         lambda m: m.group(1) + esc_attr(d["badge.award"]) + m.group(2), out)
     assert n_award == 1, f"{lang}: бейдж-награда LiftOff — совпадений {n_award}"
