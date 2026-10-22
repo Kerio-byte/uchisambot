@@ -1421,3 +1421,70 @@ empty right side of the chat header, covers no text, and the mock keeps its prop
 control — the owner's eye decides that, and moving it is a one-line CSS change; and that
 every browser will autoplay: iOS Low Power Mode never starts a video, so the button then
 shows "play" from the first second, which is the honest state rather than a bug.
+
+## Without JavaScript the demo kept playing and the pause button did nothing (23.10.2026)
+
+**What was found.** The stop button from the previous block ships in the markup as
+`hidden` and is un-hidden by its script, so that a visitor without JavaScript never sees a
+control that cannot work. The comment said so; the browser disagreed. The stylesheet set
+`.video-toggle{display:grid}`, and an author `display` rule beats the user-agent rule
+`[hidden]{display:none}` — so the button was painted on the frame at first paint, before any
+script ran. On top of that the `<video>` carried `autoplay` in the markup: with scripting
+disabled (or with the script blocked, or after an error earlier in the page) the 13-second
+loop started anyway, while the button that was supposed to stop it did nothing — and the
+`prefers-reduced-motion` promise, which is kept by the script removing the attribute, was
+ignored too. Nothing caught this because every gate, every battery and every screenshot ran
+with JavaScript on.
+
+**What is on the page now.** `autoplay` is gone from the markup: motion starts only inside
+the script that owns the stop control, and only after that control has been found
+(`if (!reduce && !save) play();` sits after the `btn` lookup, so a page without the button
+never moves). Without JavaScript the visitor sees the poster — a still frame of the same
+demo, in their language — and no button at all. The CSS now hides the control by default and
+shows it through `.video-toggle:not([hidden]){display:grid}`, so `hidden` means hidden and
+the script is the only thing that can reveal it. Behaviour with JavaScript is unchanged:
+muted loop, pause on click and on Enter, stop when off-screen or in a background tab,
+reduced-motion and Save-Data visitors get the poster and can still press play.
+
+**Gates.** The sweep grew by 27 checks (1843 → 1870), three per language: the `<video>` tag
+carries no `autoplay`, the start line under the preference gate is present, and the CSS
+`display:none` + `:not([hidden])` pair exists. Static gates cannot see whether the page
+actually moves, so the browser battery `landing-video-motion.py` grew from 363 to 408
+checks: nine languages in a context with scripting disabled — two screenshots of the video
+frame 0.9 s apart must be pixel-identical (PIL `ImageChops`, byte compare as fallback), the
+toggle must not be visible, the poster attribute must be there, the page text must still be
+readable (the reveal animation hides nothing without `.js`), and — the general form of the
+same defect — every element that still carries `hidden` in a script-less page must compute
+to `display:none`, not just the one button. `landing-browser-smoke.py` also gained a
+JS-on check of that invariant (18 page/width runs), for elements that stay hidden after the
+scripts have run.
+
+**Proven by running the new battery against the previous page** (`git show HEAD:index.html`
+into a throwaway copy of the site): 48 checks, 3 failures — exactly "кадр стоит" (the frames
+differed), "кнопки «пауза» не видно" (visible) and "все элементы с hidden скрыты без
+скрипта" (named `video-toggle`). Same battery on the fixed page: 408/0. The negative
+control is the reason to trust the new checks: before the fix they fail, in the exact way a
+visitor would have seen it.
+
+**Numbers on the finished build.** `tools/build.py` rc=0, EN 56 599 characters / 60 883
+bytes (+1 427 bytes for the comments and the CSS pair); sweep 1870/0;
+`landing-video-motion.py` 408/0 in 116 s; `landing-env-prefs.py` 45/0 (its control check
+used to assert that the `autoplay` attribute exists — it now asserts the opposite and that
+the video started without the harness's nudge, `triedPlay=false`, i.e. the page's own script
+did it); `landing-a11y-extra.py` 68/0; `landing-wcag22-targets.py` 43/0;
+`landing-axe-audit.py` 0 violations on 12 pages; `landing-cwv.py` 69/0 (LCP/CLS unchanged:
+the poster is still the LCP element and it is still preloaded); `landing-cross-engine.py`
+36 runs / 0 problems in WebKit and Firefox; `landing-render-check.py` ALL OK including its
+own `no-js /ru/: visible: True` probe; `landing-price-parity.py` 9/0;
+`landing-links-audit.py` 11 pages / 0; `landing-en-leftovers.py` 0; `landing-fonts.py` 39/0;
+`landing-poster-frames.py` 9 posters / 0; Nu validator: no real findings;
+`landing-visual-pass.py` PROBLEMS 0 on nine languages × two widths;
+`landing-browser-smoke.py` 18 runs / 0 (with the new `hidden` check); `landing-contact-e2e.py`
+468/0; `landing-viewports-extra.py` 94/0 under throttling; `landing-glyph-fallback.py` 12
+pages / 0 substituted glyphs; `landing-external-links.py` 0 broken links.
+
+**What it cannot prove.** That every browser will start a muted video from a script: iOS Low
+Power Mode never does, and some privacy extensions block media outright. In those cases the
+hero stays a still poster with a "play" button — the honest state, and the same one the
+previous block accepted. Nor that a visitor without JavaScript prefers a still frame to the
+demo: the frame is the only thing a script-less page can show without moving.
