@@ -850,3 +850,54 @@ caption was merely appended to — it now compares the whole line. Control run a
 
 The HTML did not change: the commit touches the nine twins and `build.py`, so the browser
 batteries of the previous pass remain valid for it.
+
+## The font change was never re-checked by the batteries — so they ran (22.10.2026)
+
+The switcher-font commit (10:47) is the one commit of the day that changed CSS and
+`@font-face` on all ten pages and on the 404. The full browser battery — axe, the
+accessibility extras, WCAG 2.2 targets, reduced-motion/contrast preferences, viewports,
+cross-engine, timing — last ran at 05:59–08:29, **before** it. The two AI-layer commits
+that followed touched no markup, so nothing asked for a re-run and none happened: the one
+change that could move the rendering was the one nobody measured after.
+
+So the whole battery was re-run on HEAD `3870b5e`. Every suite passed except one, and the
+failure was in the test, not the page:
+
+| suite | result |
+|---|---|
+| QA sweep / links / price parity / English leftovers | 1571-0 / 11 pages 0 / 9-0 / 0 |
+| W3C validator, live bytes, 404 probe | 0 real findings, 26/26 identical, own 404 |
+| render-check, browser smoke | ALL OK, 18 runs / 0 |
+| axe, a11y extras, WCAG 2.2, system preferences | 12 pages / 0, 68/0, 43/0, 45/0 |
+| viewports, Core Web Vitals, font budgets, cross-engine | 91/0, 69/0, 39/0, 36/0 |
+
+**The stale gate.** `landing-viewports-extra.py` asserted that the first family of the body
+stack is Manrope. The font pass put the switcher mini family first — which is the whole
+point of that pass — so the 404 check failed three times while the page rendered exactly
+right (the Latin text measures 281 px in Manrope against 284.59 px in the system fallback,
+and the mini subsets are loaded). The gate was a copy of the CSS, not of the behaviour: a
+font *name* read out of the stylesheet also stays "right" when the woff2 file 404s.
+
+It now checks what the page must do, in three steps — the stack starts with
+`UchiSam Langs` and then Manrope; both families are actually loaded
+(`document.fonts.check`); and the text is *drawn* in Manrope, by comparing the rendered
+width of a probe string in the body with its width set in Manrope (≤0.05 px apart) and
+with the system fallback. 85 → 91 checks. The width probe is what makes it real: with
+`manrope-latin.woff2` pointing at a missing file the body measures 284.59 px, and with the
+family not declared at all Chromium reports a synthesised 263.06 px.
+
+Three mutations, each caught by its own gate and only by it
+(`evidence/regress4-20261022/404-font-mutations.txt`): dropping the mini family from the
+stack (3 × *own font stack*); `system-ui` first (9 × stack + loaded + drawn); a missing
+Manrope file (6 × loaded + drawn). The page was restored byte-exact after each, control run
+91/0.
+
+**No site file changed in this pass** — the commit touches the skill's battery script,
+this README and the evidence. The reproducible build was re-run anyway: `tools/build.py`
+followed by an empty `git status`.
+
+The lesson is narrower than "re-run the tests": a gate that names a value from the
+stylesheet fails for the right reason at the wrong moment, and the fix is to name the
+property the value was standing for — here *which font the pixels come from* — not to
+update the literal.
+
