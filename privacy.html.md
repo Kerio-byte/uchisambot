@@ -1,6 +1,6 @@
 # Privacy Policy
 
-UchiSamBot (Study Helper) · Last updated: 21 October 2026
+UchiSamBot (Study Helper) · Last updated: 22 October 2026
 
 **Language:** this document is published in English (this section) and Russian (the section below). There are no other language versions; on the other language pages the link here is marked “(EN/RU)”.
 
@@ -25,19 +25,27 @@ We do not ask for or store your name, phone number, email address, postal addres
 - To prevent abuse and keep the service reliable.
 - To improve quality using aggregated, de-identified statistics (for example, how many tasks were solved in total).
 
+We process this data on these legal grounds: (a) to perform our contract with you — running the breakdowns you ask for and keeping your balance; (b) our legitimate interest — keeping the service reliable, preventing abuse, and improving quality on aggregated statistics; (c) your consent, where we ask for it — for example the confirmation described in section 5 of the Terms; and (d) legal obligations, for example keeping records related to payments.
+
 ## 3. Where your data is processed
 
 The bot runs on our own server in the European Union (Finland). Currently, all AI processing that generates the explanations runs on our own infrastructure. Your content is not sent to third-party AI services and is not used to train third-party models.
 
+Three services we use may process data outside the European Union. Telegram, the platform the bot runs on, stores data in data centres in several countries; for accounts registered from the EU or the UK, Telegram stores the data in the Netherlands. Our website is hosted by GitHub Pages (GitHub, United States), which relies on the EU–US Data Privacy Framework and on the European Commission's standard contractual clauses for transfers. Our contact form is processed by Web3Forms, which operates from India and states that transfers from the EU are made under the standard contractual clauses in its data processing agreement. We send these services nothing beyond what this policy describes.
+
 ## 4. Sharing
 
-We do not sell your data and do not share it for advertising. Data is disclosed only to: (a) Telegram — the platform the bot runs on and the payment processor; (b) competent authorities, where required by law.
+We do not sell your data and do not share it for advertising. Data is disclosed only to: (a) Telegram — the platform the bot runs on and the payment processor; (b) GitHub, which serves this website, and Web3Forms, which handles the contact form — both only if you open the website or write to us through the form; (c) competent authorities, where required by law.
 
-## 5. Storage and deletion
+## 5. Your rights and deletion
 
-Your data is stored on our server and kept for as long as needed to operate the service: accounting of free and paid breakdowns, support, and quality improvement. You can ask us to delete your data at any time — write to us, and we will delete it and confirm. Parents and guardians can make this request on behalf of their children.
+Your data is stored on our server and kept for as long as needed to operate the service: accounting of free and paid breakdowns, support, and quality improvement. Records of purchases are kept while the account exists, because they are needed to answer payment questions.
 
-Depending on your country, you may also have the right to access or correct your personal data — use the contact form on our website and we will help.
+You have the right to: see the data we hold about you; correct it if it is wrong; delete it; limit how we use it; object to a use based on our legitimate interest; and receive the data you gave us in a machine-readable form. You can also withdraw a consent you gave earlier — this does not affect what was done before you withdrew it.
+
+To use any of these rights, write to us through the contact form on our website and say what you want. We reply within one month. Deleting data ends the service for that account: the balance of free and paid breakdowns cannot be restored afterwards. Parents and guardians can make these requests on behalf of their children.
+
+If you think we handled your data wrongly, you can complain to a supervisory authority — in Finland, the Data Protection Ombudsman's Office (tietosuoja.fi) — or to the authority in your own country. We would rather you wrote to us first: most questions can be settled directly.
 
 ## 6. Children
 
@@ -65,7 +73,7 @@ Use the contact form on our website — we reply by email.
 
 ## Политика конфиденциальности
 
-UchiSamBot (Учебный помощник) · Обновлено: 21 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 22 октября 2026
 
 UchiSamBot (Учебный помощник) — телеграм-бот, который помогает школьникам разбираться с домашними заданиями: разбирает задачи по шагам, объясняет темы простыми словами, проверяет решения и делает конспекты для повторения. Здесь описано, какие данные обрабатывает бот и как. Политика относится к боту (t.me/UchiSamBot) и его сайту (kerio-byte.github.io/uchisambot). В этой политике «мы» — команда, которая ведёт UchiSamBot.
 
@@ -86,19 +94,27 @@ UchiSamBot (Учебный помощник) — телеграм-бот, кот
 - Для защиты от злоупотреблений и стабильной работы сервиса.
 - Для улучшения качества — по обезличенной статистике (например, сколько всего задач решено).
 
+Основания обработки: (а) исполнение нашего договора с вами — выдача разборов, которые вы запросили, и учёт баланса; (б) наш законный интерес — стабильная работа сервиса, защита от злоупотреблений и улучшение качества по обезличенной статистике; (в) ваше согласие, когда мы его спрашиваем — например подтверждение, о котором говорит раздел 5 Условий; (г) требования закона — например хранение записей, связанных с оплатой.
+
 ### 3. Где обрабатываются данные
 
 Бот работает на нашем собственном сервере в Европейском союзе (Финляндия). Сейчас вся ИИ-обработка, которая создаёт объяснения, выполняется на нашей собственной инфраструктуре. Ваши материалы не передаются сторонним ИИ-сервисам и не используются для обучения сторонних моделей.
 
+Три сервиса, которые мы используем, могут обрабатывать данные за пределами Европейского союза. Telegram — платформа, на которой работает бот, — хранит данные в дата-центрах в нескольких странах; для аккаунтов, зарегистрированных из ЕС или Великобритании, Telegram хранит данные в Нидерландах. Наш сайт размещён на GitHub Pages (GitHub, США): компания опирается на рамочное соглашение ЕС–США по защите данных и на стандартные договорные условия Еврокомиссии для передачи данных. Контактную форму обрабатывает Web3Forms: сервис работает из Индии и указывает, что передача данных из ЕС идёт по стандартным договорным условиям его соглашения об обработке данных. Ничего сверх описанного в этой политике мы этим сервисам не передаём.
+
 ### 4. Передача данных
 
-Мы не продаём ваши данные и не передаём их для рекламы. Данные раскрываются только: (а) Telegram — платформе, на которой работает бот, и платёжному посреднику; (б) компетентным органам — когда этого требует закон.
+Мы не продаём ваши данные и не передаём их для рекламы. Данные раскрываются только: (а) Telegram — платформе, на которой работает бот, и платёжному посреднику; (б) GitHub, который отдаёт этот сайт, и Web3Forms, который обрабатывает контактную форму — и только если вы открываете сайт или пишете через форму; (в) компетентным органам — когда этого требует закон.
 
-### 5. Хранение и удаление
+### 5. Ваши права и удаление
 
-Данные хранятся на нашем сервере столько, сколько нужно для работы сервиса: учёт бесплатных и оплаченных разборов, поддержка, улучшение качества. Вы можете в любой момент попросить удалить ваши данные — напишите нам, мы удалим их и подтвердим. Родители и опекуны могут сделать это за своих детей.
+Данные хранятся на нашем сервере столько, сколько нужно для работы сервиса: учёт бесплатных и оплаченных разборов, поддержка, улучшение качества. Записи о покупках хранятся, пока существует аккаунт: они нужны, чтобы отвечать на вопросы об оплате.
 
-В зависимости от вашей страны у вас могут быть также права на доступ к своим данным и их исправление — напишите нам, и мы поможем.
+Вы вправе: узнать, какие данные о вас у нас есть; исправить их, если они неверны; удалить их; ограничить их использование; возразить против использования на основании нашего законного интереса; получить переданные вами данные в машиночитаемом виде. Вы можете также отозвать данное ранее согласие — это не отменяет того, что уже было сделано до отзыва.
+
+Чтобы воспользоваться любым из этих прав, напишите нам через контактную форму на сайте и скажите, что нужно сделать. Мы отвечаем в течение месяца. После удаления данных сервис для этого аккаунта заканчивается: баланс бесплатных и оплаченных разборов восстановить уже нельзя. Родители и опекуны могут сделать это за своих детей.
+
+Если вы считаете, что мы обошлись с вашими данными неправильно, можно пожаловаться в надзорный орган — в Финляндии это Управление уполномоченного по защите данных (tietosuoja.fi) — или в орган вашей страны. Лучше сначала напишите нам: большинство вопросов решается напрямую.
 
 ### 6. Дети
 
