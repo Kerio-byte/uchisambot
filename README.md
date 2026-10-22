@@ -639,3 +639,49 @@ Both were proven by mutation: `hero.chip1` 2 → 3 in Spanish fails with
 restored, the sweep is 1394 checks, 0 failed. This is a documentation-and-gates
 pass — the site's own markup did not change, so the build output is byte-identical.
 
+## The badge strip is gated, not just printed (22.10.2026)
+
+The three fixes of that morning (the Startup Fame badge moved to our domain, the footer
+strip laid out 4+4, the privacy text about it) landed at 07:02–07:18 — **after** the last
+full battery, which ran at 05:59. Nothing had re-checked accessibility, cross-engine or
+timing against the pages that actually ship, so this pass ran the whole battery on that
+commit: sweep 1408 → **1426 checks, 0 failed**; render-check ALL OK (9 languages, 4 render
+probes, no console errors); browser smoke 18/18; axe-core 0 violations on all 12 pages;
+a11y-extra 68/0; WCAG 2.2 target size and focus 43/0; environment preferences 45/0 (dark,
+forced colors, reduced motion, WebKit); throttled viewports 85/0; contact end-to-end
+468/0; cross-engine 36 runs in 308 s with 0 problems; Core Web Vitals 69/0 (LCP 204–332 ms,
+CLS 0–0.006); Nu validator 0 real findings; links and external hosts 0 broken; price
+parity and the English-leftover scan clean. `tools/build.py` re-run leaves `git status`
+empty, so the build is still byte-reproducible.
+
+Then the visual pass was re-shot after those fixes (`evidence/visual-20261022b`): 9
+languages × 420/1440 px, eight sections each, 8/8 badges on every page, rows `[4,4]` on the
+desktop and `[2,2,2,2]` on the phone, heights 46/40 px, no overflow, no clipped text, no
+JS errors. The band and the footer were also looked at directly — English desktop and Hindi
+mobile (the smallest type and the longest strings): even rows, nothing cropped, Devanagari
+renders, contrast holds.
+
+**The tool was blind to the defect the owner named.** `landing-visual-pass.py` printed
+`rows=` and never asserted it, so a 6+2 strip — the exact thing the owner called unfinished
+— passed with `PROBLEMS 0`. It now derives the expected rows from the design (`ceil(n / 4)`
+desktop, `ceil(n / 2)` mobile), requires rows to be even, no row wider than the design, and
+equal badge heights, and it exits non-zero on any problem (a verdict that only exists in a
+log stops nothing). Proven by mutation: with the strip narrowed to 620 px it fails with
+`badge rows 3 != 2 ([3,3,2], 4/row)` and exit 1; restored, 0 problems and exit 0.
+
+A second defect surfaced in the same pass: three pages reported **7/8 badges** while the
+rest reported 8/8 at the same minute. A fixed 1800 ms wait after scrolling was racing the
+platforms' CDNs — the probe read `naturalWidth` before the image had answered, and on a
+retry the same pages loaded 8/8 within 1.8 s. The pass now waits for `img.complete` on
+every badge, reloads once to tell a transient miss from a broken asset, and names the
+missing file instead of just a count. Those seven assets are hotlinked by the platforms'
+terms, so a single CDN miss hides that link (`onerror`) rather than breaking the page —
+distinguishing "not yet" from "broken" is the whole point of the wait.
+
+Static markers went into the sweep as well (2 × 9 languages), because a CSS regression
+must fail without a browser: `.foot-badges{… max-width:780px … flex-wrap:wrap}` and the
+mobile `.foot-badges{gap:10px 14px}`. Narrowing the style to 620 px in the built page makes
+the sweep report exactly two failures — the new marker and the existing "page edited without
+a rebuild" guard — and restoring it returns 1426/0.
+
+The site's markup is unchanged by this pass: it is verification and gates only.
