@@ -224,7 +224,10 @@ main{display:block}
 footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .foot{text-align:center;color:var(--muted);font-size:14px}
 .foot .dim{color:#5C6E90;margin-top:8px;font-size:13px}
-.foot-badges{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 20px;margin-top:18px}
+/* 22.10.2026: восемь значков при ширине 1440 ложились 6+2 — вторая строка из двух
+   значков висела по центру и полоса выглядела недоделанной. Ограничение 780 px даёт
+   ровные 4+4 (сумма четырёх самых широких = 714, пятый значок уже не влезает). */
+.foot-badges{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 20px;margin:18px auto 0;max-width:780px}
 .foot-badges a{display:inline-flex;align-items:center;line-height:0}
 .foot-badges img{height:46px;width:auto;display:block}
 @media(max-width:700px){.foot-badges{gap:10px 14px}.foot-badges img{height:40px}}
