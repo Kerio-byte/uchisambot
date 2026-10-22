@@ -22,3 +22,15 @@ Open the bot: https://t.me/UchiSamBot?start=src_llms
 
 - [Demo video (35 s, English)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo.mp4)
 - [Demo video (35 s, Russian)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-ru.mp4)
+
+Hero loops (13 s, step captions in the page language):
+
+- [English](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web.mp4)
+- [Русский](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-ru.mp4)
+- [Español](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-es.mp4)
+- [Português](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-pt.mp4)
+- [हिन्दी](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-hi.mp4)
+- [Bahasa Indonesia](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-id.mp4)
+- [Türkçe](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-tr.mp4)
+- [Tiếng Việt](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-vi.mp4)
+- [Українська](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-uk.mp4)

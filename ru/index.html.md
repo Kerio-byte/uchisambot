@@ -6,6 +6,8 @@ UchiSamBot разбирает задачу по шагам, объясняет �
 
 [Открыть в Telegram](https://t.me/UchiSamBot?start=src_llms)
 
+[Демо-видео (13 с, по-русски)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-ru.mp4)
+
 ## Как это работает
 
 1. **Открой бота** — Нажми кнопку и Start — устанавливать ничего не нужно.
@@ -104,3 +106,9 @@ UchiSamBot разбирает задачу по шагам, объясняет �
 - [Отправить](https://kerio-byte.github.io/uchisambot/ru/#contact)
 - [Политика конфиденциальности](https://kerio-byte.github.io/uchisambot/privacy.html#ru)
 - [Условия использования](https://kerio-byte.github.io/uchisambot/terms.html#ru)
+
+## Застрял на задаче прямо сейчас?
+
+Отправь её боту — первые 2 разбора бесплатно.
+
+[Открыть в Telegram](https://t.me/UchiSamBot?start=src_llms)

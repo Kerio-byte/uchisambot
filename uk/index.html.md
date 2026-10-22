@@ -6,6 +6,8 @@ UchiSamBot розбирає домашнє завдання крок за кро
 
 [Відкрити в Telegram](https://t.me/UchiSamBot?start=src_llms)
 
+[Демо-відео (13 с, українською)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-uk.mp4)
+
 ## Як це працює
 
 1. **Відкрий бота** — Натисни кнопку та Start — встановлювати нічого не потрібно.
@@ -104,3 +106,9 @@ Stars (⭐) — внутрішня валюта Telegram. Поповнюютьс
 - [Надіслати повідомлення](https://kerio-byte.github.io/uchisambot/uk/#contact)
 - [Політика конфіденційності (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Умови використання (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## Застряг на завданні просто зараз?
+
+Надішли його ботові — перші 2 розбори безкоштовно.
+
+[Відкрити в Telegram](https://t.me/UchiSamBot?start=src_llms)
