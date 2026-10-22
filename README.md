@@ -1156,3 +1156,32 @@ language or a new sentence still needs the rebuild and the run; the check is a p
 promise. It also reports what this machine's Chromium chose — a different fallback font on another
 OS would still be a fallback, which is the failure it is looking for.
 
+## The form said "sent"; the mailbox was never asked (22.10.2026)
+
+The live end-to-end test of the contact form ended with a 3xx from `api.web3forms.com` and the
+line "the letter has been sent". A 3xx means *the service accepted the request* — it says nothing
+about the letter. Between those two facts sits the delivery itself (free-plan quota, a spam
+filter, a revoked access key, a changed recipient), and all of it breaks silently: the visitor
+sees the confirmation, the site stays green, nobody ever gets the message.
+
+**The loop was closed by hand first**: a real submit from the live site (ru), and two seconds
+later the letter in the kerio inbox, both fields intact (`email`, `message` with the run's own
+timestamp). Then a second run (uk) after the script change — same result.
+
+**A second defect was hiding in the test itself.** The POST body is form-urlencoded, so the
+`redirect` value travels with `%23contact-card` instead of `#contact-card`; the printout said
+`redirect: False` on a form that worked. It is now a decoded check, `post carries redirect`
+(10 → 11 live checks), so a real break cannot hide behind a false alarm.
+
+**New tool — `landing-contact-delivery.py`**: searches the mailbox for the subject, keeps only
+letters inside `--since-minutes`, and requires the run's own timestamp in the body *and* the test
+address in the email field. Proven with a negative control: a fresh letter from an earlier run is
+rejected (exit 1), so "a letter exists" cannot pass for "this letter arrived". Exit 2 means the
+mailbox could not be checked at all — the run is then not a pass.
+
+Numbers for the day: offline 468 checks / 0 failed across nine languages; live 11 / 0 in ru and
+uk; delivery confirmed twice. Evidence: `evidence/block-20261022-contact-delivery.txt`.
+
+**What it still cannot prove**: that a human reads the inbox and answers. Delivery is measured
+now; answering is a process, not code.
+
