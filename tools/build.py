@@ -84,6 +84,51 @@ def load_prices() -> dict:
 
 
 PRICES = load_prices()
+SUBJECTS_FILE = ROOT / "tools" / "subjects.json"
+
+
+def load_subjects() -> dict:
+    """Единственный источник списка предметов (22.10.2026).
+
+    До этого числа список жил только в девяти словарях (чипы subj.c1…c5 и строка q2a) и
+    повторялся словами в обеих половинах terms.html. При первой генерации словарей (15.10)
+    в восемь языков попало название языка самой страницы вместо предмета «English» (ru
+    «Русский язык», es «Español», tr «Türkçe»), поэтому неделю страницы обещали не тот
+    предмет, а русская половина Terms противоречила английской — и свип был зелёным,
+    потому что сверял страницу с нею же. Теперь канон здесь; проверка ниже валит сборку,
+    если чипы хоть одного языка разошлись.
+    """
+    data = json.loads(SUBJECTS_FILE.read_text(encoding="utf-8"))
+    subjects = data.get("subjects") or {}
+    assert set(subjects) == set(LANGS), f"subjects: набор языков {sorted(subjects)}"
+    for lang, items in subjects.items():
+        assert (isinstance(items, list) and len(items) == 5
+                and all(isinstance(x, str) and x.strip() for x in items)), f"subjects: {lang}"
+    return subjects
+
+
+SUBJECTS = load_subjects()
+
+
+def validate_subjects(dicts: dict) -> None:
+    """Чипы страницы обязаны совпадать с каноном слово в слово (22.10.2026).
+
+    Проверка намеренно жёсткая: список предметов — обещание продукта, одинаковое на всех
+    девяти страницах. Правка чипа «по смыслу» (например, «English» → «Русский язык») — это
+    уже другое обещание, и она должна идти через tools/subjects.json, а не мимо него.
+    """
+    problems = []
+    for lang in LANGS:
+        want = SUBJECTS[lang]
+        got = [str(dicts[lang].get(f"subj.c{i}", "")).strip() for i in range(1, 6)]
+        if got != want:
+            diff = [f"subj.c{i + 1}: {g!r} != {w!r}" for i, (g, w) in enumerate(zip(got, want)) if g != w]
+            problems.append(f"{lang}: " + "; ".join(diff))
+    if problems:
+        raise SystemExit("СПИСОК ПРЕДМЕТОВ РАСХОДИТСЯ с tools/subjects.json "
+                         "(правь канон и словари вместе):\n  " + "\n  ".join(problems))
+
+
 # Названия языков — БЕЗ флагов-эмодзи (21.10.2026): Windows не рисует региональные
 # флаги (вместо них «GB»/«RU»-квадраты), а флаг — это страна, не язык (🇮🇳 для хинди,
 # 🇧🇷 для португальского, 🇬🇧 для английского читаются как ошибка на мировом рынке).
@@ -993,6 +1038,7 @@ def audit_local_assets() -> None:
 
 def main() -> None:
     dicts = load_dicts()
+    validate_subjects(dicts)
     changed = normalize_hand_written()
     if changed:
         print(f"адрес сайта нормализован в: {', '.join(changed)}")

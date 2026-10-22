@@ -31,7 +31,7 @@ Las explicaciones paso a paso muestran por qué funciona cada paso, para que pue
 ## Asignaturas escolares
 
 - Matemáticas
-- Español
+- Inglés
 - Física
 - Química
 - Historia
@@ -75,7 +75,7 @@ No. El bot explica y enseña: muestra cada paso y la regla que hay detrás, para
 
 ### ¿Qué asignaturas cubre?
 
-Matemáticas, español, física, química e historia — y, en general, cualquier pregunta escolar con la que te quedes atascado.
+Matemáticas, inglés, física, química e historia — y, en general, cualquier pregunta escolar con la que te quedes atascado.
 
 ### ¿Qué idiomas habla?
 

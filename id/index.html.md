@@ -31,7 +31,7 @@ Penjelasan langkah demi langkah membantu memahami cara kerjanya, agar kamu bisa 
 ## Mata pelajaran sekolah
 
 - Matematika
-- Bahasa Indonesia
+- Bahasa Inggris
 - Fisika
 - Kimia
 - Sejarah
@@ -75,7 +75,7 @@ Tidak. Bot ini menjelaskan dan mengajar: setiap langkah dan aturan di baliknya d
 
 ### Mata pelajaran apa saja yang didukung?
 
-Matematika, Bahasa Indonesia, Fisika, Kimia, dan Sejarah — dan secara umum pertanyaan sekolah apa pun yang membuatmu buntu.
+Matematika, Bahasa Inggris, Fisika, Kimia, dan Sejarah — dan secara umum pertanyaan sekolah apa pun yang membuatmu buntu.
 
 ### Bahasa apa saja yang didukung?
 
