@@ -466,6 +466,29 @@ def bake(src: str, lang: str, dicts: dict) -> str:
 
     out = re.sub(r'(<(?:input|textarea)[^>]*\sdata-i18n-ph="([\w.]+)"[^>]*>)', rep_ph, out)
 
+    # 1б) подписи в АТРИБУТАХ (aria-label и подобные) — 22.10.2026: у кнопки остановки
+    #     демо-видео две подписи (пауза и играть), и обе обязаны быть на языке страницы.
+    #     Синтаксис: data-i18n-attr="aria-label:vbtn.pause;data-play-label:vbtn.play".
+    #     Текстовый механизм выше такие подписи не видит, а класть их в DOM текстом
+    #     нельзя: имя кнопки стало бы из двух строк сразу.
+    def rep_attr(m: re.Match) -> str:
+        tag = m.group(1) + m.group(3)
+        for pair in m.group(2).split(";"):
+            if ":" not in pair:
+                continue
+            attr, key = (x.strip() for x in pair.split(":", 1))
+            val = d.get(key)
+            if val is None:
+                continue
+            pat = rf'\s{re.escape(attr)}="[^"]*"'
+            if re.search(pat, tag):
+                tag = re.sub(pat, f' {attr}="{esc_attr(val)}"', tag, count=1)
+            else:
+                tag = tag[:-1].rstrip() + f' {attr}="{esc_attr(val)}">'
+        return tag
+
+    out = re.sub(r'(<[a-z][a-z0-9]*[^>]*?)\sdata-i18n-attr="([^"]+)"([^>]*>)', rep_attr, out)
+
     # 2) html lang, title, description
     out = re.sub(r'<html lang="[^"]*"', f'<html lang="{lang}"', out)
     out = re.sub(r"<title>.*?</title>", f"<title>{esc_text(d['meta.title'])}</title>", out, flags=re.S)
@@ -1054,6 +1077,12 @@ def main() -> None:
     # Ключи шаблона обязаны иметь перевод в КАЖДОМ языке: иначе rep_i18n молча
     # оставит английский текст шаблона (см. validate_dicts).
     tmpl_keys = set(re.findall(r'data-i18n(?:-ph)?="([\w.]+)"', src))
+    # 22.10.2026: подписи в атрибутах (data-i18n-attr) — тоже ключи словаря, иначе
+    # перевод кнопки молча останется английским (та же болезнь, что у data-i18n).
+    for _spec in re.findall(r'data-i18n-attr="([^"]+)"', src):
+        for _pair in _spec.split(";"):
+            if ":" in _pair:
+                tmpl_keys.add(_pair.split(":", 1)[1].strip())
     uncovered = sorted(k for k in tmpl_keys if any(k not in dicts[l] for l in LANGS))
     assert not uncovered, f"в шаблоне ключи без перевода: {uncovered}"
     today = datetime.date.today().isoformat()
@@ -1064,6 +1093,7 @@ def main() -> None:
         page = bake(src, lang, dicts)
         assert 'data-i18n="' not in page, f"{lang}: остались незапечённые ключи"
         assert "data-i18n-ph=" not in page, f"{lang}: остались placeholder-ключи"
+        assert "data-i18n-attr=" not in page, f"{lang}: остались непереведённые атрибуты"
         assert "{{BASE}}" not in page, f"{lang}: токен адреса сайта не заменён"
         assert "var I18N" not in page, f"{lang}: не вырезан JS-i18n"
         outdir = ROOT if lang == "en" else ROOT / lang

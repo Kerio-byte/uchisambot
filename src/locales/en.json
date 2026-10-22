@@ -112,5 +112,7 @@
   "badge.group": "Featured on",
   "badge.award": "No. 1 of the Day on LiftOff",
   "logo.alt": "UchiSamBot logo",
-  "lang.aria": "Language"
+  "lang.aria": "Language",
+  "vbtn.pause": "Pause the demo video",
+  "vbtn.play": "Play the demo video"
 }

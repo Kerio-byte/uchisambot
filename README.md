@@ -1348,3 +1348,76 @@ of pretending otherwise. Making the exception real is a bot change: one confirma
 invoice, worded exactly as the consent the Terms describe. Also unverified: whether "the operator
 of UchiSamBot" is enough as the controller's identity — a name and an address for complaints are
 missing, and publishing them is the owner's decision (the phone number is off-limits by his rule).
+
+## The demo video played on; nothing on the page could stop it (22.10.2026)
+
+**What was found.** The hero demo is a 13-second loop that starts by itself
+(`autoplay muted loop`) and there is no control of any kind: no `controls` attribute, no
+button, no way to stop it short of closing the tab. WCAG 2.2.2 *Pause, Stop, Hide*
+(Level A) asks exactly for that — moving content that starts on its own, runs longer than
+five seconds and sits next to other content must offer a pause, stop or hide mechanism.
+The site's accessibility line ("axe-core, 0 violations across 11 pages") never contradicted
+this, because axe cannot test 2.2.2: it is a manual criterion, so the gap survived every
+earlier pass, including the visual one. Reduced-motion and Save-Data visitors were already
+served the poster; everyone else had a loop they could not switch off.
+
+**What is on the page now.** A 44×44 round button in the top-right corner of the phone
+frame, inside the video's rounded corner, dark plate with a white icon. It is written into
+the markup as `hidden` and un-hidden by the script, because a button that cannot work
+without JavaScript is a dead control. The name of the button is the action, not the state:
+"Pause the demo video" while it plays, "Play the demo video" after a stop, and the icon
+swaps with it (`data-state="pause|play"`). Both strings live in the nine dictionaries —
+`vbtn.pause` / `vbtn.play` — and reach the attribute through a new build mechanism,
+`data-i18n-attr="aria-label:vbtn.pause;data-play-label:vbtn.play"`: attribute labels are now
+translated by the same pass that bakes body text, an unknown key fails the build, and a
+page that still carries an `data-i18n-attr` marker is refused (`build.py`, checks at the top
+and after each page). Two DOM labels inside the button would have been simpler and wrong:
+the accessible name would read both at once.
+
+**The behaviour, not just the button.** The loop pauses when it leaves the viewport and when
+the tab goes to the background — a phone should not decode a video nobody sees — and resumes
+on return only if the visitor never stopped it themselves; a manual stop outranks our resume
+logic. With `prefers-reduced-motion: reduce` or Save-Data the video still does not start at
+all, the button offers "play", and a deliberate press starts it: the visitor's choice beats
+the system setting, the system setting beats our autoplay. This replaced the earlier block
+that only removed `autoplay`/`loop` for those visitors and left everyone else with no
+control.
+
+**Gates instead of good intentions.** The sweep grew by 81 checks (1762 → 1843): per
+language, the button exists and sits inside `.phone-frame`, it is `hidden` at load, both
+labels equal that language's dictionary, the two labels differ, the pause label is not the
+English one on a non-English page, the CSS carries 44×44, and the script is wired
+(`getElementById('video-toggle')` + `visibilitychange`). Static gates prove the parts are
+present, not that the mechanism works — so the block adds a browser battery,
+`landing-video-motion.py` (363 checks): nine languages × two widths (420 / 1440 px) for
+size, position inside the video, dictionary labels, autoplay, click-to-stop with the label
+and `data-state` flipping, Enter from the keyboard resuming, off-screen stop and return
+resume, 320 px reflow with the button still on screen; then a `prefers-reduced-motion`
+context per language (no autoplay, offers play, the press really plays) and one user-intent
+scenario in English (stop → scroll away → return → still stopped; start → scroll away →
+return → resumes).
+
+**Proven by mutation on the built page, each restored byte-exact** (sha256 of `index.html`
+compared before and after the whole run): the button deleted from the markup — 17 battery
+failures; the click handler renamed to a no-op — 9; the IntersectionObserver block removed —
+2 (`off-screen pauses` on both widths); both labels made identical — 6. The first negative
+control also exposed a defect in the battery itself: a missing button made `page.click` wait
+30 s and crash instead of recording a failure; the harness now checks the button's
+existence first and reports one honest "interactions" failure.
+
+**Numbers on the finished build.** `tools/build.py` rc=0, nine pages plus 404 (EN 55 498
+characters / 59 456 bytes — 4 340 bytes more than the previous page for the CSS, markup and
+script); sweep 1843 checks / 0 failures;
+`landing-a11y-extra.py` 68/0 (the button joins the tab order and the skip-link walk without
+breaking the cycle), `landing-wcag22-targets.py` 43/0 (44 px target), `landing-env-prefs.py`
+45/0, axe 0 violations on 12 pages, `landing-cross-engine.py` 36 runs / 0 problems in WebKit
+and Firefox (IntersectionObserver, `visibilitychange` and `media.play()` behave the same),
+`landing-cwv.py` 69/0, `landing-contact-e2e.py` 468/0, `landing-visual-pass.py` PROBLEMS 0
+on nine languages × two widths. Eyes: hero screenshots at 420 and 1440 px in
+`evidence/video-motion-20261022/` and `evidence/visual-20261022e/` — the button sits in the
+empty right side of the chat header, covers no text, and the mock keeps its proportions.
+
+**What it cannot prove.** That the top-right corner is the *most* tasteful place for the
+control — the owner's eye decides that, and moving it is a one-line CSS change; and that
+every browser will autoplay: iOS Low Power Mode never starts a video, so the button then
+shows "play" from the first second, which is the honest state rather than a bug.

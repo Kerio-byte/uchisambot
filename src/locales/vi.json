@@ -112,5 +112,7 @@
   "badge.group": "Nổi bật trên các nền tảng",
   "badge.award": "Sản phẩm số 1 trong ngày trên LiftOff",
   "logo.alt": "Logo của UchiSamBot",
-  "lang.aria": "Ngôn ngữ"
+  "lang.aria": "Ngôn ngữ",
+  "vbtn.pause": "Tạm dừng video minh họa",
+  "vbtn.play": "Phát video minh họa"
 }

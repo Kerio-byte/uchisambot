@@ -112,5 +112,7 @@
   "badge.group": "Platformlarda öne çıkan uygulama",
   "badge.award": "LiftOff'ta günün 1. ürünü",
   "logo.alt": "UchiSamBot logosu",
-  "lang.aria": "Dil"
+  "lang.aria": "Dil",
+  "vbtn.pause": "Tanıtım videosunu duraklat",
+  "vbtn.play": "Tanıtım videosunu oynat"
 }

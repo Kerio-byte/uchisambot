@@ -112,5 +112,7 @@
   "badge.group": "लॉन्च प्लेटफ़ॉर्म पर फ़ीचर्ड",
   "badge.award": "LiftOff पर दिन का नंबर 1",
   "logo.alt": "UchiSamBot का लोगो",
-  "lang.aria": "भाषा"
+  "lang.aria": "भाषा",
+  "vbtn.pause": "डेमो वीडियो रोकें",
+  "vbtn.play": "डेमो वीडियो चलाएँ"
 }
