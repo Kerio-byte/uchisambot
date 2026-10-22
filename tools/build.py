@@ -146,6 +146,32 @@ FONT_SUBSETS = [
     ("latin", "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,"
               "U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
 ]
+# Мини-сабсеты переключателя языка: реестр генерирует tools/make-lang-fonts.py
+# (там же отпечатки файлов). Шаблон объявляет их литералами — свип сверяет шаблон
+# с этим реестром, чтобы объявленный unicode-range не разошёлся с содержимым файла.
+LANG_FONTS_FILE = ROOT / "tools" / "lang-fonts.json"
+try:
+    LANG_FONTS = json.loads(LANG_FONTS_FILE.read_text(encoding="utf-8"))
+except (OSError, ValueError) as e:
+    raise SystemExit(f"нет/битый {LANG_FONTS_FILE}: мини-сабсеты переключателя без реестра ({e})")
+for _k, _v in LANG_FONTS.items():
+    _f = ROOT / _v["file"]
+    if not _f.is_file():
+        raise SystemExit(f"lang-fonts.json: {_v['file']} не существует — запусти tools/make-lang-fonts.py")
+    if _f.stat().st_size != _v["bytes"]:
+        raise SystemExit(f"lang-fonts.json: размер {_v['file']} разошёлся с реестром")
+# Письменность каждого языка: полный сабсет этой письменности объявляется только
+# на его странице, мини-сабсет переключателя — наоборот, на всех ОСТАЛЬНЫХ.
+OWN_SCRIPT = {"ru": "cyrillic", "uk": "cyrillic", "vi": "vietnamese", "hi": "devanagari"}
+FULL_FACES = {
+    "ru": ("cyrillic-ext", "cyrillic"),
+    "uk": ("cyrillic-ext", "cyrillic"),
+    "vi": ("vietnamese",),
+    "hi": (),
+}
+LANGS_FAMILY = "UchiSam Langs"
+NOTO_RANGE = ("U+0900-097F,U+1CD0-1CF4,U+1CF7-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,"
+              "U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B0A")
 BADGE_ALTS = [
     (r"https://launchigniter\.com/api/badge/", "LaunchIgniter"),
     (r"https://fazier\.com/api/v1/", "Fazier"),
@@ -324,11 +350,52 @@ def normalize_hand_written() -> list:
     return changed
 
 
+def font_css(lang: str) -> str:
+    """CSS-блок шрифтов страницы (22.10.2026): состав зависит от письменности языка.
+
+    Правило (и его проверяет свип):
+      * мини-сабсеты переключателя (tools/lang-fonts.json) объявлены всегда, КРОМЕ
+        письменности самой страницы — там полный сабсет уже грузится текстом, и
+        название текущего языка в шапке берётся из него;
+      * полные сабсеты Manrope — только латиница/latin-ext и письменность языка;
+      * Noto Sans Devanagari — только /hi/ (118 КБ: другой текст её не требует).
+    Так открытие переключателя стоит 4–9 КБ вместо 127–141 КБ, а на 404 (отдельная
+    генерация) у «हिन्दी» впервые появляется свой шрифт.
+    """
+    own = OWN_SCRIPT.get(lang)
+    parts = []
+    for key, v in LANG_FONTS.items():
+        if key == own:
+            continue
+        parts.append(
+            f"@font-face{{font-family:'{LANGS_FAMILY}';font-style:normal;font-weight:200 800;"
+            f"font-display:swap;src:url(\"{v['file']}\") format('woff2');"
+            f"unicode-range:{v['range']}}}")
+    full = set(FULL_FACES.get(lang, ())) | {"latin", "latin-ext"}
+    for name, rng in FONT_SUBSETS:
+        if name not in full:
+            continue
+        parts.append(
+            f"@font-face{{font-family:'Manrope';font-style:normal;font-weight:200 800;"
+            f"font-display:swap;src:url(\"fonts/manrope-{name}.woff2\") format('woff2');"
+            f"unicode-range:{rng}}}")
+    if lang == "hi":
+        parts.append(
+            f"@font-face{{font-family:'Noto Sans Devanagari';font-style:normal;"
+            f"font-weight:400 800;font-display:swap;"
+            f"src:url(\"fonts/noto-sans-devanagari.woff2\") format('woff2');"
+            f"unicode-range:{NOTO_RANGE}}}")
+    return "\n".join(parts)
+
+
 def bake(src: str, lang: str, dicts: dict) -> str:
     d = dicts[lang]
     # 0) адрес сайта: шаблон несёт токен {{BASE}}, значение — только из tools/site.json
     #    (см. load_site: литерал в шаблоне раньше ломал redirect формы при переезде)
     out = src.replace("{{BASE}}", BASE)
+    # 0а) шрифтовой блок: состав зависит от письменности языка (см. font_css)
+    assert "{{FONTS}}" in out, "в шаблоне нет маркера {{FONTS}}"
+    out = out.replace("{{FONTS}}", font_css(lang))
 
     # 1) тексты data-i18n и placeholders data-i18n-ph
     def rep_i18n(m: re.Match) -> str:
@@ -773,12 +840,29 @@ def page_404() -> str:
         cur = ' aria-current="true"' if lang == "en" else ""
         chips.append(f'<li><a href="{url_for(lang)}" hreflang="{lang}" lang="{lang}"{cur}>'
                      f'{esc_text(label)}</a></li>')
-    faces = "".join(
-        f'@font-face{{font-family:\'Manrope\';font-style:normal;font-weight:200 800;'
-        f'font-display:swap;src:url("{BASE}fonts/manrope-{s}.woff2") format(\'woff2\');'
-        f'unicode-range:{r}}}\n'
-        for s, r in FONT_SUBSETS
+    # Шрифты 404 (22.10.2026). До этого блока страница несла все пять сабсетов Manrope,
+    # хотя её текст — английский: браузер скачивал cyrillic 14.2 + vietnamese 8.3 КБ
+    # только чтобы нарисовать «Русский» и «Tiếng Việt» в чипах, а «हिन्दी» оставалось
+    # БЕЗ шрифта (сабсета деванагари на странице не было) — единственная ссылка для
+    # хинди-посетителя рисовалась системным шрифтом. Теперь: latin (текст) + три
+    # мини-сабсета переключателя (tools/lang-fonts.json) — дешевле и без подмены.
+    # Вес у всех трёх лиц ОДИН (200 800) намеренно: Chrome отбирает лицо внутри
+    # семейства по style-дескрипторам и только потом смотрит unicode-range; разный
+    # вес у одного лица ломает выбор по диапазону (проверено: сабсет деванагари
+    # не запрашивался, пока у него стояло 400 800, хотя диапазон совпадал).
+    lang_faces = "".join(
+        f"@font-face{{font-family:'UchiSam Langs';font-style:normal;font-weight:200 800;"
+        f"font-display:swap;src:url(\"{BASE}{v['file']}\") format('woff2');"
+        f"unicode-range:{v['range']}}}\n"
+        for v in LANG_FONTS.values()
     )
+    faces = "".join(
+        f"@font-face{{font-family:'Manrope';font-style:normal;font-weight:200 800;"
+        f"font-display:swap;src:url(\"{BASE}fonts/manrope-{s}.woff2\") format('woff2');"
+        f"unicode-range:{r}}}\n"
+        for s, r in FONT_SUBSETS
+        if s == "latin"          # на 404 нет ни кириллического, ни вьетнамского текста
+    ) + lang_faces
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -790,11 +874,13 @@ def page_404() -> str:
 <link rel="icon" href="{BASE}img/logo.svg" type="image/svg+xml">
 <link rel="icon" type="image/png" sizes="64x64" href="{BASE}img/icon-64.png">
 <style>
-/* Manrope (variable, self-hosted, OFL) — те же 5 сабсетов, что и на основных страницах */
+/* Шрифты: latin для английского текста + три мини-сабсета переключателя
+   (cyrillic/vietnamese/devanagari — ровно глифы девяти названий, см. tools/lang-fonts.json).
+   Полные сабсеты по письменностям здесь не нужны: текста на них на 404 нет. */
 {faces}:root{{--brand:#3D5AFE;--brand-deep:#2338A8;--brand-soft:#EAF0FF;--ink:#14203A;--muted:#50617F;--bg:#F7FAFF;--card:#fff;--line:#E3EAF7;--r:18px}}
 *{{box-sizing:border-box}}
 body{{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--ink);
-  font:16px/1.6 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}}
+  font:16px/1.6 "UchiSam Langs","Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}}
 .card{{width:100%;max-width:620px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
   box-shadow:0 10px 30px rgba(30,60,140,.08);padding:32px}}
 .brand{{display:flex;align-items:center;gap:10px;margin-bottom:20px;font-weight:800;letter-spacing:-.02em}}
