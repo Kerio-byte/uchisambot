@@ -147,14 +147,16 @@ FONT_SUBSETS = [
               "U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
 ]
 BADGE_ALTS = [
-    ("launchigniter.com/api/badge/", "LaunchIgniter"),
-    ("fazier.com/api/v1/", "Fazier"),
-    ("statics.startupbase.io/site/badges/", "StartupBase"),
-    ("showmebest.ai/badge/", "ShowMeBestAI"),
-    ("lift-off.sh/images/badges/badgeLaunched", "LiftOff"),
-    ("startupfa.me/badge?", "Startup Fame"),
-    ("cdn.openhunts.com/badges/", "OpenHunts Club"),
-    ("auraplusplus.com/images/badges/", "Aura++"),
+    (r"https://launchigniter\.com/api/badge/", "LaunchIgniter"),
+    (r"https://fazier\.com/api/v1/", "Fazier"),
+    (r"https://statics\.startupbase\.io/site/badges/", "StartupBase"),
+    (r"https://showmebest\.ai/badge/", "ShowMeBestAI"),
+    (r"https://lift-off\.sh/images/badges/badgeLaunched", "LiftOff"),
+    # 22.10.2026: значок Startup Fame отдаётся с нашего домена (ORB резал горячую ссылку),
+    # поэтому здесь два варианта src: свой файл и старый чужой адрес.
+    (r"(?:https://startupfa\.me/badge\?|(?:\.\./)?img/badges/startupfa\.svg)", "Startup Fame"),
+    (r"https://cdn\.openhunts\.com/badges/", "OpenHunts Club"),
+    (r"https://auraplusplus\.com/images/badges/", "Aura++"),
 ]
 
 
@@ -454,7 +456,7 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     assert "{name}" in tpl, f"{lang}: badge.alt без {{name}}"
     for frag, nm in BADGE_ALTS:
         pat = re.compile(
-            r'(<img src="https://' + re.escape(frag) + r'[^"]*"[^>]*?alt=")[^"]*(")')
+            r'(<img src="' + frag + r'[^"]*"[^>]*?alt=")[^"]*(")')
         out, n = pat.subn(
             lambda m, _a=esc_attr(tpl.format(name=nm)): m.group(1) + _a + m.group(2), out)
         assert n == 1, f"{lang}: бейдж {nm} — совпадений {n}"
@@ -850,6 +852,32 @@ def audit_site_address() -> None:
             + "\n  ".join(sorted(bad)[:10]))
 
 
+def audit_local_assets() -> None:
+    """Каждый локальный ассет, на который ссылается собранная страница, обязан быть на диске.
+
+    22.10.2026: значок Startup Fame отдавался площадкой, но Chrome резал его как ORB, и
+    ссылка молча пряталась — на всех девяти страницах висело 7 площадок из 8, и никто
+    этого не видел ни в сборке, ни в свипе. Теперь такой значок лежит у нас; чтобы файл
+    не потерялся при чистке img/, сборка падает, если ссылка ведёт в пустоту. Ссылки на
+    чужие домены (http/https//) не проверяются — их живость ловит браузерный аудит.
+    """
+    pat = re.compile(r'(?:src|href|poster)="((?:\.\./)?img/[^"]+)"')
+    pages = ["index.html", "404.html", "privacy.html", "terms.html"]
+    pages += [f"{lang}/index.html" for lang in LANGS[1:]]
+    bad = []
+    for name in pages:
+        p = ROOT / name
+        if not p.exists():
+            continue
+        for ref in pat.findall(p.read_text(encoding="utf-8")):
+            rel = ref[3:] if ref.startswith("../") else ref
+            if not (ROOT / rel).is_file():
+                bad.append(f"{name}: {ref}")
+    if bad:
+        raise SystemExit("СБОРКА ОТМЕНЕНА: ссылка на локальный файл, которого нет на диске:\n  "
+                         + "\n  ".join(sorted(set(bad))[:12]))
+
+
 def main() -> None:
     dicts = load_dicts()
     changed = normalize_hand_written()
@@ -910,6 +938,7 @@ def main() -> None:
     fresh = sum(1 for u, s in stamps.items() if s["date"] == today)
     print(f"sitemap.xml (lastmod: изменено сегодня {fresh} из {len(stamps)}) + llms.txt + tools/lastmod.json")
     audit_site_address()
+    audit_local_assets()
 
 
 if __name__ == "__main__":
