@@ -322,6 +322,11 @@ Startup Fame one — see below), links open in a new tab with
 the canonical single-slash path `fazier.com/api/v1/public/…`). `privacy.html` /
 `terms.html` carry the required LiftOff + Startup Fame badges in the same style.
 
+Badge strip shape (22.10.2026): eight badges on a 1440 screen used to wrap 6+2 — the
+two-badge second row sat centered under the first and the strip read as unfinished. The
+strip is capped at `max-width:780px` (the four widest badges total 714 px, the fifth no
+longer fits), so it forms two even rows of four; on a 420 screen it stays two per row.
+
 Earned award badge (21.10.2026): on 19 Oct 2026 LiftOff placed UchiSamBot (Study Helper)
 #1 in its daily competition and issued a proof badge for it. It is the platform's own
 asset, hotlinked like the rest — `/images/badges/day/badge1DayLight.webp`, 360×120 — and
