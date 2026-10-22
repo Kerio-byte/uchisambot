@@ -24,7 +24,9 @@ UchiSamBot desglosa tus tareas paso a paso, explica el tema con palabras sencill
 - **Resúmenes y tarjetas de repaso** — Tarjetas cortas de repaso antes de un examen.
 - **A cualquier hora** — Sin esperar a un tutor cuando te quedas atascado.
 
-**No solo respuestas. Aprende a resolver el siguiente ejercicio.** Las explicaciones paso a paso muestran por qué funciona cada paso, para que puedas resolver uno parecido por tu cuenta.
+## No solo respuestas. Aprende a resolver el siguiente ejercicio.
+
+Las explicaciones paso a paso muestran por qué funciona cada paso, para que puedas resolver uno parecido por tu cuenta.
 
 ## Asignaturas escolares
 
@@ -35,6 +37,16 @@ UchiSamBot desglosa tus tareas paso a paso, explica el tema con palabras sencill
 - Historia
 
 Y cualquier otra pregunta escolar con la que te quedes atascado.
+
+## Chats reales con el bot
+
+Capturas reales — el bot funciona en 9 idiomas.
+
+![Pantalla de bienvenida de UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot1-es.webp)
+
+![Envío de una tarea a UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot2-es.webp)
+
+![Desglose paso a paso de UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot3-es.webp)
 
 ## Precios
 
