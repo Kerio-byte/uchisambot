@@ -6,6 +6,8 @@ UchiSamBot phân tích bài tập về nhà của bạn từng bước một, gi
 
 [Mở trong Telegram](https://t.me/UchiSamBot?start=src_llms)
 
+[Video demo (13 giây, tiếng Việt)](https://kerio-byte.github.io/uchisambot/demo/uchiambot-demo-web-vi.mp4)
+
 ## Cách hoạt động
 
 1. **Mở bot** — Nhấn vào nút và bấm Start — không cần cài đặt gì.
@@ -104,3 +106,9 @@ Chúng tôi chỉ dùng email của bạn để trả lời tin nhắn này.
 - [Gửi tin nhắn](https://kerio-byte.github.io/uchisambot/vi/#contact)
 - [Chính sách bảo mật (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Điều khoản sử dụng (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
+
+## Đang bí một bài ngay lúc này?
+
+Gửi bài cho bot — 2 lần phân tích đầu tiên miễn phí.
+
+[Mở trong Telegram](https://t.me/UchiSamBot?start=src_llms)

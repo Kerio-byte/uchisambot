@@ -699,3 +699,45 @@ the sweep report exactly two failures — the new marker and the existing "page 
 a rebuild" guard — and restoring it returns 1426/0.
 
 The site's markup is unchanged by this pass: it is verification and gates only.
+
+## The AI-facing layer is the same page, so it is gated too (22.10.2026)
+
+The site has a second copy of itself: `llms.txt` and one `index.html.md` per language,
+served as `text/markdown` — the layer an AI assistant reads when someone asks it about
+the bot. Everything else on the page was gated to death; this layer had three checks
+(the file exists, it starts with the H1, it carries the `src_llms` bot tag) and had
+quietly fallen behind the page:
+
+- the final band — "Stuck on a problem right now? … the first 2 breakdowns are free" —
+  was missing from all nine twins, so an agent quoting the page ended on a list of legal
+  documents instead of the offer;
+- none of the nine twins linked the language's own demo video, and `llms.txt` named only
+  the two full 35 s videos, although the site has a 13 s loop in each of the nine
+  languages. Asked "show me how it works" in Hindi, an agent had nothing to point at;
+- nothing looked inside the twins at all: HTML leftovers, the price lines and the demo
+  link were unverified.
+
+Fixed in the generator, not in the output (the output is rebuilt every time): `page_md()`
+now writes the demo link under the first bot link and the final CTA after the contact
+links, and `llms()` lists the nine loops. One new dictionary key, `md.demo` — the link
+text in that language ("Демо-видео (13 с, по-русски)", "डेमो वीडियो (13 सेकंड, हिन्दी में)" …).
+
+Five gates, 1426 → 1473 checks. Per language: no HTML tags or entities in the twin; the
+final CTA heading, its sub-line and the bot tag; the three price lines exactly as
+generated; the twin's **own** loop (the English loop must not appear on the other eight);
+the localised link text. Globally: `llms.txt` names all nine loops and every `demo/*.mp4`
+it links exists on disk — a link to a missing file is worse than no link.
+
+Proven by five mutations, each caught by exactly its gate: deleting the Hindi demo link,
+renaming the Russian CTA heading, stripping `300 Stars` from the Spanish price line,
+deleting the Hindi loop from `llms.txt`, pointing a loop at a missing file
+(`evidence/block-20261022-ai-layer-mutations.txt`). The first version of the price gate
+compared the *title* ("Paquete de 15 desgloses") and stayed green when the number was
+removed — the same "it is printed, therefore it is checked" mistake as the badge rows; it
+now compares the full generated lines.
+
+The HTML did not change — the commit touches only the nine twins, `llms.txt`, the nine
+dictionaries and `build.py` — so the accessibility, cross-engine and timing batteries of
+the previous pass stay valid for this commit; the sweep, link audit, price parity and the
+English-leftover scan were re-run (1473/0, 0, 0, 0).
+
