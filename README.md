@@ -1280,3 +1280,71 @@ phone the Russian block wraps 2 + 3 across two lines, no chip clips its text.
 list identical everywhere and makes a change deliberate; it cannot know whether the bot is good at
 English essays. Nor does it check the grammar of the FAQ sentence — only that each of the five
 subjects appears in it.
+
+## Consumer law on the page: cancelling a purchase, and the rights behind the policy (22.10.2026)
+
+**The Terms never mentioned cancelling a purchase.** `terms.html` had twelve sections and not
+one word about refusal — and the owner's rule ("no refunds promised") had been implemented in
+the sweep as a blanket ban on the words *refund* / «возврат» anywhere in the legal pages. So the
+page could not say the one thing consumer law requires it to say. Under Directive 2011/83/EU,
+Article 16(m) (EUR-Lex, CELEX 32011L0083, read from the Publications Office copy), a consumer in
+the EU/EEA has 14 days to withdraw, and that right disappears for digital content only when
+performance began with the consumer's **prior express consent** *and* an acknowledgement that
+the right is lost. Silence is not consent: Terms that say nothing leave the 14-day right alive,
+whatever our own policy says.
+
+**What the page says now.** `terms.html` §5 "Cancelling a purchase and refunds" / «Отказ от
+покупки и возврат звёзд» — five paragraphs in both halves: the right exists for EU/EEA
+consumers; it ends at delivery only if we asked before delivery and the buyer confirmed; where
+that confirmation was not given, the right remains; delivery starts when the first breakdown of
+the pack is generated; a purchase that does not work as described gets delivered or fixed, or
+the Stars for the undelivered breakdowns come back (the remedy Directive (EU) 2019/770 gives for
+digital content that does not conform — bring into conformity, price reduction, termination); and
+Stars for breakdowns already delivered are not returned on a change of mind. Sections 5–12 were
+renumbered 6–13 in both halves, so the new §5 sits where a buyer looks for it: right after the
+prices. The document date stays 22 October 2026 — same day, and the text really changed.
+
+**The policy listed rights as a possibility.** `privacy.html` §5 said "depending on your country,
+you may also have the right to access or correct" — two rights out of six, no complaint route, no
+word about transfers. Now §5 "Your rights and deletion" / «Ваши права и удаление» names access,
+rectification, erasure, restriction, objection and portability, withdrawal of consent, the
+one-month answer time, and the complaint route (Finland's Data Protection Ombudsman's Office,
+tietosuoja.fi, or the authority in the reader's own country). §2 states the legal bases
+(contract / legitimate interest / consent / legal obligation). §3 gains the transfers paragraph
+and §4 now names the website processors instead of claiming that data goes to Telegram and the
+authorities only: Telegram keeps data in data centres in several countries and, for EU or UK
+sign-ups, in the Netherlands (telegram.org/privacy); GitHub (USA) relies on the EU–US Data
+Privacy Framework and on the standard contractual clauses (docs.github.com); Web3Forms operates
+from India and states that EEA transfers run under the standard contractual clauses of its data
+processing agreement (web3forms.com/privacy). "Last updated" moved 21 → 22 October 2026 in both
+halves.
+
+**Gates instead of good intentions.** The sweep gained 40 checks (1722 → 1762): five required
+phrases per language in the withdrawal section, the 1..13 numbering intact in both halves, a ban
+on absolute phrasings ("money-back guarantee", «гарантируем возврат», «по первому требованию»),
+the refund words allowed **only** inside §5 (a count comparison against that section, not an
+allowlist), the nine rights phrases in both halves, transfers and legal bases present, and §4
+naming both website processors. The blanket refund ban still covers the landing pages, the
+AI-facing twins, the policy and the nine dictionaries; Terms left that loop on purpose and got the
+two precise gates above instead, because a legal section has to be able to use the word.
+
+**Proven by mutation, each restored byte-exact** (sha256 checked after every run): `14 days from
+the payment to cancel the purchase` shortened to "14 days from the payment" — 2 sweep failures;
+the Russian fallback sentence replaced by «Подтверждение не требуется.» — 2; a right deleted from
+§5 of the English policy — 2; §4 reduced to "(b)" so GitHub and Web3Forms vanish from the sharing
+paragraph — 2; the word "refunds" put back into the FAQ of `index-src.html` — the old blanket gate
+still bites (1 failure, `['index-src.html:refund']`). 1762 checks / 0 failures after the restores.
+
+**Checked in a browser, not only in the sweep**: `landing-nu-validate.py` — privacy and terms 0
+findings (81 known-false messages across the nine language pages, unchanged); a fresh 16-check
+eye pass at 420 and 1440 px on both documents: no horizontal overflow, no paragraph wider than its
+box, the §5 heading present and not clipped, the self-hosted font actually applied. Section
+screenshots in both languages at both widths: `evidence/legal-20261022/`.
+
+**What it cannot prove**: the Terms now describe the rule, but the bot still sends the invoice
+straight from the "pay" button with no consent step (`bot/handlers.py`, `cb_pay` → `send_invoice`)
+— so for an EU buyer the 14-day right is still alive today, and the page says so honestly instead
+of pretending otherwise. Making the exception real is a bot change: one confirmation before the
+invoice, worded exactly as the consent the Terms describe. Also unverified: whether "the operator
+of UchiSamBot" is enough as the controller's identity — a name and an address for complaints are
+missing, and publishing them is the owner's decision (the phone number is off-limits by his rule).
