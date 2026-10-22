@@ -135,7 +135,19 @@ main{display:block}
 .chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
 .chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
 .hero-phone{display:flex;justify-content:center}
+.phone-frame{position:relative;display:inline-block;line-height:0}
 .hero-phone video{display:block;width:min(300px,72vw);height:auto;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow);background:#0B1020}
+/* Кнопка «пауза/играть» на демо (22.10.2026): WCAG 2.2.2 требует механизм остановки
+   авто-движущегося контента. Кнопка в разметке СКРЫТА (hidden) и показывается только
+   скриптом: без JS она была бы мёртвой. 44x44 — размер тач-цели. */
+.video-toggle{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;padding:0;margin:0;border-radius:50%;display:grid;place-items:center;background:rgba(14,21,38,.72);color:#fff;cursor:pointer;box-shadow:0 2px 10px rgba(11,16,32,.4);transition:background .15s ease,transform .15s ease}
+.video-toggle:hover{background:rgba(14,21,38,.92)}
+.video-toggle:active{transform:scale(.96)}
+.video-toggle:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.video-toggle svg{width:18px;height:18px;display:block;fill:currentColor}
+.video-toggle .ico-play{display:none}
+.video-toggle[data-state="play"] .ico-pause{display:none}
+.video-toggle[data-state="play"] .ico-play{display:block}
 @media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:0;text-align:center}.hero-left{display:contents}.hero-in h1{order:1}.hero-in .lead{order:2;margin-left:auto;margin-right:auto}.hero-in .cta-row{order:3;justify-content:center}.hero-in .hero-phone{order:4;margin:30px auto 4px}.hero-in .chips{order:5;justify-content:center}.hero-in .hero-badge{order:6}.hero{padding-top:34px}}
 
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -311,9 +323,19 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <p class="hero-badge"><a href="https://launchigniter.com/product/uchisambot-study-helper?ref=badge-uchisambot-study-helper" target="_blank" rel="noopener"><img src="https://launchigniter.com/api/badge/uchisambot-study-helper?theme=light" alt="Destacado em LaunchIgniter" width="212" height="55" onerror="(this.closest('a')||this).style.display='none'"></a></p>
     </div>
     <div class="hero-phone">
-      <video id="hero-video" width="540" height="1170" muted loop playsinline autoplay preload="metadata" poster="../img/demo-poster-pt.webp" aria-label="Demonstração: o bot resolve uma tarefa passo a passo.">
-        <source src="../demo/uchiambot-demo-web-pt.mp4" type="video/mp4">
-      </video>
+      <div class="phone-frame">
+        <video id="hero-video" width="540" height="1170" muted loop playsinline autoplay preload="metadata" poster="../img/demo-poster-pt.webp" aria-label="Demonstração: o bot resolve uma tarefa passo a passo.">
+          <source src="../demo/uchiambot-demo-web-pt.mp4" type="video/mp4">
+        </video>
+        <!-- WCAG 2.2.2: авто-движущийся ролик обязан иметь механизм остановки.
+             hidden — до инициализации скриптом; без JS кнопка не показывается. -->
+        <button class="video-toggle" id="video-toggle" type="button" hidden data-state="pause"
+                aria-label="Pausar o vídeo de demonstração" data-play-label="Reproduzir o vídeo de demonstração"
+               >
+          <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4.5v15a1 1 0 0 0 1.5.9l11-7.5a1 1 0 0 0 0-1.8l-11-7.5A1 1 0 0 0 8 4.5z"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -591,6 +613,49 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
   try { save = !!(navigator.connection && navigator.connection.saveData); } catch(e){}
   if (reduce || save) { v.removeAttribute('autoplay'); v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
+  // Кнопка остановки (WCAG 2.2.2). Появляется только здесь: без скрипта это был бы
+  // мёртвый элемент управления. Обе подписи (пауза и играть) приходят из словаря
+  // языка при сборке страницы: data-play-label — вторая сторона.
+  var btn = document.getElementById('video-toggle');
+  if (!btn) return;
+  var userPaused = false, userStarted = false, onScreen = true;
+  var labelPause = btn.getAttribute('aria-label') || '';
+  var labelPlay = btn.getAttribute('data-play-label') || labelPause;
+  function canPlay(){
+    // reduced-motion/saveData гасят автозапуск, но НЕ запрещают ручной запуск:
+    // если человек сам нажал «играть», его выбор сильнее настройки системы.
+    return !userPaused && !document.hidden && onScreen && (userStarted || (!reduce && !save));
+  }
+  function sync(){
+    var paused = v.paused;
+    btn.setAttribute('aria-label', paused ? labelPlay : labelPause);
+    btn.setAttribute('data-state', paused ? 'play' : 'pause');
+    btn.hidden = false;
+  }
+  function play(){
+    try { var p = v.play(); if (p && p.catch) p.catch(function(){}); } catch(e){}
+  }
+  btn.addEventListener('click', function(){
+    if (v.paused) { userPaused = false; userStarted = true; play(); }
+    else { userPaused = true; try { v.pause(); } catch(e){} }
+    sync();
+  });
+  v.addEventListener('play', sync);
+  v.addEventListener('pause', sync);
+  // Вне экрана луп не декодируем (батарея телефона), а когда ролик снова в кадре —
+  // продолжаем, если человек не останавливал сам.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(es){
+      onScreen = es[es.length - 1].isIntersecting;
+      if (!onScreen) { try { v.pause(); } catch(e){} }
+      else if (canPlay()) play();
+    }, {threshold: 0.15}).observe(v);
+  }
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) { try { v.pause(); } catch(e){} }
+    else if (canPlay()) play();
+  });
+  sync();
 })();
 </script>
 <script>
