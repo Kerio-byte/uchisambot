@@ -31,7 +31,7 @@ Adım adım açıklamalar her işlemin neden işe yaradığını gösterir; böy
 ## Okul dersleri
 
 - Matematik
-- Türkçe
+- İngilizce
 - Fizik
 - Kimya
 - Tarih
@@ -75,7 +75,7 @@ Hayır. Bot açıklar ve öğretir: her adımı ve arkasındaki kuralı gösteri
 
 ### Hangi dersleri kapsıyor?
 
-Matematik, Türkçe, fizik, kimya ve tarih — ve genel olarak takıldığın her okul sorusu.
+Matematik, İngilizce, fizik, kimya ve tarih — ve genel olarak takıldığın her okul sorusu.
 
 ### Hangi dilleri konuşuyor?
 

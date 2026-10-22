@@ -31,7 +31,7 @@ As explicações passo a passo mostram por que cada etapa funciona, para você r
 ## Matérias escolares
 
 - Matemática
-- Português
+- Inglês
 - Física
 - Química
 - História
@@ -75,7 +75,7 @@ Não. O bot explica e ensina: mostra cada passo e a regra por trás dele, para q
 
 ### Quais matérias ele cobre?
 
-Matemática, português, física, química e história — e, em geral, qualquer dúvida escolar em que você ficar preso.
+Matemática, inglês, física, química e história — e, em geral, qualquer dúvida escolar em que você ficar preso.
 
 ### Em que idiomas ele fala?
 
