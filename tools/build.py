@@ -406,8 +406,9 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     out = re.sub(r'<div class="lang" role="group"[^>]*>.*?</div>',
                  switcher_html(lang, d["lang.aria"]), out, flags=re.S)
 
-    # 7) вырезать JS-i18n (тексты уже запечены)
-    out = re.sub(r'<script>\s*\nvar I18N = \{.*?\n\}\)\(\);\n</script>\n', "", out, flags=re.S)
+    # 7) JS-i18n в шаблоне больше нет (22.10.2026): мёртвый клиентский словарь удалён —
+    #    вторая копия текстов расходилась с src/locales (ru: «первые 5 разборов»).
+    #    Тексты запекаются сборкой, страница без JS показывает тот же язык.
 
     # 8) пути для подпапок
     if lang != "en":
@@ -855,7 +856,12 @@ def main() -> None:
     if changed:
         print(f"адрес сайта нормализован в: {', '.join(changed)}")
     src = (ROOT / "index-src.html").read_text(encoding="utf-8")
-    assert "data-i18n" in src and "var I18N" in src, "источник не похож на index-src.html"
+    assert "data-i18n" in src, "источник не похож на index-src.html"
+    # 22.10.2026: в шаблоне НЕ должно быть второй копии текстов. Старый клиентский
+    # словарь I18N вырезался здесь и жил отдельной жизнью — разошёлся по деньгам
+    # (ru cta.sub обещал 5 бесплатных разборов вместо 2). Вернуть его нельзя.
+    assert "var I18N" not in src, ("index-src.html снова несёт JS-словарь I18N: "
+                                   "вторая копия текстов запрещена, правь src/locales")
     assert BASE not in src, ("index-src.html содержит литерал адреса сайта — "
                              "в шаблоне должен быть только токен {{BASE}}")
     # Ключи шаблона обязаны иметь перевод в КАЖДОМ языке: иначе rep_i18n молча
