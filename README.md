@@ -1488,3 +1488,57 @@ Power Mode never does, and some privacy extensions block media outright. In thos
 hero stays a still poster with a "play" button — the honest state, and the same one the
 previous block accepted. Nor that a visitor without JavaScript prefers a still frame to the
 demo: the frame is the only thing a script-less page can show without moving.
+
+## The last thing the page asked of other people's servers (23.10.2026)
+
+Eight of the nine launch badges on every page were hotlinks: `fazier.com`,
+`statics.startupbase.io`, `showmebest.ai`, `lift-off.sh` (twice), `cdn.openhunts.com`,
+`auraplusplus.com`, and — the worst place for it — `launchigniter.com` in the hero, above the
+fold. On top of that the `<head>` carried `preconnect` to LaunchIgniter (an early TCP+TLS
+handshake, before anything is drawn) and seven `dns-prefetch` hints. So opening any of the
+nine language pages, or either legal page, told eight companies the visitor's IP address and
+that the visit came from our site — before the visitor clicked anything. The privacy policy
+said so, honestly, in both languages; that honesty was the defect's receipt.
+
+The failure mode was also real, not theoretical: on 21 Oct Chrome refused the Startup Fame
+badge as ORB (`ERR_BLOCKED_BY_ORB`), the `onerror` handler hid the link, and the page showed
+seven platforms out of eight — silently.
+
+**What changed.** The platforms' own badge art is now stored in `img/badges/` and served from
+our origin: nine files, 172 KB in total, every one byte-identical to what the platform serves
+(no re-encoding — a brand mark is not the place to save a kilobyte). All badge URLs, and every
+`preconnect`/`dns-prefetch` hint to a third party, are gone; the only external host left in the
+markup is `api.web3forms.com`, and only because the contact form posts there. `privacy.html`
+(two languages) and its markdown twin now say the truth in the other direction: the pictures are
+ours, no request leaves for the platforms, and a click is what takes you to them.
+
+**Why not the smaller files.** Rasterising the badges to 2x WebP was measured first: 148 KB →
+34 KB. It was rejected — the re-encoded LiftOff award showed a pale band across the top and
+softer text next to the original in a side-by-side crop. All nine badges are `loading="lazy"`
+below the fold anyway, and the bytes now come from the same origin over the same connection
+instead of eight separate TLS handshakes. A hundred kilobytes are not worth shipping a worse
+copy of someone else's logo.
+
+**What the gates learned** (`landing-sweep.py`, 1875 checks, 0 failures):
+- no third-party image host on any page (9 languages + privacy + terms + 404);
+- every referenced badge file exists and is really an image — SVG must start with `<` and
+  contain `<svg`, WebP must carry `RIFF….WEBP`, so a saved HTML error page cannot pass as art;
+- the set of badge files on the pages equals the set on disk, and the counts are pinned
+  (9 on the landing page: hero + footer, 3 on each legal page);
+- the privacy policy states it in English and in Russian, and so does `privacy.html.md`;
+- no `preconnect` anywhere, and `dns-prefetch` only to `api.web3forms.com`.
+
+**Checked after the change.** Build reproducible (a second `tools/build.py` leaves `git status`
+clean); sweep 1875/0; `landing-links-audit.py` 11 pages / 0; Nu validator: no real findings;
+`landing-visual-pass.py` PROBLEMS 0 across nine languages × 420/1440, with the footer strip at
+4+4 badges on desktop and 2×4 on mobile as before; the badge strip and the hero badge were
+inspected at 2x in Chromium and compared against the live hotlinked page — identical geometry
+(212×55) and identical art. The local page now makes zero third-party requests on load; the
+live GitHub Pages copy is checked after the push by `landing-live-bytes.py` and
+`landing-live-assets.py`.
+
+**What it cannot prove.** That a platform will not change its badge art tomorrow: our copy then
+stays as it is, which is the point of owning it, and refreshing it is a one-file download. That
+a badge is legible at 46 CSS pixels on every display — verified at 2x here, not on a real phone.
+And the Web3Forms monthly limit is still invisible from our side (unchanged, it is outside the
+code).
