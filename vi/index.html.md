@@ -103,7 +103,7 @@ Thường dưới một phút: bạn gửi bài tập và phần phân tích hi�
 
 ### Nếu lần phân tích không thành công thì sao?
 
-Hãy thử lại sau vài phút — đôi khi có quá tải ngắn. Nếu vẫn lỗi, nhắn cho chúng tôi qua biểu mẫu liên hệ ở cuối trang — chúng mình sẽ kiểm tra.
+Hãy thử lại sau vài phút — đôi khi có quá tải ngắn. Nếu vẫn lỗi, nhắn cho chúng tôi qua biểu mẫu liên hệ ở cuối trang — chúng tôi sẽ kiểm tra.
 
 ### Bot khác gì một chatbot AI thông thường?
 
