@@ -1186,3 +1186,41 @@ the fix) and 11 / 0 in uk (after it); delivery confirmed twice. Evidence:
 **What it still cannot prove**: that a human reads the inbox and answers. Delivery is measured
 now; answering is a process, not code.
 
+## The bell rang in an empty room (22.10.2026)
+
+Delivery was proven this evening; the *notification* that says «someone wrote» had been run once,
+against an empty mailbox — and an empty mailbox is exactly what a broken check looks like. Two
+ways to be silent, both live until now.
+
+**1. «Could not check» read as «nothing new».** The helper returned stdout only. A dead token, a
+network error or an unparseable answer produced an empty string, the script concluded «no letters»
+and exited 0: the cron ledger says `ok`, the owner hears nothing, every enquiry waits unseen in
+the inbox. Proven on the real error path — `--account nonexistent-account` prints to stderr and
+returns 1 — the old code came back with `rc=0` and empty stdout.
+
+**2. De-duplication rested on the UNREAD flag.** A letter is composed, then marked read. When
+`gmail modify` fails (a 500, a revoked scope) the flag stays, and the same letter is announced
+again on the next tick: three ticks, three notifications for one letter, twelve an hour.
+
+**Now**: `call()` returns `(rc, stdout, stderr)`, and any failure — including an answer that is
+not JSON — ends in a fixed sentence on stderr plus exit code 1. For a `no_agent` cron that is not
+silence: the scheduler delivers script failures (*«a silently broken watchdog is the worst-case
+outcome»*) and withholds repeats of the same signature for `cron.failure_repeat_alert_hours` —
+which is why the first sentence is constant and the changing detail follows it. Announced ids are
+kept in `~/.hermes/state/contact-inbox-state.json`, so UNREAD is a convenience again instead of the
+memory. A letter that cannot be read is still announced, with its id and «текст прочитать не
+удалось»; more than ten in one tick are summarised as «и ещё N»; the notification carries the
+letter's local time.
+
+**Numbers**: new regression `stars-bots-ops/scripts/contact-inbox-regress.py` — 13 checks, no
+mailbox and no network, exit 0. Mutation: control 0, delete the id write → 1, swallow the search
+`rc` → 1, so the test does tell the two behaviours apart. Live: a real letter from tonight marked
+unread again — notification with its time (22.10 19:15), the author's address and the full text;
+the second and third runs silent; the state file holds exactly that one id. Site control:
+sweep 1701 / 0.
+
+**What it still cannot prove**: that the owner answers, and that the Web3Forms monthly quota is not
+exhausted — when the free plan runs out the submission never becomes a letter, and from our side
+that is invisible.
+
+
