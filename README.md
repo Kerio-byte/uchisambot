@@ -47,6 +47,12 @@ Live: https://kerio-byte.github.io/uchisambot/
   JSON-LD numbers were literals inside `build.py` and the visible prices were strings
   in nine dictionaries, so a one-sided price edit could silently make the structured
   data and the page disagree.
+- `tools/subjects.json` — single source of the subject list (9 languages × 5 subjects:
+  mathematics, **English**, physics, chemistry, history): `tools/build.py` refuses to
+  build when a dictionary's `subj.c1`…`subj.c5` differ from it, and the sweep compares
+  the chips, the FAQ sentence and both halves of `terms.html` with the same file. Added
+  22 Oct 2026 after the list had been translated as «the language of this page» on eight
+  pages (see "The subject list was translated into the wrong thing" below).
 - `img/` — logo (SVG), favicons, chat-shot mockups (WebP; `shot1-3.webp` = EN,
   `shotN-<lang>.webp` = each of the other eight languages, see "Chat shots" below),
   social preview cards (`og-<lang>.png`, 1200×630 — one per language, see "Social
@@ -1223,4 +1229,54 @@ sweep 1701 / 0.
 exhausted — when the free plan runs out the submission never becomes a letter, and from our side
 that is invisible.
 
+## The subject list was translated into the wrong thing (22.10.2026)
 
+Every page lists five subjects: mathematics, **English**, physics, chemistry, history. On eight of
+the nine pages the second one was not English — it was the page's own language: «Русский язык» in
+Russian, «Español», «Português», «हिंदी», «Bahasa Indonesia», «Türkçe», «Tiếng Việt», «Українська
+мова». A Russian parent read that the bot covers Russian-language homework; a Hindi reader, Hindi.
+The product covers English as a subject, and it said so only on the English page.
+
+The list lives in two places per dictionary — the chips (`subj.c2`) and the FAQ sentence (`q2a`) —
+and once more, in words, in the Russian half of `terms.html`. Both halves of the legal page are
+supposed to describe the same product; they described two: *Subjects: mathematics, English…*
+against *Предметы: математика, русский язык…*.
+
+**Where it came from**: the first dictionary generation on 15 Oct (commit `2a3aee4`), where the
+translator took the word for the school subject and rendered it as the language of the page.
+`git log -S'"subj.c2"'` returns exactly one commit — the file's creation — so this was a
+translation artefact, not a later decision.
+
+**Why every gate stayed green.** The sweep had two checks for the legal list — "terms subjects EN
+== en chips" and "terms subjects RU == ru chips" — and both compared the legal page with chips of
+*the same page*. When the chips were wrong on eight pages, the document agreed with them, and the
+comparison passed. On 21 Oct the English half of Terms was fixed by hand (it had been copied from
+the Russian half); that fixed one symptom and left the cause: the Russian half kept «русский язык»
+and eight pages kept their own. This is the same class as the earlier prices and og-card drifts:
+a shop window checked against its own reflection.
+
+**Now**: `tools/subjects.json` is the single source (nine languages × five subjects), `build.py`
+refuses to write a page whose chips differ from it, and 21 new sweep checks compare the canonical
+list with the chips of every language, the FAQ sentence, and both legal halves. Numbers: 1701 →
+1722 checks, 0 failed; the canonical list is also the only place where "English" is spelled out,
+so changing it is a deliberate act with a diff.
+
+**Proven by mutation, each restored byte-exact**: `ru` `subj.c2` back to «Русский язык» — the build
+exits 1 with `ru: subj.c2: 'Русский язык' != 'Английский язык'`, and the sweep fails 2 checks on
+the same data; `ru` `q2a` with the second subject removed — 1 sweep failure
+(`faq q2a has all five subjects | Английский язык`); the Russian `terms.html` list reverted — 3
+failures (the page sha in the lastmod ledger, Terms vs chips, Terms vs the canonical file).
+
+**Also fixed in the same pass**: the Russian half of Terms §7 read «Пожалуйста, не: используйте
+бота…» — a colon that broke the sentence in two and left the imperative without its verb. The
+document date moved 21 → 22 October 2026 in both halves, because the text really changed.
+
+**Checked in a browser, not only in the sweep**: `viewports-extra` 94 checks / 0 at 320–1440 px,
+the visual pass over nine languages at 420 and 1440 px reports 0 problems, and the longer chips
+(«Английский язык», «Англійська мова», «Bahasa Inggris») were looked at in the crops: on a 420 px
+phone the Russian block wraps 2 + 3 across two lines, no chip clips its text.
+
+**What it cannot prove**: that "English" is the right subject for this product. The gate keeps the
+list identical everywhere and makes a change deliberate; it cannot know whether the bot is good at
+English essays. Nor does it check the grammar of the FAQ sentence — only that each of the five
+subjects appears in it.

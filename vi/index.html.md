@@ -31,7 +31,7 @@ Lời giải từng bước giúp bạn hiểu vì sao mỗi bước đúng, đ�
 ## Các môn học
 
 - Toán
-- Tiếng Việt
+- Tiếng Anh
 - Vật lý
 - Hóa học
 - Lịch sử
@@ -75,7 +75,7 @@ Không. Bot giải thích và dạy bạn: nó chỉ ra từng bước và quy t
 
 ### Bot hỗ trợ những môn nào?
 
-Toán, tiếng Việt, vật lý, hóa học và lịch sử — và nói chung là mọi câu hỏi ở trường khiến bạn bí.
+Toán, tiếng Anh, vật lý, hóa học và lịch sử — và nói chung là mọi câu hỏi ở trường khiến bạn bí.
 
 ### Bot nói được những ngôn ngữ nào?
 
