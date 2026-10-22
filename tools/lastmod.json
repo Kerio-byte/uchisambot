@@ -1,46 +1,46 @@
 {
   "https://kerio-byte.github.io/uchisambot/": {
     "date": "2026-10-22",
-    "sha": "19a7a67386fdfff25badf105c93ae2f0687812395215f894d905f43235260ccb"
+    "sha": "5f8c7ea139a011fca9ea9acc05e1abc0eebb5abc0f8e8c3b775c50f03d9343c2"
   },
   "https://kerio-byte.github.io/uchisambot/es/": {
     "date": "2026-10-22",
-    "sha": "f62c54ad36b950067738ecb7add57b4fb6803905653068684416ecb6f7ea99fd"
+    "sha": "44397981635c571b68f4e2755f726522a3b5cad1819013d1230a7fee5e2bfc85"
   },
   "https://kerio-byte.github.io/uchisambot/hi/": {
     "date": "2026-10-22",
-    "sha": "b2cdc6bacb9f5022ec8703155c774dc4beb3cd2bd2fb0b43f044663824ea8b98"
+    "sha": "897ab1e76ae58bb0c90fbf192ced59c1cfc74f508c69ce6783fce9988680f39e"
   },
   "https://kerio-byte.github.io/uchisambot/id/": {
     "date": "2026-10-22",
-    "sha": "a3a331bdb492e1a25260706c0df299213e244955743956f594e1b386b00b6487"
+    "sha": "57700c3f4e924d1101ed3a211b2f59f6dd227f9962867ebf65af90bfd3d05158"
   },
   "https://kerio-byte.github.io/uchisambot/privacy.html": {
-    "date": "2026-10-21",
-    "sha": "bada29371b50081fcf735c2c88bbffd1ead4a36804ae54bc9d5c2666e6836e72"
+    "date": "2026-10-22",
+    "sha": "26f34bffb6d02a1f282468155782f04d0e8cda952cbd6a52c3755f7100f8f63f"
   },
   "https://kerio-byte.github.io/uchisambot/pt/": {
     "date": "2026-10-22",
-    "sha": "1b90ff2eb079010a1f8909b09b3c61c1e7d89e5c4c8e69353e8333b8144f9710"
+    "sha": "7b4a784d9aac48f9eedcba8ee203211a7245ce79cee29e27ea51ac83c7d119e3"
   },
   "https://kerio-byte.github.io/uchisambot/ru/": {
     "date": "2026-10-22",
-    "sha": "4bc4dd67820d7b6c0d894af83b756ebe42f876bf46f540ff5d21b3f033c34833"
+    "sha": "7d9c2b636c8f792e13e782839a15bbfc209bef9142a701562c9f258ac09a5023"
   },
   "https://kerio-byte.github.io/uchisambot/terms.html": {
-    "date": "2026-10-21",
-    "sha": "ec569d2bbc93f1a188378a41ae739be783e67a3931197e7f9381573b45d8b640"
+    "date": "2026-10-22",
+    "sha": "5afab8635c03e4179c77be09df0de19278091b5faea7323e8940d0ae0d1ec0c3"
   },
   "https://kerio-byte.github.io/uchisambot/tr/": {
     "date": "2026-10-22",
-    "sha": "5992f456ebbcf426b3813ac501e458b8ef698d7212d7e2f6194db0fdd4c7690a"
+    "sha": "eb2e75d9520e34554c473cb086b202b105e3be8b33f8f1cfec7466e5c4d60808"
   },
   "https://kerio-byte.github.io/uchisambot/uk/": {
     "date": "2026-10-22",
-    "sha": "9d038245d0f3b2c583a303e7166e9215da8681ec4cd7a3c89a4066d973019986"
+    "sha": "9d68ac68e5515783dc7489adc1dfadb7e9815d027d0747d9551511e2ffcd1e57"
   },
   "https://kerio-byte.github.io/uchisambot/vi/": {
     "date": "2026-10-22",
-    "sha": "94f57e03519aa8ca93262a09e8d431551b49337b4e00dea56538cad7f5c49d4a"
+    "sha": "86dd0ea5c88d3805d72584fefccea371145e91aa5f8230299d58617bea582421"
   }
 }
