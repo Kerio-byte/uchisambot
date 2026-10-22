@@ -561,6 +561,15 @@ product name keeps its apostrophe: `UchiSamBot'a`). Ukrainian used the ASCII apo
 in two strings (`Дев'ять`, `розв'язаннях`) while the rest of the file uses `’` — the
 same word root appeared with two different marks on one page; both now use `’`.
 
+**The dead switcher's markup followed the dictionary.** The same template still carried
+the old two-language switcher — two buttons (`lang-en`, `lang-ru`) and three CSS rules
+(`.lang`, `.lang button`, `.lang button.on`). The build replaces that block with the
+nine-language `<details class="lang-dd">` dropdown, so no visitor ever saw them; their
+only handler was the dictionary that is now gone. Buttons and rules removed (pages 262
+bytes lighter each, nine pages); the empty `div` stays as the build's replacement anchor
+with the reason written inside it, so the note ships nowhere. A template that still shows
+a working switcher invites someone to wire it up again — now it shows none.
+
 ## Claims against the product (22.10.2026)
 
 Every earlier gate compared the shop window with itself: dictionaries against
