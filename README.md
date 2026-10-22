@@ -562,13 +562,17 @@ in two strings (`Дев'ять`, `розв'язаннях`) while the rest of th
 same word root appeared with two different marks on one page; both now use `’`.
 
 **The dead switcher's markup followed the dictionary.** The same template still carried
-the old two-language switcher — two buttons (`lang-en`, `lang-ru`) and three CSS rules
-(`.lang`, `.lang button`, `.lang button.on`). The build replaces that block with the
-nine-language `<details class="lang-dd">` dropdown, so no visitor ever saw them; their
-only handler was the dictionary that is now gone. Buttons and rules removed (pages 262
-bytes lighter each, nine pages); the empty `div` stays as the build's replacement anchor
-with the reason written inside it, so the note ships nowhere. A template that still shows
-a working switcher invites someone to wire it up again — now it shows none.
+the old two-language switcher — two buttons (`lang-en`, `lang-ru`) and five CSS rules
+(`.lang`, `.lang button`, `.lang button.on`, plus `.lang button` in the 44 px touch-target
+rule and its padding rule inside `@media(pointer:coarse)`). The build replaces that block
+with the nine-language `<details class="lang-dd">` dropdown, so no visitor ever saw them;
+their only handler was the dictionary that is now gone. Buttons and rules removed (pages
+365 bytes lighter each, nine pages); the empty `div` stays as the build's replacement
+anchor with the reason written inside it, so the note ships nowhere. A template that still
+shows a working switcher invites someone to wire it up again — now it shows none. The two
+media-query rules surfaced only after a second look at the built page (`grep -F "lang
+button"` on the output, not on the source): a first pass that trusts its own grep on the
+template will miss rules that hide inside shared selector lists.
 
 ## Claims against the product (22.10.2026)
 
