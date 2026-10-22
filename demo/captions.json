@@ -1,0 +1,190 @@
+{
+  "version": 2,
+  "note": "Written by demo/captions.py — the exact captions baked into each hero loop and each full demo, plus the file bytes. Re-stamp after a rebuild; landing-sweep.py fails when this disagrees with the dictionaries or with the files.",
+  "langs": {
+    "en": {
+      "video": "uchiambot-demo-web.mp4",
+      "sha256": "b14526065e7deb82b12700dbd1fec9844de48bb97f281ca20ca0cfadd7092174",
+      "bytes": 365406,
+      "poster": "demo-poster.webp",
+      "poster_sha256": "5b08ccbf8cf9a349107b6b3ee4b0b54d8691965c832011fb656ac9b85953f0c3",
+      "poster_bytes": 31864,
+      "joiner": " · ",
+      "tail": "text or photo",
+      "cap1": "2 · Send a task — text or photo",
+      "cap2": "3 · Step-by-step breakdown",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "ru": {
+      "video": "uchiambot-demo-web-ru.mp4",
+      "sha256": "7dd2f72fe0b8d9220f50f26992d8d6c69955317c9d5ce2c920709468e6967bd9",
+      "bytes": 582922,
+      "poster": "demo-poster-ru.webp",
+      "poster_sha256": "7370a45b9208fa3fb9191fc9a3eee0a27a8c57eb60f0e5c3c3bffb82af82639b",
+      "poster_bytes": 52172,
+      "joiner": " · ",
+      "tail": "текстом или фото",
+      "cap1": "2 · Отправь задачу — текстом или фото",
+      "cap2": "3 · Пошаговый разбор",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "es": {
+      "video": "uchiambot-demo-web-es.mp4",
+      "sha256": "ee7809394adc05921b620f89fc2c5d4c911ee9eb5248687a7b70bca5e5592e0f",
+      "bytes": 384481,
+      "poster": "demo-poster-es.webp",
+      "poster_sha256": "26de707be59d46a9461db33809572567840043ad355b5e181b261289b0611504",
+      "poster_bytes": 31398,
+      "joiner": " · ",
+      "tail": "texto o foto",
+      "cap1": "2 · Envía tu tarea — texto o foto",
+      "cap2": "3 · Desglose paso a paso",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "pt": {
+      "video": "uchiambot-demo-web-pt.mp4",
+      "sha256": "78de5d0cac289cd014a97828aa8e2084173510cb9e780c30d94ae7eb0db6c365",
+      "bytes": 403699,
+      "poster": "demo-poster-pt.webp",
+      "poster_sha256": "579766702c0204f1eab7a308d73d1b29609040e1779b0131d128b51fe92e0268",
+      "poster_bytes": 33226,
+      "joiner": " · ",
+      "tail": "texto ou foto",
+      "cap1": "2 · Envie uma tarefa — texto ou foto",
+      "cap2": "3 · Explicação passo a passo",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "hi": {
+      "video": "uchiambot-demo-web-hi.mp4",
+      "sha256": "26a5e4dd15419d4974938d3d762a84eec0d6d2de1cc306c5d6ad80f6b413d7ca",
+      "bytes": 321177,
+      "poster": "demo-poster-hi.webp",
+      "poster_sha256": "feb03d34e76a316289783bd056222f78417dc4a79e19227b8a8af1ff547d80ca",
+      "poster_bytes": 24018,
+      "joiner": ". ",
+      "tail": "टेक्स्ट या फोटो",
+      "cap1": "2. सवाल भेजें — टेक्स्ट या फोटो",
+      "cap2": "3. स्टेप-बाय-स्टेप हल",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "id": {
+      "video": "uchiambot-demo-web-id.mp4",
+      "sha256": "f93a456012f5f56661d8f8670e386ff3d76725bed2140ce3bc4c66f1c1427058",
+      "bytes": 399156,
+      "poster": "demo-poster-id.webp",
+      "poster_sha256": "5f7ed9b77ce9d8abbe1d8a0676632a0a3f36b286e13041fbf51f9e924ca97508",
+      "poster_bytes": 31730,
+      "joiner": " · ",
+      "tail": "teks atau foto",
+      "cap1": "2 · Kirim soal — teks atau foto",
+      "cap2": "3 · Pembahasan langkah demi langkah",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "tr": {
+      "video": "uchiambot-demo-web-tr.mp4",
+      "sha256": "8db458b2bbd524dd77223ae88c7c7bc5e70aea13f6aea5b9e37bd2b0634a75e5",
+      "bytes": 355380,
+      "poster": "demo-poster-tr.webp",
+      "poster_sha256": "b492342c83f381731902d1541d0e8f0a74fb890474dd614f6f377bb838da5481",
+      "poster_bytes": 28334,
+      "joiner": " · ",
+      "tail": "yazı ya da fotoğraf",
+      "cap1": "2 · Ödevini gönder — yazı ya da fotoğraf",
+      "cap2": "3 · Adım adım çözüm",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "vi": {
+      "video": "uchiambot-demo-web-vi.mp4",
+      "sha256": "099c81a33d0ad10c01d6fefc5256024e0b181ef8dd7c6de553bd69297bece4dd",
+      "bytes": 374423,
+      "poster": "demo-poster-vi.webp",
+      "poster_sha256": "d77a60348dd719c338e0c24b749aad737aee0e5e5c27dddd56825926c13b8254",
+      "poster_bytes": 29440,
+      "joiner": " · ",
+      "tail": "chữ hoặc ảnh",
+      "cap1": "2 · Gửi bài tập — chữ hoặc ảnh",
+      "cap2": "3 · Phân tích từng bước",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    },
+    "uk": {
+      "video": "uchiambot-demo-web-uk.mp4",
+      "sha256": "aac8f1ed429658c31cc72835c1e09eb7a2b5d7a78eaac7e690053b43d65742b7",
+      "bytes": 407306,
+      "poster": "demo-poster-uk.webp",
+      "poster_sha256": "1a6c7e50deda8f52528d7a328ac899b0dbffb3efc1e16b9ca5e2e128dacf55ab",
+      "poster_bytes": 32260,
+      "joiner": " · ",
+      "tail": "текстом або фото",
+      "cap1": "2 · Надішли завдання — текстом або фото",
+      "cap2": "3 · Покроковий розбір",
+      "keys": {
+        "cap1": "how.s2t",
+        "cap2": "shot3.alt"
+      }
+    }
+  },
+  "full": {
+    "en": {
+      "video": "uchiambot-demo.mp4",
+      "sha256": "9568beabea11dca51d2a0436959336a88f25ab7bb04b0715bb707830e6c03bf6",
+      "bytes": 937669,
+      "caps": {
+        "1": "1 · Your AI study helper",
+        "2": "2 · Send a task — text or photo",
+        "3": "3 · Step-by-step breakdown",
+        "4": "4 · Works in Russian and English"
+      },
+      "intro_tag": "Study Helper for school students",
+      "outro_sub": "First 2 breakdowns free",
+      "keys": {
+        "intro_tag": "foot.tag",
+        "outro_sub": "hero.chip1",
+        "caps.2": "how.s2t",
+        "caps.3": "shot3.alt"
+      }
+    },
+    "ru": {
+      "video": "uchiambot-demo-ru.mp4",
+      "sha256": "883b271cdf4410cf2728281105f7f384d68cb730f30fab215a82028a4325b7b3",
+      "bytes": 1368799,
+      "caps": {
+        "1": "1 · Твой помощник по учёбе",
+        "2": "2 · Отправь задачу — текстом или фото",
+        "3": "3 · Пошаговый разбор",
+        "4": "4 · Работает на русском и английском"
+      },
+      "intro_tag": "Учебный помощник для школьников",
+      "outro_sub": "Первые 2 разбора бесплатно",
+      "keys": {
+        "intro_tag": "foot.tag",
+        "outro_sub": "hero.chip1",
+        "caps.2": "how.s2t",
+        "caps.3": "shot3.alt"
+      }
+    }
+  }
+}

@@ -65,6 +65,17 @@ Live: https://kerio-byte.github.io/uchisambot/
   web-optimized hero loops — one per language, each carrying step captions in the
   page language: `*-web.mp4` (EN) / `*-web-<lang>.mp4` for the other eight. Loop
   weight budgets (QA sweep): EN ≤768 KB, RU ≤900 KB, the seven others ≤512 KB.
+- `demo/captions.py` — the **single source of every word burned into a video**
+  (22 Oct 2026): the hero loop's two step captions are `how.s2t` and `shot3.alt`
+  without the brand, the full demo's intro tagline is `foot.tag` and its outro
+  promise is `hero.chip1`; the handful of video-only phrases (the "text or photo"
+  tail, the two outro buttons) are listed in one table. `demo/captions.json` is
+  the ledger: the strings actually baked, plus sha256 of each loop, its poster and
+  each full demo. `demo/build-web-loop-langs.sh [lang …]` and
+  `demo/build-full-demo.sh en|ru` ask that script for every line and re-stamp the
+  ledger; the QA sweep fails when the dictionary, the ledger and the bytes
+  disagree. `landing-sweep.py` checks the ledger, `landing-poster-frames.py`
+  (stars-bots-ops) checks that a poster really is its loop's last frame.
 - `fonts/` — self-hosted Manrope variable font (OFL, `LICENSE-OFL.txt`): latin,
   latin-ext, cyrillic, cyrillic-ext, vietnamese subsets (~64 KB total); preload +
   `font-display: swap`, system fallback. No CDN. Plus Noto Sans Devanagari (OFL,
@@ -125,7 +136,10 @@ WebP). Sources are the per-language chat-shot PNG renders from `tools/shots-gen`
 regenerate them first if the scratch workdir is gone (`gen_shots.py --langs …`). Two
 deliberate render notes: the hi loop uses Noto Sans Devanagari Bold, whose glyph set
 has no `·` (U+00B7), so its step separator is `.`; drawtext `text_shaping` (on by
-default) shapes the Devanagari conjuncts.
+default) shapes the Devanagari conjuncts. Every caption line comes from
+`demo/captions.py` (see Structure); a rebuild refreshes the language's poster and
+re-stamps `demo/captions.json`, and the sweep fails if you forget either. The full
+35 s demos are rebuilt the same way: `bash demo/build-full-demo.sh en|ru`.
 
 Demo video weights: the eleven `demo/` files have soft budgets enforced by the QA sweep —
 full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, the nine hero loops:
@@ -950,4 +964,79 @@ clipped text, and the changed sentence is the only difference.
 
 The lesson: structure gates prove that a page has ten questions, not that the tenth answer
 still tells the truth. Where a sentence is a promise, the promise itself is the assertion.
+
+## The video promised five; the page promised two (22.10.2026)
+
+Every text pass so far gated the *page*. The videos were left out of every gate because
+their text is pixels, and pixels are not in the dictionary — so nobody compared the two.
+Reading the nine hero loops and the two 35 s demos frame by frame found three real defects
+and one structural hole:
+
+- **The full demos' outro promised "5 free step-by-step solutions"** while the product
+  gives two (`FREE_TRIALS = 2`), `tools/prices.json` says two and the page says two in five
+  places. The video is linked from `llms.txt` and from every launch platform, so the most
+  visible asset was the one making the wrong promise.
+- **The Russian "demo-ru" was captioned in English**: Russian screenshots under English
+  captions ("2 · Send any task — text or photo", "3 · Step-by-step explanations",
+  "4 · Works in Russian and English") and an English intro/outro. The file name and the
+  language of the page that links it disagreed with the language of the video.
+- **The English hero loop had drifted from the page**: it said "Send any task" where the
+  page's step is "Send a task", and "Step-by-step explanations" where the same screenshot's
+  alt text and 17 other strings say "breakdown" — a second word for one thing, in the
+  flagship language, in the first screen.
+- **The Russian page's poster was an English frame.** `demo-poster-ru.webp` still showed
+  "3 · Step-by-step explanations" (made on 15 Oct, before the RU loop was re-cut on 17 Oct):
+  the poster is what a visitor sees before pressing play and what `save-data` users see
+  instead of the video, so the Russian page opened with an English caption.
+
+**The structural fix.** Captions are no longer written in the build scripts. `demo/captions.py`
+derives every line from `src/locales/<lang>.json`: the loop's step-2 caption is `how.s2t`,
+its step-3 caption is `shot3.alt` without the brand (`from`/`от`/`de`/`do`/`से`/`dari`/
+`'tan`/`từ`/`від`, and the label is capitalised when the brand led the phrase, as in Hindi
+and Turkish); the full demo's intro tagline is `foot.tag` and its outro promise is
+`hero.chip1`. Only four phrases per language are video-only (the "text or photo" tail, the
+two outro buttons, the intro/outro scene labels) and they live in one table in that file,
+not scattered through shell scripts.
+
+`demo/captions.json` is the ledger: the exact strings baked, plus sha256 and byte count of
+each loop, its poster and each full demo. A rebuild always re-stamps it, so "the dictionary
+changed but the video did not" and "the loop was re-cut but the poster was forgotten" are
+both failures. The sweep went 1607 → 1660 checks: 36 for the nine loops (two captions, loop
+bytes, poster bytes each), 14 for the two full demos (four captions, intro tagline, outro
+promise, file bytes), 3 for the build scripts (they must call `captions.py` and must not
+carry a literal `drawtext … text='…'`).
+
+**A second pair of eyes for the posters.** The ledger proves the poster is the file that was
+built with the loop, but not that it depicts the loop's last frame — a poster rendered from
+the wrong loop by the same recipe would still be stamped. `landing-poster-frames.py`
+(stars-bots-ops) extracts frame 389 of each loop, scales it to 540×1170 and compares it with
+the poster by RMSE. Calibration on all nine: a fresh poster scores 0.0102–0.0110; the stale
+Russian one scored 0.0431 and the English poster with the old wording 0.0324. The threshold
+is 0.02, which separates the two classes with room on both sides.
+
+**Rebuilt:** the EN loop (701 KB → 365 KB, captions now "Send a task" / "Step-by-step
+breakdown"), its poster, the RU page poster (re-cut from the RU loop, 52 KB), and both full
+demos — EN 991 KB → 916 KB (crf32), RU 1.34 MB → 1.30 MB (crf33), now in Russian throughout
+with "Первые 2 разбора бесплатно". Quality was measured against the files they replace, not
+assumed: zoomed crops of the chat text are indistinguishable at normal viewing distance.
+The full-demo pipeline renders its zoompan at 1440×3120 instead of the kit's 2160×4680 —
+the 3× variant segfaulted ffmpeg 6.1.1 on this box after two minutes of encoding, twice.
+
+**Six mutations, each caught and each restored byte-exact** (`evidence/regress6-20261022/`):
+a changed `how.s2t` in Spanish (loop caption gate), the old Russian poster put back (ledger
+gate: 1 fail; poster tool: RMSE 0.04311), a literal caption slipped into the build script
+(script gate), a changed free-tier promise in `hero.chip1` + `prices.json` (full-demo promise
+gate, plus the four older free-count gates), a ledger that still described the old wording
+(2 fails, loop and full demo), the old full demo put back under the same name (bytes gate).
+Control after every restore: 1660/0, posters 9/0.
+
+**Battery after the rebuild:** sweep 1660/0, poster frames 9/0 (worst 0.01097), links 11
+pages/0, English leftovers 0, price parity 9/0, W3C validator 0 real findings, render-check
+ALL OK, axe 12 pages/0, accessibility extras 68/0, WCAG 2.2 targets 43/0, fonts 39/0, build
+reproducible. The English page was photographed at 420 and 1440 px after the swap: the new
+poster renders, nothing is cut or overflowing.
+
+The lesson: a promise that lives in pixels has to be asserted from the pixels' own source.
+Deriving the strings from the dictionary closes the gap at the only place where it opens —
+the moment of encoding — and the ledger makes the next rebuild prove it.
 
