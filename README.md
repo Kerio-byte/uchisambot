@@ -77,8 +77,12 @@ Live: https://kerio-byte.github.io/uchisambot/
   "Social preview cards" below.
 - `tools/shots-gen/` — generator for the per-language chat-shot mockups
   (`gen_shots.py` + `mockup.html` + Inter subsets under `assets/fonts/`); see
-  "Chat shots" below. EN/RU shots are frozen references — the generator renders
-  the other seven languages.
+  "Chat shots" below. All nine languages are drawn by it (EN and RU were frozen
+  captures until 23.10.2026, when the bot's seventh menu button had to reach
+  them). The keyboard is not a list in the generator: `tools/shots-gen/bot_menu.py`
+  reads `menu_kb()` from `bot/handlers.py`, and `tools/shots.json` is the ledger
+  (sha256 of every webp + the exact strings drawn, written by `--apply --stamp`),
+  which the QA sweep checks against the bot's own texts.
 - `demo/` — demo videos: full 35 s (EN/RU, H.264 720×1560 30 fps, compressed to
   ≤1 MiB / ≤1.5 MiB, direct-linked from `llms.txt` and external platforms) and
   web-optimized hero loops — one per language, each carrying step captions in the
@@ -2501,3 +2505,62 @@ is refused by the approval policy — one command stays with the owner. And that
 should change: its closing frame says "Works in Russian and English" while the page promises nine
 languages. That is an understatement, not a lie, but it is inconsistent; re-cutting two videos is
 the owner's call, not a default worth taking.
+
+## The bot showed seven menu buttons; every mockup drew six (23.10.2026)
+
+**What was found.** The screenshot section calls its three chat images "Real screenshots — the bot
+works in 9 languages". All nine languages showed the same main keyboard, and it did not exist:
+
+| drawn in all 27 images | bot's `/start` keyboard (`menu_kb()`) |
+|---|---|
+| Free examples, Break down a problem, Check my solution, Summary & flashcards, Pricing, Help | the same six **plus "Invite a friend"** between Pricing and Help |
+
+`menu_kb()` has carried the seventh button since the bot's first commit (15 Oct 22:33), so the
+window was wrong from the day the mockups were installed. It also contradicted the page's own
+referral paragraph ("Invite a friend — when they solve their first task, you get one more free
+breakdown"): the page advertised a button its own screenshot left out.
+
+**Why nothing caught it.** The generator (`tools/shots-gen/gen_shots.py`) kept the menu as a
+hand-written list of six dictionary keys; everything else in a mockup already came from the bot.
+The gates asked whether the file exists, is 1080×2340, is referenced with a width/height pair and a
+dictionary alt — none asked the bot what it puts on the keyboard. Seven languages were rendered on
+17 Oct from that list; EN and RU were frozen captures of an older screen, so the same six buttons
+were baked in twice.
+
+**What changed.**
+
+- `tools/shots-gen/bot_menu.py` (new, stdlib ast only) reads `menu_kb()` from `bot/handlers.py` and
+  returns the key order; the generator draws exactly those buttons. A new bot button is picked up by
+  the next regeneration, and a forgotten regeneration is red instead of silent.
+- All nine mockups redrawn through the one pipeline — 27 files. EN and RU are no longer frozen
+  references: RU needed a sample answer added to the generator's `CANNED` table (the same sample
+  task as the other eight languages, translated; no dictionary on the site changed), EN already had
+  one for calibration. The keyboard now has seven rows in every language; the mockup is 1793 px tall
+  at the last row against an input bar at 2170 px, so nothing is clipped.
+- `tools/shots.json` (new) is the ledger: sha256 of every webp, the menu order, and the exact strings
+  drawn (bot texts + canned sample). It is written only by
+  `gen_shots.py … --apply --stamp`, so a picture cannot be replaced or outrun by an edit silently.
+- The sweep grew 1,973 → 2,031 checks: menu order = `menu_kb()`, every drawn bot string = the bot's
+  current text (read from `i18n.py` / `i18n_extra.py` with ast, no import), canned strings = the
+  generator's `CANNED`, and every file's bytes = the ledger.
+- No page HTML changed: the files keep their names and 1080×2340 geometry, and the pages still ask
+  for 540×1170. `tools/build.py --check` reports 24 files equal to a fresh build. The 27 images grew
+  1.72 MB → 1.90 MB in total (the seventh row, ~7 KB per file); every language page stays inside the
+  1.25 MiB page budget.
+
+**Controls.** A throwaway copy of the tree (`scratch/neg-shots-231026b`, `LANDING_ROOT`): removing
+`invite` from the ledger's menu list fails `shots: menu = bot menu_kb()`; changing one recorded
+Spanish string fails `shot texts = bot`; copying the Ukrainian file over `shot1-es.webp` fails
+`shot1 bytes = ledger`. Three breaks, three red checks, nothing else moved.
+
+**Checked after the change.** Sweep 2,031 / 0. Links 11 pages / 0 problems. Render-check ALL OK
+(JS errors none). Visual pass PROBLEMS 0 — 18 page loads, 9 languages × 420/1440, screenshots in
+`evidence/visual-20261023`; the desktop shots section of `/` now reads the seventh row
+("Invite a friend"), confirmed by OCR of the rendered page, not of the asset.
+
+**What it cannot prove.** That seven is the right number tomorrow — the gate follows `menu_kb()`,
+so it proves agreement, not judgement. That the *other* screens (price list, language menu) match
+the bot: the mockups are the first screen only. And that the owner prefers the regenerated EN/RU
+images to the old captures — they are now the same pipeline as the other seven (default taken:
+uniformity over frozen references).
+
