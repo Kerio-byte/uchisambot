@@ -1865,3 +1865,59 @@ a whitelist is a permanent tax: every new CSS feature costs a pair here, and a c
 hide a real error. The no-JS pass covers three languages at one viewport, 844x390 — the short-screen
 case the ceiling exists for, not all nine languages and not a tall screen. And that a green battery
 means the site is good: it means the things this battery measures are still true.
+
+## The promise that depended on a cron nobody watched (23.10.2026)
+
+The eleventh answer, added three hours earlier the same day, ends with a sentence the reader has no
+way to check: "If an answer looks wrong, send it to us through the form — we read every message."
+Every other claim on the page is about the reader's own experience; this one is about us, and the
+mechanism behind it is a `no_agent` cron job named `обращения-лендинга`: every ten minutes
+`contact-inbox-check.py` asks the mailbox for `from:web3forms.com subject:"UchiSamBot contact form"
+is:unread`, and turns anything it finds into a Telegram message to the owner. The page was
+documented as promising that, and the README said in as many words that a later block should check
+the cron and not only the page.
+
+**Why nothing caught it.** The failure signature of this channel is silence, and silence is also the
+normal answer: a cron that is paused, deleted, or whose sender filter matches nothing returns "no
+messages" twenty-four times an hour and never fails. Hermes reports a job that errors; it does not
+report a job that is gone from `jobs.json` — a file this machine has already had to rebuild once
+(a `.corrupt-20260916` copy sits next to it). Nothing in the page's battery reads that file.
+
+**What the mailbox actually holds.** The live audit finds nine letters from Web3Forms: seven form
+submissions (15.10, four on 21.10, two on 22.10) and two service letters (the welcome message and
+the verification code). The cron's ledger `~/.hermes/state/contact-inbox-state.json` knows one of
+the seven — the 22.10 16:15 submission, the last one — because the ledger was introduced on 22.10;
+the other six predate it, were read at the time, and still carry no `UNREAD` label. The two service
+letters are not submissions and are ignored by the subject filter, correctly.
+
+**The hole nobody had looked at.** Gmail's search excludes SPAM and TRASH unless the query says
+`in:anywhere`. The cron does not say it — and it should not, a submission in spam is not something
+to announce as a message to read — but that means a submission that lands in spam is invisible to
+the cron forever, while the page keeps promising it was read. The audit therefore searches
+`in:anywhere` and treats any submission in SPAM or TRASH as a loss, whatever else is true.
+
+**Two gates, in different places, for different questions.** The sweep now asks whether the
+machinery is alive: exactly one job whose `script` ends in `contact-inbox-check.py`, enabled and
+`scheduled`, `no_agent` (a model in the loop is a different mechanism), interval no coarser than
+thirty minutes, last run no older than sixty, last status `ok` with `failure_streak` 0. On a machine
+that has no `~/.hermes/cron/jobs.json` — a clone, another host — it prints one check whose name says
+`SKIP`, not a green claim it cannot support. `landing-inbox-canary.py` asks the other question, about
+the crate rather than the machinery: every submission in the mailbox must be in the ledger, or in
+flight (unread and younger than sixty minutes), or older than the baseline — the date of the earliest
+ledger id still present in the mailbox. Anything else is printed by id and date as `ПОТЕРЯ`. A
+missing token, a missing ledger, or a ledger with no id that still exists in the mailbox exits 2:
+"cannot check" is not "clean".
+
+**Controls, because a gate that has never failed is a guess.** A fake `jobs.json` with the job
+paused, a 120-minute interval, `no_agent` false and a three-day-old failed run turns five checks red;
+the same sweep on a home without `jobs.json` runs 1882 checks and passes with the SKIP visible; a
+ledger that has forgotten the six pre-ledger submissions prints six losses and exits 1; an empty
+ledger exits 2. Sweep went from 1881 to 1887 checks, all passing.
+
+**What it cannot prove.** That a human opened the letter — the ledger proves the notification was
+sent, not that it was read; only the owner's word does that. That Web3Forms keeps the sender domain
+`notify+<id>@web3forms.com`; if it changes, the canary's own search goes empty and the first line it
+prints is "not found", which is the alarm, not a proof of health. That a letter already in spam will
+be rescued: the canary reports it, nobody moves it. And the sixty-minute in-flight window is a
+choice, not a law — a letter that arrives while the scheduler is paused will be called lost, which is
+the safe direction to be wrong in.
