@@ -253,11 +253,15 @@ fallback, then `calc(6px + env(safe-area-inset-bottom))`) — browsers without `
 support still get sane padding; modern browsers are unaffected (second declaration wins).
 Markup + inline script live in `index-src.html`.
 
-CTA tags: the hero button keeps `?start=src_landing`, the closing band button uses
-`?start=src_landing_band`, the sticky bar `?start=src_landing_sticky`, the button after
-the screenshots `?start=src_landing_shots` (the bot records the first touch per user and
-accepts any `src_*` payload). The sweep pins all four — exactly one plain `src_landing`
-link must remain (the hero).
+CTA tags (23.10.2026): every label is built from the page's own language code —
+`?start=src_landing_<code>` for the hero button, `..._band` for the closing band,
+`..._sticky` for the sticky bar, `..._shots` for the button after the screenshots
+(`en` → `src_landing_en`, `/hi/` → `src_landing_hi_band`). The bot records the first
+touch per user, accepts any `src_*` payload, and reads the code back: a visitor who
+arrives from `/hi/` is greeted in Hindi even if their Telegram interface is in another
+language. The 404 page keeps its single language-neutral `src_landing_404`. The sweep
+pins all four per page (4 × 9 = 36 labels, none foreign), and
+`landing-page-lang.py` checks the page side and the bot side together.
 
 Micro-interactions: keyboard focus ring (`:focus-visible`, 2px brand, offset — everywhere
 interactive), press feedback on buttons (`:active`), smooth FAQ open/close (~180 ms via
@@ -560,8 +564,9 @@ URL + `.md`.
 The bot link in the AI layer carries its own source tag. `llms.txt` (the
 `Open the bot` line) and the `Open in Telegram` line of every markdown twin point
 to `https://t.me/UchiSamBot?start=src_llms` — the constant `BOT_LLMS` in
-`tools/build.py`. The page keeps its three landing tags (`src_landing`,
-`src_landing_band`, `src_landing_sticky`); the AI layer is a separate channel, and
+`tools/build.py`. The page keeps its four landing tags, each with the page's own
+language code (23.10.2026: `src_landing_<code>`, `..._band`, `..._sticky`,
+`..._shots`); the AI layer is a separate channel, and
 without its own tag a reader who arrives from an AI answer lands in the bot's
 statistics as "(no tag)" and cannot be told apart from any other untagged source.
 The QA sweep checks the tag in all nine twins and in `llms.txt` and fails if the
@@ -2228,3 +2233,60 @@ load — the hard budget is 165 s, and past it the student gets the "try again i
 answer that `q9a` already describes; that the model's arithmetic is right (other batteries); and
 that the running bot already says the new sentence — it does not, until the service is restarted.
 
+## The page knew the visitor's language; the bot never heard it (23.10.2026)
+
+**What was found.** Two defects with one root: the landing speaks nine languages, the bot chose its
+first screen from the Telegram interface language only, and nothing carried the page's language
+across the boundary.
+
+1. All nine pages sent the same labels (`?start=src_landing`, `_band`, `_shots`, `_sticky`). The bot
+   computed `lang` as the Telegram language code, falling back to `default_lang` — `ru`. A visitor
+   reading `/hi/` with Telegram in Finnish or English was greeted in Russian or English, and had to
+   find `/lang` before he could read anything. Meanwhile `q3a` in all nine dictionaries promises
+   "nine languages... switch any time with `/lang`" — the page sells a choice the first screen
+   ignores.
+2. The choice was not merely ignored, it was overwritten. `storage.ensure_user()` updates `lang`
+   whenever a value is passed in, and `cmd_start` passed the Telegram-derived value into `_track()`
+   on every `/start`. A student who had picked Spanish with `/lang` and whose Telegram is in English
+   was silently moved back to English the next time he pressed Start. Measured, not reasoned: a
+   seeded user with `lang="es"` and Telegram `en` came out of `cmd_start` with `en` in the database.
+
+**What changed.** `tools/build.py` writes the page's own code into all four CTA labels — 36 labels,
+four per page (`src_landing_<code>`, `..._band`, `..._shots`, `..._sticky`); the 404 page keeps its
+single neutral `src_landing_404`. The bot reads the code back through `landing_lang()`
+(`bot/handlers.py`): a **new** user gets the language of the page he came from — it beats the
+Telegram interface, because it is the language he was just reading; a **returning** user gets the
+language he saved with `/lang` — neither Telegram nor the label may overwrite it. The first touch is
+still recorded once per user, so `source` now reads `landing_hi_band` instead of `landing`, and
+`scripts/source_stats.py` groups the report by page language and by button position (the script
+takes `--db` so the report can be tested without the live database). Before this, all nine
+languages collapsed into one row: "which language page brings people" had no answer in the data,
+only in opinion.
+
+**In the sweep.** Ten new checks (1,908 → 1,918): each page must carry exactly four labels, all with
+its own code and none foreign — the three older checks that pinned `src_landing_sticky`, `_band` and
+`_shots` now expect the language — plus one global check that runs `landing-page-lang.py` over both
+sides at once: the 36 labels on disk and `bot.handlers.landing_lang` over all nine codes and over
+the old or foreign labels (`src_landing`, `src_landing_404`, `src_llms`, `src_landing_zz` → `None`).
+The bot's tests grew 31 → 39: the new user's greeting, both fallbacks, the returning user's saved
+choice, the label never rewriting it, and the report grouping.
+
+**Controls, each restored byte-exact (`sha256sum -c`).** (1) The old language rule put back into
+`cmd_start`: three tests red with the exact difference — a `/hi/` visitor stored as `en`, a
+returning `es` user moved to `en`, a page label rewriting a stored `ru` to `vi`; the other five
+stayed green. (2) One page's hero label reverted to the bare `src_landing`: five red lines, naming
+the page and the label list (`[hi] cta labels carry the page language`), the band check, the
+`lastmod`/sha guard, the new global battery and the build comparison — a hand-edited page cannot
+pass as a built one. (3) The same page break through `landing-page-lang.py` alone:
+`FAIL hi: метки ['src_landing', 'src_landing_hi_band', ...]`.
+
+**Checked after the change.** Sweep 1,918 / 0; the link audit 0 problems over 11 pages, listing the
+new labels; `landing-render-check.py` ALL OK with no JS errors; the bot's 39 tests pass. Nothing
+visible changed on the page — only query strings — so no new screenshots were needed.
+
+**What it cannot prove.** That anyone has arrived from each page yet: the bot's database holds four
+accounts and none of them tagged; the grouped report will have rows only when a real visitor comes
+from a page. That links already shared with the old bare label change behaviour — they do not: the
+old label maps to `None` and the bot falls back to Telegram exactly as before, so the change is
+forward-only. And that the running bot already greets in the page language: it does not, until the
+service is restarted — the same standing item the previous two blocks left for the owner.
