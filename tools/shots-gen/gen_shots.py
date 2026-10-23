@@ -21,14 +21,23 @@ tools/build.py подставляет файл языка через shot_src();
   python3 tools/shots-gen/gen_shots.py --langs hi,uk          # только превью-PNG
   python3 tools/shots-gen/gen_shots.py --langs hi,uk --apply  # записать img/shotN-<lang>.webp
   python3 tools/shots-gen/gen_shots.py --langs en --calib     # EN-калибровка (в превью, не в img/)
+  python3 tools/shots-gen/gen_shots.py --langs en,ru --apply --force-en --stamp  # перерисовать эталоны
 
-EN/RU-макеты — замороженные эталоны: генератор их не перезаписывает (--apply
-игнорирует языки без CANNED-записи, кроме явного --force-en).
+Кнопки главного меню НЕ вписаны здесь списком (23.10.2026): порядок читается из
+`menu_kb()` бота (`bot_menu.py`, разбор исходника). Пока список был ручным, бот
+получил кнопку «Пригласить друга», а все девять макетов показывали шесть кнопок.
+
+`--stamp` пишет реестр `tools/shots.json`: sha256 каждого макета и ровно те
+строки, что нарисованы. Свип сверяет реестр с ботом и с байтами файлов, поэтому
+«текст бота поправили, картинку не перерисовали» и «картинку подменили руками» —
+провал, а не тишина.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -38,6 +47,13 @@ REPO = HERE.parent.parent                    # .../promo/landing-20261012
 BOT_DIR = REPO.parent.parent / "study-bot"   # .../stars-bots/study-bot
 FONTS = HERE / "assets" / "fonts"
 IMG = REPO / "img"
+LEDGER = REPO / "tools" / "shots.json"
+
+sys.path.insert(0, str(HERE))
+import bot_menu  # noqa: E402
+
+HANDLERS = BOT_DIR / "bot" / "handlers.py"
+MENU_KEYS = bot_menu.menu_keys(HANDLERS)
 
 # --- кернед-строки макетов (в боте их нет: это образец ответа и реплика юзера) ---
 # en — для калибровки стиля (эталон img/shot1-3.webp: тексты совпадают с ними).
@@ -54,6 +70,22 @@ CANNED = {
             "Example: for 2x = 10, divide both sides by 2 → x = 5.\n\n"
             "Key rule: whatever you do to one side, do the same to the other. "
             "You've almost solved it — just finish the last division."
+        ),
+    },
+    # ru добавлен 23.10.2026: до этого RU-макет был «замороженным эталоном»,
+    # и кнопку «Пригласить друга» в нём нельзя было дорисовать иначе как руками.
+    "ru": {
+        "header": "Учебный помощник",
+        "ph": "Сообщение",
+        "user2": "Разбери по шагам: 3x − 7 = 14",
+        "body3": (
+            "1. Цель: оставить x одного на одной стороне.\n"
+            "2. 3x − 7 = 14 → прибавляем 7 к обеим сторонам: 3x = 21.\n"
+            "3. Делим обе стороны на 3: x = 7.\n"
+            "4. Проверка: 3 × 7 − 7 = 14 ✓\n\n"
+            "Пример: если 2x = 10, делим обе стороны на 2 → x = 5.\n\n"
+            "Главное правило: что делаешь с одной стороной, делай и с другой. "
+            "Остался последний шаг — деление."
         ),
     },
     "es": {
@@ -186,10 +218,14 @@ def load_i18n():
 
 
 def build_shots(lang: str, i18n) -> dict:
-    """Разметка сообщений для трёх кадров. Стиль согласован с EN-эталоном."""
+    """Разметка сообщений для трёх кадров. Стиль согласован с EN-эталоном.
+
+    Кнопки меню — из `MENU_KEYS` (порядок menu_kb() бота), не из литерала:
+    бот добавил «Пригласить друга», генератор обязан это увидеть сам.
+    """
     c = CANNED[lang]
     t = lambda k: i18n.t(lang, k)  # noqa: E731
-    menu = [t("free_examples"), t("solve"), t("check"), t("notes"), t("plans"), t("help")]
+    menu = [t(k) for k in MENU_KEYS]
     return {
         1: [
             ("user", "/start", "12:02"),
@@ -249,12 +285,19 @@ def render_png(out_png: Path) -> None:
     raise RuntimeError(f"render failed after 3 attempts: {last}")
 
 
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--langs", default="es,pt,hi,id,tr,vi,uk")
     ap.add_argument("--apply", action="store_true", help="записать webp в img/")
     ap.add_argument("--calib", action="store_true", help="разрешить en в превью (не пишет в img/)")
     ap.add_argument("--force", action="store_true", help="перезаписывать существующие webp")
+    ap.add_argument("--force-en", action="store_true",
+                    help="разрешить запись EN (эталон; нужен, когда меняется клавиатура)")
+    ap.add_argument("--stamp", action="store_true", help="перештамповать реестр tools/shots.json")
     ap.add_argument("--quality", type=int, default=80)
     ap.add_argument("--workdir", default="/home/jar/.hermes/cache/scratch/shots-gen/work")
     args = ap.parse_args()
@@ -267,9 +310,13 @@ def main() -> None:
     work = Path(args.workdir)
     extract_assets(work)
     stats = []
+    ledger_langs: dict[str, dict] = {}
     for lang in langs:
         if lang not in CANNED:
-            print(f"{lang}: SKIP (нет CANNED-строк; EN/RU — эталоны, не перегенерируются)")
+            print(f"{lang}: SKIP (нет CANNED-строк)")
+            continue
+        if lang == "en" and args.apply and not args.force_en:
+            print("en: SKIP записи (эталон; --force-en, если менялась клавиатура)")
             continue
         ldir = work / lang
         ldir.mkdir(parents=True, exist_ok=True)
@@ -277,6 +324,7 @@ def main() -> None:
             (ldir / "assets").symlink_to(work / "assets")
         shots = build_shots(lang, i18n)
         c = CANNED[lang]
+        shot_rows: dict[str, dict] = {}
         for n, msgs in shots.items():
             page = (tpl
                     .replace("{{LANG}}", lang)
@@ -288,8 +336,8 @@ def main() -> None:
             png = ldir / f"shot{n}.png"
             render_png(png)
             line = f"{lang} shot{n}: png {png.stat().st_size // 1024} KiB -> "
-            if args.apply and lang != "en":
-                dst = IMG / f"shot{n}-{lang}.webp"
+            dst = IMG / (f"shot{n}.webp" if lang == "en" else f"shot{n}-{lang}.webp")
+            if args.apply:
                 if dst.exists() and not args.force:
                     line += f"{dst.name} EXISTS (skip; --force чтобы перезаписать)"
                 else:
@@ -298,8 +346,34 @@ def main() -> None:
                     line += f"{dst.name} {dst.stat().st_size // 1024} KiB"
             else:
                 line += "(preview only)"
+            if dst.exists():
+                shot_rows[str(n)] = {"file": dst.name, "sha256": sha256(dst)}
             print(line)
             stats.append(line)
+        drawn = {k: i18n.t(lang, k) for k in MENU_KEYS}
+        drawn.update({
+            "welcome": i18n.t(lang, "welcome"),
+            "task_received": i18n.t(lang, "task_received"),
+            "answer": i18n.t(lang, "answer"),
+            "task_type_1": i18n.t(lang, "task_type_1"),
+            "task_type_2": i18n.t(lang, "task_type_2"),
+            "task_type_3": i18n.t(lang, "task_type_3"),
+        })
+        ledger_langs[lang] = {
+            "texts": drawn,
+            "canned": {k: c[k] for k in ("header", "ph", "user2", "body3")},
+            "shots": shot_rows,
+        }
+    if args.stamp and args.apply:
+        LEDGER.write_text(json.dumps({
+            "note": ("Реестр макетов чата: sha256 каждого img/shotN[-<lang>].webp и ровно те "
+                     "строки, что нарисованы (тексты бота + кернед-строки макета). Пишется "
+                     "только генератором: python3 tools/shots-gen/gen_shots.py ... --apply --stamp. "
+                     "Свип сверяет его с bot/ и с байтами файлов."),
+            "menu_keys": list(MENU_KEYS),
+            "langs": ledger_langs,
+        }, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(f"реестр: {LEDGER.relative_to(REPO)} ({len(ledger_langs)} языков)")
     print("\nГотово:", len(stats), "кадров")
 
 
