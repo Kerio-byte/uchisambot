@@ -1,23 +1,28 @@
 #!/bin/bash
 # tools/publish-branch.sh — выложить ТОЛЬКО сайт, без мастерской.
 #
-# Зачем (23.10.2026). Сайт публикуется из корня ветки main, а в корне лежит вся
+# Зачем (23.10.2026). Сайт публиковался из корня ветки main, а в корне лежит вся
 # мастерская: README.md с инженерным дневником (196 КБ), tools/, src/, demo/*.py,
-# собранный шаблон index-src.html. GitHub Pages отдаёт всё это по прямым адресам
-# (/README.md → 200). Пока источник публикации — корень main, убрать мастерскую
-# нельзя; можно только не писать в неё адреса и пути (это делает свип).
+# собранный шаблон index-src.html, кадры evidence/. GitHub Pages отдаёт всё это по
+# прямым адресам (/README.md → 200): дневник, схема базы и устройства бота были
+# открыты любому, кто угадает имя файла. Пока источник публикации — корень main,
+# убрать мастерскую нельзя; можно только не писать в неё адреса и пути (это делает свип).
 #
-# Настоящее разделение — отдельная ветка публикации: в ней лежат ровно те файлы,
-# что перечисляет tools/publish-tree.py. Переключение источника — один клик в
-# GitHub: Settings → Pages → Branch: gh-pages / (root). Скрипт его НЕ делает.
+# Что сделано 24.10.2026. Источник публикации переключён на ветку gh-pages (в ней
+# ровно те файлы, что перечисляет tools/publish-tree.py: 115 файлов, 10.7 МБ).
+# Переключение — одноразовое действие в настройках репозитория, сделано через API:
+#   gh api -X PUT repos/<owner>/<repo>/pages \
+#          -f 'source[branch]=gh-pages' -f 'source[path]=/' -f 'build_type=legacy'
+# Обратно (если понадобится): -f 'source[branch]=main'.
+#
+# С этого дня сайт двигает ТОЛЬКО этот скрипт: обычный push в main ветку gh-pages не
+# трогает, и мир продолжает видеть вчерашнюю сборку. Отставшую публикацию ловят две
+# проверки свипа («публикация: …»: мастерская не отдаётся, живой сайт = сборка) и
+# landing-live-bytes.py (полное сравнение дерева).
 #
 # Использование:
 #   bash tools/publish-branch.sh --dry-run   # собрать дерево и проверить его локальным сервером
-#   bash tools/publish-branch.sh             # создать/обновить ветку gh-pages и запушить в origin
-#
-# После переключения Pages на gh-pages сайт обновляется ТОЛЬКО этим скриптом:
-# обычный push в main его не двигает. Отставшую публикацию ловит
-# landing-live-bytes.py (сравнивает живой сайт с деревом).
+#   bash tools/publish-branch.sh             # обновить ветку gh-pages во всех зеркалах
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
@@ -38,7 +43,6 @@ fi
 cd "$WORK"
 git init --quiet pub
 cd pub
-git remote add origin "$(git -C "$ROOT" remote get-url origin)"
 git checkout --quiet --orphan "$BRANCH"
 cp -a "$WORK/tree/." .
 git add -A
@@ -47,7 +51,34 @@ git -c user.name="$(git -C "$ROOT" config user.name)" -c user.email="$(git -C "$
 
 Источник публикации: tools/publish-tree.py. Мастерская (tools/, src/,
 demo/*.py|sh|json, README.md, index-src.html, evidence/) в ветку не попадает.
-Обновлять сайт после переключения Pages: bash tools/publish-branch.sh"
-git push --quiet --force origin "$BRANCH"
-echo "ветка $BRANCH отправлена в origin ($(git remote get-url origin))"
-echo "осталось одно действие владельца: Settings → Pages → Source: Deploy from a branch → $BRANCH / (root)"
+Правки страниц сайта выкладываются ТОЛЬКО этим скриптом."
+
+# Оба зеркала: GitHub отдаёт сайт, [приватное зеркало] хранит резерв. Падение одного зеркала не
+# должно отменять уже сделанный push в другое — поэтому предупреждение, а не выход.
+# Адрес берётся у основного репозитория: во временном (одноразовом) своих remote нет.
+for R in $(git -C "$ROOT" remote); do
+  URL=$(git -C "$ROOT" remote get-url "$R")
+  git remote remove "$R" 2>/dev/null || true
+  git remote add "$R" "$URL"
+  if git push --quiet --force "$R" "$BRANCH" 2>/dev/null; then
+    echo "ветка $BRANCH -> $R ($URL)"
+  else
+    echo "ВНИМАНИЕ: $R не принял ветку $BRANCH — проверить доступ"
+  fi
+done
+
+# Проверка источника публикации. Молчаливый провал этого шага — самый дорогой:
+# ветка gh-pages обновлена, а сайт по-прежнему отдаётся из main, и правки не видны.
+if command -v gh >/dev/null 2>&1; then
+  SLUG=$(git -C "$ROOT" remote get-url origin | sed -E 's#^.*github\.com[:/]##; s#\.git$##')
+  SRC=$(gh api "repos/$SLUG/pages" --jq '.source.branch + .source.path' 2>/dev/null || true)
+  if [ -z "$SRC" ]; then
+    echo "ВНИМАНИЕ: настройки Pages у $SLUG не прочитались — проверить глазами"
+  elif [ "$SRC" != "$BRANCH/" ]; then
+    echo "ВНИМАНИЕ: Pages отдаёт из '$SRC', а не из '$BRANCH/'. Ветка обновлена, но мир"
+    echo "          увидит её только после переключения источника публикации."
+    exit 1
+  else
+    echo "источник публикации: $BRANCH/ — совпадает"
+  fi
+fi

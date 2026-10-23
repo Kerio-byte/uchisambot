@@ -30,8 +30,14 @@ Live: https://kerio-byte.github.io/uchisambot/
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
   154 files — `/README.md` included. `--verify-served DIR` serves a staged tree and asks for every
   address (83 of them) to prove a switch of the publish source would not break anything.
-- `tools/publish-branch.sh` — stages that list into a `gh-pages` branch (or checks it with
-  `--dry-run`). The switch itself is a repository setting, deliberately not automated.
+- `tools/publish-branch.sh` — stages that list into the `gh-pages` branch (or checks it with
+  `--dry-run`), pushes it to every mirror, and then reads the Pages setting back. Since 24 Oct 2026
+  GitHub Pages serves this site **from `gh-pages` /(root)**, not from `main` / — so the workshop
+  (this notebook, the generator, the dictionaries, the proof frames) is no longer reachable at
+  `/README.md`, `/tools/…`. The switch was one API call, recorded in the script's header; the price
+  is that **page edits reach the world only through this script** — a push to `main` no longer moves
+  the site, and two sweep checks ("публикация: …") fail when the live site lags the tree or starts
+  serving the workshop again.
 - `tools/site.json` — single source of the site address (`base`, plus `previous`:
   older addresses of this site). Added 22 Oct 2026, before the move to an own
   domain: the address used to live in three independent places — a literal in
@@ -2735,4 +2741,58 @@ has. That the redaction found every identifier: the gate knows the patterns it w
 or an account id would pass unnoticed until somebody adds the pattern. And that the owner wants this
 notebook public at all — the redaction assumes yes, because it is the record of the work, and
 deletes nothing.
+
+## The workshop had no door; now it has no address (24.10.2026)
+
+**The gap.** The previous entry ended with an admission: `/README.md` and `/tools/build.py` still
+answered 200, and the rules that said otherwise sat in a file crawlers do not fetch. The publication
+source was the **root of `main`**, where the pages live next to the workshop — this notebook (196 KB,
+with the database schema, the payment flow, the cron schedule), the generator, the nine dictionaries,
+the assembled template and the proof frames. Redaction can take the names out of the text; it cannot
+take the text off the site. Every gate we had read files in the working tree, and all of them were
+green on a site that served the workshop.
+
+**What changed.**
+
+- Publication source: `main` / → **`gh-pages` /**, one call —
+  `gh api -X PUT repos/Kerio-byte/uchisambot/pages -f 'source[branch]=gh-pages' -f 'source[path]=/' -f 'build_type=legacy'`.
+  The branch had been staged by `tools/publish-branch.sh` from `tools/publish-tree.py`: 115 files,
+  10.7 MB, 83 addresses answered by a local server with 0 errors before the switch. `main` keeps the
+  whole workshop; nothing was deleted, and nothing in the diary was cut to make the site publishable.
+- `tools/publish-branch.sh` now pushes that branch to **every** remote (GitHub serves it, [приватное зеркало]
+  keeps the copy) and then reads the Pages setting back: if the site is still served from `main`, the
+  script says so and exits 1. The silent failure of this change is "the branch is fresh, the world
+  sees yesterday", so the script asks the setting instead of assuming it.
+- The sweep: 2049 → 2051. Two checks now ask the **site**, not the files: (1) six workshop addresses
+  — the diary, the generator, a dictionary, the template, a proof frame, a demo script — must answer
+  404; (2) `index.html` and `sitemap.xml` in the live root must be byte-identical to the built ones,
+  otherwise the publish branch lagged a commit. Network silence is red, not a skip: the sweep already
+  needs the network for the bot's model probe, and quiet is not the same as fine.
+- `robots.txt` keeps its eight `Disallow` lines. They no longer protect anything — those addresses
+  are 404 — but they are the second lock on the same door and cost nothing.
+
+**Controls.** A throwaway copy of the tree served by a local test server the way the old Pages did
+(everything at the root): the six addresses answered 200 and the gate reddened, naming all six. That
+control also caught the gate: its sixth probe was `demo/gen_shots.py`, which does not exist in the
+tree, so its 404 had proven a typo and not a policy. The list now refuses a path that is absent from
+the working tree, and the red line names it. Second control: one comment appended to a copy's
+`index.html` while the staged tree was still being served — the freshness gate reddened with both
+hashes (`живой 3a5ae810, в дереве 68299359`).
+
+**Checked after the change.** Live: `/` byte-identical to the built `index.html`
+(`sha256 3a5ae810…`), nine language pages 200, `privacy.html`, `terms.html`, `404.html`,
+`sitemap.xml`, `robots.txt`, `llms.txt`, `index.html.md`, the logo, a badge, two videos — 200; an
+unknown address returns our own 404 page ("Page not found — UchiSamBot"); `README.md`,
+`tools/build.py`, `src/locales/en.json`, `index-src.html`, `evidence/…png`, `demo/captions.py` — 404.
+Sweep 2051 / 0. Build `--check`: 24 files match. Publish list: 115 files, 513 internal references,
+all inside the list. The GitHub build that followed the switch reports `built`, no error.
+
+**What it cannot prove.** That nothing was copied before today: the notebook was public from the
+first commit of this repository until this switch, and the only copies we know of are the ones in
+git history. That the redaction was complete while it was public. That the setting stays: one
+settings change reopens every address at once, which is why the gate asks the site and not the
+setting. And that page edits will reach the world by themselves — they will not: from now on the
+build → sweep → commit → `publish-branch.sh` order is the only way a change becomes visible, and a
+forgotten last step is exactly what the freshness check is for.
+
 
