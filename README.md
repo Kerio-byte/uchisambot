@@ -19,7 +19,12 @@ Live: https://kerio-byte.github.io/uchisambot/
   plus `og:locale:alternate` for the other eight languages (social-preview locale
   linking), and the sitemap mirrors the hreflang set per URL — all nine languages
   plus `x-default` pointing at the English root. No runtime, no dependencies, no
-  tracking.
+  tracking. `python3 tools/build.py --check` renders the same 24 files into memory and
+  compares them with the disk without writing a byte (23.10.2026); the sweep runs it, so
+  a source edited without a rebuild is red instead of silently leaving the old page.
+- `tools/page-text.py` — flattens a built page into its visible text, one block per line, so it
+  can be read as an article rather than as markup (added 23.10.2026 for the meaning pass);
+  read-only, not part of the build: `python3 tools/page-text.py ru/index.html`.
 - `tools/site.json` — single source of the site address (`base`, plus `previous`:
   older addresses of this site). Added 22 Oct 2026, before the move to an own
   domain: the address used to live in three independent places — a literal in
@@ -1921,3 +1926,53 @@ prints is "not found", which is the alarm, not a proof of health. That a letter 
 be rescued: the canary reports it, nobody moves it. And the sixty-minute in-flight window is a
 choice, not a law — a letter that arrives while the scheduler is paused will be called lost, which is
 the safe direction to be wrong in.
+
+## The page was right about itself and silent about its sources (23.10.2026)
+
+**What was found.** The sweep had two ways to notice a stale page, and both read the page. It
+checked that the shipped HTML is internally consistent (prices, subject list, keys, addresses, md
+twins, `llms.txt`), and it compared each page's sha256 with the `tools/lastmod.json` ledger, so a
+hand-edited `index.html` could not hide. Neither question is "is this file what the sources
+produce". A build that was never run leaves the previous page in place: internally consistent, its
+sha still matching the ledger, every gate green — and the site saying what the dictionaries no
+longer say. The wrong direction is the likelier one, because the sources are what people edit: one
+line in `src/locales/*.json`, a price in `prices.json`, a block in `index-src.html`, committed with
+the rebuild forgotten. The build bakes those sources into nine pages, nine markdown twins, two
+legal twins, `404.html`, `sitemap.xml`, `llms.txt` and the ledger — twenty-four of the files a
+visitor or a crawler ever sees. Two copies of one truth is a failure this site has already paid
+for twice: the JavaScript `I18N` dictionary that drifted to "5 free breakdowns", and the site
+address that lived in three places.
+
+**What changed.** `tools/build.py` now renders the whole site into memory, into one dictionary of
+the 24 files it owns, and `--check` compares that dictionary with the disk byte for byte, printing
+the first differing line and exiting 1; it writes nothing — the run leaves `git status` empty,
+which is how it was proved. Two functions had to stop writing to allow it: the legal-page address
+normalisation returns its texts instead of rewriting `privacy.html` / `terms.html` / `robots.txt`
+in the middle of the build, and the post-build address audit now accepts the in-memory pages, so
+`--check` audits what the build *would* ship rather than what is already there. Default behaviour
+is unchanged: a plain `python3 tools/build.py` writes the same files with the same report.
+
+**The gate, and the gate over the gate.** The sweep runs `--check` and gained two checks (1887 →
+1889). The second one exists because a comparison can pass over an empty list: the build must also
+say how many files it compared, and the number must be at least 24. When `--check` honestly fails
+it prints no count, so the count check stays silent then — one defect, one red line, not two.
+
+**Controls, each restored byte-exact and verified with `sha256sum -c`.** `hero.chip3` edited in
+`src/locales/en.json` and not rebuilt — `--check` exits 1 naming `index.html` line 336
+(«9 languages» on disk, «9 languages now» in the build) and the ledger's sha; the same edit run
+through the sweep fails exactly one check. A line appended to the built `index.html` — caught as
+size and line count. `ru/index.html.md` moved away — `НЕТ ФАЙЛА`. A date changed in
+`tools/lastmod.json` — `sitemap.xml` line 5. And the count guard proved separately: with
+`--check` edited to print a count-less `СВЕРКА ПРОЙДЕНА`, the sweep fails the second check alone.
+
+**Checked after the change.** Full build: tree unchanged. Sweep 1889 / 0. Live parity on Pages
+re-run: 26 published files byte-identical (`landing-live-bytes.py`), external links 0 problems.
+Both mirrors at the same commit.
+
+**What it cannot prove.** That the committed state is the deployed one — Pages publishes
+separately, and `landing-live-bytes.py` is the gate for that, not this one. That the sources
+themselves are right: it proves the site is what the dictionaries say, not that the dictionaries
+say the truth. That the next block remembers to run the sweep: this is a checker, not a git hook,
+and a commit that skips it turns the next run red instead of blocking the push. And that the build
+is deterministic on a different Python: file order comes from explicit lists and the ledger from
+`json.dumps(sort_keys=True)`, but no test pins the interpreter version.
