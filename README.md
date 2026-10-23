@@ -2080,3 +2080,76 @@ account or a phone is invisible, and the letter will be chased three times (nois
 that the reminder is instant — it rides the ten-minute tick; that a letter written after the
 third reminder will be noticed — it will not; that only real enquiries arrive — a spam letter
 gets its three reminders too.
+
+## The page promised the last step would be the student's; on a photo the bot took it (23.10.2026)
+
+**What was found.** All nine FAQ pages say the bot "stops one step before the answer so you
+finish it yourself", and a feature card adds "Not just answers". Nothing measured it. The only
+test that goes near the photo path (`tests/smoke.py`, section 9) feeds a fake JPEG — four bytes
+of a JPEG header — to a mock provider and asserts that the answer contains the word "фото"; it
+cannot fail for the reason the page cares about and never touches a model. Sent through the
+production path instead (`build_prompt` plus the bot's own provider — the code a student's
+message takes), thirteen tasks — seven typed, six photographs of a textbook page — the typed
+path kept the rule seven times out of seven, and the photo path broke it once in five answers:
+"Решите уравнение: x/3 + 4 = 9" came back ending "Получаем: x = 15". The sixth photo never came
+back at all: at 120.2 seconds the bot's own timeout turned it into "the service is overloaded".
+
+**The rule now ends the answer.** A prohibition alone did not hold on the fractional equation:
+with "do not name the final answer" added as the last instruction before the language line, the
+model still wrote the value — in one of seven typed tasks and one of six photos. What holds is a
+required shape: the last line of a breakdown is a question to the student, with no equals sign.
+Six runs of the same fractional task — three typed, three photographed — all ended "умножь сам —
+что у тебя получилось?" and stopped at "x = 5 * 3". The instruction sits last but one, before
+the language line, in the position that proved itself for the answer-language rule on 22.10,
+and only for task types 2 and 3; type 1 explains a topic and gets no such line.
+
+**A mechanism, not hope.** The prompt is a request; the retry is the mechanism.
+`names_final_answer()` looks for a ready value — a lone variable and a finished number
+(`x = 15`) — and deliberately not for a coefficient (`3x = 21`) or an expression (`x = 5 * 3`).
+When it finds one, `generate_breakdown()` regenerates the breakdown once with a corrective
+instruction. If the second attempt fails too, the first answer is sent: a breakdown that names
+the answer is a flaw, an error message is a lost student. Both calls live in one function so the
+live battery exercises exactly what a student gets, not a copy of it.
+
+**Numbers.** Typed path, before the change: 7 tasks, 7 clean, 6.7–40.5 s. Photo path, before:
+6 tasks, 5 answered, 1 of those named the answer, 1 died at the 120 s timeout, 34.7–78.8 s.
+With the hard rule alone: 13 tasks, 2 violations (both the fractional equation, typed and
+photo). With the required ending: 13 tasks, 1 violation (the same photo), and the weak case
+repeated seven times — six on that exact equation plus one control — came back clean every
+time. With the retry, measured while another tenant held the GPU: 13 tasks, 11 clean; one
+photo was answered with the value because its retry timed out, one photo timed out before any
+answer. The typed path was 7/7 throughout.
+
+**One more thing the measurement found.** `solve_task` gave photo breakdowns forty-five extra
+seconds (`wait_for`), but the provider carried its own 120-second limit and cut the request
+first: the timeout landed at exactly 121.0 s while the outer budget was 165. The provider is
+now built with `LLM_TIMEOUT + 60`, so the outer, per-type budget is the one that governs.
+
+**In the sweep.** One new check, `prompt contract: the last step is left to the student`: it
+runs the bot's own `build_prompt` through the bot's virtualenv for all nine languages and three
+task types and requires the rule to be the last instruction before the language line for types
+2 and 3 — and absent for type 1. 1894 → 1895 checks, 0 failed. A negative control (the rule
+removed from the builder) turns it red — `FAILED: 1` — while the rest of the sweep stays green.
+The behavioural proof is the live battery `landing-stop-rule.py` (13 tasks, 10–60 seconds
+each); it needs the GPU, so it stays out of the sweep and runs per block.
+
+**What it cannot prove.** That every formulation ends well — thirteen tasks are a sample, and
+the failing case was found by reading output, not by a gate; that the retry always repairs a
+violated answer — it is one attempt, and the first answer is kept when it fails; that the
+detector is exact — a word problem writing "x = 5 apples" triggers an unnecessary retry (cost,
+not harm); that the model's arithmetic is right; that the answer arrives inside the promised
+minute.
+
+**Left open: the minute the page promises.** The same photo tasks took 35–120 s during this
+block and 10–16 s an hour later. The model is not the reason: llama-server reported 2.5 s of
+work (1,323 prompt tokens at 650 tokens/s, 17 tokens out at 35 tokens/s) for a request that
+took 50.7 s end to end; the rest was spent waiting in the single-slot GPU queue behind another
+tenant (LiteLLM, 40,000–60,000-token prompts from agent crons). While that queue is shared,
+"usually in 10–60 seconds" is true on an idle GPU and false on a busy one, and a photo task can
+reach the timeout — the student then reads "service overloaded". A priority lane for the bot,
+or moving agent traffic off this GPU, changes shared infrastructure: it is the owner's call,
+not a silent change in a cron block.
+
+**State.** The fix is committed and tested (31 unit tests, the smoke run, the live battery); the
+running process still executes the previous code until the service is restarted, and cron blocks
+service restarts by policy — that one command belongs to the owner.
