@@ -1976,3 +1976,48 @@ say the truth. That the next block remembers to run the sweep: this is a checker
 and a commit that skips it turns the next run red instead of blocking the push. And that the build
 is deterministic on a different Python: file order comes from explicit lists and the ledger from
 `json.dumps(sort_keys=True)`, but no test pins the interpreter version.
+
+## The shop window had no light, and every gate was reading the shop (23.10.2026)
+
+**What was found.** Nine pages, and on each of them the one action that matters — a link to
+`@UchiSamBot`, tagged `src_landing`, `_band`, `_shots`, `_sticky`, `_404`. The sweep had plenty to
+say about those links: the tag, the label, the `rel`, the target. It had already learned to compare
+the privacy promise with the bot's `.env` and with the unit file, and that no third-party AI host
+appears in the bot's code. What none of it asked is whether the thing behind the link is running.
+`study-bot.service` could be stopped, crash-looped, or never come back from a reboot, and the sweep
+would print 1889 green checks over a shop with the lights off. The class is the one this site has
+already paid for twice: the promise compared with a text, never with the live mechanism — the cron
+behind "we read every message" (22.10), the queue that answered nothing for sixteen minutes (22.10),
+and now the process behind the button.
+
+**What changed.** Four checks in `landing-sweep.py`, all deterministic, none of them spending GPU
+time: the user unit is `active`/`running`; its `MainPID` exists as a process; the `LLM_BASE_URL` of
+that **running process** — read from `/proc/<pid>/environ`, not from the `.env` that can be edited
+and left un-restarted — resolves to loopback or a private address; and the model endpoint behind it
+answers `GET /models`. The last one is a probe, not a generation: measured while an 823-token answer
+was being generated at 27 t/s, `/models` still returned in 0.01 s, so a busy queue cannot turn the
+gate red. Eight seconds is the ceiling for a wedged queue, and red there is the defect. Values are
+never printed — only scheme and host, the same discipline as the `claim↔infra` block. One defect
+still means one red line: when the service is not running, the three dependent checks are not
+executed at all, so a stopped bot prints one failure and the count drops to 1890 instead of four.
+
+**Controls, run from byte-identical copies of the sweep in the scratch directory.** A unit name
+that does not exist — `FAIL promise: the bot behind every button is running | inactive/dead pid=0`,
+1890 checks, one red. The expectation flipped to a cloud host — `FAIL … the running bot points at
+our own endpoint | scheme=http host=[адрес] from /proc`, which also proves the check reads the
+process and not the file. `_svc_state` disabled, as on a clone without systemd — 1890 checks,
+0 failed, with a check whose *name* says `SKIP` rather than a green claim it cannot support. The
+probe pointed at a closed port — `FAIL … the model behind the bot answers | http://[адрес]:9/v1/models
+-> URLError за 0.00 с`. The real sweep then ran three times in a row: 1893 checks, 0 failed, three
+times.
+
+**Checked after the change.** `tools/build.py --check`: 24 files identical to a fresh build, so the
+site itself did not move. Live parity on Pages: 26 published files byte-identical, the 404 probe
+still serving our own page. External links: 12 targets, 0 problems, including the four `t.me` tags.
+
+**What it cannot prove.** That the bot's *answers* are any good — `/models` proves the door is open,
+not the quality of the breakdown; that Telegram itself still delivers updates (the `t.me` link check
+covers a banned bot, this gate does not); that the service stays up between runs — this is a
+watchman, not a supervisor; and nothing at all on a host without a local model and without systemd,
+where all four checks announce themselves as `SKIP`.
+
