@@ -15,6 +15,7 @@ import datetime
 import hashlib
 import json
 import re
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -369,16 +370,20 @@ def shot_src(n: str, lang: str) -> str:
     return f"shot{n}.webp"
 
 
-def normalize_hand_written() -> list:
-    """Переписать адрес сайта в руками написанных файлах под текущий BASE.
+def normalized_hand_written() -> dict:
+    """Нормализованный текст руками написанных файлов под текущий BASE — без записи.
 
     privacy.html / terms.html / robots.txt не генерируются из шаблона, но содержат
     абсолютные адреса сайта: canonical, og:url, og:image, twitter:image, describedby,
     ссылку на md-двойник, сам адрес сайта в тексте политики (EN и RU) и Sitemap в
     robots.txt. Без этого шага переезд на домен оставил бы canonical на старом хосте
     (страница снимает себя с индекса) и карту сайта по старому адресу.
+
+    23.10.2026: раньше функция писала на диск прямо посреди сборки. Режиму --check
+    нужно то же самое, но без единой записи, поэтому тексты возвращаются словарём,
+    а пишет их main().
     """
-    changed = []
+    out = {}
     for name in HAND_WRITTEN:
         p = ROOT / name
         text = p.read_text(encoding="utf-8")
@@ -388,14 +393,12 @@ def normalize_hand_written() -> list:
             bare_old = old.split("://", 1)[1].rstrip("/")
             bare_new = BASE.split("://", 1)[1].rstrip("/")
             new = new.replace(bare_old, bare_new)   # host/path без схемы: текст политики «сайт (host/path)»
-        if new != text:
-            p.write_text(new, encoding="utf-8")
-            changed.append(name)
         left = [o for o in PREV_BASES
                 if o in new or o.split("://", 1)[1].rstrip("/") in new]
         if left:
             raise SystemExit(f"{name}: остался старый адрес сайта {left} — уберите руками")
-    return changed
+        out[name] = new
+    return out
 
 
 def font_css(lang: str) -> str:
@@ -1003,7 +1006,7 @@ footer a{{color:var(--muted)}}
 """
 
 
-def audit_site_address() -> None:
+def audit_site_address(pages: dict | None = None) -> None:
     """После сборки: чужого адреса сайта не осталось ни в одном файле (22.10.2026).
 
     Зачем отдельно от load_site: сборка приводит к текущему адресу только те файлы,
@@ -1012,6 +1015,9 @@ def audit_site_address() -> None:
     canonical/og:url, то есть сами себя выкидывают из поиска. Свип это ловит, но
     ловит ПОСЛЕ сборки; здесь сборка падает сама (код 1), называет файлы и не даёт
     закоммитить половинчатый переезд.
+
+    23.10.2026: pages — содержимое в памяти (режим --check проверяет то, что будет
+    записано, а не то, что уже лежит). Без словаря функция читает файлы с диска.
     """
     pat = re.compile(r"https://([A-Za-z0-9.-]+)/uchisambot/")
     files = ["index.html", "index.html.md", "privacy.html", "privacy.html.md",
@@ -1021,10 +1027,15 @@ def audit_site_address() -> None:
     files += [f"{lang}/index.html.md" for lang in LANGS[1:]]
     bad = set()
     for name in files:
-        p = ROOT / name
-        if not p.exists():
-            continue
-        text = p.read_text(encoding="utf-8")
+        if pages is not None:
+            if name not in pages:
+                continue
+            text = pages[name]
+        else:
+            p = ROOT / name
+            if not p.exists():
+                continue
+            text = p.read_text(encoding="utf-8")
         for host in pat.findall(text):
             url = f"https://{host}/uchisambot/"
             if url != BASE:
@@ -1062,12 +1073,46 @@ def audit_local_assets() -> None:
                          + "\n  ".join(sorted(set(bad))[:12]))
 
 
+def _first_diff(have: str, want: str) -> str:
+    """Короткое описание первого расхождения двух текстов (для отчёта --check)."""
+    hl, wl = have.splitlines(), want.splitlines()
+    for i, (a, b) in enumerate(zip(hl, wl), 1):
+        if a != b:
+            return f"строка {i}: на диске «{a.strip()[:70]}», сборка «{b.strip()[:70]}»"
+    return (f"диск {len(have.encode('utf-8'))} Б / сборка {len(want.encode('utf-8'))} Б, "
+            f"строк {len(hl)} / {len(wl)}")
+
+
+def compare_outputs(outputs: dict) -> list:
+    """Расхождения «что лежит на диске» против «что даёт свежая сборка» (23.10.2026).
+
+    Зачем: свип проверял собранные файлы на внутреннюю согласованность и сверял
+    sha страницы с реестром lastmod — то есть ловил РУЧНУЮ правку готовой страницы.
+    Обратный случай он не видел: правку ИСТОЧНИКА (index-src.html, src/locales,
+    prices.json) без пересборки. Тогда на диске остаётся старая, внутренне
+    согласованная страница, реестр с ней согласен, свип зелёный — а сайт говорит
+    не то, что написано в словарях. Сборка детерминирована (lastmod держит дату,
+    пока байты те же), поэтому «свежая сборка == диск» — проверяемое утверждение.
+    """
+    bad = []
+    for name in sorted(outputs):
+        want = outputs[name]
+        p = ROOT / name
+        if not p.is_file():
+            bad.append(f"НЕТ ФАЙЛА    {name}")
+            continue
+        have = p.read_text(encoding="utf-8")
+        if have != want:
+            bad.append(f"РАСХОЖДЕНИЕ  {name}: {_first_diff(have, want)}")
+    return bad
+
+
 def main() -> None:
+    check = "--check" in sys.argv[1:]
     dicts = load_dicts()
     validate_subjects(dicts)
-    changed = normalize_hand_written()
-    if changed:
-        print(f"адрес сайта нормализован в: {', '.join(changed)}")
+    hand = normalized_hand_written()
+    changed = [n for n in HAND_WRITTEN if (ROOT / n).read_text(encoding="utf-8") != hand[n]]
     src = (ROOT / "index-src.html").read_text(encoding="utf-8")
     assert "data-i18n" in src, "источник не похож на index-src.html"
     # 22.10.2026: в шаблоне НЕ должно быть второй копии текстов. Старый клиентский
@@ -1091,6 +1136,7 @@ def main() -> None:
     today = datetime.date.today().isoformat()
     prev = load_lastmods()
     stamps: dict = {}
+    out: dict = {}          # полный набор файлов, которые сборка обязана положить на диск
 
     for lang in LANGS:
         page = bake(src, lang, dicts)
@@ -1099,37 +1145,60 @@ def main() -> None:
         assert "data-i18n-attr=" not in page, f"{lang}: остались непереведённые атрибуты"
         assert "{{BASE}}" not in page, f"{lang}: токен адреса сайта не заменён"
         assert "var I18N" not in page, f"{lang}: не вырезан JS-i18n"
-        outdir = ROOT if lang == "en" else ROOT / lang
-        outdir.mkdir(exist_ok=True)
-        (outdir / "index.html").write_text(page, encoding="utf-8")
-        print(f"{lang}: {outdir / 'index.html'} ({len(page)} символов, {len(page.encode('utf-8'))} байт)")
+        rel = "index.html" if lang == "en" else f"{lang}/index.html"
+        out[rel] = page
         md = page_md(dicts[lang], lang)
         assert md.startswith("# ") and "data-i18n" not in md, f"{lang}: плохой md-двойник"
-        (outdir / "index.html.md").write_text(md, encoding="utf-8")
-        print(f"{lang}: {outdir / 'index.html.md'} ({len(md.encode('utf-8'))} байт)")
+        out[rel + ".md"] = md
         stamps[url_for(lang)] = stamp(prev, url_for(lang), page, today)
 
     for name in ("privacy.html", "terms.html"):
-        raw = (ROOT / name).read_text(encoding="utf-8")
-        md = legal_md(raw, name)
-        (ROOT / (name + ".md")).write_text(md, encoding="utf-8")
-        print(f"{name}.md ({len(md.encode('utf-8'))} байт)")
-        stamps[BASE + name] = stamp(prev, BASE + name, raw, today)
+        md = legal_md(hand[name], name)
+        out[name + ".md"] = md
+        stamps[BASE + name] = stamp(prev, BASE + name, hand[name], today)
 
     # 404 (21.10): своя страница вместо стандартной заглушки GitHub Pages.
     # В sitemap НЕ идёт (её не индексируют), в lastmod-реестр не попадает.
     p404 = page_404()
     assert p404.count('<a href="' + BASE) >= 10, "404: не все ссылки абсолютные"
-    (ROOT / "404.html").write_text(p404, encoding="utf-8")
-    print(f"404.html ({len(p404.encode('utf-8'))} байт)")
+    out["404.html"] = p404
 
-    (ROOT / "sitemap.xml").write_text(sitemap({u: s["date"] for u, s in stamps.items()}), encoding="utf-8")
-    (ROOT / "tools" / "lastmod.json").write_text(
-        json.dumps(stamps, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    (ROOT / "llms.txt").write_text(llms(dicts), encoding="utf-8")
+    out["sitemap.xml"] = sitemap({u: s["date"] for u, s in stamps.items()})
+    out["tools/lastmod.json"] = json.dumps(stamps, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    out["llms.txt"] = llms(dicts)
+    for name in changed:
+        out[name] = hand[name]
+
+    # Аудит адреса — по тому, что сборка собирается положить, а не по старому диску.
+    audit_site_address({**{n: hand[n] for n in HAND_WRITTEN}, **out})
+
+    if check:
+        bad = compare_outputs(out)
+        if bad:
+            print("СВЕРКА НЕ ПРОЙДЕНА: на диске не то, что даёт свежая сборка — "
+                  "правь источники и запусти tools/build.py")
+            for line in bad:
+                print("  " + line)
+            raise SystemExit(1)
+        print(f"СВЕРКА ПРОЙДЕНА: {len(out)} файлов совпадают со свежей сборкой")
+        return
+
+    if changed:
+        print(f"адрес сайта нормализован в: {', '.join(changed)}")
+    for name, text in out.items():
+        p = ROOT / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+    for lang in LANGS:
+        rel = "index.html" if lang == "en" else f"{lang}/index.html"
+        page = out[rel]
+        print(f"{lang}: {ROOT / rel} ({len(page)} символов, {len(page.encode('utf-8'))} байт)")
+        print(f"{lang}: {ROOT / (rel + '.md')} ({len(out[rel + '.md'].encode('utf-8'))} байт)")
+    for name in ("privacy.html", "terms.html"):
+        print(f"{name}.md ({len(out[name + '.md'].encode('utf-8'))} байт)")
+    print(f"404.html ({len(out['404.html'].encode('utf-8'))} байт)")
     fresh = sum(1 for u, s in stamps.items() if s["date"] == today)
     print(f"sitemap.xml (lastmod: изменено сегодня {fresh} из {len(stamps)}) + llms.txt + tools/lastmod.json")
-    audit_site_address()
     audit_local_assets()
 
 
