@@ -109,6 +109,10 @@ Coba lagi beberapa menit lagi — kadang ada beban singkat. Kalau terus gagal, h
 
 Berbeda dari chatbot biasa, di sini ada metode belajar: setiap pembahasan menjelaskan langkah-langkahnya, dan saat menyelesaikan soal bot berhenti satu langkah sebelum jawaban supaya kamu menyelesaikannya sendiri. Selain itu, soalnya tersimpan di server kami sendiri — tidak dikirim ke layanan AI pihak ketiga.
 
+### Apakah bot bisa salah?
+
+Pembahasan dibuat oleh AI, jadi bisa ada kesalahan. Bot menunjukkan setiap langkah supaya kamu bisa memeriksa langkahnya di buku pelajaran atau dengan gurumu. Kalau jawaban terlihat salah, kirimkan ke kami lewat formulir: kami membaca semua pesan.
+
 ## Ada pertanyaan atau masukan?
 
 Tulis kepada kami — pesanmu sampai ke tim kami, dan kami balas ke emailmu. Tanpa spam, tanpa milis.

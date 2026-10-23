@@ -81,6 +81,8 @@
   "q9a": "Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue fallando, escríbenos con el formulario de contacto que hay más abajo — lo revisamos.",
   "q10": "¿En qué se diferencia de un chatbot de IA común?",
   "q10a": "A diferencia de un chatbot común, aquí hay un método de enseñanza: cada desglose explica los pasos y, al resolver, el bot se detiene un paso antes de la respuesta para que la completes tú. Además, tus tareas se quedan en nuestro propio servidor — no se envían a servicios de IA de terceros.",
+  "q11": "¿Puede equivocarse el bot?",
+  "q11a": "Las explicaciones las genera una IA, así que puede haber errores. El bot muestra cada paso para que compares el razonamiento con tu libro de texto o con tu profesor. Si una respuesta te parece incorrecta, envíanosla con el formulario: leemos todos los mensajes.",
   "parents.title": "Para padres",
   "parents.sub": "En resumen: cómo cuidamos los datos de tus hijos.",
   "parents.b1": "No hace falta registrarse ni dar datos personales.",

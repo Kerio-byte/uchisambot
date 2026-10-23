@@ -109,6 +109,10 @@ Hãy thử lại sau vài phút — đôi khi có quá tải ngắn. Nếu vẫn
 
 Khác với chatbot thông thường, ở đây có phương pháp dạy học: mỗi phân tích giải thích từng bước, và khi giải bài bot dừng lại một bước trước đáp án để bạn tự hoàn thành. Ngoài ra, bài tập của bạn được lưu trên máy chủ riêng của chúng tôi — không gửi cho dịch vụ AI bên thứ ba.
 
+### Bot có thể sai không?
+
+Lời giải do AI tạo ra nên có thể có lỗi. Bot trình bày từng bước để bạn đối chiếu cách làm với sách giáo khoa hoặc hỏi giáo viên. Nếu thấy câu trả lời sai, hãy gửi cho chúng tôi qua biểu mẫu: chúng tôi đọc mọi tin nhắn.
+
 ## Có câu hỏi hoặc góp ý?
 
 Hãy viết cho chúng tôi — tin nhắn của bạn sẽ đến với đội ngũ, và chúng tôi trả lời qua email của bạn. Không spam, không danh sách gửi thư.

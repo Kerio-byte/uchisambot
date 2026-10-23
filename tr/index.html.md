@@ -109,6 +109,10 @@ Birkaç dakika sonra yeniden dene — bazen kısa süreli yoğunluk olur. Sorun 
 
 Sıradan bir sohbet botundan farklı olarak burada bir öğretme yöntemi var: her çözüm adımları açıklar ve bot soruyu çözerken cevaptan bir adım önce durur — son adımı sen tamamlarsın. Ayrıca soruların kendi sunucumuzda kalır — üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
 
+### Bot yanlış yapabilir mi?
+
+Çözümleri yapay zekâ üretiyor, bu yüzden hata olabilir. Bot her adımı gösterir; böylece çözümü ders kitabınla ya da öğretmeninle karşılaştırabilirsin. Bir yanıt yanlış görünüyorsa formdan bize gönder: tüm mesajları okuyoruz.
+
 ## Sorunuz ya da geri bildiriminiz var mı?
 
 Bize yazın — mesajınız ekibimize ulaşır, size e-postayla yanıt veririz. Spam yok, e-posta listesi yok.

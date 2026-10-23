@@ -109,6 +109,10 @@ Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue
 
 A diferencia de un chatbot común, aquí hay un método de enseñanza: cada desglose explica los pasos y, al resolver, el bot se detiene un paso antes de la respuesta para que la completes tú. Además, tus tareas se quedan en nuestro propio servidor — no se envían a servicios de IA de terceros.
 
+### ¿Puede equivocarse el bot?
+
+Las explicaciones las genera una IA, así que puede haber errores. El bot muestra cada paso para que compares el razonamiento con tu libro de texto o con tu profesor. Si una respuesta te parece incorrecta, envíanosla con el formulario: leemos todos los mensajes.
+
 ## ¿Preguntas o comentarios?
 
 Escríbenos — tu mensaje llega a nuestro equipo y te respondemos a tu correo. Sin spam ni listas de correo.
