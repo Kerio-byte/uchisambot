@@ -1,0 +1,347 @@
+{
+ "note": "Реестр макетов чата: sha256 каждого img/shotN[-<lang>].webp и ровно те строки, что нарисованы (тексты бота + кернед-строки макета). Пишется только генератором: python3 tools/shots-gen/gen_shots.py ... --apply --stamp. Свип сверяет его с bot/ и с байтами файлов.",
+ "menu_keys": [
+  "free_examples",
+  "solve",
+  "check",
+  "notes",
+  "plans",
+  "invite",
+  "help"
+ ],
+ "langs": {
+  "en": {
+   "texts": {
+    "free_examples": "✏️ Free examples",
+    "solve": "🧠 Break down a problem",
+    "check": "✅ Check my solution",
+    "notes": "📝 Summary & flashcards",
+    "plans": "💰 Pricing",
+    "invite": "🎁 Invite a friend",
+    "help": "❓ Help",
+    "welcome": "🎓 Hi! I'm the Study Helper.\n\nI explain topics in simple words, break problems into steps, check your solutions, and make summaries/flashcards for revision. I teach — I don't do homework for you, so you actually learn.\n\nLanguage: 🇬🇧 English.\nSwitch with /lang",
+    "task_received": "✅ Got it!\n\nBreakdown type:\n1️⃣ Explain in simple words\n2️⃣ Step-by-step solution\n3️⃣ Check my solution\n\nReply with 1, 2 or 3 or tap a button below.",
+    "answer": "📚 Here's your breakdown:",
+    "task_type_1": "explain in simple words",
+    "task_type_2": "step-by-step",
+    "task_type_3": "check my solution"
+   },
+   "canned": {
+    "header": "Study Helper",
+    "ph": "Message",
+    "user2": "Break down step by step: 3x − 7 = 14",
+    "body3": "1. Goal: leave x alone on one side.\n2. 3x − 7 = 14 → add 7 to both sides: 3x = 21.\n3. Divide both sides by 3: x = 7.\n4. Check: 3 × 7 − 7 = 14 ✓\n\nExample: for 2x = 10, divide both sides by 2 → x = 5.\n\nKey rule: whatever you do to one side, do the same to the other. You've almost solved it — just finish the last division."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1.webp",
+     "sha256": "621bfccf9d883efbed2573caf1d40f9a7940f678670c6bb7b1a03d6c59e1288d"
+    },
+    "2": {
+     "file": "shot2.webp",
+     "sha256": "e6dd26b59a7dbc66aa850f7b3bf36b083962613899cf8086fe7050480717fe9d"
+    },
+    "3": {
+     "file": "shot3.webp",
+     "sha256": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784"
+    }
+   }
+  },
+  "ru": {
+   "texts": {
+    "free_examples": "✏️ Бесплатные примеры",
+    "solve": "🧠 Разобрать задачу",
+    "check": "✅ Проверить решение",
+    "notes": "📝 Конспект и карточки",
+    "plans": "💰 Тарифы",
+    "invite": "🎁 Пригласить друга",
+    "help": "❓ Помощь",
+    "welcome": "🎓 Привет! Я — Учебный помощник.\n\nЯ объясняю темы простыми словами, разбираю задачи по шагам, проверяю решения и делаю конспекты/карточки для повторения. Я учу, а не решаю за тебя — чтобы ты разобрался сам.\n\nЯзык: 🇷🇺 Русский.\nСменить — /lang",
+    "task_received": "✅ Задача принята!\n\nТип разбора:\n1️⃣ Объяснить тему простыми словами\n2️⃣ Разобрать по шагам\n3️⃣ Проверить моё решение\n\nНапиши номер (1, 2 или 3) или нажми кнопку ниже.",
+    "answer": "📚 Вот разбор:",
+    "task_type_1": "объяснить тему простыми словами",
+    "task_type_2": "разобрать по шагам",
+    "task_type_3": "проверить моё решение"
+   },
+   "canned": {
+    "header": "Учебный помощник",
+    "ph": "Сообщение",
+    "user2": "Разбери по шагам: 3x − 7 = 14",
+    "body3": "1. Цель: оставить x одного на одной стороне.\n2. 3x − 7 = 14 → прибавляем 7 к обеим сторонам: 3x = 21.\n3. Делим обе стороны на 3: x = 7.\n4. Проверка: 3 × 7 − 7 = 14 ✓\n\nПример: если 2x = 10, делим обе стороны на 2 → x = 5.\n\nГлавное правило: что делаешь с одной стороной, делай и с другой. Остался последний шаг — деление."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-ru.webp",
+     "sha256": "f70c4f7c1533150f086dd99b0325c2720fdd55ab0e801c0d5cf36623fde1944f"
+    },
+    "2": {
+     "file": "shot2-ru.webp",
+     "sha256": "9716c732f2f6439a8ae41d6054b9716d716454abc00828ee75b252090410bf49"
+    },
+    "3": {
+     "file": "shot3-ru.webp",
+     "sha256": "e14c03253ab83ccb586dda848be17f313bdf4da3a26227d5ff828ffbb17b472a"
+    }
+   }
+  },
+  "es": {
+   "texts": {
+    "free_examples": "✏️ Ejemplos gratis",
+    "solve": "🧠 Analizar un problema",
+    "check": "✅ Revisar mi solución",
+    "notes": "📝 Resumen y tarjetas",
+    "plans": "💰 Precios",
+    "invite": "🎁 Invitar a un amigo",
+    "help": "❓ Ayuda",
+    "welcome": "🎓 ¡Hola! Soy el Ayudante de Estudio.\n\nExplico temas con palabras sencillas, divido los problemas en pasos, reviso tus soluciones y hago resúmenes/tarjetas para repasar. Enseño — no hago la tarea por ti, para que de verdad aprendas.\n\nIdioma: 🇪🇸 Español.\nCambiar con /lang",
+    "task_received": "✅ ¡Tarea recibida!\n\nTipo de análisis:\n1️⃣ Explicar con palabras sencillas\n2️⃣ Resolver paso a paso\n3️⃣ Revisar mi solución\n\nEscribe 1, 2 o 3 o pulsa un botón abajo.",
+    "answer": "📚 Aquí tienes el análisis:",
+    "task_type_1": "explicar con palabras sencillas",
+    "task_type_2": "paso a paso",
+    "task_type_3": "revisar mi solución"
+   },
+   "canned": {
+    "header": "Ayudante de Estudio",
+    "ph": "Mensaje",
+    "user2": "Resuelve paso a paso: 3x − 7 = 14",
+    "body3": "1. Meta: dejar la x sola en un lado.\n2. 3x − 7 = 14 → suma 7 a los dos lados: 3x = 21.\n3. Divide los dos lados entre 3: x = 7.\n4. Comprueba: 3 × 7 − 7 = 14 ✓\n\nEjemplo: si fuera 2x = 10, divides los dos lados entre 2 → x = 5.\n\nRegla clave: lo que hagas con un lado, hazlo también con el otro. Ya casi está — solo queda la última división."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-es.webp",
+     "sha256": "c52ec825ab24e2003d4fcb1d79a92f5e1ebd63fca3807ff8163c29a6e14fe9ad"
+    },
+    "2": {
+     "file": "shot2-es.webp",
+     "sha256": "70a31fc783c7aee44e5a7f9ab101279715f71cf23ce9a23aaa8253e46dd7a3e8"
+    },
+    "3": {
+     "file": "shot3-es.webp",
+     "sha256": "705791b9544310f6428c28df6b48050625ff3e35f74831b9d99912a841863e99"
+    }
+   }
+  },
+  "pt": {
+   "texts": {
+    "free_examples": "✏️ Exemplos grátis",
+    "solve": "🧠 Analisar uma tarefa",
+    "check": "✅ Verificar a minha solução",
+    "notes": "📝 Resumo e cartões",
+    "plans": "💰 Preços",
+    "invite": "🎁 Convidar um amigo",
+    "help": "❓ Ajuda",
+    "welcome": "🎓 Olá! Sou o UchiSamBot, o Assistente de Estudos.\n\nEu explico os assuntos com palavras simples, resolvo problemas passo a passo, verifico as suas soluções e faço resumos e cartões de revisão. Eu ensino — não faço a tarefa por você, para que você aprenda de verdade.\n\nIdioma: 🇧🇷 Português.\nTrocar com /lang",
+    "task_received": "✅ Tarefa recebida!\n\nTipo de análise:\n1️⃣ Explicar com palavras simples\n2️⃣ Resolver passo a passo\n3️⃣ Verificar a minha solução\n\nResponda com 1, 2 ou 3 ou toque num botão abaixo.",
+    "answer": "📚 Aqui está a sua análise:",
+    "task_type_1": "explicar com palavras simples",
+    "task_type_2": "resolver passo a passo",
+    "task_type_3": "verificar a minha solução"
+   },
+   "canned": {
+    "header": "Assistente de Estudos",
+    "ph": "Mensagem",
+    "user2": "Resolva passo a passo: 3x − 7 = 14",
+    "body3": "1. Meta: deixar o x sozinho de um lado.\n2. 3x − 7 = 14 → some 7 aos dois lados: 3x = 21.\n3. Divida os dois lados por 3: x = 7.\n4. Confira: 3 × 7 − 7 = 14 ✓\n\nExemplo: se fosse 2x = 10, você dividiria os dois lados por 2 → x = 5.\n\nRegra de ouro: o que você fizer com um lado, faça também com o outro. Está quase pronto — falta só a última divisão."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-pt.webp",
+     "sha256": "7fa437fc44ab2a67b911b69d23d194c6111faaeab3f38742bde61e57a2f44dd9"
+    },
+    "2": {
+     "file": "shot2-pt.webp",
+     "sha256": "85823bdf7904d980834ee7b6b4d70780483bbf336ac65fa0f1ba95f633575be4"
+    },
+    "3": {
+     "file": "shot3-pt.webp",
+     "sha256": "3f43c1dc39c426e0961ffddce001784dfac85ad9fdb49adc0ed34da677a7a766"
+    }
+   }
+  },
+  "hi": {
+   "texts": {
+    "free_examples": "✏️ मुफ़्त उदाहरण",
+    "solve": "🧠 सवाल समझें",
+    "check": "✅ मेरा हल जाँचें",
+    "notes": "📝 नोट्स और फ्लैशकार्ड",
+    "plans": "💰 कीमतें",
+    "invite": "🎁 दोस्त को बुलाएँ",
+    "help": "❓ मदद",
+    "welcome": "🎓 नमस्ते! मैं UchiSamBot हूँ — आपका स्टडी हेल्पर।\n\nमैं विषयों को आसान शब्दों में समझाता हूँ, सवालों को कदम-दर-कदम हल करता हूँ, आपके जवाब जाँचता हूँ और दोहराने के लिए नोट्स/फ्लैशकार्ड बनाता हूँ। मैं सिखाता हूँ — आपका होमवर्क नहीं करता, ताकि आप खुद सीखें।\n\nभाषा: 🇮🇳 हिन्दी।\nबदलने के लिए /lang",
+    "task_received": "✅ सवाल मिल गया!\n\nहल का प्रकार:\n1️⃣ आसान शब्दों में समझाएँ\n2️⃣ कदम-दर-कदम हल\n3️⃣ मेरा हल जाँचें\n\n1, 2 या 3 लिखें या नीचे बटन दबाएँ।",
+    "answer": "📚 ये रहा आपका हल:",
+    "task_type_1": "आसान शब्दों में समझाना",
+    "task_type_2": "कदम-दर-कदम हल",
+    "task_type_3": "मेरा हल जाँचना"
+   },
+   "canned": {
+    "header": "स्टडी हेल्पर",
+    "ph": "संदेश",
+    "user2": "कदम-दर-कदम हल करें: 3x − 7 = 14",
+    "body3": "1. लक्ष्य: x को एक तरफ़ अकेला छोड़ना।\n2. 3x − 7 = 14 → दोनों तरफ़ 7 जोड़ें: 3x = 21।\n3. दोनों तरफ़ 3 से भाग दें: x = 7।\n4. जाँच: 3 × 7 − 7 = 14 ✓\n\nउदाहरण: अगर 2x = 10 हो, तो दोनों तरफ़ 2 से भाग दें → x = 5।\n\nमुख्य नियम: एक तरफ़ जो करें, वही दूसरी तरफ़ भी करें। बस आख़िरी भाग देना बाकी है।"
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-hi.webp",
+     "sha256": "13d744585fb128f28656c82be8cc8a47c46e8a465f3e5837df141f7cefe16a37"
+    },
+    "2": {
+     "file": "shot2-hi.webp",
+     "sha256": "1783a556d11937e3bc4d9d5c44cc6dc565308dbeb74923a2633055ae23a11211"
+    },
+    "3": {
+     "file": "shot3-hi.webp",
+     "sha256": "f9097027414ba5d8e8d6aa31e7b8a665664cdedbd7497e94cbcbc29b2968e8ff"
+    }
+   }
+  },
+  "id": {
+   "texts": {
+    "free_examples": "✏️ Contoh gratis",
+    "solve": "🧠 Bedah soal",
+    "check": "✅ Periksa jawabanku",
+    "notes": "📝 Ringkasan & kartu belajar",
+    "plans": "💰 Harga",
+    "invite": "🎁 Ajak teman",
+    "help": "❓ Bantuan",
+    "welcome": "🎓 Hai! Aku Study Helper.\n\nAku menjelaskan topik dengan kata sederhana, membahas soal langkah demi langkah, memeriksa jawabanmu, dan membuat ringkasan serta kartu belajar untuk mengulang. Aku mengajar — bukan mengerjakan PR-mu, supaya kamu benar-benar paham.\n\nBahasa: 🇮🇩 Indonesia.\nGanti dengan /lang",
+    "task_received": "✅ Soal diterima!\n\nJenis pembahasan:\n1️⃣ Jelaskan topik dengan kata sederhana\n2️⃣ Bahas langkah demi langkah\n3️⃣ Periksa jawabanku\n\nBalas dengan 1, 2, atau 3 atau tekan tombol di bawah.",
+    "answer": "📚 Ini pembahasannya:",
+    "task_type_1": "jelaskan topik dengan kata sederhana",
+    "task_type_2": "bahas langkah demi langkah",
+    "task_type_3": "periksa jawabanku"
+   },
+   "canned": {
+    "header": "Study Helper",
+    "ph": "Pesan",
+    "user2": "Bahas langkah demi langkah: 3x − 7 = 14",
+    "body3": "1. Tujuan: sisakan x di satu sisi.\n2. 3x − 7 = 14 → tambahkan 7 ke kedua sisi: 3x = 21.\n3. Bagi kedua sisi dengan 3: x = 7.\n4. Periksa: 3 × 7 − 7 = 14 ✓\n\nContoh: kalau 2x = 10, bagi kedua sisi dengan 2 → x = 5.\n\nAturan kunci: apa pun yang kamu lakukan di satu sisi, lakukan juga di sisi lain. Tinggal satu pembagian terakhir."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-id.webp",
+     "sha256": "31cb7c312cb07cb0a9e7964b1c2865435884ea1776825d604116c87cf6b50256"
+    },
+    "2": {
+     "file": "shot2-id.webp",
+     "sha256": "33de7b38a381baba970ca538cbcd674b02688f21c0d2bfc59b897b674d7a67bb"
+    },
+    "3": {
+     "file": "shot3-id.webp",
+     "sha256": "0bfa63676b2be9f0f8bd9010aa94b021e9cc8d7971ce11fbd93403a0c0d36508"
+    }
+   }
+  },
+  "tr": {
+   "texts": {
+    "free_examples": "✏️ Ücretsiz örnekler",
+    "solve": "🧠 Soruyu adım adım çöz",
+    "check": "✅ Çözümümü kontrol et",
+    "notes": "📝 Özet ve kartlar",
+    "plans": "💰 Fiyatlar",
+    "invite": "🎁 Arkadaşını davet et",
+    "help": "❓ Yardım",
+    "welcome": "🎓 Merhaba! Ben Ders Yardımcısı.\n\nKonuları basit kelimelerle anlatıyorum, soruları adım adım çözüyorum, çözümlerini kontrol ediyorum ve tekrar için özet ve kartlar hazırlıyorum. Öğretirim — ödevini senin yerine yapmam, böylece gerçekten öğrenirsin.\n\nDil: 🇹🇷 Türkçe.\nDeğiştirmek için /lang",
+    "task_received": "✅ Aldım!\n\nÇözüm türü:\n1️⃣ Basit kelimelerle anlat\n2️⃣ Adım adım çözüm\n3️⃣ Çözümümü kontrol et\n\n1, 2 ya da 3 yaz veya aşağıdaki butona bas.",
+    "answer": "📚 İşte çözümün:",
+    "task_type_1": "basit kelimelerle anlat",
+    "task_type_2": "adım adım çözüm",
+    "task_type_3": "çözümümü kontrol et"
+   },
+   "canned": {
+    "header": "Ders Yardımcısı",
+    "ph": "Mesaj",
+    "user2": "Adım adım çöz: 3x − 7 = 14",
+    "body3": "1. Amaç: x'i bir tarafta yalnız bırakmak.\n2. 3x − 7 = 14 → iki tarafa da 7 ekle: 3x = 21.\n3. İki tarafı da 3'e böl: x = 7.\n4. Kontrol: 3 × 7 − 7 = 14 ✓\n\nÖrnek: 2x = 10 olsaydı iki tarafı da 2'ye bölerdin → x = 5.\n\nAltın kural: bir tarafa ne yaparsan, diğer tarafa da aynısını yap. Geriye son bölme kaldı."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-tr.webp",
+     "sha256": "886a4e37001141c0f356ccb2e5714bc8e11d2cb386ac2da4f2c6630491bfde63"
+    },
+    "2": {
+     "file": "shot2-tr.webp",
+     "sha256": "8611b200acf08c3acc145a5457d05baff171a1f9c7108e87d7f8a97e1fdc1e50"
+    },
+    "3": {
+     "file": "shot3-tr.webp",
+     "sha256": "fd226b93a1e83df7864507bf8cfd39ad888f7806ae12dcb1fba8f2ee13d8c470"
+    }
+   }
+  },
+  "vi": {
+   "texts": {
+    "free_examples": "✏️ Ví dụ miễn phí",
+    "solve": "🧠 Phân tích bài toán",
+    "check": "✅ Kiểm tra lời giải",
+    "notes": "📝 Tóm tắt & thẻ ghi nhớ",
+    "plans": "💰 Bảng giá",
+    "invite": "🎁 Mời bạn bè",
+    "help": "❓ Trợ giúp",
+    "welcome": "🎓 Xin chào! Mình là Study Helper.\n\nMình giải thích các chủ đề bằng từ ngữ đơn giản, chia bài toán thành từng bước, kiểm tra lời giải của bạn và tạo tóm tắt/thẻ ghi nhớ để ôn tập. Mình dạy — mình không làm bài hộ bạn, để bạn thực sự hiểu bài.\n\nNgôn ngữ: 🇻🇳 Tiếng Việt.\nĐổi bằng /lang",
+    "task_received": "✅ Đã nhận bài!\n\nKiểu phân tích:\n1️⃣ Giải thích bằng từ ngữ đơn giản\n2️⃣ Phân tích từng bước\n3️⃣ Kiểm tra lời giải của mình\n\nViết số (1, 2 hoặc 3) hoặc bấm nút bên dưới.",
+    "answer": "📚 Đây là phần phân tích:",
+    "task_type_1": "giải thích bằng từ ngữ đơn giản",
+    "task_type_2": "phân tích từng bước",
+    "task_type_3": "kiểm tra lời giải của mình"
+   },
+   "canned": {
+    "header": "Study Helper",
+    "ph": "Tin nhắn",
+    "user2": "Phân tích từng bước: 3x − 7 = 14",
+    "body3": "1. Mục tiêu: để x đứng một mình ở một vế.\n2. 3x − 7 = 14 → cộng 7 vào cả hai vế: 3x = 21.\n3. Chia cả hai vế cho 3: x = 7.\n4. Kiểm tra: 3 × 7 − 7 = 14 ✓\n\nVí dụ: nếu là 2x = 10, chia cả hai vế cho 2 → x = 5.\n\nQuy tắc chính: làm gì với một vế thì làm đúng như vậy với vế kia. Chỉ còn phép chia cuối cùng."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-vi.webp",
+     "sha256": "700fd794ffcdefd3c6b8e3a1435af16dc6c3f2aff29b4b2d5cbc4d91f05eb31e"
+    },
+    "2": {
+     "file": "shot2-vi.webp",
+     "sha256": "1b4bdc80cb6535f57069719ecd50bea1b6405e8f1ca65c7abd2477b4b64b2820"
+    },
+    "3": {
+     "file": "shot3-vi.webp",
+     "sha256": "97b5cd23d24503f88de289c7a915003971bd925079d26db5e986e2e46a9a03e6"
+    }
+   }
+  },
+  "uk": {
+   "texts": {
+    "free_examples": "✏️ Безкоштовні приклади",
+    "solve": "🧠 Розібрати задачу",
+    "check": "✅ Перевірити розв'язок",
+    "notes": "📝 Конспект і картки",
+    "plans": "💰 Тарифи",
+    "invite": "🎁 Запросити друга",
+    "help": "❓ Допомога",
+    "welcome": "🎓 Привіт! Я — Навчальний помічник.\n\nЯ пояснюю теми простими словами, розбираю задачі крок за кроком, перевіряю твої розв'язки та роблю конспекти/картки для повторення. Я навчаю — не роблю домашнє завдання за тебе, щоб ти справді навчився.\n\nМова: 🇺🇦 Українська.\nЗмінити — /lang",
+    "task_received": "✅ Задачу прийнято!\n\nТип розбору:\n1️⃣ Пояснити тему простими словами\n2️⃣ Розібрати крок за кроком\n3️⃣ Перевірити мій розв'язок\n\nНапиши номер (1, 2 або 3) або натисни кнопку нижче.",
+    "answer": "📚 Ось розбір:",
+    "task_type_1": "пояснити тему простими словами",
+    "task_type_2": "розібрати крок за кроком",
+    "task_type_3": "перевірити мій розв'язок"
+   },
+   "canned": {
+    "header": "Навчальний помічник",
+    "ph": "Повідомлення",
+    "user2": "Розбери крок за кроком: 3x − 7 = 14",
+    "body3": "1. Мета: залишити x сам на одному боці.\n2. 3x − 7 = 14 → додай 7 до обох частин: 3x = 21.\n3. Поділи обидві частини на 3: x = 7.\n4. Перевірка: 3 × 7 − 7 = 14 ✓\n\nПриклад: якби було 2x = 10, ти б поділив обидві частини на 2 → x = 5.\n\nГоловне правило: що робиш з однією частиною — роби й з іншою. Залишилося останнє ділення."
+   },
+   "shots": {
+    "1": {
+     "file": "shot1-uk.webp",
+     "sha256": "d2841a013d6359796597f06c63e303722bd1e43731d5206bdb82a93f2faa6f98"
+    },
+    "2": {
+     "file": "shot2-uk.webp",
+     "sha256": "b7c756520069dbbce1fa2d3a5af7090edb7736dedbb0967c923484062b1f0d3a"
+    },
+    "3": {
+     "file": "shot3-uk.webp",
+     "sha256": "1c4620e64f71da65717383f65602c4ef5fba3ce78e46aa4b7bd0126b7b4a0f96"
+    }
+   }
+  }
+ }
+}
