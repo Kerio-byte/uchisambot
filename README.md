@@ -1592,3 +1592,65 @@ runs in WebKit and Firefox, 0 problems.
 when the menu was opened by touch — the engines here are emulated, not a real device. Nor that a
 visitor expects an outside click to close this particular list: it is the only navigation of its
 kind on the page, and the stake is one extra tap, not a lost sale.
+
+## In landscape the language menu stopped at the sixth language (23.10.2026)
+
+The switcher's list is a fixed height on a touch device: nine rows of 44 px, 2 px gaps, 16 px
+padding, 2 px border — 430 px. In portrait that fits any phone. In landscape it does not, and the
+list is `position:absolute` inside the sticky header, so there was nothing to scroll: the list
+continued past the bottom edge and stayed there. Measured with touch emulation, menu open, before
+the fix:
+
+- 844×390 (phone landscape): the list ran from y=61 to y=491 on a 390 px screen. Vietnamese sat at
+  392–436 and Ukrainian at 438–482 — two of the nine languages were entirely outside the screen,
+  and `scrollHeight` equalled `clientHeight` (428/428), so dragging brought nothing back.
+- 568×320 (small phone, landscape): four of the nine were below the edge.
+- With the sticky "Open in Telegram" bar up (its `z-index:40` outranks the header's stacking
+  context), the list's bottom at 491 lay under a bar whose top was 331 — off-screen *and* covered.
+- Portrait was clean from 320 to 1280 px wide: zero findings. The 320 px reflow pass cannot see
+  this, because it varies the width; the defect lived in the height.
+
+**Why no gate caught it.** The keyboard battery proved the menu opens with Enter, holds nine
+entries and — since the block above — closes on Escape and an outside click. The smoke run proves
+the header renders and no script throws. Nothing asked whether every entry can be *reached* when
+the screen is shorter than the list: "the control works" and "all of the control is on the screen"
+are different questions.
+
+**What changed**, in three layers of decreasing dependence:
+
+1. A CSS ceiling — `max-height:calc(100vh - 132px)` (`100dvh` behind `@supports`),
+   `overflow-y:auto`, `overscroll-behavior:contain`, `scroll-snap-type:y proximity`,
+   `scrollbar-width:thin`. 132 px = header 63 + gap 8 + sticky bar 57 + slack. Without JavaScript
+   the list scrolls now, but the ceiling slices the sixth row through a letter.
+2. The menu script measures that ceiling in **whole rows** against the real space left above the
+   sticky bar, so the cut lands on a row boundary: 6 rows (292 px) at 844×390, 5 rows (246 px) at
+   568×320, and 5 rows when the bar is up — its top at 331 against a list bottom of 307.
+3. The same script adds a `more` class while something is left below and draws an **inset** bottom
+   shadow (inset keeps the drop shadow; a `mask-image` fade would have clipped it away), removed
+   at the end of the list and recomputed on open, on scroll and on resize/rotation. The inline fit
+   costs 4.3 KB raw and 1.5 KB gzipped per page.
+
+**What the gates learned.** `landing-a11y-extra.py` gained section E — 26 checks in an 844×390
+touch context: nine entries; the list fits or scrolls; the `more` hint is present exactly while
+the list overflows and gone at its end; the last language is reachable and hittable under the
+pointer after scrolling; focus on the last language scrolls it into view; the open list clears the
+sticky bar; no page errors. 104 checks in total, 0 failed.
+
+The gate was proved to bite, not just to pass: the same battery run against a copy of the site with
+the old CSS (`LANDING_ROOT=…`) reports **13 failures** — `list bottom=491 vh=390 canScroll=False`,
+`'Українська' rect=438..482 vh=390 hit=none`, `list bottom=491 bar top=331` — one set per language
+plus the sticky-bar check. Red before, green after.
+
+**Checked after the change.** Build reproducible (a second `tools/build.py` leaves the worktree
+byte-identical — same diff hash); sweep 1875/0; smoke 18/18 runs, 0 problems; cross-engine WebKit +
+Firefox, 18 mobile runs, 0 problems; screenshots at 844×390 and 568×320 read at 2x — the list ends
+on a row boundary, no sliced glyph, and the shadow reads as "more below".
+
+**What it cannot prove.** That a real phone's landscape viewport equals 390 px — `100dvh` follows
+the browser toolbars, and no emulator models those exactly. That a visitor takes an inset shadow
+for "scroll" when the scrollbar itself is invisible on a phone. That six rows beat nine on a 320 px
+screen: the choice was to keep every language one scroll away instead of building a second,
+two-column layout that exists only in landscape. And the geometry was measured in Chromium with
+touch emulation; WebKit and Firefox get the same CSS, but their scrollbars, snapping and `dvh`
+handling are their own — the cross-engine run proves the page, not this geometry.
+
