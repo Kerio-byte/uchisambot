@@ -2342,3 +2342,69 @@ read as an article — the numbers are there, the braces are not.
 since 22 Oct and still serves the old code — restarting it from a cron run is refused by the
 approval policy, so the one command stays with the owner. And that anyone will pay: the database
 holds four accounts and no purchase; the money screen has only stopped lying.
+
+## The phones on the page were 45% thinner than the files (23.10.2026)
+
+**What was found.** The three chat mockups in "Real chats with the bot" — the section that exists
+to show the product is real — were drawn with a **fixed height and a squeezed width** on all nine
+language pages, at every screen size. Each file is a phone screen, 1080×2340 (ratio 0.462). On the
+page it was drawn at:
+
+| viewport | box | ratio | deviation |
+|---|---|---|---|
+| 390 mobile | 298×1170 | 0.254 | −45% |
+| 1280 desktop, first column | 369×1170 | 0.315 | −32% |
+| 1280 desktop, other two | 308×1170 | 0.263 | −43% |
+
+Fifty-four images (3 shots × 9 languages × 2 viewports) were out of proportion. The detail that
+makes it a defect rather than a taste: the avatar in the chat header is 89×91 px in the file
+(a circle), so on the page it was an ellipse 24.6×45.5 px, and every letter in every bubble was
+1.8× taller than wide.
+
+**Why it survived nine days of passes.** The sweep knew two things about these images: that each
+`<img>` **has** width/height attributes (a layout-shift guard from 16.10) and that the first shot's
+column is wider (`grid-template-columns:1.2fr 1fr 1fr`). Neither compares the box on screen with
+the file. And the unequal columns were *only* viable because all three frames were 1170 px tall:
+the layout and the distortion propped each other up, so the sweep was asserting the symptom.
+Eyes saw "a phone", not "a phone 1.8× too tall" — a narrow phone still looks like a phone.
+
+**The cause in one line.** The stylesheet had `img{max-width:100%;display:block}` and no
+`height:auto`. The `width`/`height` *attributes* are CSS presentational hints, not just metadata:
+with `width:100%` from CSS and `height:1170px` from the attribute, the browser keeps 1170 px of
+height and, since `object-fit` defaults to `fill`, stretches the file into that box. Measured, not
+argued: an element screenshot (298×1171) compared with the same webp resampled into the same box
+gave a mean channel difference of 7.6/255 — the rendering *is* the stretch.
+
+**What changed.** `height:auto` in the global img rule (`img{max-width:100%;display:block;height:auto}`)
+— the attributes still reserve the space, which is why the layout-shift numbers did not move
+(CLS ≤ 0.1, `landing-cwv.py` 69/0). `.shots` became `repeat(3,1fr)`: with honest proportions the
+1.2fr first column stood 130 px taller than its neighbours and the row read as a staircase, while
+the three frames are one and the same 1080×2340 file. After the change: 390 → 298×642,
+420 → 323×698, 1280 and 1440 → 328×708, all three equal, ratio 0.463 against the file's 0.462.
+
+**In the sweep and in the battery.** Two static checks (1,919 → 1,928): `shots equal columns` and
+`img height auto` — the second one exists because this whole class of defect starts with an img
+rule that sets a width and forgets the height. The real measurement moved to where layout lives:
+`landing-visual-pass.py` now records, for **every** image on the page, the drawn box against the
+file's own proportions and fails above 2% (fractional px tolerance). It runs for all nine languages
+at 420 and 1440, so the shots, the badges and the hero badge are all covered.
+
+**Controls.** (1) Negative: `height:auto` removed from a throwaway copy of the tree, rebuilt —
+`landing-visual-pass.py` prints 54 problems and exits 1 (`image squashed shot1.webp dev=-40.1%
+box=323x1170`); the repo itself was never touched, the copy stays in scratch. (2) The CSS comment
+first spelled the tag as `<img>`; the sweep's `img dims all` check matched that literal and went
+red — the comment was reworded. Both are reminders the gates read raw text: worth knowing before
+writing prose next to markup.
+
+**Checked after the change.** Sweep 1,928 / 0. `landing-visual-pass.py` PROBLEMS 0 (18 page loads,
+badges 8/8 on every page, rows 2 mobile / 4 desktop). Links 11 pages / 0 problems; render-check ALL
+OK; a11y-extra 124 / 0; viewports-extra 94 / 0; axe 12 pages / 0 violations; wcag22 43 / 0; cwv
+69 / 0; browser smoke 18 / 0. Images out of proportion across the whole site: 54 → **0 of 252**
+(9 language pages + privacy + terms + 404, at 390 and 1280).
+
+**What it cannot prove.** That the conversations in those mockups match what the live bot says
+today: the service still runs the code it started on 22 Oct, and restarting it from a cron run is
+refused by the approval policy — that one command stays with the owner. And that the even row is
+the look the owner wants: the first frame no longer dominates; getting the accent back means
+cropping the chat text at the sides, which is worse than a flat row, so the flat row is the default
+and one word from the owner turns it back.
