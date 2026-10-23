@@ -2399,8 +2399,10 @@ writing prose next to markup.
 **Checked after the change.** Sweep 1,928 / 0. `landing-visual-pass.py` PROBLEMS 0 (18 page loads,
 badges 8/8 on every page, rows 2 mobile / 4 desktop). Links 11 pages / 0 problems; render-check ALL
 OK; a11y-extra 124 / 0; viewports-extra 94 / 0; axe 12 pages / 0 violations; wcag22 43 / 0; cwv
-69 / 0; browser smoke 18 / 0. Images out of proportion across the whole site: 54 → **0 of 252**
-(9 language pages + privacy + terms + 404, at 390 and 1280).
+69 / 0; cross-engine 60 / 0 (WebKit + Firefox, mobile / desktop / three landscape sizes);
+browser smoke 18 / 0. Images out of proportion across the whole site: 54 → **0 of 252**
+(9 language pages + privacy + terms + 404, at 390 and 1280), and 0 of 234 **on the live site**
+(9 pages × 420 and 1440, after the push).
 
 **What it cannot prove.** That the conversations in those mockups match what the live bot says
 today: the service still runs the code it started on 22 Oct, and restarting it from a cron run is
