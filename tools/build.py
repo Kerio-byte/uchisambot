@@ -570,6 +570,19 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     # якорь на блок формы — по нему CSS показывает подтверждение и без JS)
     out = out.replace(BASE + "?sent=1#contact-card", url_for(lang) + "?sent=1#contact-card")
 
+    # 8а-3) метка CTA несёт язык страницы (23.10.2026). До этого все девять страниц отдавали
+    # боту один src_landing: первый экран выбирался по языку интерфейса Telegram (посетитель
+    # /hi/ с Telegram на финском получал русское приветствие), а владелец не мог узнать,
+    # какая языковая страница приводит людей. Кавычка в шаблоне не даёт спутать метку
+    # с её продолжением (_band/_shots/_sticky), поэтому замены независимы.
+    for _pos in ("band", "shots", "sticky"):
+        _old = f'?start=src_landing_{_pos}"'
+        assert out.count(_old) == 1, f"{lang}: метка {_old!r} встречается {out.count(_old)} раз"
+        out = out.replace(_old, f'?start=src_landing_{lang}_{_pos}"')
+    _old = '?start=src_landing"'
+    assert out.count(_old) == 1, f"{lang}: метка {_old!r} встречается {out.count(_old)} раз"
+    out = out.replace(_old, f'?start=src_landing_{lang}"')
+
     # 8b) шрифты: preload под письменность страницы, пути — для подпапок
     if lang in ("ru", "uk"):
         out = out.replace('href="fonts/manrope-latin.woff2"', 'href="fonts/manrope-cyrillic.woff2"')
