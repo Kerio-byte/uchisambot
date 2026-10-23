@@ -40,7 +40,7 @@ Dan pertanyaan sekolah lain apa pun yang membuatmu buntu.
 
 ## Chat asli dengan botnya
 
-Tangkapan layar asli — bot bekerja dalam 9 bahasa.
+Beginilah tampilan pembahasan — bot bekerja dalam 9 bahasa.
 
 ![Layar sambutan UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot1-id.webp)
 

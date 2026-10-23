@@ -40,7 +40,7 @@ Và bất kỳ câu hỏi nào ở trường khiến bạn bí.
 
 ## Những cuộc trò chuyện thật với bot
 
-Ảnh chụp màn hình thật — bot hoạt động bằng 9 ngôn ngữ.
+Phần phân tích trông như thế này — bot hoạt động bằng 9 ngôn ngữ.
 
 ![Màn hình chào mừng của UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot1-vi.webp)
 

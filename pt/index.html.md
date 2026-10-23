@@ -40,7 +40,7 @@ E qualquer outra dúvida escolar em que você ficar preso.
 
 ## Conversas reais com o bot
 
-Capturas reais — o bot funciona em 9 idiomas.
+É assim que uma explicação aparece — o bot funciona em 9 idiomas.
 
 ![Tela de boas-vindas do UchiSamBot](https://kerio-byte.github.io/uchisambot/img/shot1-pt.webp)
 

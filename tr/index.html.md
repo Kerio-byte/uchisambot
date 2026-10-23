@@ -40,7 +40,7 @@ Ve takıldığın diğer tüm okul soruları.
 
 ## Botla gerçek sohbetler
 
-Gerçek ekran görüntüleri — bot 9 dilde çalışıyor.
+Çözüm böyle görünüyor — bot 9 dilde çalışıyor.
 
 ![UchiSamBot karşılama ekranı](https://kerio-byte.github.io/uchisambot/img/shot1-tr.webp)
 
