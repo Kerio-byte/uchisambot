@@ -1543,3 +1543,52 @@ stays as it is, which is the point of owning it, and refreshing it is a one-file
 a badge is legible at 46 CSS pixels on every display — verified at 2x here, not on a real phone.
 And the Web3Forms monthly limit is still invisible from our side (unchanged, it is outside the
 code).
+
+## The language menu could be opened and never dismissed (23.10.2026)
+
+The nine-language switcher is a native `<details>`: it opens on click, on Enter and on Space — and
+then it stayed open. Escape did nothing; a click anywhere else on the page did nothing. On a 420 px
+screen the open list of nine languages covers the first screen, and the only way back was to hit
+the same 44-px summary again, the smallest target in the header. Measured before the fix in
+Chromium, WebKit and Firefox at 420 px: `open` was still true after Escape and after an outside
+click, and focus stayed on the language link.
+
+**Why no gate caught it.** The keyboard battery proved that the menu OPENS via Enter, that it holds
+nine entries and that Tab reaches a link inside it — the opening half of the control. No check
+asked whether it closes. A gate that tests only the half a control does first will approve a trap.
+
+**What changed.** One standalone `<script>` block at the end of `index-src.html` (~1.5 KB raw,
++0.6 KB gzipped per page): Escape closes the menu and puts focus back on the summary, as the
+disclosure pattern requires; any click outside closes it without moving focus. It is a separate
+IIFE on purpose — the contact-form script begins with `if (!form …) return`, which would have
+skipped anything appended to it. With JavaScript off nothing changes: `<details>` still opens and
+closes by its own summary.
+
+**What the gates learned**
+- `landing-a11y-extra.py`: focus is first placed on a language LINK (not on the summary, where the
+  focus-return assertion would pass for free), then Escape must leave `open=false` with focus on the
+  summary, and a click on the page heading must leave `open=false`. Before: 6 failures (3 × ru,
+  3 × hi); after: 78 checks, 0 failures.
+- `landing-cross-engine.py`: the same three assertions now run inside every WebKit and Firefox run,
+  because key handling and click-outside differ per engine (18 mobile runs, 0 problems).
+
+**A second defect found by the same pass: a gate that had been red since the badges moved.**
+`landing-browser-smoke.py` still simulated "the platforms' servers are unreachable" and expected the
+eight hotlinked badges to hide via `onerror`. Since 23.10 all nine badges are served from
+`img/badges/`, so that scenario measured `external images 0` and reported a failure on every run — a
+permanently red check. Permanently red is worse than absent: it trains everyone to skim the output,
+and the next real failure hides behind it. It now tests what can actually break: abort all nine
+badge files → every link hides, no broken icon is left and the layout keeps its width; abort one
+file → exactly that link hides and the other eight stay visible and loaded (so the per-image
+`onerror` works, not a CSS rule that would hide the whole strip).
+
+**Checked after the change.** Build reproducible (a second `tools/build.py` leaves `git status`
+clean apart from the lastmod ledger it rewrites from content hashes); sweep 1875/0;
+`landing-links-audit.py` 11 pages / 0; `landing-browser-smoke.py` 18/18 runs with both badge
+scenarios (9/9 hidden; 1 hidden + 8 intact); `landing-a11y-extra.py` 78/0; cross-engine 18 mobile
+runs in WebKit and Firefox, 0 problems.
+
+**What it cannot prove.** That a hardware-keyboard Escape reaches `keydown` the same way on a phone
+when the menu was opened by touch — the engines here are emulated, not a real device. Nor that a
+visitor expects an outside click to close this particular list: it is the only navigation of its
+kind on the page, and the stake is one extra tap, not a lost sale.
