@@ -2058,7 +2058,11 @@ green, 0 failed.
 With `CHASE_AFTER_H = 1000000` — the chase switched off — 12 checks go red, including both
 reminders and the clearing by reply. With the found sent-message no longer counting as an
 answer — the eyes blinded — 2 go red, exactly the two that describe the reply. So the harness
-bites on "switched off" and on "blind", not merely on a missing word. Then, against the real
+bites on "switched off" and on "blind", not merely on a missing word. A third control checked
+the wiring rather than the behaviour: with the harness's last line replaced by `sys.exit(1)`
+while it still printed `ИТОГ: ВСЁ ЧИСТО`, the sweep printed `FAIL … | ИТОГ: ВСЁ ЧИСТО` — a gate
+that matched the words of a green run would have passed a failing harness, which is exactly
+this morning's validator mistake; the check reads the exit code. Then, against the real
 mailbox and read-only: an address the mailbox wrote to a year ago answers *yes*, the same
 address with a thirty-day cutoff answers *no* (every letter is older than the cutoff), an
 address that never existed answers *no*; and a dry run of the cron itself on a copy of the
