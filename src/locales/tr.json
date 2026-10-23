@@ -81,6 +81,8 @@
   "q9a": "Birkaç dakika sonra yeniden dene — bazen kısa süreli yoğunluk olur. Sorun sürerse aşağıdaki formdan bize yaz — ilgilenelim.",
   "q10": "Sıradan bir yapay zekâ sohbet botundan farkı ne?",
   "q10a": "Sıradan bir sohbet botundan farklı olarak burada bir öğretme yöntemi var: her çözüm adımları açıklar ve bot soruyu çözerken cevaptan bir adım önce durur — son adımı sen tamamlarsın. Ayrıca soruların kendi sunucumuzda kalır — üçüncü taraf yapay zekâ hizmetlerine gönderilmez.",
+  "q11": "Bot yanlış yapabilir mi?",
+  "q11a": "Çözümleri yapay zekâ üretiyor, bu yüzden hata olabilir. Bot her adımı gösterir; böylece çözümü ders kitabınla ya da öğretmeninle karşılaştırabilirsin. Bir yanıt yanlış görünüyorsa formdan bize gönder: tüm mesajları okuyoruz.",
   "parents.title": "Ebeveynler için",
   "parents.sub": "Kısaca: çocuğunuzun verilerini nasıl koruyoruz.",
   "parents.b1": "Kayıt yok, kişisel bilgi istenmiyor.",
