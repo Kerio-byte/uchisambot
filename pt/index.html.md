@@ -109,6 +109,10 @@ Tente de novo em alguns minutos — às vezes há sobrecargas curtas. Se continu
 
 Diferente de um chatbot comum, aqui há um método de ensino: cada explicação mostra os passos e, nas resoluções, o bot para um passo antes da resposta para você terminar sozinho. Além disso, suas tarefas ficam no nosso próprio servidor — não são enviadas a serviços de IA de terceiros.
 
+### O bot pode errar?
+
+As explicações são geradas por IA, por isso pode haver erros. O bot mostra cada passo para você conferir o raciocínio com o livro didático ou com o professor. Se uma resposta parecer errada, envie para nós pelo formulário: lemos todas as mensagens.
+
 ## Dúvidas ou sugestões?
 
 Escreva para nós — sua mensagem vai direto para a nossa equipe e respondemos no seu e-mail. Sem spam e sem listas de e-mails.

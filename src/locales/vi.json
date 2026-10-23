@@ -81,6 +81,8 @@
   "q9a": "Hãy thử lại sau vài phút — đôi khi có quá tải ngắn. Nếu vẫn lỗi, nhắn cho chúng tôi qua biểu mẫu liên hệ ở cuối trang — chúng tôi sẽ kiểm tra.",
   "q10": "Bot khác gì một chatbot AI thông thường?",
   "q10a": "Khác với chatbot thông thường, ở đây có phương pháp dạy học: mỗi phân tích giải thích từng bước, và khi giải bài bot dừng lại một bước trước đáp án để bạn tự hoàn thành. Ngoài ra, bài tập của bạn được lưu trên máy chủ riêng của chúng tôi — không gửi cho dịch vụ AI bên thứ ba.",
+  "q11": "Bot có thể sai không?",
+  "q11a": "Lời giải do AI tạo ra nên có thể có lỗi. Bot trình bày từng bước để bạn đối chiếu cách làm với sách giáo khoa hoặc hỏi giáo viên. Nếu thấy câu trả lời sai, hãy gửi cho chúng tôi qua biểu mẫu: chúng tôi đọc mọi tin nhắn.",
   "parents.title": "Dành cho phụ huynh",
   "parents.sub": "Tóm tắt: cách chúng tôi bảo vệ dữ liệu của con bạn.",
   "parents.b1": "Không cần đăng ký, không cần thông tin cá nhân.",
