@@ -22,7 +22,7 @@
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
-KIT="${KIT:-/home/jar/Projects/stars-bots/promo/submission-kit-20261014}"
+KIT="${KIT:-$ROOT/../submission-kit-20261014}"
 FB=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 F=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 L="${1:?usage: build-full-demo.sh en|ru}"

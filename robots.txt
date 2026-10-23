@@ -1,28 +1,47 @@
+# robots.txt for UchiSamBot.
+#
+# The pages are for people and for AI assistants: they may be read, quoted and
+# indexed. What sits beside them is not the site — the build system, the source
+# dictionaries, the video scripts and the working notes are the workshop.
+#
+# Honest note (23.10.2026): on a GitHub Pages project site (host/uchisambot/)
+# crawlers read robots.txt only at the host root, and the host root has none —
+# so today these rules are not consulted at all. They become operative the day
+# the site moves to its own domain; until then the real protection is that the
+# workshop is simply not published (tools/publish-tree.py decides what ships).
+
 User-agent: *
 Allow: /
+Disallow: /README.md
+Disallow: /index-src.html
+Disallow: /src/
+Disallow: /tools/
+Disallow: /evidence/
+Disallow: /demo/*.py
+Disallow: /demo/*.sh
+Disallow: /demo/*.json
 
-# AI assistants and agents — we want to be known and quoted correctly.
+# AI assistants and agents — we want to be known and quoted correctly,
+# about the pages, not about the workshop.
 User-agent: GPTBot
-Allow: /
 User-agent: OAI-SearchBot
-Allow: /
 User-agent: ChatGPT-User
-Allow: /
 User-agent: ClaudeBot
-Allow: /
 User-agent: Claude-User
-Allow: /
 User-agent: Claude-SearchBot
-Allow: /
 User-agent: PerplexityBot
-Allow: /
 User-agent: Google-Extended
-Allow: /
 User-agent: Applebot-Extended
-Allow: /
 User-agent: CCBot
-Allow: /
 User-agent: Meta-ExternalAgent
 Allow: /
+Disallow: /README.md
+Disallow: /index-src.html
+Disallow: /src/
+Disallow: /tools/
+Disallow: /evidence/
+Disallow: /demo/*.py
+Disallow: /demo/*.sh
+Disallow: /demo/*.json
 
 Sitemap: https://kerio-byte.github.io/uchisambot/sitemap.xml

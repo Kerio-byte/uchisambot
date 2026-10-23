@@ -19,10 +19,10 @@
 # Devanagari conjuncts.
 #
 # Sources (overridable via env):
-#   KIT (default /home/jar/Projects/stars-bots/promo/submission-kit-20261014)
+#   KIT (default: $ROOT/../submission-kit-20261014)
 #     en -> $KIT/shots_en/shot2_task_en.png + shot3_answer_en.png
 #     ru -> $KIT/shots/shot2_task_ru.png    + shot3_answer_ru.png
-#   SHOTS_DIR (default /home/jar/.hermes/cache/scratch/shots-gen/work)
+#   SHOTS_DIR (default: $ROOT/.shots-work)
 #     <lang> -> $SHOTS_DIR/<lang>/shot2.png + shot3.png
 #   If the shots-gen renders are gone:
 #     python3 tools/shots-gen/gen_shots.py --langs <l>[,<l>...]
@@ -36,8 +36,8 @@
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
-KIT="${KIT:-/home/jar/Projects/stars-bots/promo/submission-kit-20261014}"
-SHOTS_DIR="${SHOTS_DIR:-/home/jar/.hermes/cache/scratch/shots-gen/work}"
+KIT="${KIT:-$ROOT/../submission-kit-20261014}"
+SHOTS_DIR="${SHOTS_DIR:-$ROOT/.shots-work}"
 FB=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 FN=/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf
 

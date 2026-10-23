@@ -25,6 +25,13 @@ Live: https://kerio-byte.github.io/uchisambot/
 - `tools/page-text.py` — flattens a built page into its visible text, one block per line, so it
   can be read as an article rather than as markup (added 23.10.2026 for the meaning pass);
   read-only, not part of the build: `python3 tools/page-text.py ru/index.html`.
+- `tools/publish-tree.py` — the one list of what counts as the site (115 files), and `--check`
+  for it: every listed file exists, no page links into the workshop, every internal reference
+  points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
+  154 files — `/README.md` included. `--verify-served DIR` serves a staged tree and asks for every
+  address (83 of them) to prove a switch of the publish source would not break anything.
+- `tools/publish-branch.sh` — stages that list into a `gh-pages` branch (or checks it with
+  `--dry-run`). The switch itself is a repository setting, deliberately not automated.
 - `tools/site.json` — single source of the site address (`base`, plus `previous`:
   older addresses of this site). Added 22 Oct 2026, before the move to an own
   domain: the address used to live in three independent places — a literal in
@@ -656,8 +663,8 @@ the product.
 
 **Status: both issues below are FIXED (22 Oct, 03:13, main session).** The answer
 language was rewritten to a per-locale map (`ANSWER_LANG`: English + native name,
-directive as the last prompt line) and `study-bot.service` was restarted with it;
-measured through the same `:8080` queue afterwards — hi/es/uk/tr/vi answer in their
+directive as the last prompt line) and the bot's own service was restarted with it;
+measured through the same local queue afterwards — hi/es/uk/tr/vi answer in their
 own language. The "endpoint answered nothing" case was not a wedged proxy: the TTS
 server was pinned to GPU 0 and held 2.2 GB, leaving ~2.4 GB free against the queue's
 3 GB reserve, so `wait_vram()` stalled every request. The TTS unit now runs on GPU 1
@@ -681,12 +688,12 @@ here: this block's working folder is the landing alone, and the bot fix needs
 `study-bot.service` restarted, which cron is not allowed to do.
 
 **Product reachability.** At the same hour the bot's endpoint
-(`http://[адрес]:8080/v1`, the `gpu-queue-[GPU]` proxy in front of
-llama-server) answered nothing at all: five requests between 02:41 and 02:57,
-waits of 15 to 130 seconds, not one byte back, while the model behind it on
-`[локальный порт]` answered the same request in 1.2 s. The bot has no second provider, so a
+(our own loopback queue, with the local inference server behind it) answered
+nothing at all: five requests between 02:41 and 02:57,
+waits of 15 to 130 seconds, not one byte back, while the model itself
+answered the same request in 1.2 s. The bot has no second provider, so a
 visitor waits out `LLM_TIMEOUT=120` and gets an error. One command restores it
-(`systemctl restart gpu-queue-[GPU].service`, `Restart=always`); cron is barred
+(one restart on the host, `Restart=always`); cron is barred
 from touching services.
 
 **Two gates added** so neither class slips again, 1392 → 1394 checks:
@@ -1105,14 +1112,14 @@ rebuild that dropped it, would have passed.
 `LLM_BASE_URL` → `api.openai.com` (1 fail: "endpoint is ours, not a third party"); an
 `Environment=LLM_BASE_URL=https://api.anthropic.com/v1` line appended to the unit (2 fails: the
 endpoint and the override); a file in `bot/` naming `api.groq.com` (1 fail: the code scan);
-`LLM_BASE_URL` → `192.168.1.50` (0 fails — a private LAN box is still "our infrastructure", and a
+`LLM_BASE_URL` → a private LAN address (0 fails — a box on our own LAN is still "our infrastructure", and a
 gate that cries wolf gets switched off); "not sent to third-party AI services" → "handled with
 care" in `privacy.html` (1 fail, plus the `lastmod` sha check, which watches every page edit); the
 Russian training sentence softened in `privacy.html.md` (1 fail). After every restore: sha256
 equal, `git status` clean, sweep 1674/0.
 
 **Where the promise stands today**, measured rather than assumed: `LLM_PROVIDER=local`,
-`LLM_BASE_URL=http://[адрес]:8080/v1`, the queue in front of it routes `8080 → 9080` on this box,
+`LLM_BASE_URL` = the loopback queue, which routes two ports on this box —
 no third-party host in the bot code, and a chat probe through that same queue answered
 ("работает") — the endpoint the page promises is the endpoint that answers.
 
@@ -1123,7 +1130,7 @@ page), not every possible lie.
 
 ## The screenshots ended and there was nothing to press (22.10.2026)
 
-Round 2 of the landing board (15 Oct, `~/.hermes/rooms/landing-modern-20261015`) agreed on six
+Round 2 of the landing board (15 Oct, its room folder lives outside this repo) agreed on six
 P0 items; five shipped. The sixth — *CTA after the screenshots* — did not, and nothing noticed,
 because no gate had been written for a decision: every check named a block that already existed.
 Measured before the fix at 1440 px: the shots section ended at y=3430 and the nearest button sat
@@ -1235,7 +1242,7 @@ not JSON — ends in a fixed sentence on stderr plus exit code 1. For a `no_agen
 silence: the scheduler delivers script failures (*«a silently broken watchdog is the worst-case
 outcome»*) and withholds repeats of the same signature for `cron.failure_repeat_alert_hours` —
 which is why the first sentence is constant and the changing detail follows it. Announced ids are
-kept in `~/.hermes/state/contact-inbox-state.json`, so UNREAD is a convenience again instead of the
+kept in the inbox cron's own state file (outside this repo), so UNREAD is a convenience again instead of the
 memory. A letter that cannot be read is still announced, with its id and «текст прочитать не
 удалось»; more than ten in one tick are summarised as «и ещё N»; the notification carries the
 letter's local time.
@@ -1901,13 +1908,13 @@ the cron and not only the page.
 
 **Why nothing caught it.** The failure signature of this channel is silence, and silence is also the
 normal answer: a cron that is paused, deleted, or whose sender filter matches nothing returns "no
-messages" twenty-four times an hour and never fails. Hermes reports a job that errors; it does not
+messages" twenty-four times an hour and never fails. The job scheduler reports a task that errors; it does not
 report a job that is gone from `jobs.json` — a file this machine has already had to rebuild once
 (a `.corrupt-20260916` copy sits next to it). Nothing in the page's battery reads that file.
 
 **What the mailbox actually holds.** The live audit finds nine letters from Web3Forms: seven form
 submissions (15.10, four on 21.10, two on 22.10) and two service letters (the welcome message and
-the verification code). The cron's ledger `~/.hermes/state/contact-inbox-state.json` knows one of
+the verification code). The cron's ledger — the same state file — knows one of
 the seven — the 22.10 16:15 submission, the last one — because the ledger was introduced on 22.10;
 the other six predate it, were read at the time, and still carry no `UNREAD` label. The two service
 letters are not submissions and are ignored by the subject filter, correctly.
@@ -1922,7 +1929,7 @@ the cron forever, while the page keeps promising it was read. The audit therefor
 machinery is alive: exactly one job whose `script` ends in `contact-inbox-check.py`, enabled and
 `scheduled`, `no_agent` (a model in the loop is a different mechanism), interval no coarser than
 thirty minutes, last run no older than sixty, last status `ok` with `failure_streak` 0. On a machine
-that has no `~/.hermes/cron/jobs.json` — a clone, another host — it prints one check whose name says
+that has no scheduler job file — a clone, another host — it prints one check whose name says
 `SKIP`, not a green claim it cannot support. `landing-inbox-canary.py` asks the other question, about
 the crate rather than the machinery: every submission in the mailbox must be in the ledger, or in
 flight (unread and younger than sixty minutes), or older than the baseline — the date of the earliest
@@ -2024,7 +2031,7 @@ that does not exist — `FAIL promise: the bot behind every button is running | 
 our own endpoint | scheme=http host=[адрес] from /proc`, which also proves the check reads the
 process and not the file. `_svc_state` disabled, as on a clone without systemd — 1890 checks,
 0 failed, with a check whose *name* says `SKIP` rather than a green claim it cannot support. The
-probe pointed at a closed port — `FAIL … the model behind the bot answers | http://[адрес]:9/v1/models
+probe pointed at a closed port — `FAIL … the model behind the bot answers | http://<loopback>:<closed port>/v1/models
 -> URLError за 0.00 с`. The real sweep then ran three times in a row: 1893 checks, 0 failed, three
 times.
 
@@ -2158,10 +2165,10 @@ not harm); that the model's arithmetic is right; that the answer arrives inside 
 minute.
 
 **Left open: the minute the page promises.** The same photo tasks took 35–120 s during this
-block and 10–16 s an hour later. The model is not the reason: llama-server reported 2.5 s of
+block and 10–16 s an hour later. The model is not the reason: the inference server reported 2.5 s of
 work (1,323 prompt tokens at 650 tokens/s, 17 tokens out at 35 tokens/s) for a request that
 took 50.7 s end to end; the rest was spent waiting in the single-slot GPU queue behind another
-tenant (LiteLLM, 40,000–60,000-token prompts from agent crons). While that queue is shared,
+tenant (a shared agent service, 40,000–60,000-token prompts). While that queue is shared,
 "usually in 10–60 seconds" is true on an idle GPU and false on a busy one, and a photo task can
 reach the timeout — the student then reads "service overloaded". A priority lane for the bot,
 or moving agent traffic off this GPU, changes shared infrastructure: it is the owner's call,
@@ -2180,7 +2187,7 @@ no gate, no ledger, no test. Two measurements of the *same* production path (`ge
 plus the bot's provider, the code a student's message takes) disagree with it in both directions.
 On an idle card, three typed tasks and three photographs of a textbook page came back in 4.6–17.8 s
 and 7.8–23.8 s — the page over-promised the floor by a factor of two. With the card shared
-(agent crons through LiteLLM, the previous block's numbers), photographs took 34.7–78.8 s and one
+(agent crons through the shared service, the previous block's numbers), photographs took 34.7–78.8 s and one
 task died at the 120 s timeout — the page under-promised the ceiling by more than a minute. A
 number that is wrong both ways is a guess, and the student who sends a photo is the one who
 measures it.
@@ -2642,4 +2649,90 @@ the site — that is a bot-side block, not this one. That the rows already colle
 the owner would rather not keep “last seen” and Premium at all, dropping two columns is a one-line
 change, and the gate will demand the policy follow it. And that the three text links belong in the
 footer — they are named now, which is the honest minimum, not a judgement about keeping them.
+
+## The shop was open; the workshop had no door (23.10.2026)
+
+**What was found.** GitHub Pages publishes the repository root, and the root holds both the site
+and the machinery that builds it. Measured, not inferred: 154 files are committed, and the pages
+are served beside them — `/README.md` returned 200 with byte-for-byte the file on disk (196 KB —
+this notebook), `/tools/build.py` 73 KB, `/index-src.html` the unbuilt template with `{{BASE}}`
+still inside and English only, a locale dictionary, `demo/captions.py`, `tools/shots.json`, even
+`.gitignore` and two early evidence copies that were committed before the ignore rule. Directory
+listings are off and no page links to any of them, but a path guessed once is a path forever.
+
+What the notebook carried while it was public is the part that matters: a private LAN address, two
+loopback endpoints with ports, four home-directory paths, the name of the software that runs the
+work, and the systemd unit whose name ends in a GPU model. The owner's rule of 23 Oct — public
+surfaces are neutral: no paths, no addresses, no tool names — was being broken by the file that
+keeps the record of the project obeying it.
+
+**Why nothing caught it.** Every battery reads the pages. The page is what gets checked: its links,
+its texts, its colours, its claims, its weight. The files beside it were in nobody's scope, and the
+one file that mentioned them, `robots.txt`, said `Allow: /`.
+
+**And robots.txt was not read anyway.** A crawler asks the *host root* for `/robots.txt`. On this
+project site that is `https://kerio-byte.github.io/robots.txt`, which answers 404; our rules live at
+`/uchisambot/robots.txt` and nothing fetches them. Eleven AI-crawler groups had been maintained
+there since 21 Oct — well-formed, ineffective. The live-assets battery asked whether the file
+existed, and it did. The rules become live the day the site has its own domain; until then the only
+protection that works is not publishing the file at all.
+
+**What changed.**
+
+- Redaction of the published text — nine places in this notebook, four in the tooling. The LAN
+  address, the loopback endpoints, the home paths, the software names and the GPU-bearing unit name
+  are gone; each sentence still makes its point ("a box on our own LAN is still our
+  infrastructure", "one restart on the host"). `demo/build-full-demo.sh` and
+  `build-web-loop-langs.sh` now take their kit path from `$ROOT` instead of an absolute home path;
+  `gen_shots.py` renders into `.shots-work/` inside the repo (gitignored) instead of a
+  home-directory cache.
+- `robots.txt` rewritten: the workshop is disallowed in *both* groups — `*` and the AI group (RFC
+  9309 gives a robot the most specific group, so rules written only under `*` would not bind
+  GPTBot). Eight paths: `/README.md`, `/index-src.html`, `/src/`, `/tools/`, `/evidence/`,
+  `/demo/*.py`, `/demo/*.sh`, `/demo/*.json`. The file now says in its own comment that today it is
+  not consulted.
+- `tools/publish-tree.py` — one explicit list of what a site is: 115 files, 10.7 MB (nine pages and
+  their md twins, the legal pages, 404, sitemap, robots, llms, the IndexNow key, `img/`, `fonts/`,
+  the eleven videos). `--check` fails when a listed file is missing, when a page links into the
+  workshop, or when a referenced file is not in the list; 39 files are named as the workshop and
+  left out.
+- `tools/publish-branch.sh` — `--dry-run` stages that tree and asks a local server for every address
+  in it (83 addresses, 0 errors); without the flag it writes the tree to a `gh-pages` branch and
+  pushes it. Switching Pages to that branch is one click in the repository settings, and it is the
+  owner's click, not a cron's.
+- The sweep: 2045 → 2049. Four checks — the published text carries no private address, loopback
+  endpoint, home path, software name or GPU model; the publish list is complete and workshop-free;
+  the list names its own size; `robots.txt` disallows the workshop in *every* group, not only in
+  `*`.
+
+**Controls.** A throwaway copy of the tree, three breaks, three red lines, nothing else moved:
+(a) a private LAN address written into the copy's README fails `что отдаёт сайт… |
+README.md:11 частный IP`; (b) one `Disallow: /tools/` removed from the AI group fails `robots:
+мастерская закрыта в каждой группе | GPTBot,… нет /tools/`; (c) `img/logo.svg` deleted fails
+`состав публикации… | ссылка на файл вне публикации: img/logo.svg`. The copy showed three
+environmental failures of its own (no git history, no bot tree), which is why its count reads 1993,
+not 2049.
+
+The first run of that control also caught the check itself, which is the reason it exists. The copy
+lives inside another git repository (the agent's working directory), so `git -C <copy> ls-files`
+answered with *that* repository's list, every file of the copy looked untracked, and the text scan
+went quiet — green without reading a single line. One comparison fixed it (the repository root must
+be the tree root); after that the control produced the three lines above. A gate that decides what
+to read from a command's silence is one `cd` away from being a gate that reads nothing.
+
+**Checked after the change.** Sweep 2049 / 0. Build `--check`: 24 files match. Publish list: 115
+files, 513 internal references, every one inside the list. Publish tree served locally: 83
+addresses, 0 errors. Links 11 pages / 0 problems. Render-check ALL OK, JS errors none.
+Nu-validator: no real findings. External links: 11 pages, 0 problems. Visual pass: 18 loads, 0
+problems.
+
+**What it cannot prove.** That the workshop is unreachable — it is not: `/README.md` and
+`/tools/build.py` still answer 200, and the rules that say otherwise sit in a file crawlers do not
+fetch. What works is the branch switch (prepared and tested, one click) or a private repository
+(paid; Pages from a private repo is not free). That no crawler has taken the notebook already: we
+can log our own requests, not Google's, and the notebook has been public as long as the repository
+has. That the redaction found every identifier: the gate knows the patterns it was given; a hostname
+or an account id would pass unnoticed until somebody adds the pattern. And that the owner wants this
+notebook public at all — the redaction assumes yes, because it is the record of the work, and
+deletes nothing.
 

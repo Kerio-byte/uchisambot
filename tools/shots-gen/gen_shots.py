@@ -303,7 +303,7 @@ def main() -> None:
                     help="разрешить запись EN (эталон; нужен, когда меняется клавиатура)")
     ap.add_argument("--stamp", action="store_true", help="перештамповать реестр tools/shots.json")
     ap.add_argument("--quality", type=int, default=80)
-    ap.add_argument("--workdir", default="/home/jar/.hermes/cache/scratch/shots-gen/work")
+    ap.add_argument("--workdir", default=str(REPO / ".shots-work"))
     args = ap.parse_args()
 
     from PIL import Image
