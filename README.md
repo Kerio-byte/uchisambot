@@ -1809,3 +1809,59 @@ clock, so a wrong clock writes the same wrong day twice and this gate agrees wit
 uncommitted edit kept for a week keeps its first day — it does not; every run dates it to today,
 which is honest but not a history. And that a date makes a policy compliant: it records when the
 words changed, not whether they are sufficient.
+
+## The validator was reported green for five hours while returning an error (23.10.2026)
+
+At 05:13 the language menu got its height ceiling: `max-height:calc(100vh - 132px)`,
+`calc(100dvh - 132px)` behind `@supports`, `overscroll-behavior:contain`, and an inset shadow for
+the "more below" hint. Every run of `landing-nu-validate.py` since then exited **1** — four
+findings on each of the nine language pages: `overscroll-behavior doesn't exist`,
+`height: Unknown dimension` (`100dvh`), `max-height: Parse Error` (`calc(100dvh - 132px)`), and
+`box-shadow: rgb(20, 40, 90, 0.30) is an incorrect operator` — and the section above this one,
+written the same night, states "Nu validator exit 0 (only the known parser gaps on
+`overscroll-behavior`, `dvh` and four-argument `rgb`)".
+
+**All four are the validator's gaps, not the page's.** The bundled `vnu.jar` predates `dvh` and
+`overscroll-behavior`; worse, its CSS parser rewrote the source's valid `rgba(20,40,90,.30)` into
+four-argument `rgb()` and then rejected its own rewrite. A browser accepts every one of them —
+which is exactly why the fix could not be "believe the validator" or "delete the CSS".
+
+**Why nobody saw it.** The gate was read as `python3 landing-nu-validate.py | tail -6`: that prints
+the exit code of `tail`, and the line that carries the verdict (`=== РЕАЛЬНЫЕ НАХОДКИ ===` and the
+findings under it) sat below the cut. The report then quoted the exit code from memory of the last
+time it had been green. A gate whose result is read from a truncated screen, with a document next
+to it asserting the good state, is not a measurement — it is the appearance of one. Same family as
+the badge gate that had been red since the files moved.
+
+**What replaced it.** `KNOWN_FP_PAIRS` — the message fragment *and* a mandatory fragment of the
+`extract` must both match. Anything less is a real finding: `Unknown dimension` without `100dvh`,
+`max-height` without `dvh`, `incorrect operator` without `var(--shadow-2)`, and `overscroll-behavior`
+with any other value all still fail. Verified with ten synthetic messages: the four genuine parser
+gaps pass as known, six look-alikes (a broken `height:100foo`, a broken `calc` with no `dvh`, a
+different shadow, a different `overscroll-behavior` value, an ordinary `color` error, an HTML error)
+stay real.
+
+**And the page's side is now proven in a browser, not read off the CSS.** `landing-a11y-extra.py`
+grew a no-JavaScript pass (section E2, four checks on `ru`, `hi`, `en` at 844x390): computed
+`max-height` equals screen minus 132 px (258 px), the open list is cut by it, it still scrolls
+(428 > 256 px), and `overscrollBehaviorY` computes to `contain`. Without JavaScript on purpose: with
+the script running, `fit()` re-caps the list to whole rows (292 px at that height), so the CSS
+declaration is no longer visible in the computed value — the first version of this check demanded
+258 px with JS on and failed for that reason alone. Easier to notice in the diff than in the
+running site: the check was wrong, not the page.
+
+**Checked.** Negative control: removing `max-height`, the `@supports` ceiling and
+`overscroll-behavior` from the built `index.html`, `ru/`, `hi/` produced 16 failures (four per
+language in E2, four in the JS path); `clientHeight` became 428 px on a 390 px screen and the list
+stopped scrolling. Files restored with `git checkout --`, sha256 equal to the `tools/lastmod.json`
+ledger (f29abfe0 / 15d186a3 / 726fc693), working tree clean. Then: build rc=0 and byte-identical on
+a second run; sweep 1881 / 0; Nu 126 known gaps / 0 findings / **rc=0**; a11y-extra 124 / 0 (was
+104); render-check ALL OK; links 11 pages / 0; axe 12 pages / 0; smoke 18 runs / 0; video-motion
+408 / 0; viewports 94 / 0; price parity 9 / 0; posters 9 / 0; English leftovers 0; live assets and
+external links clean.
+
+**What it cannot prove.** That `vnu.jar` is the right judge for CSS at all — it is not, and keeping
+a whitelist is a permanent tax: every new CSS feature costs a pair here, and a careless pair would
+hide a real error. The no-JS pass covers three languages at one viewport, 844x390 — the short-screen
+case the ceiling exists for, not all nine languages and not a tall screen. And that a green battery
+means the site is good: it means the things this battery measures are still true.
