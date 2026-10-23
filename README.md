@@ -2290,3 +2290,55 @@ from a page. That links already shared with the old bare label change behaviour 
 old label maps to `None` and the bot falls back to Telegram exactly as before, so the change is
 forward-only. And that the running bot already greets in the page language: it does not, until the
 service is restarted — the same standing item the previous two blocks left for the owner.
+
+## The price screen asked the buyer to fill in the blanks (23.10.2026)
+
+**What was found.** Three defects, one root: the words about money were typed by hand and no test
+ever rendered the screen a person sees.
+
+1. The path from the menu to paying (`plans:buy`) called `t(lang, "plan_info")` **without the
+   values**. Formatting raised, `t()` returned the template unchanged, and a buyer in all nine
+   languages read `1️⃣ One breakdown — {single} ⭐️ ({single_tasks} task)`. A correct renderer,
+   `plans_text()`, sat three functions above and was used only by the other branch.
+2. The invitation in all nine dictionaries promised the friend **five** free breakdowns while
+   `FREE_TRIALS` is 2 — and every language page on this site says two.
+3. The plan labels lived as two strings, `title_ru` / `title_en`, so seven languages saw an
+   English name in the plan button and in the **Telegram invoice itself**, on the screen where
+   the decision to pay is made. The price screen also carried a hand-typed dollar estimate
+   (`30 stars ≈ $0.4–0.6`) and hand-typed discount percentages.
+
+**What changed.** `handlers.plans_text()` is the single renderer, at module level: prices come
+from `payments.PLANS`, and both discount percentages are **computed** from those prices (20 and 33
+are arithmetic now, not text). The `plans:buy` branch sends one screen with three buttons instead
+of three copies of a raw template. `i18n.PLAN_TITLES` holds the three plan names in nine languages
+with `plan_title(lang, plan_id)`, used by both the button and the invoice title (Telegram's
+32-character limit is asserted); the `title_ru`/`title_en` fields are gone from `payments.Plan`.
+The friend's free tier is a `{free}` placeholder filled with `FREE_TRIALS`, and the Russian and
+Ukrainian sentences were rewritten so no grammatical case is bound to the number. `t()` no longer
+stays silent: a missing substitution is logged as a warning — that silence is exactly what hid
+this defect for three blocks.
+
+**In the sweep.** One check (1,918 → 1,919) runs `landing-bot-money.py`, a new battery that
+renders the three money screens with the bot's own code in all nine languages: no raw
+placeholders, the real prices and computed discounts, the real free tier with no stray "5", plan
+titles present and within the invoice limit, no English title outside English, and an AST guard
+that forbids `t(…, "plan_info")` without arguments and any return of `title_ru`/`title_en`. The
+bot's own suite grew 39 → 97: `tests/test_money_screens.py` (58 checks) plus the old pricing test
+rewritten to render through `plans_text()` instead of assembling the arguments by hand — which is
+why it had stayed green while the screen was broken.
+
+**Controls, each restored byte-exact (`sha256sum -c`).** (1) The argument-less call put back into
+`plans:buy`: the battery prints `FAIL handlers.py: t(lang, 'plan_info') без подстановок` and the
+AST guard test turns red, 96 others green. (2) A "5" put back into the Spanish invitation: two
+battery lines naming `es`, two red tests. (3) The Turkish 5-pack label replaced with the English
+one: `FAIL tr/pack5: английское название тарифа`, one red test.
+
+**Checked after the change.** Bot tests 97 passed; `landing-bot-money.py` ALL OK (9 languages, no
+placeholders, prices 30/120/300, discounts 20 %/33 %, `FREE_TRIALS` 2); the sweep 1,919 / 0; the
+price parity 9 checks / 0 mismatches; and the three screens printed for all nine languages and
+read as an article — the numbers are there, the braces are not.
+
+**What it cannot prove.** That the live bot already speaks this way: the service has been running
+since 22 Oct and still serves the old code — restarting it from a cron run is refused by the
+approval policy, so the one command stays with the owner. And that anyone will pay: the database
+holds four accounts and no purchase; the money screen has only stopped lying.
