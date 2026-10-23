@@ -1654,7 +1654,6 @@ two-column layout that exists only in landscape. And the geometry was measured i
 touch emulation; WebKit and Firefox get the same CSS, but their scrollbars, snapping and `dvh`
 handling are their own — the cross-engine run proves the page, not this geometry.
 
-
 ## The menu's geometry was proven in one engine and shipped to all of them (23.10.2026)
 
 The previous block made the language list stop on a whole row and scroll, and proved it with 26
