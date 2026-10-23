@@ -1654,3 +1654,58 @@ two-column layout that exists only in landscape. And the geometry was measured i
 touch emulation; WebKit and Firefox get the same CSS, but their scrollbars, snapping and `dvh`
 handling are their own — the cross-engine run proves the page, not this geometry.
 
+
+## The menu's geometry was proven in one engine and shipped to all of them (23.10.2026)
+
+The previous block made the language list stop on a whole row and scroll, and proved it with 26
+checks in Chromium. Its own closing paragraph named the hole: "the cross-engine run proves the
+page, not this geometry." Visitors do not arrive in desktop Chromium. On iOS every browser,
+including Telegram's in-app one, is WKWebView (WebKit); on Android it is Chromium but a different
+viewport, and Firefox is a real minority on both. The geometry had never been measured in either
+of the other two engines.
+
+**What was measured.** `landing-cross-engine.py` gained a landscape section: four phone-landscape
+viewports (844×390, 915×412, 667×375, 568×320), three languages that stress the list (ru, vi, hi),
+two engines — 24 runs. Each run keeps the page scrolled, so the sticky "Open in Telegram" bar is up
+(its 57 px is the worst case for vertical room) and opens the menu from the sticky header there.
+Per run: nine entries; the list either fits the screen or really scrolls (`scrollHeight >
+clientHeight`); the `more` shadow is present exactly while the list overflows and gone at its end;
+the last language, after scrolling, is inside the viewport and hit-testable at its own centre; the
+list bottom and the last row clear the sticky bar; no page errors.
+
+**Result on the shipped pages: 24 runs, 0 problems.** The inline fit script computes the same
+ceiling in both engines, to the pixel: 292 px = 6 rows at 915×412, 246 px = 5 rows at 844×390,
+200 px = 4 rows at 667×375, 154 px = 3 rows at 568×320, with `scrollHeight` 428 against client
+heights of 290 / 244 / 198 / 152. So all nine languages stay one scroll away in WebKit and Gecko
+too, and the hint appears and disappears with the overflow in both.
+
+**The gate was proved to bite.** The same section run against the pre-fix build (`git archive
+8db0889`) fails 24 of 24 runs with five distinct signatures: `list bottom=491 vh=390`,
+`list bottom=491 under sticky bar top=261`, `last language 'Українська' not in view: 438..482
+vh=390`, `not hittable`, `last entry bottom=482 under bar top=261`. That is the defect the previous
+block fixed, now caught by the engines that actually ship on phones.
+
+**Two ways the new gate lied before it told the truth.** The first version read the `more` class in
+the same JS task that set `scrollTop = scrollHeight`; the class is recomputed by the `scroll`
+handler, which runs after that task, so 12 of 12 runs "failed" on a correct page — the scroll and
+the read are now separate calls with a 300 ms pause. The second version scrolled the page back to
+the top before opening the menu, which hides the sticky bar: the overlap check then measured
+nothing at all. The page now stays scrolled, and every row records whether the bar was really up
+(`bar=up/down`), so a future change that suppresses the bar cannot make that check pass by
+accident. At 915 px wide the bar legitimately does not appear (desktop threshold) — the row says
+`bar=down` and the run passes.
+
+**Checked after the change.** The site's own files are untouched by this block, so the build was
+re-run to prove it: `tools/build.py` leaves `git status` empty. Sweep 1875 / 0. Full cross-engine
+battery with the new section: **60 runs, 0 problems, 428.6 s** (36 page runs as before plus the 24
+menu runs, about 120 s more). Live parity on Pages: 24 published files (nine pages, their markdown
+twins, privacy, terms, 404, sitemap, robots, llms) byte-identical to the local build. Both mirrors
+at the same commit.
+
+**What it cannot prove.** That an emulated 390 px landscape equals a real iPhone's visual viewport:
+iOS toolbars move and `100dvh` follows them, and no emulator models the address-bar animation.
+That GeckoView (Firefox on Android) behaves like the desktop Firefox used here. That a finger's
+momentum scroll and snapping inside the list feel the same as a programmatic `scrollTop` jump — the
+gate asserts reachability, not feel. And that three visible rows out of nine, at 568×320 with the
+bar up, is the right trade: the alternative, a two-column list that exists only in landscape, was
+declined twice now.
