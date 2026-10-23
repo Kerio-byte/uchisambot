@@ -104,7 +104,21 @@ main{display:block}
 .lang-dd summary::-webkit-details-marker{display:none}
 .lang-dd summary:hover{background:var(--brand-soft);color:var(--brand)}
 .lang-dd[open] summary{background:var(--brand-soft);color:var(--brand)}
-.lang-list{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-2);padding:8px;z-index:60;min-width:200px;display:grid;gap:2px}
+.lang-list{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-2);padding:8px;z-index:60;min-width:200px;display:grid;gap:2px;max-height:calc(100vh - 132px);overflow-y:auto;overscroll-behavior:contain}
+/* Список — девять пунктов по 44 px на тач-устройстве, это ~430 px. В ландшафте телефона
+   (390–320 px высоты) он выше экрана, а position:absolute внутри липкой шапки не даёт
+   доскроллить: нижние языки (vi, uk) были недоступны — проверить нечем, пункт за кадром,
+   список не скроллится (23.10.2026, замер: 844x390 — 2 языка из 9, 568x320 — 4 из 9).
+   Потолок высоты + внутренняя прокрутка возвращают все девять пунктов; 132 px = шапка
+   63 + отступ 8 + липкая кнопка 57 + запас. dvh там, где браузер его знает: 100vh на
+   телефоне считается по большому вьюпорту (с адресной строкой) и оставляет пункты под ней. */
+@supports(height:100dvh){.lang-list{max-height:calc(100dvh - 132px)}}
+/* Признак «ниже есть ещё»: когда список прокручивается, снизу внутри рамки появляется тень
+   (inset, внешняя тень не страдает), а прокрутка прилипает к границам пунктов. Без этого
+   обрезанный по нижнему краю пункт читается как недоделка, а не как «прокрути». */
+.lang-list{scroll-snap-type:y proximity;scrollbar-width:thin}
+.lang-list.more{box-shadow:inset 0 -18px 14px -14px rgba(20,40,90,.30),var(--shadow-2)}
+.lang-list>*{scroll-snap-align:start}
 .lang-list>*{display:flex;align-items:center;padding:9px 12px;border-radius:12px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500;transition:background .12s ease,color .12s ease}
 .lang-list a:hover{background:var(--brand-soft);color:var(--brand)}
 /* .on объявлен ниже и с меньшей специфичностью базового селектора: текущий пункт — жирный и брендовый */
@@ -748,6 +762,45 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   var dd = document.querySelector('details.lang-dd');
   if (!dd) return;
   var sum = dd.querySelector('summary');
+  var list = dd.querySelector('.lang-list');
+  // Тень «ниже есть ещё» — только пока список действительно прокручивается и не дочитан
+  // до конца (23.10.2026: на коротком экране список прокручивается, обрезанный пункт без
+  // признака прокрутки читается как дефект вёрстки).
+  function more(){
+    if (!list) return;
+    var rest = list.scrollHeight - list.clientHeight - list.scrollTop;
+    list.classList.toggle('more', rest > 2);
+  }
+  // Потолок высоты ставим по ЦЕЛЫМ пунктам: CSS-потолок (max-height:calc(100dvh - 132px))
+  // режет шестой пункт посередине буквы — на глаз это «сломанная вёрстка», а не «прокрути».
+  // Считаем, сколько пунктов реально влезает выше липкой кнопки, и обрезаем по границе.
+  function fit(){
+    if (!list || !dd.open || !list.children.length) return;
+    var cs = getComputedStyle(list);
+    var pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+            + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+    var gap = parseFloat(cs.rowGap || cs.gap) || 0;
+    var rowH = list.children[0].getBoundingClientRect().height;
+    if (!rowH) return;
+    var top = list.getBoundingClientRect().top;
+    var bar = document.querySelector('.sticky-cta');
+    var barH = 0;
+    if (bar) {
+      var bcs = getComputedStyle(bar);
+      if (bcs.visibility === 'visible') barH = bar.getBoundingClientRect().height + 8;
+    }
+    var avail = window.innerHeight - top - barH - 8;
+    var rows = Math.max(2, Math.min(list.children.length, Math.floor((avail - pad + gap) / (rowH + gap))));
+    list.style.maxHeight = (pad + rows * rowH + (rows - 1) * gap) + 'px';
+    more();
+  }
+  if (list) list.addEventListener('scroll', more, {passive:true});
+  // Поворот телефона меняет высоту без открытия меню: пересчитать и потолок, и тень.
+  window.addEventListener('resize', fit, {passive:true});
+  dd.addEventListener('toggle', function(){
+    if (dd.open) { if (window.requestAnimationFrame) requestAnimationFrame(fit); else fit(); }
+    else if (list) list.classList.remove('more');
+  });
   function close(focus){
     if (!dd.open) return;
     dd.open = false;
