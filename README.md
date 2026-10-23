@@ -2021,3 +2021,58 @@ covers a banned bot, this gate does not); that the service stays up between runs
 watchman, not a supervisor; and nothing at all on a host without a local model and without systemd,
 where all four checks announce themselves as `SKIP`.
 
+## The letter was announced once, and nobody asked whether it was answered (23.10.2026)
+
+**What was found.** The form says "we will reply to your email"; the eleventh answer in the
+FAQ says "we read every message". The mechanism was one cron: every ten minutes it looks for
+a new enquiry, sends the owner a single Telegram message, marks the letter read, and writes
+its id into the state file's `seen` list. After that, silence. Delivery was watched from five
+sides — the form posts, the mailbox receives, the marker matches, the canary fires when the
+box goes quiet — and not one check asked the only question the page actually promises:
+*was it answered?* A message that arrives at midnight can be missed, and nothing in the system
+would ever mention that letter again. The class is the one this repository keeps paying for:
+the promise is compared with the notification, never with the outcome.
+
+**What changed.** `contact-inbox-check.py` now keeps a `pending` list. An announced letter
+enters it with its address and the letter's own date; twenty-four hours without a reply and the
+digest carries a reminder, then one a day, three in total, after which the letter is left alone
+and stays in the mailbox. "Answered" is not a guess: `gmail search 'in:sent to:"<address>"'`
+in the same kerio mailbox, and only messages dated not earlier than the enquiry — an older
+correspondence with the same person is not an answer. There are three verdicts, not two:
+*yes* takes the letter off the chase, *no* raises the reminder, and *could not check* (expired
+token, no network, unparsable reply) says so in words, leaves the counter alone, and keeps the
+letter pending; guessing is forbidden in both directions. A failure in the chase does not
+muffle the channel — new letters are still announced in that same tick. Reminders ride in one
+digest message rather than one message per letter (owner, 21.10), at most five answer-checks
+per tick to spare the Gmail quota, at most fifty letters remembered.
+
+**The regression harness was eight scenarios; it is seventeen.** A fake mailbox, no network:
+reminder one, reminder two, silence after the third, "the reply went out" clearing the letter,
+old correspondence not counting as a reply, a broken answer-check staying honest and not
+swallowing the new letter announced in the same tick, a fresh letter not being chased, the
+announced letter landing in `pending` with its address and date, and an unreadable address
+getting one warning and then silence. `python3 contact-inbox-regress.py` → exit 0, 35 checks
+green, 0 failed.
+
+**Controls.** Two mutations of the production script, each a refusal the harness had to catch.
+With `CHASE_AFTER_H = 1000000` — the chase switched off — 12 checks go red, including both
+reminders and the clearing by reply. With the found sent-message no longer counting as an
+answer — the eyes blinded — 2 go red, exactly the two that describe the reply. So the harness
+bites on "switched off" and on "blind", not merely on a missing word. Then, against the real
+mailbox and read-only: an address the mailbox wrote to a year ago answers *yes*, the same
+address with a thirty-day cutoff answers *no* (every letter is older than the cutoff), an
+address that never existed answers *no*; and a dry run of the cron itself on a copy of the
+state file exits 0, prints nothing (no new letters), and migrates the state to the new schema.
+
+**In the sweep.** One new check, `promise: an enquiry nobody answered is chased`, runs the
+harness and requires exit 0 — behaviour, not the presence of words, which is the lesson of the
+validator that stayed green for five hours while returning an error. On a clone without the
+harness the check announces itself as `SKIP` rather than passing silently. 1893 → 1894 checks,
+0 failed.
+
+**What it cannot prove.** That the owner will reply — the chase makes silence visible, it does
+not answer for a person; that the reply left from this mailbox — an answer sent from another
+account or a phone is invisible, and the letter will be chased three times (noise, not loss);
+that the reminder is instant — it rides the ten-minute tick; that a letter written after the
+third reminder will be noticed — it will not; that only real enquiries arrive — a spam letter
+gets its three reminders too.
