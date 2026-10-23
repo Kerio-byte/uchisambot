@@ -40,7 +40,7 @@ And any other school question you are stuck on.
 
 ## Real chats with the bot
 
-Real screenshots — the bot works in 9 languages.
+This is what a breakdown looks like — the bot works in 9 languages.
 
 ![UchiSamBot welcome screen](https://kerio-byte.github.io/uchisambot/img/shot1.webp)
 
