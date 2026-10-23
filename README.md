@@ -1756,3 +1756,56 @@ fonts already shipped. Cross-engine 60 runs / 0.
 speaker reviewed them; the wording follows the register the dictionaries already use (आप, bạn) and
 the sentence structure of the English. That the inbox cron stays alive — see above. And that an
 eleventh answer gets read at all: length is not attention.
+
+## The policy changed; its own date did not (23.10.2026)
+
+At 02:33 on 23 October, §7 of the privacy policy was rewritten: the eight launch badges moved from
+the platforms' servers to ours, and the sentence a reader relies on changed from "the platform sees
+your IP address and that the request came from our site" to "opening a page sends no request to
+those platforms at all". The page was edited, committed, deployed — and still said "Last updated:
+22 October 2026". Nothing else on the site tells a reader that the data-sharing disclosure changed;
+the date is the only thing that does.
+
+**Why no gate looked there.** The sweep did check legal dates — against a hand-written ledger:
+`LEGAL_DATES = {"privacy.html": ("22 October 2026", "22 октября 2026"), …}`. That is a copy of the
+date, not a fact about the file. The copy goes stale exactly on the day it matters: the text changes,
+the ledger does not, and the run prints `FAILED: 0`. The same class as the badge gate that had been
+red since the files moved and the FAQ counter that was a literal — a gate reading a second copy of
+the truth instead of the truth.
+
+**What replaced it.** The date now has to equal the day the *visible text* of the page last changed,
+read from git. `_legal_last_text_change()` walks the file's commits from newest to oldest, extracts
+`<main>` from each revision, strips the two date lines, and returns the date of the first commit
+whose text differs from the previous one. Stripping the date lines is what keeps the check from
+chasing its own tail: without it, bumping the date would count as a text change and every document
+would keep dating itself to the day it was last dated. Two more checks hold the twin and the two
+language halves: the `.md` file must carry the same day in English and Russian, and the two halves
+must name one day that is not in the future. The ledger is gone; the sweep is 1881 checks (+6).
+
+**Terms was not bumped, deliberately.** `terms.html` also changed on 23 October — but only in the
+`<head>` (`dns-prefetch` links removed) and in the footer (badge images now local). Its visible text
+did not change by a word, so its date stays 22 October. A gate that demanded a bump for that would
+demand a lie in the other direction, and would be switched off within a week — the same lesson as
+the always-red badge gate. The check compares text, not mtime and not the commit list.
+
+**The working tree counts as today.** The project's order is build → sweep → commit. If the check
+read only committed history, an honest edit would turn the sweep red *before* the commit and force
+the order to be broken. So when the working tree's text differs from `HEAD`, the required date is
+today. Verified by mutation: with yesterday's date left on an edited page, the run fails with
+`история 23 October 2026 (рабочее дерево (не закоммичено))`.
+
+**Checked.** Build rc=0; the build touched three files (privacy.html, its markdown twin, the lastmod
+ledger), a second build is byte-identical, and this README is the fourth file in the commit. Sweep
+1881 / 0. Links 11 pages / 0. Nu validator exit 0 (only the known parser gaps on
+`overscroll-behavior`, `dvh` and four-argument `rgb`). Browser smoke 18 runs (nine languages ×
+desktop and mobile) / 0. Negative controls: the pre-fix page fails the new check
+(`страница 22 October 2026 / история 23 October 2026 (c25662a6)`), a stale `.md` twin fails one
+check, a drifted Russian half fails four; every mutation was restored and verified by sha256.
+
+**What it cannot prove.** That the date equals the day a reader could first see the change: it is
+the day of the commit, and Pages deploys minutes later — the same day, unless the commit lands just
+before midnight. That the machine's clock is right: the page and the history are stamped by the same
+clock, so a wrong clock writes the same wrong day twice and this gate agrees with both. That an
+uncommitted edit kept for a week keeps its first day — it does not; every run dates it to today,
+which is honest but not a history. And that a date makes a policy compliant: it records when the
+words changed, not whether they are sufficient.
