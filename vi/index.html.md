@@ -1,4 +1,4 @@
-# UchiSamBot — Trợ lý học tập cho học sinh
+# UchiSamBot — Bài tập về nhà từng bước trên Telegram
 
 > Bot Telegram phân tích bài tập về nhà từng bước, giải thích chủ đề bằng từ đơn giản, kiểm tra bài giải và tạo thẻ ghi nhớ. 2 lần phân tích đầu tiên miễn phí.
 

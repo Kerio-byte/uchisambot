@@ -1,4 +1,4 @@
-# UchiSamBot — Asisten belajar untuk siswa sekolah
+# UchiSamBot — PR langkah demi langkah di Telegram
 
 > Bot Telegram yang membahas PR langkah demi langkah, menjelaskan topik dengan kata sederhana, memeriksa jawaban, dan membuat kartu belajar. 2 pembahasan gratis.
 
