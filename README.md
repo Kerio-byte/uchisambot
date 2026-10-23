@@ -2795,4 +2795,54 @@ setting. And that page edits will reach the world by themselves — they will no
 build → sweep → commit → `publish-branch.sh` order is the only way a change becomes visible, and a
 forgotten last step is exactly what the freshness check is for.
 
+## The policy said no other servers; only the markup was ever asked (24.10.2026)
 
+**The gap.** The privacy policy makes the site's strongest factual claim — opening a page sends no
+request to anyone but us, and the only exception (`api.web3forms.com`) happens when a person presses
+Send. Three checks stood behind it, all reading attributes: `<img src>` with an absolute address,
+`<script src>`, `<link rel="stylesheet" href="https://…">`, plus the `preconnect`/`dns-prefetch`
+hints added on 23.10. A browser is asked for more than that. Fonts arrive through `url()` inside
+`@font-face`, the hero asks for a `poster` and a `<source>`, `<link rel="preload">` and `srcset`
+fetch files before a pixel is painted, and none of those shapes was in any gate. So a font moving to
+a CDN — one edit, no visible change on the page — would have left the policy asserting something
+untrue, with every check green. And nothing at all looked at the wire: an address assembled in
+script (`atob` plus `new Image().src`) is invisible to every regex ever written.
+
+**What changed.** Two gates of different natures, because neither one is enough.
+
+- `landing-sweep.py` now enumerates every address a browser **must** load — `img/source/video src`,
+  `poster`, `srcset`, `script src`, `iframe`, `object`/`embed`, `link[stylesheet|preload|icon|
+  apple-touch-icon|manifest]` and `url()` in CSS — and requires each one to resolve to our own host.
+  Relatives pass, `data:` passes, everything else has to be `kerio-byte.github.io`. 258 load-bearing
+  addresses across the twelve pages; +21 checks (9 language pages + all 12 files) → **2072 checks**.
+- New battery `landing-third-party.py` — 12 pages in Chromium, 9 assertions each (**108 checks**):
+  the document answers 200 and actually pulls assets; every request went to our host; no failed
+  request; no response ≥ 400; no JavaScript error; opening a page makes no non-GET call (beacons
+  post); no cookie is set; and storage holds only the one key the policy names (`ucs_sent`).
+  It prints `CHECKS: N, FAILED: 0` and exits non-zero otherwise, like the rest of the family.
+
+**Controls.** A hardlinked copy of the tree (`cp -al`; every edited file is replaced — `unlink` then
+write — or the hardlink would truncate the real page), served locally, run through the sweep with
+`LANDING_ROOT` and through the battery with `--base`.
+
+- Foreign font only, in `es/index.html`: the old gate set stayed green — `privacy no third-party
+  assets` and `no third-party image hosts` did not notice a `url()` at all — while the two new checks
+  answered `css url()->https://fonts.gstatic.com/s/manrope/manrope-latin.woff2` and the sweep exited 1.
+- Runtime beacon only (`atob` + `new Image().src` to `evil-example.com`): the sweep reported **zero**
+  failures naming it, which is the point — static reading cannot see an address that does not exist
+  as text. The battery named `evil-example.com` on both "no foreign host" and "no failed request".
+- The battery's first version counted hosts on **responses**. The beacon's domain does not exist, so
+  there was no response and "no foreign host" stayed green — the leak was caught only one line lower,
+  as a failed request. Hosts are now counted on `request` events. The control above is from the fixed
+  version; the bug is recorded because the control is what found it.
+
+**Checked after the change.** Sweep 2072 / 0. `tools/build.py --check`: 24 files match, so nothing in
+the shipped HTML moved. Battery 108 / 0 on the live site: 12 pages, 6–19 requests each, one host —
+`kerio-byte.github.io`. The static enumeration finds 258 addresses and 0 foreign ones.
+
+**What it cannot prove.** That the visitor's browser behaves like ours: an extension, a hosts file or
+a DNS filter can block a request in one browser and not in another, and the battery records what one
+Chromium did. That a click cannot reach a third party — `a href` and `form action` are deliberately
+out of scope (they carry no request until a person acts). And that the storage line stays honest in
+both directions: it compares against the single key the policy names, so a future feature that adds
+a second key must add it to the policy first, and the check will say so.
