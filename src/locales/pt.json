@@ -76,7 +76,7 @@
   "q7": "Onde eu consigo Stars?",
   "q7a": "Direto no chat: quando você toca para comprar uma explicação, o Telegram abre a janela de pagamento e oferece recarregar seu saldo de Stars, se estiver baixo. O saldo fica na sua conta do Telegram e funciona em qualquer bot que aceite Stars.",
   "q8": "Quanto tempo leva uma explicação?",
-  "q8a": "Normalmente em menos de um minuto: você envia a tarefa e a explicação chega no chat — geralmente em 10–60 segundos.",
+  "q8a": "Normalmente em menos de um minuto: você envia a tarefa e a explicação chega no chat — geralmente em 5–60 segundos. Se o servidor estiver ocupado, pode levar até dois minutos.",
   "q9": "E se uma explicação falhar?",
   "q9a": "Tente de novo em alguns minutos — às vezes há sobrecargas curtas. Se continuar falhando, fale conosco pelo formulário de contato no fim da página — vamos verificar.",
   "q10": "Qual é a diferença para um chatbot de IA comum?",

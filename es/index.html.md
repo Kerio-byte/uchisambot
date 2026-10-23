@@ -99,7 +99,7 @@ Directamente en el chat: cuando tocas para comprar un desglose, Telegram abre la
 
 ### ¿Cuánto tarda un desglose?
 
-Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat — por lo general, en 10–60 segundos.
+Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat — por lo general, en 5–60 segundos. Si el servidor está ocupado, puede tardar hasta dos minutos.
 
 ### ¿Qué pasa si un desglose falla?
 
