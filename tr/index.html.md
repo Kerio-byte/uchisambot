@@ -99,7 +99,7 @@ Tam sohbetin içinde: bir çözüm satın almak için dokunduğunda Telegram öd
 
 ### Bir çözüm ne kadar sürer?
 
-Genellikle bir dakikadan kısa: ödevini gönderirsin, çözüm sohbete gelir — çoğunlukla 10–60 saniye içinde.
+Genellikle bir dakikadan kısa: ödevini gönderirsin, çözüm sohbete gelir — çoğunlukla 5–60 saniye içinde. Sunucu yoğunsa iki dakikaya kadar sürebilir.
 
 ### Çözüm başarısız olursa ne olur?
 

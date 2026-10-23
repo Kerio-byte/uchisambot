@@ -76,7 +76,7 @@
   "q7": "Where do I get Stars?",
   "q7a": "Right in the chat: when you tap to buy a breakdown, Telegram opens the payment window and offers to top up your Stars balance if it's low. The balance stays in your Telegram account and works in any bot that accepts Stars.",
   "q8": "How long does a breakdown take?",
-  "q8a": "Usually under a minute: send your task and the breakdown comes back in the chat — typically in 10–60 seconds.",
+  "q8a": "Usually under a minute: send your task and the breakdown comes back in the chat — normally in 5–60 seconds. If the server is busy, it can take up to two minutes.",
   "q9": "What if a breakdown fails?",
   "q9a": "Try again in a few minutes — brief overloads happen. If it keeps failing, write to us via the contact form below — we will look into it.",
   "q10": "How is it different from a general AI chatbot?",
