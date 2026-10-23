@@ -38,13 +38,17 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent                    # .../promo/landing-20261012
-BOT_DIR = REPO.parent.parent / "study-bot"   # .../stars-bots/study-bot
+# 23.10.2026: путь к боту можно переопределить (как LANDING_ROOT в свипе) — иначе прогон
+# на копии дерева падал на чтении bot/handlers.py, и негативный контроль «фраза выпала из
+# политики» приходилось проверять на живом сайте.
+BOT_DIR = Path(os.environ.get("BOT_DIR", REPO.parent.parent / "study-bot"))   # .../stars-bots/study-bot
 FONTS = HERE / "assets" / "fonts"
 IMG = REPO / "img"
 LEDGER = REPO / "tools" / "shots.json"

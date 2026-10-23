@@ -2564,3 +2564,82 @@ the bot: the mockups are the first screen only. And that the owner prefers the r
 images to the old captures — they are now the same pipeline as the other seven (default taken:
 uniformity over frozen references).
 
+## The policy listed six things; the bot kept fifty-one columns (23.10.2026)
+
+**What was found.** `privacy.html` §1 named six categories of data: the Telegram user ID with
+the interface language, the content sent to the bot, technical processing records, purchase
+records, and referral links. The bot's database wrote more than that:
+
+| stored, not named in §1 | where |
+|---|---|
+| the public @username, Telegram Premium status | `users.username`, `users.premium` |
+| the language the visitor's own Telegram app is set to | `users.tg_lang` |
+| the tag of the link that brought the visitor (`src_landing_*`) | `users.source` |
+| photo present, bio length, username present, account language, an age read from the bio, six bio words (school / student / parent / exam / tutor / English), shared group chats, the kind of “last seen”, whether a phone number is shown | `profiles.*` (13 columns, keyed by `user_id`) |
+
+The cron `профили-бота` has been filling that table daily at 08:30 since 15 Oct; at the time of
+the check it held four rows for five users. So §1 was not merely incomplete: it said “we do not
+ask for or store your name” while the public name was stored, and §2 called its statistics
+“aggregated, de-identified” while the profile row sits next to a `user_id`. The policy also
+described the footer as the eight badge pictures only — three plain text links
+(realisticai.io, aitooltrek.com, basedtools.ai) were not named anywhere.
+
+**Why nothing caught it.** Every privacy battery compared the policy with the site: the rights
+list, the legal bases, the processors, the badges, the cookies. None compared it with the bot.
+The policy was checked against itself, so it could stay true to its own wording and false to the
+machine. The `profiles` table made this worse by existing in two places — `bot/storage.py` and
+`scripts/profile_collect.py` — neither of which the site ever read.
+
+**What changed.**
+
+- §1, both halves: nine bullets. New: the app's own language (used once, on the first visit);
+  @username and Premium (“Telegram shows both publicly… we never ask for your real name”); the
+  arrival tag (“a word about a place, not about you”); and the profile observations, field by
+  field — with the limits spelled out: never the bio text, only that a phone is shown, the kind
+  of “last seen”, read as totals, never published, never shown to other users, never used for
+  advertising.
+- §1 closing paragraph: “your name” → “your real name”, plus one sentence that these
+  observations come from what Telegram shows publicly, not from messages.
+- §2: the purpose is now “understand who uses the bot … read as totals rather than one person at
+  a time”, with “no decision about you is taken automatically from them”; the legitimate-interest
+  clause says “statistics about the service as a whole” instead of “aggregated statistics”.
+- §5: the profile observations are kept while the account exists and are deleted with the rest.
+- §7: the three footer text links are named, with the same sentence as the badges — nothing is
+  sent until a visitor clicks.
+- The sweep grew 2,031 → 2,045 checks. New battery: the sweep reads the bot's schema (both files,
+  stdlib regex, no import) and requires every column of `users`, `tasks`, `purchases`,
+  `referrals`, `profiles`, `contacts` — 51 columns — to have a phrase in the EN half **and** a
+  phrase in the RU half of the policy. A column the bot writes but the map does not know is red;
+  a map entry the bot no longer writes is red; a phrase that fell out of the text is red. Plus
+  “real name, not name”, the deletion sentence, and: every external host linked from any of the
+  nine pages must be named in the policy in both halves.
+- One source for the bot's address: `BOT_ROOT` in the sweep and `BOT_DIR` in `gen_shots.py`
+  replace three literals — which is what let the negative controls run on a copy of the tree
+  instead of on the live site.
+
+**Controls.** A throwaway copy of the tree (`scratch/negpriv2-222734`, `LANDING_ROOT` +
+`BOT_ROOT`): 2,044 / 0 before any break. Then four breaks, four red lines, nothing else moved:
+(a) the RU bullet “Ваш @username” → “Ваш ник” fails `privacy names every field the bot writes:
+users | username[ru]`; (b) “настоящее имя” → “имя” fails `privacy says 'real name' while storing
+@username`; (c) a `phone` column added to `users` and `school_name` to `profiles` in a copy of
+the bot fails `covers every column the bot writes | [('users','phone'), ('profiles','school_name')]`;
+(d) removing the three-links sentence from the EN half fails `privacy names every external site
+the page links to [en] | aitooltrek.com, basedtools.ai, realisticai.io`.
+
+**Checked after the change.** Sweep 2,045 / 0. Links 11 pages / 0 problems. Render-check ALL OK,
+JS errors none. Visual pass PROBLEMS 0 — 18 page loads, 9 languages × 420/1440. cwv 69 / 0.
+a11y-extra 124 / 0. wcag22 43 / 0. axe 12 pages / 0 violations. Cross-engine 60 / 0 (WebKit +
+Firefox; mobile, desktop and three landscape sizes; 426 s). Nu validator: no real findings, the
+privacy page itself 0 messages. External links: 0 problems — the three newly named directories
+answer 200. The legal page measured by eye at 420 and 1440, both halves: horizontal overflow 0,
+the nine-bullet list wraps cleanly, nothing clipped.
+
+**What it cannot prove.** That this is the lawful basis: “legitimate interest, statistics about
+the service as a whole” is now stated, but whether it holds for observations taken from minors'
+public profiles is a lawyer's judgement, not a gate's. That a user ever sees this notice: the bot
+has no link to the policy in `/start` or the menu, so the notice still reaches only visitors of
+the site — that is a bot-side block, not this one. That the rows already collected are wanted: if
+the owner would rather not keep “last seen” and Premium at all, dropping two columns is a one-line
+change, and the gate will demand the policy follow it. And that the three text links belong in the
+footer — they are named now, which is the honest minimum, not a judgement about keeping them.
+
