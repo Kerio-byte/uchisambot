@@ -735,5 +735,34 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   onScroll();
 })();
 </script>
+<script>
+(function(){
+  // Меню языков — это <details>: раскрывается по клику и Enter, но САМО не закрывается
+  // ни по Escape, ни по клику мимо (проверено 23.10.2026 в Chromium, WebKit и Firefox).
+  // На телефоне раскрытый список из девяти языков накрывает первый экран, а убрать его
+  // можно было только повторным нажатием в тот же заголовок высотой 44 px. Здесь —
+  // привычное поведение раскрывающегося меню: Escape закрывает и возвращает фокус на
+  // заголовок (как требует паттерн disclosure), клик вне меню закрывает без переноса фокуса.
+  // Без скрипта меню остаётся обычным <details> и работает как раньше.
+  var dd = document.querySelector('details.lang-dd');
+  if (!dd) return;
+  var sum = dd.querySelector('summary');
+  function close(focus){
+    if (!dd.open) return;
+    dd.open = false;
+    if (focus && sum) { try { sum.focus({preventScroll: true}); } catch(e){ sum.focus(); } }
+  }
+  document.addEventListener('keydown', function(e){
+    // Esc — старое имя клавиши в IE/старом Edge; лишним не будет.
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    close(true);
+  });
+  document.addEventListener('click', function(e){
+    if (!dd.open) return;          // клик, которым меню ОТКРЫЛИ, сюда попадает до toggle
+    if (dd.contains(e.target)) return;  // клик по заголовку закрывает сам <details>
+    close(false);
+  });
+})();
+</script>
 </body>
 </html>
