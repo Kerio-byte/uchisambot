@@ -59,7 +59,7 @@ HAND_WRITTEN = ("privacy.html", "terms.html", "robots.txt")
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 PRICES_FILE = ROOT / "tools" / "prices.json"
 # Ссылка на бота для ИИ-слоя (llms.txt + md-двойники страниц). Правило владельца:
-# каждая ссылка на бота несёт метку источника (реестр — ~/.hermes/state/money/link-tags.md);
+# каждая ссылка на бота несёт метку источника (реестр меток ведётся вне этого репозитория);
 # без метки переход из ИИ-канала падает в статистике в «(без метки)» и неразличим по площадкам.
 BOT_LLMS = "https://t.me/UchiSamBot?start=src_llms"
 
