@@ -76,7 +76,7 @@
   "q7": "Dari mana mendapatkan Stars?",
   "q7a": "Langsung di chat: saat kamu ketuk untuk membeli pembahasan, Telegram membuka jendela pembayaran dan menawarkan isi ulang saldo Stars kalau kurang. Saldonya tersimpan di akun Telegram kamu dan bisa dipakai di bot mana pun yang menerima Stars.",
   "q8": "Berapa lama satu pembahasan?",
-  "q8a": "Biasanya kurang dari satu menit: kamu kirim soalnya, lalu pembahasannya masuk ke chat — umumnya dalam 10–60 detik.",
+  "q8a": "Biasanya kurang dari satu menit: kamu kirim soalnya, lalu pembahasannya masuk ke chat — umumnya dalam 5–60 detik. Kalau server sedang sibuk, bisa sampai dua menit.",
   "q9": "Bagaimana kalau pembahasannya gagal?",
   "q9a": "Coba lagi beberapa menit lagi — kadang ada beban singkat. Kalau terus gagal, hubungi kami lewat formulir di bawah ini — kami akan cek.",
   "q10": "Apa bedanya dengan chatbot AI biasa?",

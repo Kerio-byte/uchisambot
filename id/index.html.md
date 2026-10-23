@@ -99,7 +99,7 @@ Langsung di chat: saat kamu ketuk untuk membeli pembahasan, Telegram membuka jen
 
 ### Berapa lama satu pembahasan?
 
-Biasanya kurang dari satu menit: kamu kirim soalnya, lalu pembahasannya masuk ke chat — umumnya dalam 10–60 detik.
+Biasanya kurang dari satu menit: kamu kirim soalnya, lalu pembahasannya masuk ke chat — umumnya dalam 5–60 detik. Kalau server sedang sibuk, bisa sampai dua menit.
 
 ### Bagaimana kalau pembahasannya gagal?
 

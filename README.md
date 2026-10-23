@@ -58,6 +58,14 @@ Live: https://kerio-byte.github.io/uchisambot/
   the chips, the FAQ sentence and both halves of `terms.html` with the same file. Added
   22 Oct 2026 after the list had been translated as «the language of this page» on eight
   pages (see "The subject list was translated into the wrong thing" below).
+- `tools/answer-time.json` — the number the page gives for waiting (23.10.2026). `claims` holds
+  what all nine pages say (the range `5–60`, the 120-second ceiling and the ceiling phrase in each
+  language); `sessions` holds what was measured on the production path — date, model, GPU queue
+  state before and after, every task's seconds — written by `landing-answer-time.py`
+  (`stars-bots-ops` skill), never by hand. The sweep ties the nine `q8a` answers to `claims` and
+  fails when any recorded session exceeds the ceiling, when one of the two kinds of session (idle,
+  busy) is missing, or when the newest is older than thirty days (see "The page counted seconds on
+  a card it never looked at" below).
 - `img/` — logo (SVG), favicons, chat-shot mockups (WebP; `shot1-3.webp` = EN,
   `shotN-<lang>.webp` = each of the other eight languages, see "Chat shots" below),
   social preview cards (`og-<lang>.png`, 1200×630 — one per language, see "Social
@@ -2153,3 +2161,70 @@ not a silent change in a cron block.
 **State.** The fix is committed and tested (31 unit tests, the smoke run, the live battery); the
 running process still executes the previous code until the service is restarted, and cron blocks
 service restarts by policy — that one command belongs to the owner.
+
+## The page counted seconds on a card it never looked at (23.10.2026)
+
+**What was found.** The previous block ended with an open item: "the answer arrives inside the
+promised minute" could not be proven. The promise itself was the reason. All nine pages answer
+"how long does a breakdown take?" with one number — **10–60 seconds** — and nothing measured it:
+no gate, no ledger, no test. Two measurements of the *same* production path (`generate_breakdown`
+plus the bot's provider, the code a student's message takes) disagree with it in both directions.
+On an idle card, three typed tasks and three photographs of a textbook page came back in 4.6–17.8 s
+and 7.8–23.8 s — the page over-promised the floor by a factor of two. With the card shared
+(agent crons through LiteLLM, the previous block's numbers), photographs took 34.7–78.8 s and one
+task died at the 120 s timeout — the page under-promised the ceiling by more than a minute. A
+number that is wrong both ways is a guess, and the student who sends a photo is the one who
+measures it.
+
+**What changed.** `q8a` in all nine dictionaries now names the measured range and the ceiling:
+*5–60 seconds*, and *"if the server is busy, it can take up to two minutes"*. The bot's own
+"⏳ working on it" line says the same thing in nine languages (`bot/i18n.py`, `bot/i18n_extra.py`)
+— that line is what a student reads while waiting, so it was the other half of the same promise;
+it deploys with the restart the previous block left for the owner.
+
+**The number now has an owner.** `tools/answer-time.json` is a ledger in the same shape as
+`prices.json`, `subjects.json` and `demo/captions.json`: `claims` — what the page says (the range,
+the 120-second ceiling, and the ceiling phrase per language, because a check across nine languages
+cannot match a Russian sentence against an English one); `sessions` — what was measured: date,
+model, queue state before and after, and every task's seconds. `landing-answer-time.py` (in the
+`stars-bots-ops` skill) runs the production path, appends a session with `--write`, and exits 1
+when a task fails or the slowest one exceeds the ceiling. `--contend N` starts N filler generations
+in the same queue first, so "a busy server" is reproducible instead of remembered.
+
+**In the sweep.** Thirteen new checks (1,895 → 1,908, 0 failed): the ledger must name a range and a
+ceiling that agree with each other; each of the nine `q8a` must contain both the range string and
+its own language's ceiling phrase; no recorded session may exceed the ceiling or carry a
+violation; there must be at least one idle session and one busy one; the newest session may not be
+older than thirty days — a stale measurement is a claim nobody checked, and the sweep says so
+instead of letting the number age quietly.
+
+**Numbers.** Idle session (16:23, GPU 0 at 0 %, 20,284 MiB resident): typed `n=3` 4.6/6.7/17.8 s
+(p50 6.7), photo `n=3` 7.8/11.3/23.8 s (p50 11.3), no errors. Contended session (16:29, two
+600-token fillers fired into the same endpoint first): the first typed task waited **41.5 s**
+behind them, the rest ran 6.6–12.9 s; `busy: true` is recorded with the queue state, not with a
+feeling. The page's ceiling, 120 s, is deliberately below the bot's own hard photo budget
+(`LLM_TIMEOUT` 120 + 45 = 165 s): the ledger fails the sweep at 120 because past two minutes the
+page is already wrong, whatever the system is still willing to wait for.
+
+**Controls, each restored byte-exact (`sha256sum -c`).** (1) `ru.json` edited back to "10–60" —
+two red lines, `[ru] время разбора` and the older `translated numbers == EN` — plus `[build]`,
+because the source was not rebuilt; that is the old gate doing its job. (2) A session's `text.max`
+set to 150 — `ни один замер не вышел за потолок страницы`, naming the date and `150.0 > 120`.
+(3) Both sessions marked `busy: false` — `есть замер и на свободной, и на занятой карте` names
+"сессий 2, из них под нагрузкой 0". Every other check stayed green through all three.
+
+**Checked after the change.** Sweep 1,908 / 0. The FAQ answer — the longest line on the page — at
+420 px in RU, HI and EN: opened on its own (the language menu is a `<details>` too, and opening
+every `<details>` on the page screenshots the menu over the text — the first attempt did exactly
+that), the answer is 378 px wide inside a 420 px viewport, no horizontal scroll, no clipping, the
+new sentence wraps by words. `landing-render-check.py`, the a11y battery (124 checks) and the
+viewport battery (94 checks) re-run green; the bot's 31 unit tests pass with the new `processing`
+strings.
+
+**What it cannot prove.** That the GPU queue behaves tomorrow as it did at 16:23 and 16:29 — the
+session records the queue state precisely because the number is a property of the card, not of the
+page; that three plus three tasks are a distribution rather than a sample; that 120 s covers every
+load — the hard budget is 165 s, and past it the student gets the "try again in a few minutes"
+answer that `q9a` already describes; that the model's arithmetic is right (other batteries); and
+that the running bot already says the new sentence — it does not, until the service is restarted.
+

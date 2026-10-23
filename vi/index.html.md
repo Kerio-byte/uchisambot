@@ -99,7 +99,7 @@ Ngay trong cuộc trò chuyện: khi bạn bấm mua một lần phân tích, Te
 
 ### Một lần phân tích mất bao lâu?
 
-Thường dưới một phút: bạn gửi bài tập và phần phân tích hiện ngay trong cuộc trò chuyện — thông thường trong 10–60 giây.
+Thường dưới một phút: bạn gửi bài tập và phần phân tích hiện ngay trong cuộc trò chuyện — thông thường trong 5–60 giây. Nếu máy chủ đang bận, có thể mất đến hai phút.
 
 ### Nếu lần phân tích không thành công thì sao?
 

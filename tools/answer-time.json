@@ -1,0 +1,148 @@
+{
+  "_note": "Единственный источник чисел «сколько ждать разбор» (23.10.2026). Сайт (FAQ q8a во всех 9 языках) обязан называть ровно эти числа: typical_raw и ceiling_phrase. Сессии замера дописывает ~/.hermes/skills/earn-hunt/stars-bots-ops/scripts/landing-answer-time.py --write; свип сверяет тексты с claims и каждый замер с потолком ceiling.",
+  "claims": {
+    "typical": [
+      5,
+      60
+    ],
+    "typical_raw": "5–60",
+    "ceiling": 120,
+    "ceiling_phrase": {
+      "en": "up to two minutes",
+      "ru": "до двух минут",
+      "es": "hasta dos minutos",
+      "pt": "até dois minutos",
+      "hi": "दो मिनट तक",
+      "id": "sampai dua menit",
+      "tr": "iki dakikaya kadar",
+      "vi": "đến hai phút",
+      "uk": "до двох хвилин"
+    }
+  },
+  "sessions": [
+    {
+      "date": "2026-10-23 16:23 +0300",
+      "model": "qwen",
+      "busy": false,
+      "contend": 0,
+      "queue_before": "0, 20284 MiB, 0 % | 1, 2516 MiB, 0 %",
+      "queue_after": "0, 20284 MiB, 95 % | 1, 2516 MiB, 0 %",
+      "text": {
+        "n": 3,
+        "min": 4.6,
+        "max": 17.8,
+        "p50": 6.7,
+        "p90": 17.8,
+        "mean": 9.7
+      },
+      "photo": {
+        "n": 3,
+        "min": 7.8,
+        "max": 23.8,
+        "p50": 11.3,
+        "p90": 23.8,
+        "mean": 14.3
+      },
+      "rows": [
+        {
+          "id": "t1",
+          "kind": "text",
+          "seconds": 6.7,
+          "chars": 631,
+          "error": ""
+        },
+        {
+          "id": "t2",
+          "kind": "text",
+          "seconds": 4.6,
+          "chars": 508,
+          "error": ""
+        },
+        {
+          "id": "t3",
+          "kind": "text",
+          "seconds": 17.8,
+          "chars": 1976,
+          "error": ""
+        },
+        {
+          "id": "p1",
+          "kind": "photo",
+          "seconds": 11.3,
+          "chars": 918,
+          "error": ""
+        },
+        {
+          "id": "p2",
+          "kind": "photo",
+          "seconds": 23.8,
+          "chars": 798,
+          "error": ""
+        },
+        {
+          "id": "p3",
+          "kind": "photo",
+          "seconds": 7.8,
+          "chars": 632,
+          "error": ""
+        }
+      ],
+      "violations": []
+    },
+    {
+      "date": "2026-10-23 16:25 +0300",
+      "model": "qwen",
+      "busy": true,
+      "contend": 2,
+      "queue_before": "0, 20284 MiB, 0 % | 1, 2516 MiB, 0 %",
+      "queue_after": "0, 20284 MiB, 96 % | 1, 2516 MiB, 0 %",
+      "text": {
+        "n": 2,
+        "min": 6.6,
+        "max": 41.5,
+        "p50": 24.1,
+        "p90": 41.5,
+        "mean": 24.1
+      },
+      "photo": {
+        "n": 2,
+        "min": 11.4,
+        "max": 12.9,
+        "p50": 12.2,
+        "p90": 12.9,
+        "mean": 12.2
+      },
+      "rows": [
+        {
+          "id": "t1",
+          "kind": "text",
+          "seconds": 41.5,
+          "chars": 540,
+          "error": ""
+        },
+        {
+          "id": "t2",
+          "kind": "text",
+          "seconds": 6.6,
+          "chars": 655,
+          "error": ""
+        },
+        {
+          "id": "p1",
+          "kind": "photo",
+          "seconds": 12.9,
+          "chars": 1057,
+          "error": ""
+        },
+        {
+          "id": "p2",
+          "kind": "photo",
+          "seconds": 11.4,
+          "chars": 827,
+          "error": ""
+        }
+      ],
+      "violations": []
+    }
+  ]
+}
