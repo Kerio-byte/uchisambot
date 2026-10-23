@@ -70,7 +70,11 @@
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{margin:0;font:16px/1.6 "UchiSam Langs","Manrope","Noto Sans Devanagari",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
   background:var(--bg);-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
+/* height:auto обязателен: атрибуты width/height у картинки — это CSS-подсказки (height:1170px),
+   и при одной только ширине 100% браузер держит ВЫСОТУ из атрибута: кадр чата 1080x2340
+   рисовался 298x1170, то есть сжат по ширине на 45% (аватары в чате — эллипсы).
+   С height:auto пропорция файла сохраняется, атрибуты продолжают резервировать место. */
+img{max-width:100%;display:block;height:auto}
 a{color:var(--brand);text-decoration:none}
 /* Микровзаимодействия: заметный фокус с клавиатуры (2px brand) */
 a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:12px}
@@ -187,7 +191,11 @@ main{display:block}
 .principle-band p{color:var(--ink);font-size:15px;max-width:56ch}
 @media(max-width:680px){.principle-band{grid-template-columns:1fr;gap:8px}}
 
-.shots{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:18px}
+/* Три кадра одной ширины: кадры чата — одна и та же пропорция 1080x2340, поэтому
+   равные колонки дают ровный ряд и одинаковые подписи. Прежние 1.2fr 1fr 1fr держались
+   на растянутых картинках (все три по 1170 px высотой): с честной пропорцией первый кадр
+   становился на 130 px выше остальных и ряд выглядел лестницей. */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .shots img{width:100%;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .shots figure{margin:0}
 .shots figcaption{margin-top:9px;text-align:center;font-size:13.5px;font-weight:600;color:var(--muted)}
