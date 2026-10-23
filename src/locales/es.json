@@ -76,7 +76,7 @@
   "q7": "¿Dónde consigo Stars?",
   "q7a": "Directamente en el chat: cuando tocas para comprar un desglose, Telegram abre la ventana de pago y te ofrece recargar tu saldo de Stars si es bajo. El saldo se queda en tu cuenta de Telegram y funciona en cualquier bot que acepte Stars.",
   "q8": "¿Cuánto tarda un desglose?",
-  "q8a": "Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat — por lo general, en 10–60 segundos.",
+  "q8a": "Normalmente en menos de un minuto: envías tu tarea y el desglose llega al chat — por lo general, en 5–60 segundos. Si el servidor está ocupado, puede tardar hasta dos minutos.",
   "q9": "¿Qué pasa si un desglose falla?",
   "q9a": "Vuelve a intentarlo en unos minutos — a veces hay sobrecargas breves. Si sigue fallando, escríbenos con el formulario de contacto que hay más abajo — lo revisamos.",
   "q10": "¿En qué se diferencia de un chatbot de IA común?",

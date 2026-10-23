@@ -99,7 +99,7 @@ Right in the chat: when you tap to buy a breakdown, Telegram opens the payment w
 
 ### How long does a breakdown take?
 
-Usually under a minute: send your task and the breakdown comes back in the chat — typically in 10–60 seconds.
+Usually under a minute: send your task and the breakdown comes back in the chat — normally in 5–60 seconds. If the server is busy, it can take up to two minutes.
 
 ### What if a breakdown fails?
 

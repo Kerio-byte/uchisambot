@@ -99,7 +99,7 @@ Direto no chat: quando você toca para comprar uma explicação, o Telegram abre
 
 ### Quanto tempo leva uma explicação?
 
-Normalmente em menos de um minuto: você envia a tarefa e a explicação chega no chat — geralmente em 10–60 segundos.
+Normalmente em menos de um minuto: você envia a tarefa e a explicação chega no chat — geralmente em 5–60 segundos. Se o servidor estiver ocupado, pode levar até dois minutos.
 
 ### E se uma explicação falhar?
 

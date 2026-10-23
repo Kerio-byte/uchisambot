@@ -76,7 +76,7 @@
   "q7": "Lấy Stars ở đâu?",
   "q7a": "Ngay trong cuộc trò chuyện: khi bạn bấm mua một lần phân tích, Telegram sẽ mở cửa sổ thanh toán và đề nghị nạp thêm Stars nếu số dư không đủ. Số dư được lưu trong tài khoản Telegram của bạn và dùng được với mọi bot chấp nhận Stars.",
   "q8": "Một lần phân tích mất bao lâu?",
-  "q8a": "Thường dưới một phút: bạn gửi bài tập và phần phân tích hiện ngay trong cuộc trò chuyện — thông thường trong 10–60 giây.",
+  "q8a": "Thường dưới một phút: bạn gửi bài tập và phần phân tích hiện ngay trong cuộc trò chuyện — thông thường trong 5–60 giây. Nếu máy chủ đang bận, có thể mất đến hai phút.",
   "q9": "Nếu lần phân tích không thành công thì sao?",
   "q9a": "Hãy thử lại sau vài phút — đôi khi có quá tải ngắn. Nếu vẫn lỗi, nhắn cho chúng tôi qua biểu mẫu liên hệ ở cuối trang — chúng tôi sẽ kiểm tra.",
   "q10": "Bot khác gì một chatbot AI thông thường?",
