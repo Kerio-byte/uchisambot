@@ -1,4 +1,4 @@
-# UchiSamBot — Assistente de estudos para alunos
+# UchiSamBot — Tarefas passo a passo no Telegram
 
 > Bot de Telegram que divide a tarefa em passos, explica os conteúdos em palavras simples e faz flashcards. Primeiras 2 explicações grátis.
 

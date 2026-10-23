@@ -2410,3 +2410,94 @@ refused by the approval policy — that one command stays with the owner. And th
 the look the owner wants: the first frame no longer dominates; getting the accent back means
 cropping the chat text at the sides, which is worse than a flat row, so the flat row is the default
 and one word from the owner turns it back.
+
+## The headline said what the product is, and forgot what it does and where it lives (23.10.2026)
+
+**What was found.** `<title>` is the only string a person reads before deciding to click: the browser
+tab, the search result, and the **bold first line of a Telegram link preview**. Nine pages carried
+nine different headlines, and two of them carried the whole message:
+
+| lang | chars | title |
+|---|---|---|
+| en | 51 | UchiSamBot — Step-by-Step Homework Help in Telegram |
+| ru | 56 | UchiSamBot — разбор домашних заданий по шагам в Telegram |
+| es | 47 | UchiSamBot — Ayudante de estudio para escolares |
+| pt | 46 | UchiSamBot — Assistente de estudos para alunos |
+| hi | 50 | UchiSamBot — स्कूली बच्चों के लिए पढ़ाई में मददगार |
+| id | 48 | UchiSamBot — Asisten belajar untuk siswa sekolah |
+| tr | 50 | UchiSamBot — okul öğrencileri için ders yardımcısı |
+| vi | 40 | UchiSamBot — Trợ lý học tập cho học sinh |
+| uk | 45 | UchiSamBot — навчальний помічник для школярів |
+
+Seven of the nine said what the product *is* (a study helper, for school students) and neither what
+makes it different (**step by step — not a ready answer**) nor where it lives (**Telegram**). The
+description immediately below each of those titles said both correctly: `Bot de Telegram que
+desglosa las tareas paso a paso…`, `Telegram बॉट, जो होमवर्क को स्टेप-बाय-स्टेप हल करता है…`. So the
+weak line was exactly the one printed largest, and the fine print underneath was doing the selling.
+
+**Why nothing caught it.** Every gate asked whether the title *is there* — `title` (the dictionary
+string appears in the page), `og:title`, `twitter:title`, `og:image:alt`, `md twin h1`. All five are
+"the same string in five places" checks, and all five passed on a headline that described the
+product as a category rather than as a promise. Nothing compared the title with the description
+written by the same translator one line below, and nothing knew that "the place where the product
+lives" is part of the message.
+
+**What changed.** Seven `meta.title` strings, each built from that language's own words — no new
+terms were introduced, every phrase is lifted from the same language's `meta.desc` or `hero.sub`:
+
+| lang | chars | new title |
+|---|---|---|
+| es | 43 | UchiSamBot — Tareas paso a paso en Telegram |
+| pt | 46 | UchiSamBot — Tarefas passo a passo no Telegram |
+| hi | 56 | UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में |
+| id | 48 | UchiSamBot — PR langkah demi langkah di Telegram |
+| tr | 47 | UchiSamBot — adım adım ödev çözümü, Telegram'da |
+| vi | 51 | UchiSamBot — Bài tập về nhà từng bước trên Telegram |
+| uk | 50 | UchiSamBot — домашні завдання покроково в Telegram |
+
+Lengths now 43–56 (were 40–51) — the spread narrowed and nobody exceeds 65 characters.
+`tools/build.py` rebuilt 7 pages, 7 markdown twins, `llms.txt` and `tools/lastmod.json`; the diff is
+23 files, 63 insertions and 63 deletions, and `--check` confirms disk equals a fresh build. The
+preview cards (`img/og-*.png`) were **not** re-rendered on purpose: they are drawn from `foot.tag`
+and `f1t/f2t/f5t`, which do not include the title, so `tools/og-cards.lock.json` stayed valid.
+
+**In the sweep (1,928 → 1,973 checks).** Three checks per page — `title names Telegram`, `title
+names the brand`, `title <= 65 chars` — plus one global `brand mentions == EN (8 langs)`: the number
+of times the product is named must match English for every key. Numbers were already compared
+(`translated numbers == EN`); the name was not, so a translator could write "Uchi-бот" or drop the
+name from a sentence and every gate stayed green.
+
+**The blind spot next door: glyphs burned into pixels.** Looking for what else nothing checks, the
+video captions turned out to be drawn with a font the page never uses — `DejaVuSans-Bold.ttf` for
+eight languages, `NotoSansDevanagari-Bold.ttf` for Hindi. FreeType gets one file and renders a
+missing character as `.notdef`, an empty box: the mp4 stays valid, the ledger still matches by
+sha256, every gate stays green, and the frame shows a rectangle. Nothing asked the font what it can
+spell. Today the answer is clean — 0 missing codepoints across all 29 baked strings (18 loop
+captions, 11 full-demo lines) — so the defect does not exist; the blind spot did. The sweep now
+reads the font's own `cmap` with a stdlib parser (`scripts/font_cmap.py`, formats 4, 6 and 12,
+because the sweep has no fontTools and should not grow one), and that parser was cross-checked
+against fontTools on both files: the maps agree to the last codepoint (DejaVu 5,935 / 5,935, Noto
+Devanagari 272 / 272, zero differences either way).
+
+**Controls.** A throwaway copy of the tree (`scratch/neg-231026a`) with four breaks — the Spanish
+title put back to its old wording, `2` turned into `3` in the Vietnamese description, the brand
+erased from `id.hero.sub`, and the Devanagari letter `स` appended to an English caption. The sweep on
+that copy exits 1 and fails exactly as intended: `title names Telegram` (es), `translated numbers ==
+EN` (vi), `brand mentions == EN (id:hero.sub)`, and `burned captions have every glyph | U+0938 'स'
+нет в DejaVuSans-Bold.ttf`. To make that possible without touching the live tree, the sweep's root is
+now overridable with `LANDING_ROOT`.
+
+**Checked after the change.** Sweep 1,973 / 0. Links 11 pages / 0 problems; render-check ALL OK;
+`landing-visual-pass.py` PROBLEMS 0 (18 page loads, 9 languages × 420/1440); cwv 69 / 0; a11y-extra
+124 / 0; wcag22 43 / 0; axe 12 pages / 0 violations; cross-engine 60 / 0 (WebKit + Firefox, mobile,
+desktop and three landscape sizes); Nu validator: no real findings; external links: 0 problems.
+
+**What it cannot prove.** That these are the headlines the owner wants — the formula is the default
+(translation was already even, only the shape of the line changed). That the live bot answers with
+the new code: the user-unit `study-bot.service` started on 22 Oct 03:13:50, while the commits of
+23 Oct (15:38 the last step stays with the student, 16:33 the waiting line, 17:23 the greeting
+language, 18:10 the price screen) are not in that process, and restarting a service from a cron run
+is refused by the approval policy — one command stays with the owner. And that the 35-second demo
+should change: its closing frame says "Works in Russian and English" while the page promises nine
+languages. That is an understatement, not a lie, but it is inconsistent; re-cutting two videos is
+the owner's call, not a default worth taking.
