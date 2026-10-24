@@ -273,6 +273,16 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 /* Подтверждение стоит ВЫШЕ формы (21.10): без JS сообщение и форма видны одновременно,
    и человек должен прочитать «отправлено» до формы, а не после кнопки. */
 .contact-ok{color:#1B7F4B;font-weight:600;margin:0 0 16px}
+/* Отказ отправки (24.10): пока форма уходила обычным POST, любой отказ Web3Forms уводил
+   человека на чужую страницу («Internal Server Error» или страницу ошибки браузера), текст
+   пропадал, и никто не говорил, что сообщение НЕ ушло. Теперь отказ виден на своём месте,
+   на языке страницы, рядом с формой; цвет #B3261E на белом — контраст 6.5:1 (AA). */
+.contact-err{color:#B3261E;font-weight:600;margin:0 0 16px}
+/* Фокус на эти строки ставит скрипт (tabindex=-1), чтобы скринридер прочитал сообщение.
+   Браузерная рамка по умолчанию рисовала вокруг текста толстый чёрный прямоугольник —
+   видно глазами на ru/hi/en, телефон и десктоп. Своя рамка в цвет сообщения выглядит
+   намеренной и не спорит с оформлением. */
+.contact-ok:focus,.contact-err:focus{outline:2px solid currentColor;outline-offset:3px;border-radius:6px}
 /* Подтверждение после отправки формы БЕЗ JS (21.10): Web3Forms возвращает посетителя
    на ?sent=1#contact-card, и целевой блок сам показывает подтверждение.
    Раньше атрибут hidden снимал только скрипт — человек без JS видел пустую форму заново.
@@ -530,6 +540,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <h2 data-i18n="contact.title">Questions or feedback?</h2>
       <p class="contact-sub" data-i18n="contact.sub">Write to us — your message goes to our team, and we reply to your email. No spam, no mailing lists.</p>
       <p class="contact-ok" id="contact-ok" tabindex="-1" hidden data-i18n="contact.ok">Thank you! We received your message and will reply to your email.</p>
+      <p class="contact-err" id="contact-err" role="alert" tabindex="-1" hidden data-i18n="contact.err">The message was not sent. Check your connection and try again — your text is still in the box.</p>
+      <p class="contact-err" id="contact-err-busy" role="alert" tabindex="-1" hidden data-i18n="contact.err_busy">The form is busy right now, so the message was not sent. Try again in a minute — your text is still in the box.</p>
       <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
@@ -541,6 +553,9 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <label class="sr-only" for="cf-msg" data-i18n="contact.l_msg">Your message</label>
         <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Your question, feedback or complaint…" data-i18n-ph="contact.ph_msg"></textarea>
         <button type="submit" class="btn" data-i18n="contact.btn">Send message</button>
+        <!-- Текст кнопки на время отправки (24.10): показывается только пока ждём ответ,
+             берётся из словаря языка страницы, а не из JS (вторая копия текстов запрещена). -->
+        <span id="cf-sending" hidden data-i18n="contact.sending">Sending…</span>
       </form>
       <p class="contact-note"><span data-i18n="contact.note">We use your email only to reply to this message.</span> <a href="privacy.html" data-i18n="contact.privacy">Privacy Policy</a></p>
     </div>
@@ -589,15 +604,107 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   var ok = document.getElementById('contact-ok');
   var card = document.getElementById('contact-card');
   if (!form || !ok || !card) return;
+  var err = document.getElementById('contact-err');
+  var errBusy = document.getElementById('contact-err-busy');
+  var sending = document.getElementById('cf-sending');
+  var btn = form.querySelector('button[type="submit"]');
+  var btnLabel = btn ? btn.textContent : '';
+  var busy = false;
+  // fetch+FormData есть у всех живых браузеров; у очень старых — обычная отправка (ниже).
+  var canAjax = !!(window.fetch && window.FormData && window.JSON && window.Promise);
 
   function stored(){ try { return sessionStorage.getItem('ucs_sent') || ''; } catch(e){ return ''; } }
+  function focusEl(el){ try { el.focus({ preventScroll: false }); } catch(e){} }
+  function hideErrors(){ if (err) err.hidden = true; if (errBusy) errBusy.hidden = true; }
 
-  form.addEventListener('submit', function(){
+  // «Отправлено»: спрятать форму, показать подтверждение, убрать адрес, поставить на место якоря.
+  function confirmSent(){
+    hideErrors();
+    form.style.display = 'none';
+    ok.hidden = false;
+    // Из адреса убираем ?sent=1&t=… вместе с якорем: «ссылка на спасибо» не должна
+    // оставаться в строке браузера. После очистки браузер прыгает наверх, поэтому
+    // ставим карточку на место якоря вручную (мгновенно, без плавной прокрутки) — иначе
+    // человек после отправки видит верх страницы и не знает, что сообщение ушло.
+    try { history.replaceState(null, '', location.pathname); } catch(e){}
+    try {
+      var de = document.documentElement, prev = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
+      card.scrollIntoView({ block: 'start' });
+      de.style.scrollBehavior = prev;
+    } catch(e){}
+    // Фокус объявляет подтверждение скринридеру (без него чтение начинается с начала
+    // страницы). Firefox ставит фокус на документ уже ПОСЛЕ нашего скрипта (шаг «перейти
+    // к якорю»), поэтому повторяем — иначе там фокус остаётся на body.
+    var announce = function(){ try { ok.focus({ preventScroll: true }); } catch(e){} };
+    announce();
+    setTimeout(announce, 150);
+  }
+
+  // «Не ушло»: сказать это на языке страницы и НЕ терять написанное.
+  function showError(which){
+    var el = which === 'busy' ? (errBusy || err) : err;
+    if (!el) return;
+    if (el === err && errBusy) errBusy.hidden = true;
+    if (el === errBusy && err) err.hidden = true;
+    el.hidden = false;
+    focusEl(el);
+  }
+
+  function release(){
+    busy = false;
+    if (!btn) return;
+    btn.disabled = false;
+    btn.removeAttribute('aria-busy');
+    btn.textContent = btnLabel;
+  }
+
+  form.addEventListener('submit', function(ev){
+    // Токен нужен только тому пути, где браузер сам уходит на Web3Forms и возвращается
+    // на ?sent=1&t=…: без JS и в очень старых браузерах. Выдаём его всегда, до развилки.
     var redir = form.querySelector('input[name="redirect"]');
-    if (!redir || redir.value.indexOf('#contact-card') < 0) return;
-    var t = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-    try { sessionStorage.setItem('ucs_sent', t); } catch(e){}
-    redir.value = redir.value.replace(/[?&]t=[^&#]*/g, '').replace('#contact-card', '&t=' + t + '#contact-card');
+    if (redir && redir.value.indexOf('#contact-card') >= 0) {
+      var t = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      try { sessionStorage.setItem('ucs_sent', t); } catch(e){}
+      redir.value = redir.value.replace(/[?&]t=[^&#]*/g, '').replace('#contact-card', '&t=' + t + '#contact-card');
+    }
+    // Очень старый браузер: не мешаем обычной отправке — страницу уведёт сам Web3Forms.
+    if (!canAjax) return;
+    // 24.10: отправка без ухода со страницы. Причина — отказы. Раньше любой отказ
+    // (обрыв сети, 500, 429, «Invalid Access Key», письмо, съеденное фильтром) уводил
+    // человека на чужую страницу с голым текстом ошибки: сайта нет, текста нет,
+    // и никто не сказал, что сообщение НЕ ушло. Проверено зондом на трёх отказах.
+    ev.preventDefault();
+    if (busy) return;
+    busy = true;
+    hideErrors();
+    if (btn) {
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      if (sending) btn.textContent = sending.textContent;
+    }
+    var data = new FormData(form);
+    data.delete('redirect');            // ответ ждём телом JSON: поле redirect в теле не нужно
+    var body = {};
+    data.forEach(function(v, k){ body[k] = v; });
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function(r){
+      return r.text().then(function(txt){
+        var j = null;
+        try { j = JSON.parse(txt); } catch(e){}
+        // Web3Forms отвечает 200 и на отказ тоже (success:false), поэтому мало смотреть
+        // на код ответа: успех — только явное success:true. Непонятный ответ считаем
+        // отказом: пусть человек отправит ещё раз, чем будет ждать ответа на письмо,
+        // которого нет.
+        if (r.ok && j && j.success === true) { confirmSent(); return; }
+        showError(r.status === 429 || r.status === 503 || r.status >= 500 ? 'busy' : 'plain');
+      });
+    }).catch(function(){
+      showError('plain');
+    }).then(release);
   });
 
   var hasCard = location.hash === '#contact-card';
@@ -609,25 +716,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     card.classList.add('stale');
     return;
   }
-  form.style.display = 'none';
-  ok.hidden = false;
-  // Из адреса убираем ?sent=1&t=… вместе с якорем: «ссылка на спасибо» не должна
-  // оставаться в строке браузера. После очистки браузер прыгает наверх, поэтому
-  // ставим карточку на место якоря вручную (мгновенно, без плавной прокрутки) — иначе
-  // человек после отправки видит верх страницы и не знает, что сообщение ушло.
-  try { history.replaceState(null, '', location.pathname); } catch(e){}
-  try {
-    var de = document.documentElement, prev = de.style.scrollBehavior;
-    de.style.scrollBehavior = 'auto';
-    card.scrollIntoView({ block: 'start' });
-    de.style.scrollBehavior = prev;
-  } catch(e){}
-  // Фокус объявляет подтверждение скринридеру (без него чтение начинается с начала
-  // страницы). Firefox ставит фокус на документ уже ПОСЛЕ нашего скрипта (шаг «перейти
-  // к якорю»), поэтому повторяем — иначе там фокус остаётся на body.
-  var announce = function(){ try { ok.focus({ preventScroll: true }); } catch(e){} };
-  announce();
-  setTimeout(announce, 150);
+  confirmSent();
 })();
 </script>
 <script>
