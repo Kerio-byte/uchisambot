@@ -17,6 +17,17 @@
 Проверка «ничего лишнего» ловит обратное: файл, который лежит в корне и
 отдаётся, но в список не входит. Проверка «ничего не забыли» ловит переезд на
 отдельную ветку, который унёс бы с собой половину картинок.
+
+Пятая проверка (24.10.2026). Список проверял себя: «лишнего нет» значило «в
+списке нет файлов мастерской», но НИКТО не спрашивал, нужен ли сайту каждый
+файл из списка. Каталоги `img/` и `fonts/` уезжают целиком, поэтому всё, что
+туда положено, становится сайтом молча. Так уехали четыре скриншота 16:9 для
+сторонних каталогов (`img/screen1..4.png`, 1,07 МБ — сделаны для загрузки в
+PeerPush/LaunchIgniter, на сайте нет ни одной ссылки) и два макета старой
+вёрстки (`img/shot4.webp`, `img/shot4-ru.webp` — четвёртый кадр прежней
+карусели, интерфейс до правки меню). Теперь каждый опубликованный файл обязан
+быть НАЗВАН каким-нибудь опубликованным текстом (html/md/txt/xml); исключения
+перечислены поимённо в PUBLIC_UNLINKED, каждое — с причиной.
 """
 from __future__ import annotations
 
@@ -48,8 +59,17 @@ PUBLIC_DEMO = ["*.mp4"]                      # видео (полные демо
 # Мастерская: лежит в том же корне, но сайтом не является.
 BACKSTAGE = [
     "README.md", "index-src.html", "tools/", "src/", "demo/*.py", "demo/*.sh",
-    "demo/*.json", "evidence/", ".gitignore",
+    "demo/*.json", "evidence/", ".gitignore", "submission-kit/",
 ]
+
+# Публикуется, но ни одной страницей не называется — и это правильно. Каждая
+# строка здесь отвечает на вопрос «кто просит этот файл, если не страница».
+PUBLIC_UNLINKED = {
+    ".nojekyll": "флаг GitHub Pages: без него Pages прогоняет Jekyll",
+    "210a46fb97554124948a7b1a74a15d5f.txt": "ключ IndexNow: поисковик читает его по адресу",
+    "robots.txt": "робот берёт его по соглашению, ссылок на него нет",
+    "404.html": "его отдаёт хост на несуществующий адрес, со страниц не линкуется",
+}
 
 
 def manifest() -> list[str]:
@@ -155,6 +175,27 @@ def references(files: list[str]) -> list[tuple[str, str, str]]:
     return out
 
 
+def unlinked(files: list[str]) -> list[tuple[str, int]]:
+    """Файлы публикации, которые не называет ни один опубликованный текст.
+
+    Названный файл не обязан быть ссылкой: шрифт живёт в `url(...)` внутри CSS,
+    макет — в `poster=`, карточка og — в `og:image`. Достаточно, чтобы имя
+    встретилось в опубликованном html/md/txt/xml: это доказывает, что файл
+    кому-то нужен. Исключения — PUBLIC_UNLINKED.
+    """
+    texts = {f: (ROOT / f).read_text(encoding="utf-8", errors="replace")
+             for f in files if Path(f).suffix in (".html", ".md", ".txt", ".xml")}
+    out = []
+    for f in files:
+        if f in texts or f in PUBLIC_UNLINKED:
+            continue
+        name = Path(f).name
+        if not any(name in body for body in texts.values()):
+            size = (ROOT / f).stat().st_size if (ROOT / f).is_file() else 0
+            out.append((f, size))
+    return out
+
+
 def check() -> int:
     pub = manifest()
     back = backstage_files()
@@ -187,8 +228,16 @@ def check() -> int:
             if tgt.startswith(b):
                 problems.append(f"страница ссылается на мастерскую: {src}: {url}")
 
+    # 5) у каждого опубликованного файла есть читатель (24.10.2026)
+    lost = unlinked(pub)
+    for f, size in lost:
+        problems.append(f"файл публикуется, но сайт его не называет: {f} ({size // 1024} КБ)")
+
+    unlinked_by_decision = len(set(PUBLIC_UNLINKED) & set(pub))
     size = sum((ROOT / f).stat().st_size for f in pub if (ROOT / f).is_file())
     print(f"публикация: {len(pub)} файлов, {size / 1048576:.1f} МБ")
+    print(f"названо страницами: {len(pub) - len(lost) - unlinked_by_decision} файлов, "
+          f"без ссылки по решению: {unlinked_by_decision}, без читателя: {len(lost)}")
     print(f"мастерская (в публикацию не идёт): {len(back)} файлов")
     for b in back:
         print(f"   - {b}")

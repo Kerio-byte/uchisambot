@@ -3182,3 +3182,71 @@ ever have shipped: today the build always wins — the point is that nobody was 
 `scripts/landing-sweep.py` (+66), `references/landing-qa.md` (section 24.10). No page, no image and
 no dictionary value changed.
 
+## The publish list checked itself, and six files rode along (24.10.2026)
+
+**What was found.** `tools/publish-tree.py` is the one place that decides what the world
+gets. Its `--check` asked four questions — every listed file exists, no workshop file is
+listed, every internal link lands inside the list, no page points at the workshop — and it
+answered them with one sentence that sounded stronger than it was: «список полон, лишнего
+нет». "Nothing extra" compared the list **with itself**. The manifest walks all of `img/`
+and `fonts/` with `rglob`, so anything dropped into those two folders becomes the site by
+being there, and nothing ever asked whether a page wanted it.
+
+Six files were riding along. `img/screen1.png` … `screen4.png` — four 1920×1080
+screenshots, 1,104,464 bytes, committed on 15 October (f77ed94) for **uploading into other
+people's forms** (PeerPush, OpenHunts, LaunchIgniter, the Product Hunt gallery), not for
+the site: no page, no md twin, no `llms.txt` and no `sitemap.xml` names them. And
+`img/shot4.webp` + `img/shot4-ru.webp` (57,496 bytes) — the fourth frame of the old "Real
+chats" rail, which has had three frames since the redesign; the EN/RU pair that was never
+re-cut when the other seven languages got their own. All six answered **200** on the live
+site this morning, 1.11 MB of them. The screenshot set also predates the seven-button menu
+(23.10), so the site was publishing pictures of an interface it no longer has.
+
+There was a quieter reason nobody noticed: `landing-live-assets.py` had already classified
+the same six as "kept — осознанно оставлены вне сайта", one hand-written reason each. The
+file was honest about them being off-page and never asked the next question — off-page
+means unpublished, or it means shipped.
+
+**The fix is one folder and one honest list.** The four screenshots moved to
+`submission-kit/` with a five-line README saying they are uploaded as files, never linked
+by URL; the folder sits outside the manifest's walk. The two old frames are deleted, as the
+fourth frame is gone from the page. Publication went from **115 files / 10.7 MB to 109
+files / 9.6 MB**, and the six addresses now answer 404.
+
+**The gate: a fifth check.** Every published file must be **named** by some published text
+(html/md/txt/xml). Named is enough — a font lives in `url(...)`, a poster in `poster=`, an
+og card in `og:image`; the only question is whether anybody asks for the file. Four files
+are named by nobody and published on purpose, and they are listed in `PUBLIC_UNLINKED` with
+a reason each: `.nojekyll` (the Pages flag), the IndexNow key (read at its address, never
+linked), `robots.txt` (a crawler's convention) and `404.html` (served by the host for
+unknown paths). The sweep gained one check that reads the new count line `без читателя: N`
+and fails if it is not 0 **or if the line disappears** — a gate that watches the gate,
+because the failure mode here was silence, not a red line.
+
+**Controls: three mutations on the real tree, each restored byte-exact.** A stray
+`img/zzz-control.png` → red, named with its size; the *same* file with one line added to
+`llms.txt` → green, which proves the criterion is "has a reader" and not "is new"; a stray
+`fonts/zzz-control.woff2` → red. After the restores `llms.txt` matched its snapshot sha256
+and the check printed 0.
+
+**Checked after the change.** `tools/build.py --check`: 24 files identical to a fresh build
+— this block changed what ships, not what anyone reads. Sweep **2278 / 0**, one more check
+than yesterday. `landing-live-bytes.py` after publishing: 26 / 26. The six removed
+addresses: 404 from the live site. PeerPush's public page was read before deleting: its
+gallery is served from `static.peerpush.com`, not from our host, and the workshop notes for
+the other platforms record uploads, not links.
+
+**What it cannot prove.** That "named somewhere" equals "needed": one stale sentence would
+keep a file alive forever — the check is a floor, not a review. That no third party
+hotlinks the six removed URLs: PeerPush was verified, the rest are recorded as uploads, and
+a hotlink would break on someone else's page rather than here. That GitHub Pages drops the
+six at once: the branch is authoritative, but a CDN copy can outlive the push by minutes —
+the 404 probe was taken after the rebuild, not instead of it.
+
+**Files.** `tools/publish-tree.py` (fifth check, `PUBLIC_UNLINKED`, the `без читателя`
+line), `submission-kit/` (four screenshots + README), `img/shot4.webp` and
+`img/shot4-ru.webp` (deleted), the skill `stars-bots-ops`: `scripts/landing-sweep.py` (+1),
+`scripts/landing-live-assets.py` (six stale allowlist entries dropped),
+`references/landing-qa.md`. No page, no text, no price and no picture the visitor sees
+changed.
+
