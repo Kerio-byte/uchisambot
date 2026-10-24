@@ -3558,8 +3558,10 @@ battery stays at 69 checks / 0 failures). The shape is a pill with a glyph **and
 glyph alone, the button read as part of the phone — an icon under a phone frame looks like the
 phone's own control. The word comes from the dictionary on both sides (`vbtn.pauseShort` /
 `vbtn.playShort`, nine languages: Pause/Play, Пауза/Играть, Pausa/Reproducir, Pausar/Reproduzir,
-रोकें/चलाएँ, Jeda/Putar, Duraklat/Oynat, Tạm dừng/Phát, Пауза/Відтворити) and both sit in one grid
-cell, so the pill is as wide as the longer word and does not jump when the state flips. The long
+रोकें/चलाएँ, Jeda/Putar, Duraklat/Oynat, Tạm dừng/Phát, Пауза/Відтворити; the Russian play word
+became «Смотреть» the same day — see «The button said «Пауза» on screen and «Остановить» to a screen
+reader» below) and both sit in one grid cell, so the pill is as wide as the longer word and does not
+jump when the state flips. The long
 "Pause the demo video" stays as `aria-label` — the visible word is `aria-hidden`, so a screen reader
 hears one name, not two.
 
@@ -3765,4 +3767,91 @@ page is drawn in a foreign font: the battery covers every painted glyph on twelv
 but it is a photograph, not a hook — the sweep now catches the one cause that produced this defect
 (a control with no family) and still cannot catch a family that is declared in the CSS and missing
 from the woff2 subset.
+
+## The button said «Пауза» on screen and «Остановить» to a screen reader (24.10.2026)
+
+**What was found.** The control that stops the demo carries one visible word and a longer spoken
+name. The visible word comes from `vbtn.pauseShort` / `vbtn.playShort` (nine languages), the name
+from `vbtn.pause` / `vbtn.play`. Nothing required the two to agree — and in three of the eighteen
+strings they did not:
+
+| language | visible word | spoken name | visible word inside the name? |
+|---|---|---|---|
+| en | Pause / Play | Pause the demo video / Play the demo video | yes / yes |
+| **ru** | **Пауза** | **Остановить демо-видео** | **no** |
+| **ru** | **Играть** | **Запустить демо-видео** | **no** |
+| **uk** | **Пауза** | **Зупинити демо-відео** | **no** |
+| uk | Відтворити | Відтворити демо-відео | yes |
+| es, pt, hi, id, tr, vi | Pausa/Pausar, रोकें, Jeda, Duraklat, Tạm dừng, … | the same word inside a longer phrase | yes (all 12) |
+
+That is WCAG **2.5.3 Label in Name**, level A — the criterion written for people who drive the page
+with their voice: they read «Пауза» on the screen and say «нажми Пауза», and the browser looks for a
+control by that name. It finds nothing. The same mismatch is a smaller lie for anyone helping a
+relative over the phone: the helper says "нажмите Пауза", the screen reader says "Остановить
+демо-видео".
+
+English passed **by luck**, not by design: «Pause» happens to be the first word of «Pause the demo
+video». The Russian and Ukrainian names were written on 22.10, days before the visible word existed
+(24.10, the commit that moved the control out from over the frame, c7eab08) — and the block that
+added the word checked exactly one thing: that a screen reader hears one name, not two
+(`aria-hidden` on the word). It never asked whether the one name contains the word people see.
+
+**Why nothing caught it.** `axe` reports **0 violations on twelve pages** with this defect present,
+and it is not a bug in axe: it has a rule for 2.5.3 (`label-content-name-mismatch`), and that rule
+reads the element's *text content*. The visible word sits in `<span aria-hidden="true">` — the very
+technique that gives a screen reader one clean name hides the word from the checker. The other
+a11y batteries (`a11y-extra` 124, `wcag22-targets` 43) measure names and hit areas, not whether one
+contains the other.
+
+**What was done.**
+
+1. `src/locales/ru.json` — `vbtn.pause` «Остановить демо-видео» → **«Пауза демо-видео»**;
+   `vbtn.play` «Запустить демо-видео» → **«Смотреть демо-видео»**; `vbtn.playShort` «Играть» →
+   **«Смотреть»**. The last one is not a11y housekeeping: «Играть» under a video is a calque of
+   *play*, while every other language and every Russian player says «воспроизвести/смотреть», and the
+   state it labels is a paused poster — a preview you press to watch. The pair now reads naturally
+   under the triangle, and the name is the word plus what it acts on.
+2. `src/locales/uk.json` — `vbtn.pause` «Зупинити демо-відео» → **«Пауза демо-відео»**; the short
+   word «Пауза» and the whole play side were already consistent and are untouched.
+3. **18 sweep checks** (2429 → **2447**): for each of nine languages and both states the visible
+   short word must be inside the name, compared after normalisation (case, ё/е, apostrophes,
+   collapsed spaces) — without it, tr «Duraklat» against «duraklat» and its own «videosunu» would
+   produce false red on a correct page.
+4. The CSS comment in `index-src.html` that named the old words was corrected in the same pass; it
+   ships inside every built page and would otherwise have gone stale silently.
+
+**Proof — mutations on a copy of the tree (`LANDING_ROOT`), live tree untouched.**
+
+| control | result |
+|---|---|
+| ru reverted to the 24.10 words in a throwaway copy, rebuilt | `CHECKS: 2386, FAILED: 7`, of them `FAIL [ru] video toggle label-in-name (pause) \| видимое='Пауза' имя='Остановить демо-видео'` and the same for `(play)` with `видимое='Играть' имя='Смотреть демо-видео'` |
+| the fixed tree, before publishing | `CHECKS: 2447, FAILED: 1` — the failed one is «публикация: живой сайт — это текущая сборка» |
+| sweep after `tools/publish-branch.sh` and the CDN catch-up | `CHECKS: 2447, FAILED: 0` |
+| runtime state flip on the live-intent build (Playwright, ru and uk) | playing: `state=pause`, visible «Пауза», `aria-label="Пауза демо-видео"`; after the click: `state=play`, visible «Смотреть», `aria-label="Смотреть демо-видео"`; uk: «Пауза»/«Пауза демо-відео», «Відтворити»/«Відтворити демо-відео» |
+
+**Numbers on the finished build.** Pill width at 420 px: en 91.7 → 91.7, ru **97.8 → 118.0**
+(the longer word sets the pill; both words share one grid cell, so the width does not jump between
+states), uk 126.3 → 126.3 — still the widest, still inside the 300 px row with 10 px gap and an
+empty pixel difference inside the frame at 420 and 360 px (`landing-toggle-clear.py` 56 / 0).
+`landing-video-motion.py` **444 / 0** (the visible word in both states, all nine languages),
+`landing-wcag22-targets.py` **43 / 0**, `landing-a11y-extra.py` **124 / 0**, axe **0 violations on
+12 pages**, `landing-cwv.py` **69 / 0**, `landing-glyph-fallback.py` **12 pages / 0 substituted**
+(the new word is drawn by our own subset, not by a system font), `landing-visual-pass.py`
+**PROBLEMS 0** on nine languages × two widths, `landing-live-bytes.py` **26 / 26**, `build.py
+--check` **24 files identical to a fresh build**.
+
+**What it cannot prove.** That «Смотреть» is the word the owner wants — the accessibility half is
+forced by the criterion, the choice of word is a default and one line to change back. That a real
+voice-control user finds the button: the name now contains the visible word, which is what the
+criterion asks, but no speech engine was driven here. And that no other control on the page has the
+same mismatch: the new gate covers the one control that has a dictionary pair, the language summary
+(`Language: English` with visible `English`) and the CTA were checked by hand and pass — but a future
+control that puts its visible word behind `aria-hidden` will be invisible to axe and to this gate
+alike, unless it is given the same pair of keys.
+
+**Files.** `src/locales/ru.json`, `src/locales/uk.json`, `index-src.html` (comment), the nine built
+pages + their md twins + `tools/lastmod.json`, and in the skill `stars-bots-ops`:
+`scripts/landing-sweep.py` (+18). Evidence: `evidence/label-20261024/` (the pill in both states,
+ru and uk) and `evidence/visual-20261024j/` (the visual pass this build was measured with).
+
 

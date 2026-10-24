@@ -165,8 +165,10 @@ main{display:block}
    (замер: скрыть кнопку → разница кадра 65x65 px у правого верхнего угла). Видимая
    часть — только значок: подписи кнопки в словарях до 35 знаков (испанский), текст под
    кадром поехал бы по ширине. Поэтому видимая часть — значок и короткое слово из
-   словаря (vbtn.pauseShort / vbtn.playShort: «Пауза»/«Играть»), а длинная подпись
-   «Остановить демо-видео» остаётся для скринридера. 44 px — тач-цель. */
+   словаря (vbtn.pauseShort / vbtn.playShort: «Пауза»/«Смотреть»), а длинная подпись
+   «Пауза демо-видео» остаётся для скринридера. Имя обязано содержать видимое слово
+   (WCAG 2.5.3): 24.10.2026 «Пауза» ⊄ «Остановить демо-видео» — сторож в свипе.
+   44 px — тач-цель. */
 .media-ctrl{display:flex;align-items:center;justify-content:flex-end;width:min(300px,72vw);height:44px;margin:10px auto 0}
 .video-toggle{display:none;align-items:center;justify-content:center;gap:7px;height:44px;min-width:44px;padding:0 14px 0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font-weight:600;font-size:13px;line-height:1;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 3px rgba(11,16,32,.10);transition:background .15s ease,border-color .15s ease,transform .15s ease}
 /* hidden обязан реально скрывать: прежний display:grid перебивал UA-правило
