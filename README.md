@@ -4447,3 +4447,68 @@ both mirrors, `ls-remote` agrees at `017dcea` / `9a08cb9`).
 (+the 932×430 menu run) and `SKILL.md` in the `stars-bots-ops` skill;
 `evidence/block-20261024s/` (first screen 252, the wide negative control, the menu at 932×430,
 live bytes, live runtime, the sweep after publishing, four hero screenshots).
+
+## The sideways phone was measured down to the hero, and no further (25.10.2026)
+
+The previous block closed with a sentence it could not answer: “the rest of the page below the hero
+is fine in landscape — only the first screen and the menu were measured”. Two blocks in a row had
+fixed the sideways phone and both stopped at the fold: first screen, header. Below it are six
+sections, eight anchors, a FAQ with eleven answers, a contact form — and a sticky bar that takes a
+sixth of a 360 px tall screen when it is there at all.
+
+This block measured the rest. `scripts/landing-landscape-page.py`: three real landscape screens on
+both sides of the 860 breakpoint — 932×430 (iPhone 14/15/16 Pro Max, wider than the breakpoint),
+740×360 (cheap Android, narrow enough for the sticky bar), 568×320 (iPhone SE, first generation, the
+lowest screen the page is expected on) — nine languages, **Chromium and WebKit** (Telegram on iOS is
+WKWebView). Per screen × language: the document is no wider than the screen; visible content stays
+inside its own section (the content of a closed `<details>` is not counted — it has no box on
+screen); all eight header anchors land below the sticky header; the last FAQ answer opens fully and
+does not slide under the bottom bar; the shots rail can be scrolled to its third frame; the submit
+button is on screen and uncovered; no JS errors. **956 checks, 0 failed.**
+
+**The defect it found was the bar itself.** The sticky CTA lived in `@media(max-width:860px)`, and
+the header carries no button of its own. On 932×430 the hero button ends at y = 313 and the next
+button is at y = 2921: **6.2 screens of scrolling with nothing to tap** — on a phone, because the
+phone was held sideways and its width crossed a desktop breakpoint. The same defect the previous
+block fixed one screen higher: the rule asked about width where the question was “is this a phone”.
+Fixed by asking the pointer — `@media(max-width:860px), (hover:none) and (pointer:coarse)`, the same
+query in the JS `matchMedia`, and on a wide coarse-pointer screen the bar's button is
+`flex: 0 1 420px` centred, because a full-width 932 px button reads as a banner. The desktop is
+unchanged, and that is checked rather than assumed: a separate context with `is_mobile=False,
+has_touch=False` at the same 932×430 must keep the bar at `display: none`.
+
+**Proven to fail.** The battery carries its own control (`--control`): a style injected after load
+that zeroes `scroll-padding-top` and forces the bar on wide screens. Control run: **114 checks,
+48 red, exit 1**; without the control **956 / 0**. Two measurement traps were closed on the way, both
+of which had already produced false readings. The bar's `transition: transform .22s` runs on its own
+clock, so a single reading caught it mid-slide (top 318 on a 360 px screen) — the state is now re-read
+until its bottom meets the screen's. And `scrollTo` ignores `scroll-padding-bottom`, so “the answer
+under the bar” is only a real check when the scroll is `scrollIntoView({block:'end'})`. The section's
+own 84 px top padding hid a bad anchor landing as well: the check compares the section's edge, not
+the heading — which is exactly why the control zeroes the padding and still finds the heading at
+y = 85.
+
+**One false red, and what it cost.** The first cross-engine run, started while three other browsers
+were working, reported `webkit/desktop/pt` with eleven “broken” local images and two click timeouts.
+The same page alone was clean, and the whole battery alone was 60 / 0. WebKit starves under load; a
+red from a contended run has to be re-run alone before it is believed — otherwise the next block
+“fixes” a page that was never broken.
+
+**What it cannot prove.** That a real notch behaves like WebKit here — safe-area insets are zero in
+emulation, and the page does not use `viewport-fit=cover`, so the notch is expected to shrink the
+layout viewport instead of overlapping it, but that is reading, not measurement. That a tablet should
+get the sticky bar at all: the rule is “coarse pointer”, so an iPad now shows it — a default, not a
+decision. That 420 px is the right width for the button on a wide phone — taste, written down as a
+default. And that any of the nine texts is what a native reader wants: this block measured boxes, not
+words.
+
+**Numbers.** Sweep **2 571 / 0** (after publishing); `tools/build.py --check` 24 / 24; landscape page
+**956 / 0** (control 114 / 48 red, exit 1); first screen **252 / 0**; cross-engine **60 / 0**;
+a11y-extra **187 / 0**; WCAG 2.2 **43 / 0**; viewports-extra **94 / 0**; axe **12 pages / 0**; live
+bytes **26 / 26**; live runtime **121 / 0**; publish tree 109 files, 513 internal links. Published
+through `tools/publish-branch.sh` (main and `gh-pages`, both mirrors).
+
+**Files.** `index-src.html` (+ the nine built pages, `sitemap.xml`, `tools/lastmod.json`);
+`scripts/landing-landscape-page.py` and `SKILL.md` in the `stars-bots-ops` skill;
+`evidence/block-20261025a/` (landscape page 956, the control at 114 / 48 red, cross-engine 60, three
+screenshots of the bar on a sideways phone, one of it absent under a mouse, and the raw numbers).
