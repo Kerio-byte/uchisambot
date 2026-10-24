@@ -120,5 +120,7 @@
   "logo.alt": "Logo của UchiSamBot",
   "lang.aria": "Ngôn ngữ",
   "vbtn.pause": "Tạm dừng video minh họa",
-  "vbtn.play": "Phát video minh họa"
+  "vbtn.play": "Phát video minh họa",
+  "vbtn.pauseShort": "Tạm dừng",
+  "vbtn.playShort": "Phát"
 }
