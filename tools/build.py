@@ -166,17 +166,10 @@ GLOBE_SVG = (
 OG_LOCALE = {"en": "en_US", "ru": "ru_RU", "es": "es_ES", "pt": "pt_BR",
              "hi": "hi_IN", "id": "id_ID", "tr": "tr_TR", "vi": "vi_VN", "uk": "uk_UA"}
 NO_TRANSLATE = ["UchiSamBot", "Telegram Stars", "Stars", "/lang", "you@example.com"]
-VIDEO_ALT = {
-    "en": "Demo: the bot breaks down a task step by step.",
-    "ru": "Демонстрация: бот разбирает задачу по шагам.",
-    "es": "Demostración: el bot resuelve una tarea paso a paso.",
-    "pt": "Demonstração: o bot resolve uma tarefa passo a passo.",
-    "hi": "डेमो: बॉट समस्या को चरण-दर-चरण हल करता है।",
-    "id": "Demo: bot menyelesaikan tugas langkah demi langkah.",
-    "tr": "Demo: bot bir soruyu adım adım çözüyor.",
-    "vi": "Bản demo: bot giải bài từng bước.",
-    "uk": "Демонстрація: бот розбирає задачу крок за кроком.",
-}
+# Подпись видео для скринридеров жила ЗДЕСЬ, таблицей на девять языков внутри генератора:
+# её не видел ни один словарный гейт, поэтому «бот решает задачу по шагам» спокойно осталось
+# в шести языках после того, как страница от этой фразы отказалась (24.10.2026). Теперь это
+# обычный ключ словаря demo.alt, а шаблон несёт data-i18n-attr="aria-label:demo.alt".
 # Бейджи (герой + футер): фрагмент src -> имя площадки. Альт = шаблон словаря
 # badge.alt («отмечен на {name}»), подпись группы бейджей = badge.group.
 # До 16.10 альты были захардкожены по-английски и лежали ОДИНАКОВО на всех 9
@@ -645,7 +638,8 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     if lang != "en":
         out = out.replace("demo/uchiambot-demo-web.mp4", f"demo/uchiambot-demo-web-{lang}.mp4")
         out = out.replace("img/demo-poster.webp", f"img/demo-poster-{lang}.webp")
-    out = out.replace(VIDEO_ALT["en"], VIDEO_ALT[lang])
+    # Подпись видео ставит общий механизм data-i18n-attr (ключ demo.alt) — отдельной
+    # подстановки здесь больше нет: девять строк жили в таблице генератора мимо словарей.
 
     # 10) CSS переключателя (один раз)
     if ".lang-dd" not in src:
