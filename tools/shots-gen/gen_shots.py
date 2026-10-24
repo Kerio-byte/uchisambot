@@ -22,6 +22,8 @@ tools/build.py подставляет файл языка через shot_src();
   python3 tools/shots-gen/gen_shots.py --langs hi,uk --apply  # записать img/shotN-<lang>.webp
   python3 tools/shots-gen/gen_shots.py --langs en --calib     # EN-калибровка (в превью, не в img/)
   python3 tools/shots-gen/gen_shots.py --langs en,ru --apply --force-en --stamp  # перерисовать эталоны
+  python3 tools/shots-gen/gen_shots.py --langs en,ru --scenes 4 --apply --stamp --force-scene4
+                                                # кадр 4 полного демо (экран /lang)
 
 Кнопки главного меню НЕ вписаны здесь списком (23.10.2026): порядок читается из
 `menu_kb()` бота (`bot_menu.py`, разбор исходника). Пока список был ручным, бот
@@ -51,6 +53,13 @@ REPO = HERE.parent.parent                    # .../promo/landing-20261012
 BOT_DIR = Path(os.environ.get("BOT_DIR", REPO.parent.parent / "study-bot"))   # .../stars-bots/study-bot
 FONTS = HERE / "assets" / "fonts"
 IMG = REPO / "img"
+# Сцены, которых нет на странице (24.10.2026). Кадр 4 полного демо — экран выбора
+# языка; страница его не показывает, поэтому файл живёт рядом с генератором, а не
+# в img/. Пятая проверка tools/publish-tree.py требует, чтобы каждый файл из img/
+# был назван опубликованной страницей; сцена 4 нужна только сборщику видео.
+SCENES = HERE / "scenes"
+# Полные демо (35 с) собраны только на двух языках — только им и нужен кадр 4.
+SCENE4_LANGS = ("en", "ru")
 LEDGER = REPO / "tools" / "shots.json"
 
 sys.path.insert(0, str(HERE))
@@ -221,11 +230,24 @@ def load_i18n():
     return i18n
 
 
+def lang_picker_rows(i18n) -> list:
+    """Клавиатура выбора языка ровно как в bot/handlers.py cmd_lang: по два в ряд.
+
+    Подписи берутся из живого i18n бота (`LANG_TITLES`, порядок `SUPPORTED`), а не
+    из литерала: экран должен показывать те же девять кнопок, что бот отдаёт на
+    /lang. Последний ряд — одна кнопка (девять не делится на два).
+    """
+    titles = [i18n.LANG_TITLES[c] for c in i18n.SUPPORTED]
+    return [titles[i:i + 2] for i in range(0, len(titles), 2)]
+
+
 def build_shots(lang: str, i18n) -> dict:
-    """Разметка сообщений для трёх кадров. Стиль согласован с EN-эталоном.
+    """Разметка сообщений для кадров. Стиль согласован с EN-эталоном.
 
     Кнопки меню — из `MENU_KEYS` (порядок menu_kb() бота), не из литерала:
     бот добавил «Пригласить друга», генератор обязан это увидеть сам.
+    Кадр 4 — экран /lang из cmd_lang(): до 24.10.2026 демо показывало кадр из
+    старого каталога с двумя языками («Русский / English»), хотя бот отдаёт девять.
     """
     c = CANNED[lang]
     t = lambda k: i18n.t(lang, k)  # noqa: E731
@@ -245,15 +267,30 @@ def build_shots(lang: str, i18n) -> dict:
             ("bot", t("answer") + "\n\n" + c["body3"], "12:05"),
             ("kb", menu, None),
         ],
+        4: [
+            ("user", "/lang", "12:06"),
+            ("bot", t("lang_menu"), "12:06"),
+            ("kb", lang_picker_rows(i18n), None),
+        ],
     }
+
+
+def kb_html(rows: list) -> str:
+    """Ряд клавиатуры: строка — кнопка во всю ширину, список из двух — две в ряд."""
+    parts = []
+    for row in rows:
+        cells = [row] if isinstance(row, str) else list(row)
+        cls = "row" if len(cells) == 1 else "row two"
+        inner = "".join(f'<div class="cell">{html.escape(x)}</div>' for x in cells)
+        parts.append(f'<div class="{cls}">{inner}</div>')
+    return "".join(parts)
 
 
 def messages_html(msgs: list) -> str:
     out = []
     for kind, text, ts in msgs:
         if kind == "kb":
-            rows = "".join(f'<div class="row">{html.escape(r)}</div>' for r in text)
-            out.append(f'<div class="kb">{rows}</div>')
+            out.append(f'<div class="kb">{kb_html(text)}</div>')
         else:
             ts_html = f'<div class="ts">{html.escape(ts)} ✓✓</div>' if kind == "user" \
                 else f'<div class="ts">{html.escape(ts)}</div>'
@@ -261,15 +298,31 @@ def messages_html(msgs: list) -> str:
     return "".join(out)
 
 
-def render_png(out_png: Path) -> None:
+def render_png(out_png: Path) -> list[str]:
     """Рендер страницы (html рядом с out_png) в PNG через локальный Playwright/Chromium.
 
     Ретрай 3x: headless-скриншот иногда падает транзиентно (Protocol error
     Page.captureScreenshot) — повтор без изменения входных данных помогает.
+
+    Возвращает список дефектов вёрстки (пусто = чисто). Кегль кнопок экрана /lang
+    подобран под самую длинную подпись из девяти; если бот добавит язык длиннее,
+    подпись вылезет за кнопку — этого не видно ни в sha256, ни в реестре, только
+    замером scrollWidth против clientWidth.
     """
     import time
 
     from playwright.sync_api import sync_playwright
+
+    measure = """() => {
+        const out = [];
+        for (const el of document.querySelectorAll('.cell, .msg .body')) {
+            // scrollWidth включает padding, как и clientWidth — сравниваем напрямую.
+            if (el.scrollWidth > el.clientWidth + 1) {
+                out.push(`${el.className.trim()}: ${el.scrollWidth}px > ${el.clientWidth}px — ${el.textContent.slice(0, 48)}`);
+            }
+        }
+        return out;
+    }"""
 
     last = None
     for attempt in range(3):
@@ -280,9 +333,10 @@ def render_png(out_png: Path) -> None:
                 pg.goto(out_png.with_suffix(".html").as_uri())
                 pg.wait_for_function("document.fonts.status === 'loaded'", timeout=15000)
                 pg.wait_for_timeout(120)
+                defects = pg.evaluate(measure)
                 pg.screenshot(path=str(out_png))
                 b.close()
-            return
+            return defects or []
         except Exception as e:  # noqa: BLE001
             last = e
             time.sleep(2)
@@ -302,6 +356,11 @@ def main() -> None:
     ap.add_argument("--force-en", action="store_true",
                     help="разрешить запись EN (эталон; нужен, когда меняется клавиатура)")
     ap.add_argument("--stamp", action="store_true", help="перештамповать реестр tools/shots.json")
+    ap.add_argument("--scenes", default="1,2,3",
+                    help="какие кадры рисовать: 1,2,3 — макеты страницы (img/), "
+                         "4 — экран выбора языка (tools/shots-gen/scenes/, только en+ru)")
+    ap.add_argument("--force-scene4", action="store_true",
+                    help="перезаписать кадр 4 (он не эталон и не на странице)")
     ap.add_argument("--quality", type=int, default=80)
     ap.add_argument("--workdir", default=str(REPO / ".shots-work"))
     args = ap.parse_args()
@@ -309,26 +368,41 @@ def main() -> None:
     from PIL import Image
 
     langs = [s.strip() for s in args.langs.split(",") if s.strip()]
+    want_scenes = [int(s) for s in args.scenes.split(",") if s.strip()]
     i18n = load_i18n()
     tpl = (HERE / "mockup.html").read_text(encoding="utf-8")
     work = Path(args.workdir)
     extract_assets(work)
     stats = []
+    layout_issues: list[str] = []
     ledger_langs: dict[str, dict] = {}
+    # Реестр дополняется, а не переписывается целиком: прогон двух языков (кадр 4)
+    # не имеет права стереть записи семи остальных.
+    if LEDGER.is_file():
+        ledger_langs = json.loads(LEDGER.read_text(encoding="utf-8")).get("langs", {})
     for lang in langs:
         if lang not in CANNED:
             print(f"{lang}: SKIP (нет CANNED-строк)")
             continue
-        if lang == "en" and args.apply and not args.force_en:
+        # Эталон en пишется только по явному разрешению — и только для кадров страницы:
+        # кадр 4 (экран /lang) эталоном не является и живёт в scenes/.
+        page_shots = [n for n in want_scenes if n in (1, 2, 3)]
+        if lang == "en" and page_shots and args.apply and not args.force_en:
             print("en: SKIP записи (эталон; --force-en, если менялась клавиатура)")
+            continue
+        scenes = [n for n in want_scenes if n != 4 or lang in SCENE4_LANGS]
+        if len(scenes) != len(want_scenes):
+            print(f"{lang}: кадр 4 только для {', '.join(SCENE4_LANGS)} "
+                  f"(полное демо есть только на них) — пропущен")
+        if not scenes:
             continue
         ldir = work / lang
         ldir.mkdir(parents=True, exist_ok=True)
         if not (ldir / "assets").exists():
             (ldir / "assets").symlink_to(work / "assets")
-        shots = build_shots(lang, i18n)
+        shots = {n: v for n, v in build_shots(lang, i18n).items() if n in scenes}
         c = CANNED[lang]
-        shot_rows: dict[str, dict] = {}
+        shot_rows: dict[str, dict] = dict(ledger_langs.get(lang, {}).get("shots", {}))
         for n, msgs in shots.items():
             page = (tpl
                     .replace("{{LANG}}", lang)
@@ -338,23 +412,34 @@ def main() -> None:
                     .replace("{{MESSAGES}}", messages_html(msgs)))
             (ldir / f"shot{n}.html").write_text(page, encoding="utf-8")
             png = ldir / f"shot{n}.png"
-            render_png(png)
+            defects = render_png(png)
+            for d in defects:
+                print(f"LAYOUT {lang} shot{n}: {d}")
+                layout_issues.append(f"{lang} shot{n}: {d}")
             line = f"{lang} shot{n}: png {png.stat().st_size // 1024} KiB -> "
-            dst = IMG / (f"shot{n}.webp" if lang == "en" else f"shot{n}-{lang}.webp")
+            name = (f"shot{n}.webp" if lang == "en" else f"shot{n}-{lang}.webp")
+            dst_dir = SCENES if n == 4 else IMG
+            dst = dst_dir / name
+            allow_overwrite = args.force or (n == 4 and args.force_scene4)
             if args.apply:
-                if dst.exists() and not args.force:
+                if dst.exists() and not allow_overwrite:
                     line += f"{dst.name} EXISTS (skip; --force чтобы перезаписать)"
                 else:
+                    dst_dir.mkdir(parents=True, exist_ok=True)
                     im = Image.open(png).convert("RGB")
                     im.save(dst, "WEBP", quality=args.quality, method=6)
-                    line += f"{dst.name} {dst.stat().st_size // 1024} KiB"
+                    line += f"{dst.relative_to(REPO)} {dst.stat().st_size // 1024} KiB"
             else:
                 line += "(preview only)"
             if dst.exists():
-                shot_rows[str(n)] = {"file": dst.name, "sha256": sha256(dst)}
+                # В реестре — путь от корня: кадры 1-3 лежат в img/, кадр 4 — рядом
+                # с генератором. Свип разрешает имя так же (img/ для голого имени).
+                rel = str(dst.relative_to(REPO)) if n == 4 else dst.name
+                shot_rows[str(n)] = {"file": rel, "sha256": sha256(dst)}
             print(line)
             stats.append(line)
-        drawn = {k: i18n.t(lang, k) for k in MENU_KEYS}
+        drawn = ledger_langs.get(lang, {}).get("texts", {})
+        drawn.update({k: i18n.t(lang, k) for k in MENU_KEYS})
         drawn.update({
             "welcome": i18n.t(lang, "welcome"),
             "task_received": i18n.t(lang, "task_received"),
@@ -363,22 +448,34 @@ def main() -> None:
             "task_type_2": i18n.t(lang, "task_type_2"),
             "task_type_3": i18n.t(lang, "task_type_3"),
         })
-        ledger_langs[lang] = {
+        if 4 in scenes:
+            drawn.update({"lang_menu": i18n.t(lang, "lang_menu")})
+        row = {
             "texts": drawn,
             "canned": {k: c[k] for k in ("header", "ph", "user2", "body3")},
             "shots": shot_rows,
         }
+        if 4 in scenes:
+            # ровно те подписи, что нарисованы на кнопках экрана /lang
+            row["lang_titles"] = [i18n.LANG_TITLES[x] for x in i18n.SUPPORTED]
+        ledger_langs[lang] = row
     if args.stamp and args.apply:
         LEDGER.write_text(json.dumps({
             "note": ("Реестр макетов чата: sha256 каждого img/shotN[-<lang>].webp и ровно те "
-                     "строки, что нарисованы (тексты бота + кернед-строки макета). Пишется "
-                     "только генератором: python3 tools/shots-gen/gen_shots.py ... --apply --stamp. "
-                     "Свип сверяет его с bot/ и с байтами файлов."),
+                     "строки, что нарисованы (тексты бота + кернед-строки макета). Кадр 4 "
+                     "(экран /lang) лежит в tools/shots-gen/scenes/ — страница его не "
+                     "показывает. Пишется только генератором: python3 "
+                     "tools/shots-gen/gen_shots.py ... --apply --stamp. Свип сверяет его "
+                     "с bot/ и с байтами файлов."),
             "menu_keys": list(MENU_KEYS),
             "langs": ledger_langs,
         }, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         print(f"реестр: {LEDGER.relative_to(REPO)} ({len(ledger_langs)} языков)")
     print("\nГотово:", len(stats), "кадров")
+    if layout_issues:
+        print(f"ПРОВАЛ ВЁРСТКИ: {len(layout_issues)} подписей не влезли в свои блоки — "
+              f"правка кегля в mockup.html, потом перерисовка")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
