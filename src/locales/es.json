@@ -120,5 +120,7 @@
   "logo.alt": "Logotipo de UchiSamBot",
   "lang.aria": "Idioma",
   "vbtn.pause": "Pausar el vídeo de demostración",
-  "vbtn.play": "Reproducir el vídeo de demostración"
+  "vbtn.play": "Reproducir el vídeo de demostración",
+  "vbtn.pauseShort": "Pausa",
+  "vbtn.playShort": "Reproducir"
 }

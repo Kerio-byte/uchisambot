@@ -126,21 +126,35 @@ main{display:block}
 .hero-badge img{display:inline-block}
 .chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
 .chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
-.hero-phone{display:flex;justify-content:center}
+.hero-phone{display:flex;flex-direction:column;align-items:center}
 .phone-frame{position:relative;display:inline-block;line-height:0}
 .hero-phone video{display:block;width:min(300px,72vw);height:auto;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow);background:#0B1020}
-/* Кнопка «пауза/играть» на демо (22.10.2026): WCAG 2.2.2 требует механизм остановки
-   авто-движущегося контента. Кнопка в разметке СКРЫТА (hidden) и показывается только
-   скриптом: без JS она была бы мёртвой. 44x44 — размер тач-цели. */
-.video-toggle{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;padding:0;margin:0;border-radius:50%;display:none;place-items:center;background:rgba(14,21,38,.72);color:#fff;cursor:pointer;box-shadow:0 2px 10px rgba(11,16,32,.4);transition:background .15s ease,transform .15s ease}
+/* Кнопка «пауза/играть» ПОД кадром, а не поверх него (24.10.2026): WCAG 2.2.2 требует
+   механизм остановки авто-движущегося ролика, но управление не имеет права закрывать
+   содержимое. На кадре 300 px круг 44 px в правом верхнем углу накрывал сразу два
+   нарисованных элемента чата — иконку батареи в строке состояния и меню «три точки»
+   (замер: скрыть кнопку → разница кадра 65x65 px у правого верхнего угла). Видимая
+   часть — только значок: подписи кнопки в словарях до 35 знаков (испанский), текст под
+   кадром поехал бы по ширине. Поэтому видимая часть — значок и короткое слово из
+   словаря (vbtn.pauseShort / vbtn.playShort: «Пауза»/«Играть»), а длинная подпись
+   «Остановить демо-видео» остаётся для скринридера. 44 px — тач-цель. */
+.media-ctrl{display:flex;align-items:center;justify-content:flex-end;width:min(300px,72vw);height:44px;margin:10px auto 0}
+.video-toggle{display:none;align-items:center;justify-content:center;gap:7px;height:44px;min-width:44px;padding:0 14px 0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font-weight:600;font-size:13px;line-height:1;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 3px rgba(11,16,32,.10);transition:background .15s ease,border-color .15s ease,transform .15s ease}
 /* hidden обязан реально скрывать: прежний display:grid перебивал UA-правило
    [hidden]{display:none}, и кнопка «пауза» висела на кадре без скрипта — мёртвый
    элемент управления (найдено 23.10.2026 при проверке страницы с выключенным JS). */
-.video-toggle:not([hidden]){display:grid}
-.video-toggle:hover{background:rgba(14,21,38,.92)}
+.video-toggle:not([hidden]){display:inline-flex}
+.video-toggle:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
 .video-toggle:active{transform:scale(.96)}
 .video-toggle:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 .video-toggle svg{width:18px;height:18px;display:block;fill:currentColor}
+/* Обе стороны подписи лежат в одной ячейке: ширина кнопки = длинному слову, поэтому
+   при смене состояния (клик человека или ролик снова в кадре) кнопка не прыгает по
+   ширине. Текст декоративен (aria-hidden) — имя кнопки всё равно даёт aria-label. */
+.vt-text{display:inline-grid}
+.vt-text>span{grid-area:1/1;white-space:nowrap}
+.video-toggle[data-state="play"] .vt-a{visibility:hidden}
+.video-toggle[data-state="pause"] .vt-b{visibility:hidden}
 .video-toggle .ico-play{display:none}
 .video-toggle[data-state="play"] .ico-pause{display:none}
 .video-toggle[data-state="play"] .ico-play{display:block}
@@ -341,13 +355,18 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <video id="hero-video" width="540" height="1170" muted loop playsinline preload="metadata" poster="img/demo-poster.webp" aria-label="Demo: the bot breaks down a task step by step." data-i18n-attr="aria-label:demo.alt">
           <source src="demo/uchiambot-demo-web.mp4" type="video/mp4">
         </video>
-        <!-- WCAG 2.2.2: авто-движущийся ролик обязан иметь механизм остановки.
-             hidden — до инициализации скриптом; без JS кнопка не показывается. -->
+      </div>
+      <!-- WCAG 2.2.2: авто-движущийся ролик обязан иметь механизм остановки.
+           Кнопка живёт ПОД кадром, в своей строке (24.10.2026): на кадре она накрывала
+           иконку батареи и меню чата. hidden — до инициализации скриптом; без JS кнопка
+           не показывается. -->
+      <div class="media-ctrl">
         <button class="video-toggle" id="video-toggle" type="button" hidden data-state="pause"
                 aria-label="Pause the demo video" data-play-label="Play the demo video"
                 data-i18n-attr="aria-label:vbtn.pause;data-play-label:vbtn.play">
           <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
           <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4.5v15a1 1 0 0 0 1.5.9l11-7.5a1 1 0 0 0 0-1.8l-11-7.5A1 1 0 0 0 8 4.5z"/></svg>
+          <span class="vt-text" aria-hidden="true"><span class="vt-a" data-i18n="vbtn.pauseShort">Pause</span><span class="vt-b" data-i18n="vbtn.playShort">Play</span></span>
         </button>
       </div>
     </div>
@@ -715,6 +734,9 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   var userPaused = false, userStarted = false, onScreen = true;
   var labelPause = btn.getAttribute('aria-label') || '';
   var labelPlay = btn.getAttribute('data-play-label') || labelPause;
+  // Видимое слово подписи (24.10.2026): значок без слова читался как кнопка самого
+  // телефона на кадре. Переключение слова делает CSS по [data-state], которое ставит
+  // sync(); обе стороны лежат в одной ячейке grid, поэтому ширина кнопки не прыгает.
   function canPlay(){
     // reduced-motion/saveData гасят автозапуск, но НЕ запрещают ручной запуск:
     // если человек сам нажал «играть», его выбор сильнее настройки системы.
