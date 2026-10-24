@@ -4512,3 +4512,68 @@ through `tools/publish-branch.sh` (main and `gh-pages`, both mirrors).
 `scripts/landing-landscape-page.py` and `SKILL.md` in the `stars-bots-ops` skill;
 `evidence/block-20261025a/` (landscape page 956, the control at 114 / 48 red, cross-engine 60, three
 screenshots of the bar on a sideways phone, one of it absent under a mouse, and the raw numbers).
+
+## The tablet was a device nobody had measured, and the one zone it owns (25.10.2026)
+
+The block before this one closed with a sentence it did not answer: the sticky bar moved from a width
+query to a pointer query, so an iPad now shows it — “a default, not a decision”. Tablets as a class had
+never been measured at all: every battery before them named phones (390×844, 932×430, 568×320,
+360×640) or the desktop (1440×900, 1920×1080). On a tablet three things happen at once, and none of
+them happens at either end:
+
+1. width 768…860: the layout is already single-column (≤860) while the header menu is still visible
+   (it hides only ≤760) — a combination that exists nowhere else;
+2. width 861…1366 with a coarse pointer: the desktop grid **plus** a sticky bar;
+3. height 1024…1366: the bar now lives on a screen where it never existed, and can cover a FAQ
+   answer or the submit button.
+
+`scripts/landing-tablet-page.py`: eight real iPad screens in both orientations — 768×1024 (mini 5/6,
+9.7"), 810×1080 (10.2"), 820×1180 (Air 11" / 10th gen), 834×1194 (Pro 11"), 1024×768, 1180×820 (Air
+landscape), 1194×834 (Pro 11" landscape), 1366×1024 (Pro 12.9") — nine languages, **Chromium and
+WebKit**. Per screen × language: the document is no wider than the screen; visible content (the
+content of a closed `<details>` has no box and is not counted) stays inside its own section; the hero
+button is fully above the fold; the header is exactly as tall as the desktop's, measured in the same
+run at 1440×900 rather than written as a constant; the header menu and the language switch do not
+overlap — at 768…860 they are neighbours; the bar is absent at the top and present after scrolling,
+≤64 px tall, flush with the bottom, and on a wide tablet its button is ≤440 px and centred; the bar is
+hidden when the shots' own button is on screen; the shots rail can be scrolled to its last frame; the
+submit button is visible and uncovered; the last FAQ answer does not slide under the bar; no JS errors.
+**1804 checks, 0 failed** — and every one of the 144 page runs produced 12 or 13 checks, so a run that
+silently half-loaded would show up as a hole in the count instead of passing.
+
+The control injects three deliberate defects (zero `scroll-padding-bottom`, a 120 px bar, a full-width
+button on a wide tablet) and reddens **26 of 204** checks on English alone, so the battery is not green
+by construction.
+
+**The gap it named and did not close.** The battery's own header says the 768…860 zone exists nowhere
+else — and then only proves that the nav does not overlap the language switch. Nobody opened that menu
+on a tablet: every earlier menu run was at 420 px (no header menu at all), 844×390 (short landscape)
+or 1440×900. `scripts/landing-tablet-menu.py` closes it — three narrow iPads × en/ru/hi × both
+engines, **162 checks**: closed at load, opens on click, exactly nine items, the list entirely on
+screen (all four edges), no item clipped by its own list, exactly one `aria-current="page"`, Escape
+closes and returns focus to the summary, a click outside closes. **162 / 0.** Its control (the list
+clipped to 60 px and pushed 320 px right) reddens **27**, and both classes — “on screen” and “not
+clipped” — go red, not just one.
+
+**Margins, not just passes.** The bar is exactly 59 px on all 144 runs; the tightest hero clearance is
+186 px (Hindi at 1024×768, both engines); 806 px is the widest bar button anywhere, and that is the
+narrow screen's full-width button at 834 px, which the check deliberately does not constrain — above
+860 the button never exceeds 440 px. On the menu: the list is 430 px tall on all three screens, sits
+at x 548…748 on a 768 px screen, and all nine items are inside it in every run.
+
+**What it cannot prove.** That a real notch or home indicator behaves like the emulator — safe-area
+insets are zero in emulation and the page does not use `viewport-fit=cover`, so the notch is expected
+to shrink the layout viewport rather than overlap it, but that is reading, not measurement. That a
+tablet should get the sticky bar at all: the rule is “coarse pointer”, so an iPad does — still a
+default, not a decision. That 420 px (or 440 px) is the right button width — taste. That an iPad with
+a trackpad behaves like a touch tablet: `pointer:fine` means no bar, and that combination was not
+measured. And nothing about the nine texts: this block measured boxes, not words.
+
+**Numbers.** `tools/build.py --check` 24 / 24; sweep **2598 / 0**; tablet **1804 / 0** (control 204 /
+26 red); tablet menu **162 / 0** (control 162 / 27 red).
+
+**Files.** No site file changed — both batteries are proof, not a fix, so `index-src.html`, the nine
+built pages and the publish tree are untouched and nothing was re-published. `scripts/landing-tablet-page.py`,
+`scripts/landing-tablet-menu.py` and `SKILL.md` in the `stars-bots-ops` skill;
+`evidence/tablet-page-20261025T024748.json` (1804), `evidence/tablet-menu-20261025T025600.json` (162),
+their two control files, and two screenshots of the bar on an upright and a sideways iPad.
