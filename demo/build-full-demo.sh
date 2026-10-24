@@ -17,26 +17,33 @@
 # section "full") records the strings and the bytes; landing-sweep.py fails when
 # they disagree.
 #
-# Sources: $KIT/shots_en (en) and $KIT/shots (ru), overridable with KIT=...
+# Sources (24.10.2026): every input lives in this repository — scenes 1-3 are the
+# screenshots the page shows (img/shotN[-<lang>].webp), scene 4 is the /lang mockup
+# drawn by tools/shots-gen (tools/shots-gen/scenes/shot4[-ru].webp), the logo is
+# img/logo-512.png. No external catalogue: before this the demo silently kept the
+# kit's two-language scene while the page promised nine.
 # Run from anywhere:  bash demo/build-full-demo.sh en|ru
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
-KIT="${KIT:-$ROOT/../submission-kit-20261014}"
+LOGO="$ROOT/img/logo-512.png"
 FB=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 F=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 L="${1:?usage: build-full-demo.sh en|ru}"
 
 case "$L" in
-  # 24.10.2026: сцены 1-3 — те же файлы, что показывает страница (img/shotN[-<lang>].webp).
-  # Раньше все четыре снимались из внешнего каталога submission-kit; после перерисовки
-  # макетов 23.10 (седьмая кнопка «Пригласить друга») полное демо продолжало показывать
-  # шесть кнопок. Сцена 4 — переключение языка — своей картинки на странице не имеет
-  # и остаётся из каталога; она клавиатуру не показывает.
-  en) SHOTS="$KIT/shots_en"; S1="$ROOT/img/shot1.webp"; S2="$ROOT/img/shot2.webp"
-      S3="$ROOT/img/shot3.webp"; S4="$SHOTS/shot4_lang_en.png"; OUT="$HERE/uchiambot-demo.mp4" ;;
-  ru) SHOTS="$KIT/shots";    S1="$ROOT/img/shot1-ru.webp"; S2="$ROOT/img/shot2-ru.webp"
-      S3="$ROOT/img/shot3-ru.webp"; S4="$SHOTS/shot4_answer_en.png"; OUT="$HERE/uchiambot-demo-ru.mp4" ;;
+  # 24.10.2026: все четыре сцены — файлы из репозитория. Сцены 1-3 — те же, что
+  # показывает страница (img/shotN[-<lang>].webp). Сцена 4 — экран выбора языка,
+  # его рисует tools/shots-gen из LANG_TITLES бота (tools/shots-gen/scenes/):
+  # до этого кадр брался из substrate-kit и показывал ДВА языка («Русский /
+  # English») под подписью «работает на русском и английском», хотя страница и бот
+  # отвечают на девяти. Внешний каталог здесь больше не нужен — все входы из репозитория.
+  en) S1="$ROOT/img/shot1.webp"; S2="$ROOT/img/shot2.webp"
+      S3="$ROOT/img/shot3.webp"; S4="$ROOT/tools/shots-gen/scenes/shot4.webp"
+      OUT="$HERE/uchiambot-demo.mp4" ;;
+  ru) S1="$ROOT/img/shot1-ru.webp"; S2="$ROOT/img/shot2-ru.webp"
+      S3="$ROOT/img/shot3-ru.webp"; S4="$ROOT/tools/shots-gen/scenes/shot4-ru.webp"
+      OUT="$HERE/uchiambot-demo-ru.mp4" ;;
   *) echo "unknown language: $L" >&2; exit 2 ;;
 esac
 for f in "$S1" "$S2" "$S3" "$S4"; do
@@ -55,14 +62,14 @@ WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 
 convert -size 1080x2340 gradient:'#1E2A78-#3D5AFE' \
-  \( "$KIT/logo-512.png" -resize 460x460 \) -gravity center -geometry +0-330 -composite \
+  \( "$LOGO" -resize 460x460 \) -gravity center -geometry +0-330 -composite \
   -font "$FB" -pointsize 104 -fill white -gravity center -annotate +0+120 'UchiSamBot' \
   -font "$F" -pointsize 46 -fill '#EAF0FF' -gravity center -annotate +0+250 "$TAG" \
   -font "$FB" -pointsize 48 -fill '#4FC3F7' -gravity center -annotate +0+400 't.me/UchiSamBot' \
   "$WORK/intro.png"
 
 convert -size 1080x2340 gradient:'#1E2A78-#3D5AFE' \
-  \( "$KIT/logo-512.png" -resize 320x320 \) -gravity center -geometry +0-560 -composite \
+  \( "$LOGO" -resize 320x320 \) -gravity center -geometry +0-560 -composite \
   -font "$FB" -pointsize 84 -fill white -gravity center -annotate +0-140 "$OT" \
   -font "$F" -pointsize 48 -fill '#EAF0FF' -gravity center -annotate +0-10 "$OS" \
   -font "$FB" -pointsize 68 -fill '#4FC3F7' -gravity center -annotate +0+180 "$OC" \

@@ -88,12 +88,15 @@ VIDEO = {'en': 'uchiambot-demo-web.mp4'}
 FULL = {'en': 'uchiambot-demo.mp4', 'ru': 'uchiambot-demo-ru.mp4'}
 FULL_ONLY = {
     'en': {'c1': 'Your AI study helper',
-           'c4': 'Works in Russian and English',
+           # 24.10.2026: was "Works in Russian and English" while the page says nine
+           # languages (hero.chip3, shots.cap, FAQ q3a) and the bot answers in nine
+           # (ANSWER_LANG). The scene now shows the real /lang picker with nine rows.
+           'c4': 'Works in 9 languages',
            'outro_t': 'Try it for free',
            'outro_cta': 'Open @UchiSamBot',
            'outro_where': 'in Telegram'},
     'ru': {'c1': 'Твой помощник по учёбе',
-           'c4': 'Работает на русском и английском',
+           'c4': 'Работает на 9 языках',
            'outro_t': 'Попробуй бесплатно',
            'outro_cta': 'Открой @UchiSamBot',
            'outro_where': 'в Telegram'},
@@ -152,6 +155,28 @@ def shot_name(lang, n):
     ledger — a new screenshot with an old loop is a sweep failure, not silence.
     """
     return f'shot{n}.webp' if lang == 'en' else f'shot{n}-{lang}.webp'
+
+
+def scene_path(lang, n):
+    """Full-demo scene N: 1-3 are the page screenshots, 4 is the /lang mockup.
+
+    Scene 4 is not on the page (the page shows three shots), so it lives next to
+    the generator that draws it, in tools/shots-gen/scenes/. It used to come from
+    submission-kit-20261014 and showed two languages under a caption that promised
+    two, while the page and the bot answer in nine (24.10.2026).
+    """
+    if n == 4:
+        name = 'shot4.webp' if lang == 'en' else f'shot4-{lang}.webp'
+        return ROOT / 'tools' / 'shots-gen' / 'scenes' / name
+    return ROOT / 'img' / shot_name(lang, n)
+
+
+def scene_source(lang, n):
+    """What the ledger records: scenes 1-3 are named by the page's own file name,
+    scene 4 by its path from the repo root (it lives outside img/)."""
+    if n == 4:
+        return str(scene_path(lang, n).relative_to(ROOT))
+    return shot_name(lang, n)
 
 
 def full_caption(lang, scene):
@@ -236,7 +261,8 @@ def build_ledger(langs=None, full=None):
                 'shot2_sha256': sha256(ROOT / 'img' / shot_name(lang, 2)),
                 'shot3': shot_name(lang, 3),
                 'shot3_sha256': sha256(ROOT / 'img' / shot_name(lang, 3)),
-                'shot4': 'external kit (the language-switch scene has no page shot)',
+                'shot4': scene_source(lang, 4),
+                'shot4_sha256': sha256(scene_path(lang, 4)),
             },
             'caps': {str(n): full_caption(lang, n) for n in (1, 2, 3, 4)},
             'intro_tag': full_intro_tag(lang),
@@ -331,14 +357,14 @@ def check():
                   f'(sha256 differs) — rebuild the full demo and re-stamp')
             bad += 1
         src = row.get('sources') or {}
-        for n in (1, 2, 3):
-            name = shot_name(lang, n)
-            shot = ROOT / 'img' / name
-            if src.get(f'shot{n}') != name or not shot.is_file():
-                print(f'FAIL {lang}:full the ledger does not point scene {n} at {name}')
+        for n in (1, 2, 3, 4):
+            want = scene_source(lang, n)
+            shot = scene_path(lang, n)
+            if src.get(f'shot{n}') != want or not shot.is_file():
+                print(f'FAIL {lang}:full the ledger does not point scene {n} at {want}')
                 bad += 1
             elif sha256(shot) != src.get(f'shot{n}_sha256'):
-                print(f'FAIL {lang}:full {name} was redrawn after the demo was built — '
+                print(f'FAIL {lang}:full {want} was redrawn after the demo was built — '
                       f'rebuild it: bash demo/build-full-demo.sh {lang}')
                 bad += 1
     print(f'ledger: {len(LANGS)} loops + {len(FULL)} full demos, {bad} problem(s)')

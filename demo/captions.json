@@ -204,8 +204,8 @@
   "full": {
     "en": {
       "video": "uchiambot-demo.mp4",
-      "sha256": "e14aa169cb892b489f87aa07adb9eafae959e25e92bd511a66787744cc77bbfd",
-      "bytes": 987858,
+      "sha256": "9f2df1251b6f33f18cbadb6e6226b2f51a1a7bf283410e18eae1a983d14127ef",
+      "bytes": 1020066,
       "sources": {
         "shot1": "shot1.webp",
         "shot1_sha256": "621bfccf9d883efbed2573caf1d40f9a7940f678670c6bb7b1a03d6c59e1288d",
@@ -213,13 +213,14 @@
         "shot2_sha256": "e6dd26b59a7dbc66aa850f7b3bf36b083962613899cf8086fe7050480717fe9d",
         "shot3": "shot3.webp",
         "shot3_sha256": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784",
-        "shot4": "external kit (the language-switch scene has no page shot)"
+        "shot4": "tools/shots-gen/scenes/shot4.webp",
+        "shot4_sha256": "fe00b7c0ef9281de2e2a03e44d9ff0b57f40d185684d6851908fde52339524ab"
       },
       "caps": {
         "1": "1 · Your AI study helper",
         "2": "2 · Send a task — text or photo",
         "3": "3 · Step-by-step breakdown",
-        "4": "4 · Works in Russian and English"
+        "4": "4 · Works in 9 languages"
       },
       "intro_tag": "Study Helper for school students",
       "outro_sub": "First 2 breakdowns free",
@@ -232,8 +233,8 @@
     },
     "ru": {
       "video": "uchiambot-demo-ru.mp4",
-      "sha256": "191302665c7f16ab306234d2bacb88b2358aa041a78988a97bd8e0a600dc78ab",
-      "bytes": 1172866,
+      "sha256": "a996c4b024d45f838d89328d14f0eb7abdac87e9081a08afe65e587f258d1178",
+      "bytes": 1013006,
       "sources": {
         "shot1": "shot1-ru.webp",
         "shot1_sha256": "f70c4f7c1533150f086dd99b0325c2720fdd55ab0e801c0d5cf36623fde1944f",
@@ -241,13 +242,14 @@
         "shot2_sha256": "9716c732f2f6439a8ae41d6054b9716d716454abc00828ee75b252090410bf49",
         "shot3": "shot3-ru.webp",
         "shot3_sha256": "e14c03253ab83ccb586dda848be17f313bdf4da3a26227d5ff828ffbb17b472a",
-        "shot4": "external kit (the language-switch scene has no page shot)"
+        "shot4": "tools/shots-gen/scenes/shot4-ru.webp",
+        "shot4_sha256": "1147fe85db8a2f96199e06c71d077508bcd5323d2e932c077b54c9f21e201519"
       },
       "caps": {
         "1": "1 · Твой помощник по учёбе",
         "2": "2 · Отправь задачу — текстом или фото",
         "3": "3 · Пошаговый разбор",
-        "4": "4 · Работает на русском и английском"
+        "4": "4 · Работает на 9 языках"
       },
       "intro_tag": "Учебный помощник для школьников",
       "outro_sub": "Первые 2 разбора бесплатно",
