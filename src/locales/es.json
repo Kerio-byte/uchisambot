@@ -97,6 +97,7 @@
   "foot.pay": "Los pagos se procesan con Telegram Stars.",
   "foot.privacy": "Política de privacidad",
   "foot.terms": "Términos de servicio",
+  "demo.alt": "Demostración: el bot desglosa una tarea paso a paso.",
   "meta.title": "UchiSamBot — Tareas paso a paso en Telegram",
   "meta.desc": "Bot de Telegram que desglosa las tareas paso a paso, explica los temas con palabras sencillas y crea tarjetas de repaso. Primeros 2 desgloses gratis.",
   "contact.title": "¿Preguntas o comentarios?",
