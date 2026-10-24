@@ -3456,3 +3456,75 @@ nine `demo/*-web*.mp4`, nine `img/demo-poster*.webp`, two full demos, README (de
 section, the publish-list count 115 → 109, the "Editing" step that still said Pages
 serves `main`), `evidence/block-20261024f-video-menu.txt`, and the skill `stars-bots-ops`:
 `scripts/landing-sweep.py` (+26 checks).
+
+## The demo's language scene showed two languages, and in Russian an English screen (24.10.2026)
+
+**What was wrong.** Scene 4 of both 35 s demos was the one picture in the chain nobody could
+check: it came from `submission-kit-20261014` (`shots_en/shot4_lang_en.png`,
+`shots/shot4_answer_en.png`), not from this repository. The picture listed two languages
+("Русский / English"), the caption over it said "Works in Russian and English", and the RU demo
+put Russian words over an **English** screen (the file it took was the English answer shot, name
+and all). The page had said nine for a while (`hero.chip3`, `shots.cap`, FAQ `q3a`), and the bot
+answers in nine since `ANSWER_LANG` (22.10). The three page stills were already tied to the bot
+by `tools/shots.json`; the fourth scene sat outside that chain, so nothing could notice it.
+
+**Drawn, not borrowed.** `tools/shots-gen` now draws scene 4 the way `cmd_lang()` builds it: the
+`lang_menu` message and the keyboard from `LANG_TITLES` in `SUPPORTED` order, two buttons per
+row, five rows — read from the bot's i18n, not from a literal. `build_shots()` gained key 4,
+`--scenes` selects what to draw, and a two-language run now *adds* to the ledger instead of
+replacing it (the first version rewrote the file and would have dropped seven languages).
+
+**Where the file lives, and one plan corrected.** The earlier note said "add
+`img/shot4[-en|-ru].webp`, publish list 109 → 111". That would have published two files no page
+names — exactly what the fifth publish check (same day) forbids. The scene is video-only, so it
+lives in `tools/shots-gen/scenes/` and the publish list stays at **109 files**.
+
+**Captions.** `FULL_ONLY` now says "Works in 9 languages" / "Работает на 9 языках". The string is
+video-only and now agrees with the dictionary instead of arguing with it.
+
+**The kit is gone.** `build-full-demo.sh` no longer reads an external catalogue at all: scenes
+1-3 from `img/`, scene 4 from `tools/shots-gen/scenes/`, the logo from `img/logo-512.png`
+(byte-identical to the kit's, checked by sha256). The build is reproducible from the repository
+alone, and the sweep fails if a `KIT=`/`SHOTS=` declaration comes back.
+
+**A gate for the fit.** Nine labels in 405 px each is a layout problem no hash can see. The
+renderer now measures every button (`scrollWidth` against `clientWidth`) and exits 1 when a
+label does not fit. Checked by breaking it: at 60 px «🇮🇩 Bahasa Indonesia» overflows 510 > 420 px
+and the generator fails; at the shipped 30 px nothing does.
+
+**Checked by breaking it (sweep).** In a copy of the tree the ledger's `lang_titles` was cut back
+to the two old ones — two failures, each naming the file and the redraw command. Replacing
+`shot4.webp` with another picture and adding a `KIT=` line produced three more (bytes, `full demo
+scene 4 = its source`, `full demo scene 4 from the generator`). Real tree: **2,368 → 2,376
+checks, 0 failed**.
+
+**Rebuilt.** Both demos, 30 s and 29 s of ffmpeg: 35.5 s, 1,065 frames, 720×1560, 30 fps. Weights
+stayed inside the budgets the sweep enforces — EN 988 → 996 KB (1 MiB), RU 1,173 → 989 KB
+(1.5 MiB). Frames pulled from the delivered files at 28.5 s show nine buttons and the new caption
+in both; the caption's every glyph is in the font the sweep checks.
+
+**Reproducible.** A second render of scene 4, on a copy of the tree, produced the same sha256
+(`fe00b7c0…`), so "redraw and restamp" cannot silently orphan the demos.
+
+**Published.** `tools/publish-branch.sh`: 109 files to both mirrors, Pages source read back as
+`gh-pages/`; `landing-live-bytes.py` 26/26; both demos then fetched from the live host one by one
+and compared by sha256 — **2/2 identical** (1,020,066 and 1,013,006 bytes). `build.py --check` 24
+files identical, `landing-poster-frames.py` 9/0, `landing-video-motion.py` 408/0.
+
+**What it cannot prove.** That a viewer reads nine rows in a 720 px frame: each button is 113.8 px
+on the 1080 px mockup, ~76 px in the delivered video. That a real Telegram client draws the same
+flags — several desktop builds render "RU" as two letters instead. That the scene equals the live
+bot screen: the chain proves the words equal `LANG_TITLES`, not that Telegram renders them the
+same way. And that the burned caption is readable at phone size — that check is the eye, not a
+gate.
+
+**Open item for the next block.** None left in the video chain: all four scenes now come from
+files this repository can rebuild, and every one of them has a hash in a ledger.
+
+**Files.** `tools/shots-gen/gen_shots.py` (scene 4, `--scenes`, ledger merge, `--force-scene4`,
+fit measurement), `tools/shots-gen/mockup.html` (two-button rows), `tools/shots-gen/scenes/shot4.webp`
++ `shot4-ru.webp`, `tools/shots.json` (29 entries, `lang_titles`, `lang_menu`), `demo/captions.py`
+(`c4`, `scene_path()`, `scene_source()`, scene-4 sources and check), `demo/captions.json`
+(re-stamped: 9 loops + 2 full demos, 0 problems), `demo/build-full-demo.sh` (all inputs from the
+repo), both demos, `evidence/block-20261024g-*.txt`, and the skill `stars-bots-ops`:
+`scripts/landing-sweep.py` (+8 checks).
