@@ -3250,3 +3250,75 @@ line), `submission-kit/` (four screenshots + README), `img/shot4.webp` and
 `references/landing-qa.md`. No page, no text, no price and no picture the visitor sees
 changed.
 
+## The sentence left step 3 and stayed in the search result (24.10.2026)
+
+**What was found.** The previous pass took "the bot solves it" out of step 3 and the hero
+subheadline in all nine languages. It left the same sentence in the one place a parent reads
+**before** the click. `meta.desc` in Hindi said the bot is one "जो होमवर्क को स्टेप-बाय-स्टेप
+हल करता है" — that solves the homework step by step; Turkish said "Ödevleri adım adım çözen,
+… bir Telegram botu" — a bot that solves the homework step by step. Both sit in the tab
+title's description, the search snippet, the bold line of a Telegram link preview and, word
+for word, in the JSON-LD `description` block that crawlers read. The page itself answers its
+own first FAQ with «नहीं / Hayır» to "is this cheating" and promises the bot stops one step
+before the answer.
+
+Two reasons the gate was silent. First, `tools/claims.json` guarded exactly two dictionary
+keys — `how.s3d` and `hero.sub` — and the head is built from `meta.title` / `meta.desc`,
+which nobody checked against the registry. Second, the Turkish forbid list held `çözer` and
+`çözüyor` but not the participle `çözen`: even with the meta keys added, the old string
+would have walked through.
+
+**The fix is two strings, in the page's own verbs.** Hindi now says the bot "समझाता है"
+(explains) — the verb of its own hero and step 3 — and "बताता है" for how it covers a topic,
+the verb step 3 uses for the reason behind a step. Turkish says "Ödevini adım adım çözmene
+yardımcı olan" (helps you solve it step by step), the exact construction of its own hero
+subheadline. Both descriptions were measured against the 160-character budget before the
+build: 148 and 159. The titles were **not** touched: "हल" and "çözüm" are the product's unit
+names the way "разбор" is in Russian, step 3 sells them as a noun, and the previous block's
+decision that the unit keeps its name still holds.
+
+**The gate has two halves now.** The registry guards four keys (`how.s3d`, `hero.sub`,
+`meta.title`, `meta.desc`) and Turkish gained `\bçözen\b`. On top of that the sweep reads the
+**shipped head** of all nine pages — `<title>`, `meta[name=description]`, `og:title`,
+`og:description`, `twitter:title`, `twitter:description` and every JSON-LD `description` —
+and asks two questions: does each field equal the dictionary string (one source, five
+surfaces), and does any of them carry a forbidden verb. Six checks per language plus one on
+the registry itself: **2278 → 2333**.
+
+**Controls: five mutations in a copy of the tree, each rebuilt before the sweep.**
+
+| mutation | expected red line | what it printed |
+|---|---|---|
+| hi description back to «हल करता है» | dictionary + head | `claim: guarded keys do not promise a solution \| meta.desc: «हल कर»` and the head line naming meta description, og, twitter and json-ld |
+| tr description back to «çözen» | new pattern works | `meta.desc: «\bçözen\b»` — the old string would have passed without the added form |
+| dictionary clean, `og:description` sabotaged in the built page | head gate is independent | `head: og/twitter copies == dictionary \| og:description` + `head: no solve claim before the click` while the dictionary check stayed green |
+| registry told to guard only the two body keys | the registry is watched | `claims registry guards the head keys \| keys=['how.s3d', 'hero.sub']` |
+| one JSON-LD description drifted | copies must match | `head: json-ld description == dictionary \| узлов 1` |
+
+**Checked after the change.** `tools/build.py --check`: 24 files identical to a fresh build.
+Sweep **2333 / 0**. Nu validator: 0 real findings. `landing-en-leftovers.py`: 0.
+`landing-render-check.py` with a local server: 4 pages, bullets 4, overflow 0, no JS errors.
+Before publishing, the sweep's publication check named exactly two stale addresses — `/hi/`
+and `/tr/` — which is the measurement that nothing else on the site moved. Published through
+`tools/publish-branch.sh` to both mirrors, Pages source read back as `gh-pages/`;
+`landing-live-bytes.py`: **26 / 26**. After the rebuild the full sweep is green, publication
+check included.
+
+**What it cannot prove.** That a Hindi or Turkish reader hears "समझाता है" / "yardımcı olan"
+as teaching rather than as a softer promise of the same thing — that is a copywriter's ear,
+and both lines roll back with one word per language. That the registry is complete: it lists
+the verb forms we have seen, so a synonym nobody has written yet would pass — the protection
+is only as wide as the list, which is why the head check reads the patterns rather than a
+fixed phrase. That no cached preview survives elsewhere: Telegram and the search engines keep
+their own copies of a link preview, and a fresh scrape is not something this repo can force.
+That the five surfaces are all of them: the page could grow a sixth copy of the description
+(`<meta name="application-name">`, a manifest, a second JSON-LD node) and the check would
+name it only if it matched one of the six patterns above.
+
+**Files.** `src/locales/hi.json`, `src/locales/tr.json` (one string each),
+`tools/claims.json` (two keys, one pattern, the note that records both passes),
+`hi/index.html`, `hi/index.html.md`, `tr/index.html`, `tr/index.html.md`,
+`tools/lastmod.json` (rebuilt), the skill `stars-bots-ops`: `scripts/landing-sweep.py` (+55),
+`references/landing-qa.md`. Live pages: `/hi/`, `/tr/`.
+
+
