@@ -25,7 +25,7 @@ Live: https://kerio-byte.github.io/uchisambot/
 - `tools/page-text.py` — flattens a built page into its visible text, one block per line, so it
   can be read as an article rather than as markup (added 23.10.2026 for the meaning pass);
   read-only, not part of the build: `python3 tools/page-text.py ru/index.html`.
-- `tools/publish-tree.py` — the one list of what counts as the site (115 files), and `--check`
+- `tools/publish-tree.py` — the one list of what counts as the site (109 files), and `--check`
   for it: every listed file exists, no page links into the workshop, every internal reference
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
   154 files — `/README.md` included. `--verify-served DIR` serves a staged tree and asks for every
@@ -106,8 +106,9 @@ Live: https://kerio-byte.github.io/uchisambot/
   without the brand, the full demo's intro tagline is `foot.tag` and its outro
   promise is `hero.chip1`; the handful of video-only phrases (the "text or photo"
   tail, the two outro buttons) are listed in one table. `demo/captions.json` is
-  the ledger: the strings actually baked, plus sha256 of each loop, its poster and
-  each full demo. `demo/build-web-loop-langs.sh [lang …]` and
+  the ledger: the strings actually baked, plus sha256 of each loop, its poster,
+  each full demo, and (since 24 Oct 2026) of the two page screenshots each loop is
+  cut from. `demo/build-web-loop-langs.sh [lang …]` and
   `demo/build-full-demo.sh en|ru` ask that script for every line and re-stamp the
   ledger; the QA sweep fails when the dictionary, the ledger and the bytes
   disagree. `landing-sweep.py` checks the ledger, `landing-poster-frames.py`
@@ -147,7 +148,11 @@ Live: https://kerio-byte.github.io/uchisambot/
    `terms.html.md` — converted from the legal pages' own `main` content), `404.html`,
    sitemap and llms.txt.
 3. Commit the template + locales + generated pages together and push to `main`;
-   GitHub Pages serves the site from the repository root.
+   then publish the site tree to the `gh-pages` branch — GitHub Pages serves the
+   site from `gh-pages` /(root) since 24 Oct 2026, so a push to `main` alone no
+   longer changes what visitors see: `bash tools/publish-branch.sh` stages the
+   publish list (`tools/publish-tree.py`), pushes it to every mirror and reads the
+   Pages setting back.
 
 Reproducible build: `tools/build.py` is deterministic — a second run on unchanged
 sources leaves the worktree clean. `sitemap.xml`’s `<lastmod>` comes from a content
@@ -159,23 +164,28 @@ re-hashes every page and fails when the ledger is stale (page edited without a
 rebuild, or sitemap date ≠ ledger date).
 
 Hero video (per-language loops): every language page plays its OWN 13 s loop with the
-two step captions in the page language — `demo/uchiambot-demo-web.mp4` (EN, the kit
-build) and `demo/uchiambot-demo-web-<lang>.mp4` for the other eight (RU rebuilt; the
+two step captions in the page language — `demo/uchiambot-demo-web.mp4` (EN) and
+`demo/uchiambot-demo-web-<lang>.mp4` for the other eight (RU rebuilt; the
 seven es/pt/hi/id/tr/vi/uk loops added 17 Oct 2026), poster `img/demo-poster[-<lang>].webp`
 (last frame of the loop). Captions are the site dictionary terms (`how.s2t` /
 `shot3.alt` core), e.g. RU `2 · Отправь задачу — текстом или фото` / `3 · Пошаговый
 разбор`, ES `2 · Envía tu tarea — texto o foto` / `3 · Desglose paso a paso`. RU:
-rebuild with `demo/build-web-loop-ru.sh`; the other seven loops and the poster of any
-language: `demo/build-web-loop-langs.sh [lang …]` — same zoompan/drawtext pipeline as
-the kit build (13.0 s, 720×1560, x264 veryslow crf30; poster = frame 389 → 540×1170
-WebP). Sources are the per-language chat-shot PNG renders from `tools/shots-gen` —
-regenerate them first if the scratch workdir is gone (`gen_shots.py --langs …`). Two
-deliberate render notes: the hi loop uses Noto Sans Devanagari Bold, whose glyph set
-has no `·` (U+00B7), so its step separator is `.`; drawtext `text_shaping` (on by
-default) shapes the Devanagari conjuncts. Every caption line comes from
-`demo/captions.py` (see Structure); a rebuild refreshes the language's poster and
-re-stamps `demo/captions.json`, and the sweep fails if you forget either. The full
-35 s demos are rebuilt the same way: `bash demo/build-full-demo.sh en|ru`.
+rebuild with `demo/build-web-loop-ru.sh`; any language (and its poster):
+`demo/build-web-loop-langs.sh [lang …]` — same zoompan/drawtext pipeline as the
+kit build (13.0 s, 720×1560, x264 veryslow crf30; poster = frame 389 → 540×1170
+WebP). **Sources are the page's own screenshots** (24 Oct 2026): `img/shot2[-<lang>].webp`
+and `img/shot3[-<lang>].webp` — the exact files the page displays, so a loop cannot
+show a bot the page does not show; rebuilding needs no render run and no external
+catalogue. Two deliberate render notes: the hi loop uses Noto Sans Devanagari Bold,
+whose glyph set has no `·` (U+00B7), so its step separator is `.`; drawtext
+`text_shaping` (on by default) shapes the Devanagari conjuncts. Every caption line
+comes from `demo/captions.py` (see Structure); a rebuild refreshes the language's
+poster and re-stamps `demo/captions.json` (loop bytes, poster bytes, **and the sha256
+of both source screenshots**), and the sweep fails if you forget either — a redrawn
+screenshot with an old loop is red, not silent. The full 35 s demos are rebuilt the
+same way (`bash demo/build-full-demo.sh en|ru`): their scenes 1–3 are those same page
+screenshots, scene 4 (the language switch) has no page equivalent and still comes
+from `submission-kit-20261014` — see the open item in the 24 Oct entry.
 
 Demo video weights: the eleven `demo/` files have soft budgets enforced by the QA sweep —
 full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, the nine hero loops:
@@ -3350,3 +3360,99 @@ them, `tools/lastmod.json` (rebuilt), the skill `stars-bots-ops`:
 `/hi/`, `/id/`, `/tr/`, `/vi/`.
 
 
+
+
+## The screenshots were redrawn with a seventh button; the videos above them still had six (24.10.2026)
+
+On 23 October the chat mockups were redrawn because the bot's menu has seven buttons
+(`menu_kb()`) and all nine languages had been drawing six — the page's "real chats"
+section showed a keyboard the bot never had, and the referral paragraph underneath
+advertised the button the pictures left out. That commit changed 27 stills, moved the
+generator from a hand-written list to the bot's own source, and wrote `tools/shots.json`
+as a ledger. It did not touch the video. Every language page opens with a 13 s loop, and
+the poster a visitor sees before pressing play is that loop's last frame; the loops were
+cut from other files — the EN and RU captures in `submission-kit-20261014`, the other
+seven from `.shots-work` renders — so when the stills were redrawn the pictures that
+move stayed as they were. For a day the same page showed seven buttons in the chat
+section and six in the hero, and sold a seventh in the paragraph between them.
+
+**What the reading was.** Tesseract on the shipped Spanish poster, bottom of the frame:
+`Ejemplos gratis / Analizar un problema / Revisar mi solución / Resumen y tarjetas /
+Precios / Ayuda` — six rows, Help last. On the screenshot the page itself displays:
+`… / Precios / Invitar a un amigo / Ayuda`. The seven other Latin-script posters read
+the same way (`Invite a friend`, `Пригласить друга`, `Convidar um amigo`, `Ajak teman`,
+`Arkadaşını davet et`, `Mời bạn bè`, `запросити друга`); the Hindi poster has no OCR
+data on this box and gained exactly one text line (18 → 19 with the English model) —
+the same one row. The 35 s demo linked from `llms.txt` and the launch platforms carried
+the same six-button welcome scene for eight seconds of its thirty-five.
+
+**The fix is a source, not a re-render.** `demo/build-web-loop-langs.sh` used to name an
+external catalogue; it now reads `img/shot2[-<lang>].webp` and `img/shot3[-<lang>].webp`
+— the two files the page displays. That is a smaller pipeline, not a bigger one: a
+rebuild needs no Playwright run, no kit, no scratch workdir, and the loop and the still
+are the same picture by construction. The same three files feed scenes 1–3 of the full
+demos; scene 4 (the language switch) has no page equivalent and stays in the kit — see
+the open item below.
+
+**The gate that was missing.** `demo/captions.json` described the loop's bytes and the
+poster's bytes, so "re-cut the video, forgot the poster" was red — but nothing described
+what the loop was *cut from*, which is why a redrawn screenshot left nine videos green.
+The ledger now carries, per language, `sources.shot2` / `sources.shot3` and their sha256;
+`landing-sweep.py` compares them with `img/` on every run (18 checks), adds six for the
+full demos' scenes 1–3, and two mechanism checks that do not read the data at all: the
+loop builder may not declare an external catalogue (`KIT=` / `SHOTS_DIR=` gone), and the
+full demo must take scenes 1–3 from `img/`. Sweep: **2,342 → 2,368 checks.**
+
+**Checked by breaking it.** On a copy of the tree (`LANDING_ROOT`) one screenshot was
+redrawn with a red box and the loop left alone. Exactly one new failure appeared, naming
+the file, both hashes and the command:
+
+```
+FAIL [es] loop cut from page screenshot 3 | реестр 'shot3-es.webp'/705791b95443
+≠ файл shot3-es.webp/43ac09f9cbd7 — пересоберите: bash demo/build-web-loop-langs.sh es
+```
+
+(The four other failures in that run belong to the copy: no `.git`, no `evidence/`, and
+the bot path resolved under the copied tree.)
+
+**Rebuilt.** Nine loops and nine posters in 3 min 17 s; both full demos in 35 s and 37 s.
+Every loop kept its shape (13.0 s, 720×1560, 390 frames, 30 fps; poster = frame 389 →
+540×1170), both demos theirs (35.5 s, 1,065 frames). Weights moved but stayed inside the
+budgets the sweep enforces — loops EN 365 → 410 KB, RU 583 → 448 KB, the seven others
+321–407 → 357–458 KB (budget 512 KB); full EN 938 → 988 KB (budget 1 MiB), full RU
+1,369 → 1,173 KB (budget 1.5 MiB).
+
+**Checked after the change.** `tools/build.py --check`: 24 files identical to a fresh
+build. Sweep **2,368 / 0**. `landing-poster-frames.py`: 9 / 0 (RMSE ≈ 0.0106 — a poster
+really is its loop's last frame). `landing-video-motion.py`: 408 / 0. `publish-tree.py
+--check`: 109 files, 513 internal references, list complete. Published through
+`tools/publish-branch.sh` to both mirrors, Pages source read back as `gh-pages/`;
+`landing-live-bytes.py` **26 / 26**, and then the eleven video files were fetched from
+the live host one by one and compared by sha256 — **11 / 11 identical**, nine posters too,
+so the pages in the world now play the loops with seven buttons.
+
+**What it cannot prove.** That the seventh button is the only difference between what the
+videos showed and what the bot does: the chain proves the loop shows the picture the page
+shows, and `tools/shots.json` proves the still shows what `menu_kb()` says — but a screen
+the bot has and the page has no shot for sits outside that chain, and one does (below).
+That OCR is a gate: it is evidence, and the gate is the hash. That a poster still equals
+frame 389 when a loop's length changes — the frame poster rule is a constant, not a
+lookup, so a 15-second loop would keep the number and pick a different picture. And that
+a visitor sees the added row at all: in a 540 px poster it is 24 px tall; the proof here
+is the file chain, not the eye.
+
+**Open item for the next block.** Scene 4 of both full demos is the `/lang` screen from
+`submission-kit-20261014`: it lists two languages ("Русский / English") and the caption
+over it says "Works in Russian and English", while the page and the bot answer in nine.
+Fixing it is a real piece of work — draw a nine-row picker in `tools/shots-gen` from the
+bot's `LANG_TITLES`, add `img/shot4[-en|-ru].webp`, extend `tools/shots.json`, the
+publish list (109 → 111) and the ledger — so it is named here instead of half-done.
+
+**Files.** `demo/build-web-loop-langs.sh` (sources = `img/`, default all nine,
+MISSING hint), `demo/build-web-loop-ru.sh` (header), `demo/build-full-demo.sh` (scenes
+1–3 = `img/`), `demo/captions.py` (`shot_name()`, `sources` in both ledger sections, two
+new check loops), `demo/captions.json` (re-stamped: 9 loops + 2 full demos, 0 problems),
+nine `demo/*-web*.mp4`, nine `img/demo-poster*.webp`, two full demos, README (demo
+section, the publish-list count 115 → 109, the "Editing" step that still said Pages
+serves `main`), `evidence/block-20261024f-video-menu.txt`, and the skill `stars-bots-ops`:
+`scripts/landing-sweep.py` (+26 checks).

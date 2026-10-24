@@ -28,10 +28,15 @@ F=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 L="${1:?usage: build-full-demo.sh en|ru}"
 
 case "$L" in
-  en) SHOTS="$KIT/shots_en"; S1="$SHOTS/shot1_welcome_en.png"; S2="$SHOTS/shot2_task_en.png"
-      S3="$SHOTS/shot3_answer_en.png"; S4="$SHOTS/shot4_lang_en.png"; OUT="$HERE/uchiambot-demo.mp4" ;;
-  ru) SHOTS="$KIT/shots";    S1="$SHOTS/shot1_welcome_ru.png"; S2="$SHOTS/shot2_task_ru.png"
-      S3="$SHOTS/shot3_answer_ru.png"; S4="$SHOTS/shot4_answer_en.png"; OUT="$HERE/uchiambot-demo-ru.mp4" ;;
+  # 24.10.2026: сцены 1-3 — те же файлы, что показывает страница (img/shotN[-<lang>].webp).
+  # Раньше все четыре снимались из внешнего каталога submission-kit; после перерисовки
+  # макетов 23.10 (седьмая кнопка «Пригласить друга») полное демо продолжало показывать
+  # шесть кнопок. Сцена 4 — переключение языка — своей картинки на странице не имеет
+  # и остаётся из каталога; она клавиатуру не показывает.
+  en) SHOTS="$KIT/shots_en"; S1="$ROOT/img/shot1.webp"; S2="$ROOT/img/shot2.webp"
+      S3="$ROOT/img/shot3.webp"; S4="$SHOTS/shot4_lang_en.png"; OUT="$HERE/uchiambot-demo.mp4" ;;
+  ru) SHOTS="$KIT/shots";    S1="$ROOT/img/shot1-ru.webp"; S2="$ROOT/img/shot2-ru.webp"
+      S3="$ROOT/img/shot3-ru.webp"; S4="$SHOTS/shot4_answer_en.png"; OUT="$HERE/uchiambot-demo-ru.mp4" ;;
   *) echo "unknown language: $L" >&2; exit 2 ;;
 esac
 for f in "$S1" "$S2" "$S3" "$S4"; do
