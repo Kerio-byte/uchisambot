@@ -49,6 +49,12 @@
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{margin:0;font:16px/1.6 "UchiSam Langs","Manrope","Noto Sans Devanagari",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
   background:var(--bg);-webkit-font-smoothing:antialiased}
+/* Кнопка НЕ наследует шрифт страницы: UA-таблица браузера выдаёт ей свой (на Linux —
+   Arial/Liberation Sans), и класс без font-family рисует текст чужой гарнитурой.
+   Так и вышло 24.10.2026: кнопке «пауза» дали видимое слово, а слово набралось
+   Liberation Sans — батарея глифов видит только НАРИСОВАННЫЙ текст, поэтому
+   иконка-кружок до этого была «чистой», а пилюля с подписью — уже нет. */
+button,input,select,textarea{font-family:inherit}
 /* height:auto обязателен: атрибуты width/height у картинки — это CSS-подсказки (height:1170px),
    и при одной только ширине 100% браузер держит ВЫСОТУ из атрибута: кадр чата 1080x2340
    рисовался 298x1170, то есть сжат по ширине на 45% (аватары в чате — эллипсы).

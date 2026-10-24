@@ -3681,3 +3681,88 @@ owner wants: the layout (headline left, phone right, chips on the first card, wh
 the short cards) is a default taken to finish the job, not a decision he made. And that four
 cards are the right number for those forms — the set was four on 15.10 and the platforms ask
 for one to five; keeping four was the least surprising choice, not a measured one.
+
+---
+
+## The stop button was set in Arial, and the only gate that could see it had to be remembered (24.10.2026)
+
+**What was found.** The control that stops the demo sits under the frame in its own row, and
+since 24.10 it carries a visible word: «Пауза» on the Russian page, «Pausa», «Duraklat»,
+«रोकें» — one word per language, nine of them, 13 px, weight 600. That word was not set in the
+page's typeface. `<button>` does not inherit `font-family`: the browser's own stylesheet gives
+it its default (Arial), and `.video-toggle` declared size, weight and letter-spacing but never
+a family — so the label was painted by whatever that machine calls Arial: Liberation Sans here,
+Segoe UI on Windows, Roboto on Android. The page around it is Manrope. Ask the browser which
+font drew each glyph (CDP `CSS.getPlatformFontsForNode`) and all nine pages name the system font
+for exactly those two words and for nothing else on the page: en 9 glyphs, ru 11, es 15, pt 16,
+hi 9, id 9, tr 13, vi 12, uk 15 — 109 glyphs in a font the site does not ship.
+
+Before that same day the button was a 44-pixel circle holding an icon and no text, so there was
+nothing to set in the wrong font. The word arrived in the commit that moved the control out of
+the frame to stop it covering the chat's battery icon (c7eab08) — the defect was a side effect
+of a fix that did exactly what it promised.
+
+**Why nothing caught it.** The gate that answers this question exists: `landing-glyph-fallback.py`,
+written 22.10 after the 404 page drew «हिन्दी» in a system font while every static check was green.
+Its own docstring forbids folding it into the sweep — 4–6 seconds per page, and it needs a browser —
+so it runs when a block remembers to run it. The last block that remembered was the no-JavaScript
+block, and it printed `12 pages / 0 substituted`. That green was true and worthless: the page it
+measured had no word on that button, and the battery reports *painted* glyphs — nothing painted,
+nothing to report. A gate that says "zero substitutions" while the thing it is supposed to check has
+not been written yet reads exactly like a gate that says "the text is ours". The geometry gates
+(`toggle-clear`, `wcag22-targets`) measure boxes and never look at a face; the sweep compares page
+text with the dictionaries and cannot see which file drew it; every screenshot was taken and read
+for layout, not for typeface.
+
+**What was done.**
+
+1. `button,input,select,textarea{font-family:inherit}` after the `body` rule in `index-src.html`,
+   with the reason in a comment. This is the durable half: it also covers controls nobody has
+   written yet. It changes nothing that was already right — `.contact button.btn` and the form
+   fields already took `font:inherit`, and the video toggle keeps its own size, weight and
+   letter-spacing because a class beats an element selector.
+2. The label now falls through the page's own stack (UchiSam Langs → Manrope → Noto Sans
+   Devanagari) like the rest of the text. The battery reports 0 substituted glyphs on all twelve
+   pages, Hindi included: those two words used to be drawn by the system's copy of Noto Sans
+   Devanagari and are now drawn by the subset the page ships.
+3. Ten sweep checks (2419 → **2429**), because the browser battery cannot live in the routine but
+   its cause can. On each of the nine pages every `<button>` must get its `font-family` (or `font:`)
+   from a top-level CSS rule whose *subject* matches that button: descendant selectors count
+   (`.contact button.btn{font:inherit}` covers the submit, and the check must not accuse it),
+   pseudo-classes and attribute selectors are stripped, `@media` blocks are excluded so a family
+   hidden behind a media query does not pass. One global check demands 18 buttons across the nine
+   pages, so the per-page checks cannot go quiet if the control disappears.
+
+**Proof — mutations on a copy of the tree (`LANDING_ROOT`), live tree untouched.**
+
+| control | result |
+|---|---|
+| previous `index-src.html` restored and rebuilt in a throwaway copy | `CHECKS: 2368, FAILED: 13`, of them nine `FAIL [<lang>] buttons: гарнитура приходит из CSS, а не из UA-таблицы \| нет правила: video-toggle` — one per language, naming the element |
+| the same copy, submit button | never named — the matcher reads `.contact button.btn{font:inherit}` correctly; no false accusations |
+| sweep on the fixed tree before publishing | `CHECKS: 2429, FAILED: 1` — the failed one is «публикация: живой сайт — это текущая сборка», i.e. the check that says the world still serves yesterday's build |
+| sweep after `tools/publish-branch.sh` | `CHECKS: 2429, FAILED: 0` |
+
+**Numbers on the finished build.** Glyph battery 12 pages / 0 substituted (was 9 pages / 109
+glyphs); computed `font-family` of `#video-toggle`: `Arial` → `"UchiSam Langs", Manrope, "Noto
+Sans Devanagari", …`; pill width before → after, identical at 420 and 1440 px: en 92→92, ru 98→98,
+es 124→122, pt 123→122, hi 80→83, id 87→88, tr 106→106, vi 118→115, uk 128→126, inside a 300 px
+row with no clipping and no page overflow in any of the 18 cells; `landing-toggle-clear.py` 56/0
+(the pill still covers no pixel of the frame), `landing-wcag22-targets.py` 43/0,
+`landing-a11y-extra.py` 124/0, axe 0 violations on 12 pages, `landing-cwv.py` 69/0 (the poster is
+still the LCP element and CLS did not move), `landing-viewports-extra.py` 94/0,
+`landing-render-check.py` ALL OK, `landing-visual-pass.py` PROBLEMS 0 on nine languages × two
+widths, `landing-live-bytes.py` 26/26, `landing-fonts.py` 39/0, `landing-links-audit.py` 11 pages
+/ 0, `landing-en-leftovers.py` 0, `landing-price-parity.py` 9/0, `landing-site-move-test.py`
+8 groups / 0, `landing-poster-frames.py` 9 / 0, `landing-cross-engine.py` 60 runs / 0 in WebKit
+and Firefox (429 s).
+
+**What it cannot prove.** That the visitor saw *Arial*: on Windows the same defect shows Segoe UI
+and on Android Roboto, so the honest sentence is "a typeface the site does not ship", and the
+before/after crops in `evidence/visual-20261024e-buttons/` are evidence for this machine only. That
+13 px Manrope is what the button should look like: the size and weight came with the pill as the
+design drew it, and changing them is the owner's word, not a gate's. And that nothing else on the
+page is drawn in a foreign font: the battery covers every painted glyph on twelve pages *today*,
+but it is a photograph, not a hook — the sweep now catches the one cause that produced this defect
+(a control with no family) and still cannot catch a family that is declared in the CSS and missing
+from the woff2 subset.
+
