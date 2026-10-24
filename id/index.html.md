@@ -12,7 +12,7 @@ UchiSamBot membahas PR kamu langkah demi langkah, menjelaskan topiknya dengan ka
 
 1. **Buka botnya** — Ketuk tombolnya dan tekan Start — tidak perlu instal apa pun.
 2. **Kirim soal** — Tulis pertanyaanmu atau foto soalnya.
-3. **Dapatkan pembahasan** — Bot menyelesaikannya langkah demi langkah dan menjelaskan setiap langkahnya.
+3. **Dapatkan pembahasan** — Bot membahasnya langkah demi langkah dan menjelaskan setiap langkahnya.
 4. **Periksa sendiri** — Minta periksa jawabanmu, atau minta ringkasan dan kartu belajar.
 
 ## Apa saja isinya

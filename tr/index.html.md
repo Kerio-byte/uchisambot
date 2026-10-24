@@ -2,7 +2,7 @@
 
 > Ödevleri adım adım çözen, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve tekrar kartları hazırlayan bir Telegram botu. İlk 2 çözüm ücretsiz.
 
-UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, cevaplarını kontrol eder ve tekrar kartları hazırlar — tam da Telegram'ın içinde, günün her saati.
+UchiSamBot ödevini adım adım çözmene yardımcı olur, konuyu basit kelimelerle anlatır, cevaplarını kontrol eder ve tekrar kartları hazırlar — tam da Telegram'ın içinde, günün her saati.
 
 [Telegram'da aç](https://t.me/UchiSamBot?start=src_llms)
 
@@ -12,7 +12,7 @@ UchiSamBot ödevini adım adım çözer, konuyu basit kelimelerle anlatır, ceva
 
 1. **Botu aç** — Butona dokun ve Start'a bas — hiçbir şey kurmana gerek yok.
 2. **Ödevini gönder** — Sorunu yaz ya da fotoğrafını çek.
-3. **Adım adım çözümünü al** — Bot adım adım çözer ve her adımı açıklar.
+3. **Adım adım çözümünü al** — Bot çözümü adım adım gösterir ve her adımı açıklar.
 4. **Kendini test et** — Çözümünü kontrol etmesini iste ya da özet ve tekrar kartları al.
 
 ## İçinde neler var
