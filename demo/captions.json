@@ -4,11 +4,17 @@
   "langs": {
     "en": {
       "video": "uchiambot-demo-web.mp4",
-      "sha256": "b14526065e7deb82b12700dbd1fec9844de48bb97f281ca20ca0cfadd7092174",
-      "bytes": 365406,
+      "sha256": "859b57b80e2863d361cc785dfa5f0785ccb03393b7be1a55b04b91d4ab7ac406",
+      "bytes": 410243,
+      "sources": {
+        "shot2": "shot2.webp",
+        "shot2_sha256": "e6dd26b59a7dbc66aa850f7b3bf36b083962613899cf8086fe7050480717fe9d",
+        "shot3": "shot3.webp",
+        "shot3_sha256": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784"
+      },
       "poster": "demo-poster.webp",
-      "poster_sha256": "5b08ccbf8cf9a349107b6b3ee4b0b54d8691965c832011fb656ac9b85953f0c3",
-      "poster_bytes": 31864,
+      "poster_sha256": "9b3cb42c7234cb6db7b8453020b4e31b25b338e9b7ec1b65ebb34ba878b1a6e5",
+      "poster_bytes": 32056,
       "joiner": " · ",
       "tail": "text or photo",
       "cap1": "2 · Send a task — text or photo",
@@ -20,11 +26,17 @@
     },
     "ru": {
       "video": "uchiambot-demo-web-ru.mp4",
-      "sha256": "7dd2f72fe0b8d9220f50f26992d8d6c69955317c9d5ce2c920709468e6967bd9",
-      "bytes": 582922,
+      "sha256": "a16fab8d0d42b71c71d0bdabc12e460eb7783226e9226ab7bf66cc0373dbc18f",
+      "bytes": 448371,
+      "sources": {
+        "shot2": "shot2-ru.webp",
+        "shot2_sha256": "9716c732f2f6439a8ae41d6054b9716d716454abc00828ee75b252090410bf49",
+        "shot3": "shot3-ru.webp",
+        "shot3_sha256": "e14c03253ab83ccb586dda848be17f313bdf4da3a26227d5ff828ffbb17b472a"
+      },
       "poster": "demo-poster-ru.webp",
-      "poster_sha256": "7370a45b9208fa3fb9191fc9a3eee0a27a8c57eb60f0e5c3c3bffb82af82639b",
-      "poster_bytes": 52172,
+      "poster_sha256": "3eaff8f9301c7957413bc7fa5a1fd7f55917933cc8512d5c33eb32522d06cff5",
+      "poster_bytes": 33550,
       "joiner": " · ",
       "tail": "текстом или фото",
       "cap1": "2 · Отправь задачу — текстом или фото",
@@ -36,11 +48,17 @@
     },
     "es": {
       "video": "uchiambot-demo-web-es.mp4",
-      "sha256": "ee7809394adc05921b620f89fc2c5d4c911ee9eb5248687a7b70bca5e5592e0f",
-      "bytes": 384481,
+      "sha256": "2af00d7890602963407f539b2afeb1343b63ece789c692e3c42137eb1756520f",
+      "bytes": 432902,
+      "sources": {
+        "shot2": "shot2-es.webp",
+        "shot2_sha256": "70a31fc783c7aee44e5a7f9ab101279715f71cf23ce9a23aaa8253e46dd7a3e8",
+        "shot3": "shot3-es.webp",
+        "shot3_sha256": "705791b9544310f6428c28df6b48050625ff3e35f74831b9d99912a841863e99"
+      },
       "poster": "demo-poster-es.webp",
-      "poster_sha256": "26de707be59d46a9461db33809572567840043ad355b5e181b261289b0611504",
-      "poster_bytes": 31398,
+      "poster_sha256": "f0faba43ff5ade1a8600b90e3579072017a5859a0de4bcdfbbc2b5d77ce78367",
+      "poster_bytes": 33070,
       "joiner": " · ",
       "tail": "texto o foto",
       "cap1": "2 · Envía tu tarea — texto o foto",
@@ -52,11 +70,17 @@
     },
     "pt": {
       "video": "uchiambot-demo-web-pt.mp4",
-      "sha256": "78de5d0cac289cd014a97828aa8e2084173510cb9e780c30d94ae7eb0db6c365",
-      "bytes": 403699,
+      "sha256": "27cb2ac503292b7d2c2f5b792304b4d882d02aa21d106c0a2a63cbe90c0c8407",
+      "bytes": 458476,
+      "sources": {
+        "shot2": "shot2-pt.webp",
+        "shot2_sha256": "85823bdf7904d980834ee7b6b4d70780483bbf336ac65fa0f1ba95f633575be4",
+        "shot3": "shot3-pt.webp",
+        "shot3_sha256": "3f43c1dc39c426e0961ffddce001784dfac85ad9fdb49adc0ed34da677a7a766"
+      },
       "poster": "demo-poster-pt.webp",
-      "poster_sha256": "579766702c0204f1eab7a308d73d1b29609040e1779b0131d128b51fe92e0268",
-      "poster_bytes": 33226,
+      "poster_sha256": "142829a0b0fb4194e71ff2e52ffd1285593d2289dead3a01d0c8ba1478f679b5",
+      "poster_bytes": 34770,
       "joiner": " · ",
       "tail": "texto ou foto",
       "cap1": "2 · Envie uma tarefa — texto ou foto",
@@ -68,11 +92,17 @@
     },
     "hi": {
       "video": "uchiambot-demo-web-hi.mp4",
-      "sha256": "26a5e4dd15419d4974938d3d762a84eec0d6d2de1cc306c5d6ad80f6b413d7ca",
-      "bytes": 321177,
+      "sha256": "2b137c060c069d2e81d05bc4bbb26e10c9881cb1ac3c40fb30277256df72c3af",
+      "bytes": 356519,
+      "sources": {
+        "shot2": "shot2-hi.webp",
+        "shot2_sha256": "1783a556d11937e3bc4d9d5c44cc6dc565308dbeb74923a2633055ae23a11211",
+        "shot3": "shot3-hi.webp",
+        "shot3_sha256": "f9097027414ba5d8e8d6aa31e7b8a665664cdedbd7497e94cbcbc29b2968e8ff"
+      },
       "poster": "demo-poster-hi.webp",
-      "poster_sha256": "feb03d34e76a316289783bd056222f78417dc4a79e19227b8a8af1ff547d80ca",
-      "poster_bytes": 24018,
+      "poster_sha256": "4b4cd5f13ca00e797127df93d0c43c724bea578070ca61c5efba27c35ccb235a",
+      "poster_bytes": 25146,
       "joiner": ". ",
       "tail": "टेक्स्ट या फोटो",
       "cap1": "2. सवाल भेजें — टेक्स्ट या फोटो",
@@ -84,11 +114,17 @@
     },
     "id": {
       "video": "uchiambot-demo-web-id.mp4",
-      "sha256": "f93a456012f5f56661d8f8670e386ff3d76725bed2140ce3bc4c66f1c1427058",
-      "bytes": 399156,
+      "sha256": "5dc6a119293a81c367c1687d00322681c2386682d7b3cf20d2cdf8deef74169f",
+      "bytes": 447081,
+      "sources": {
+        "shot2": "shot2-id.webp",
+        "shot2_sha256": "33de7b38a381baba970ca538cbcd674b02688f21c0d2bfc59b897b674d7a67bb",
+        "shot3": "shot3-id.webp",
+        "shot3_sha256": "0bfa63676b2be9f0f8bd9010aa94b021e9cc8d7971ce11fbd93403a0c0d36508"
+      },
       "poster": "demo-poster-id.webp",
-      "poster_sha256": "5f7ed9b77ce9d8abbe1d8a0676632a0a3f36b286e13041fbf51f9e924ca97508",
-      "poster_bytes": 31730,
+      "poster_sha256": "b573a3a683221c675fd378be4ce35aaab5924a786572d084c31f67973e834dcf",
+      "poster_bytes": 32768,
       "joiner": " · ",
       "tail": "teks atau foto",
       "cap1": "2 · Kirim soal — teks atau foto",
@@ -100,11 +136,17 @@
     },
     "tr": {
       "video": "uchiambot-demo-web-tr.mp4",
-      "sha256": "8db458b2bbd524dd77223ae88c7c7bc5e70aea13f6aea5b9e37bd2b0634a75e5",
-      "bytes": 355380,
+      "sha256": "358780831e571e2c3e7531cd00612c69de4bf782804b83ec460b4b8983cd0499",
+      "bytes": 399947,
+      "sources": {
+        "shot2": "shot2-tr.webp",
+        "shot2_sha256": "8611b200acf08c3acc145a5457d05baff171a1f9c7108e87d7f8a97e1fdc1e50",
+        "shot3": "shot3-tr.webp",
+        "shot3_sha256": "fd226b93a1e83df7864507bf8cfd39ad888f7806ae12dcb1fba8f2ee13d8c470"
+      },
       "poster": "demo-poster-tr.webp",
-      "poster_sha256": "b492342c83f381731902d1541d0e8f0a74fb890474dd614f6f377bb838da5481",
-      "poster_bytes": 28334,
+      "poster_sha256": "630a8e22e47329a4958b36f3ba3bce11023248a2e45fcb03cbb11890a86c1f1a",
+      "poster_bytes": 30204,
       "joiner": " · ",
       "tail": "yazı ya da fotoğraf",
       "cap1": "2 · Ödevini gönder — yazı ya da fotoğraf",
@@ -116,11 +158,17 @@
     },
     "vi": {
       "video": "uchiambot-demo-web-vi.mp4",
-      "sha256": "099c81a33d0ad10c01d6fefc5256024e0b181ef8dd7c6de553bd69297bece4dd",
-      "bytes": 374423,
+      "sha256": "ff3fd3938cc9e0e931c0fbb33acd24f2fc42a7f2ec3b2019d300d6a66008d891",
+      "bytes": 416808,
+      "sources": {
+        "shot2": "shot2-vi.webp",
+        "shot2_sha256": "1b4bdc80cb6535f57069719ecd50bea1b6405e8f1ca65c7abd2477b4b64b2820",
+        "shot3": "shot3-vi.webp",
+        "shot3_sha256": "97b5cd23d24503f88de289c7a915003971bd925079d26db5e986e2e46a9a03e6"
+      },
       "poster": "demo-poster-vi.webp",
-      "poster_sha256": "d77a60348dd719c338e0c24b749aad737aee0e5e5c27dddd56825926c13b8254",
-      "poster_bytes": 29440,
+      "poster_sha256": "3ee2a536a0b803ef7112cefa3f873c25154705f27309efd93edd803c752d5abe",
+      "poster_bytes": 30698,
       "joiner": " · ",
       "tail": "chữ hoặc ảnh",
       "cap1": "2 · Gửi bài tập — chữ hoặc ảnh",
@@ -132,11 +180,17 @@
     },
     "uk": {
       "video": "uchiambot-demo-web-uk.mp4",
-      "sha256": "aac8f1ed429658c31cc72835c1e09eb7a2b5d7a78eaac7e690053b43d65742b7",
-      "bytes": 407306,
+      "sha256": "cc0e7804304471db620003532baa13715b7a698929124242550b567a3a26af85",
+      "bytes": 454996,
+      "sources": {
+        "shot2": "shot2-uk.webp",
+        "shot2_sha256": "b7c756520069dbbce1fa2d3a5af7090edb7736dedbb0967c923484062b1f0d3a",
+        "shot3": "shot3-uk.webp",
+        "shot3_sha256": "1c4620e64f71da65717383f65602c4ef5fba3ce78e46aa4b7bd0126b7b4a0f96"
+      },
       "poster": "demo-poster-uk.webp",
-      "poster_sha256": "1a6c7e50deda8f52528d7a328ac899b0dbffb3efc1e16b9ca5e2e128dacf55ab",
-      "poster_bytes": 32260,
+      "poster_sha256": "593edc8371960a515e2db0d899e69f29011b851be20345a45fe810d481bf6322",
+      "poster_bytes": 33560,
       "joiner": " · ",
       "tail": "текстом або фото",
       "cap1": "2 · Надішли завдання — текстом або фото",
@@ -150,8 +204,17 @@
   "full": {
     "en": {
       "video": "uchiambot-demo.mp4",
-      "sha256": "9568beabea11dca51d2a0436959336a88f25ab7bb04b0715bb707830e6c03bf6",
-      "bytes": 937669,
+      "sha256": "e14aa169cb892b489f87aa07adb9eafae959e25e92bd511a66787744cc77bbfd",
+      "bytes": 987858,
+      "sources": {
+        "shot1": "shot1.webp",
+        "shot1_sha256": "621bfccf9d883efbed2573caf1d40f9a7940f678670c6bb7b1a03d6c59e1288d",
+        "shot2": "shot2.webp",
+        "shot2_sha256": "e6dd26b59a7dbc66aa850f7b3bf36b083962613899cf8086fe7050480717fe9d",
+        "shot3": "shot3.webp",
+        "shot3_sha256": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784",
+        "shot4": "external kit (the language-switch scene has no page shot)"
+      },
       "caps": {
         "1": "1 · Your AI study helper",
         "2": "2 · Send a task — text or photo",
@@ -169,8 +232,17 @@
     },
     "ru": {
       "video": "uchiambot-demo-ru.mp4",
-      "sha256": "883b271cdf4410cf2728281105f7f384d68cb730f30fab215a82028a4325b7b3",
-      "bytes": 1368799,
+      "sha256": "191302665c7f16ab306234d2bacb88b2358aa041a78988a97bd8e0a600dc78ab",
+      "bytes": 1172866,
+      "sources": {
+        "shot1": "shot1-ru.webp",
+        "shot1_sha256": "f70c4f7c1533150f086dd99b0325c2720fdd55ab0e801c0d5cf36623fde1944f",
+        "shot2": "shot2-ru.webp",
+        "shot2_sha256": "9716c732f2f6439a8ae41d6054b9716d716454abc00828ee75b252090410bf49",
+        "shot3": "shot3-ru.webp",
+        "shot3_sha256": "e14c03253ab83ccb586dda848be17f313bdf4da3a26227d5ff828ffbb17b472a",
+        "shot4": "external kit (the language-switch scene has no page shot)"
+      },
       "caps": {
         "1": "1 · Твой помощник по учёбе",
         "2": "2 · Отправь задачу — текстом или фото",

@@ -142,6 +142,18 @@ def poster_name(lang):
     return 'demo-poster.webp' if lang == 'en' else f'demo-poster-{lang}.webp'
 
 
+def shot_name(lang, n):
+    """The two page screenshots a loop is cut from (24.10.2026).
+
+    The loop's source used to be an external kit capture or a .shots-work render,
+    so redrawing a screenshot left the video untouched: after the 23.10 menu fix
+    nine loops still showed six buttons under a page that drew seven. A loop is
+    now cut from exactly the file the page displays, and its sha256 goes into the
+    ledger — a new screenshot with an old loop is a sweep failure, not silence.
+    """
+    return f'shot{n}.webp' if lang == 'en' else f'shot{n}-{lang}.webp'
+
+
 def full_caption(lang, scene):
     """Scene captions of the 35 s demo (1 intro-follower, 2 send, 3 breakdown, 4 languages)."""
     d = dictionary(lang)
@@ -194,6 +206,12 @@ def build_ledger(langs=None, full=None):
             'video': video_name(lang),
             'sha256': sha256(path),
             'bytes': path.stat().st_size,
+            'sources': {
+                'shot2': shot_name(lang, 2),
+                'shot2_sha256': sha256(ROOT / 'img' / shot_name(lang, 2)),
+                'shot3': shot_name(lang, 3),
+                'shot3_sha256': sha256(ROOT / 'img' / shot_name(lang, 3)),
+            },
             'poster': poster_name(lang),
             'poster_sha256': sha256(poster),
             'poster_bytes': poster.stat().st_size,
@@ -211,6 +229,15 @@ def build_ledger(langs=None, full=None):
             'video': FULL[lang],
             'sha256': sha256(path),
             'bytes': path.stat().st_size,
+            'sources': {
+                'shot1': shot_name(lang, 1),
+                'shot1_sha256': sha256(ROOT / 'img' / shot_name(lang, 1)),
+                'shot2': shot_name(lang, 2),
+                'shot2_sha256': sha256(ROOT / 'img' / shot_name(lang, 2)),
+                'shot3': shot_name(lang, 3),
+                'shot3_sha256': sha256(ROOT / 'img' / shot_name(lang, 3)),
+                'shot4': 'external kit (the language-switch scene has no page shot)',
+            },
             'caps': {str(n): full_caption(lang, n) for n in (1, 2, 3, 4)},
             'intro_tag': full_intro_tag(lang),
             'outro_sub': full_outro_sub(lang),
@@ -256,6 +283,27 @@ def check():
             print(f'FAIL {lang}: {poster.name} was not made from this loop '
                   f'(poster sha256 differs) — rebuild the loop, it refreshes the poster')
             bad += 1
+        # 24.10.2026: the loop must be cut from the screenshot the page shows now.
+        src = row.get('sources')
+        if not src:
+            print(f'FAIL {lang}: the ledger names no screenshot sources — rebuild and restamp')
+            bad += 1
+            continue
+        for n in (2, 3):
+            name = shot_name(lang, n)
+            shot = ROOT / 'img' / name
+            if not shot.exists():
+                print(f'FAIL {lang}: {name} is gone')
+                bad += 1
+            elif src.get(f'shot{n}') != name:
+                print(f'FAIL {lang}: the ledger says the loop was cut from '
+                      f'{src.get(f"shot{n}")!r}, the page shows {name!r} — rebuild the loop')
+                bad += 1
+            elif sha256(shot) != src.get(f'shot{n}_sha256'):
+                print(f'FAIL {lang}: {name} was redrawn after the loop was cut '
+                      f'(sha256 differs) — the video still shows the old picture; '
+                      f'rebuild it: bash demo/build-web-loop-langs.sh {lang}')
+                bad += 1
     doc = json.loads(LEDGER.read_text(encoding='utf-8'))
     for lang in FULL:
         row = doc.get('full', {}).get(lang)
@@ -282,6 +330,17 @@ def check():
             print(f'FAIL {lang}: {path.name} is not the file the ledger describes '
                   f'(sha256 differs) — rebuild the full demo and re-stamp')
             bad += 1
+        src = row.get('sources') or {}
+        for n in (1, 2, 3):
+            name = shot_name(lang, n)
+            shot = ROOT / 'img' / name
+            if src.get(f'shot{n}') != name or not shot.is_file():
+                print(f'FAIL {lang}:full the ledger does not point scene {n} at {name}')
+                bad += 1
+            elif sha256(shot) != src.get(f'shot{n}_sha256'):
+                print(f'FAIL {lang}:full {name} was redrawn after the demo was built — '
+                      f'rebuild it: bash demo/build-full-demo.sh {lang}')
+                bad += 1
     print(f'ledger: {len(LANGS)} loops + {len(FULL)} full demos, {bad} problem(s)')
     return 1 if bad else 0
 
