@@ -2846,3 +2846,95 @@ Chromium did. That a click cannot reach a third party — `a href` and `form act
 out of scope (they carry no request until a person acts). And that the storage line stays honest in
 both directions: it compares against the single key the policy names, so a future feature that adds
 a second key must add it to the policy first, and the check will say so.
+
+## The form said "sent" and had nothing to say when it was not (24.10.2026)
+
+**The gap.** The contact form is the only support channel on the site, and its happy path was gated
+end to end: nine languages, native POST → Web3Forms → mailbox → return to `?sent=1`, the letter
+read back from the inbox. Its failure path was gated by nothing, and — measured, not assumed — did
+not exist. A probe that made the endpoint fail three ways found the same shape every time: a broken
+connection left the visitor on `chrome-error://chromewebdata/`; HTTP 500 left them on
+`api.web3forms.com/submit` reading "Internal Server Error"; 429 left them reading "Too Many
+Requests". In all three the site was gone from the screen, the typed text was gone with it, nobody
+said the message had not been sent, and nothing on our side recorded that a person had tried. Nine
+languages became the browser's or the API's English.
+
+The same probe turned up the other end of the same promise. The page tells the visitor "we read
+every message" (q11a, nine languages). The only mechanism behind that sentence was a watcher
+searching the mailbox every ten minutes — and its query had no `in:spam`. The first letter I sent
+through the new path arrived, and Gmail filed it under SPAM: the watcher answered "No messages
+found" while the site had already told the sender "we received your message".
+
+**What changed.**
+
+- **The form sends without leaving the page.** `fetch` with `Content-Type`/`Accept: application/json`,
+  the documented Web3Forms AJAX contract. Success requires an explicit `success: true`; status alone
+  is not enough, because the API answers 200 with `success:false` when it refuses (invalid key, quota,
+  spam filter). The visitor never navigates, so the site stays on screen in every outcome.
+- **Failure speaks, in the page's language, and keeps the text.** Two new lines above the form —
+  a general one and a "form is busy" one for 429/5xx — with `role="alert"` and a programmatic focus
+  so a screen reader announces it. The textarea keeps its contents, the button comes back enabled,
+  and a `busy` guard makes a double click one letter, not two. Three keys × nine languages.
+- **The old path survives.** The native POST, the `?sent=1` return and the CSS `:target`
+  confirmation stay for browsers without `fetch` and for readers without JavaScript. The token logic
+  that proves "this confirmation is yours" was not touched.
+- **The watcher now looks in spam** (`in:inbox OR in:spam`) and says so in the notification: a letter
+  that Gmail filed as spam is announced as such instead of being silently invisible. The canary that
+  guards this promise had the same class of hole from the other side: it treated *any* spam letter as
+  a loss, which was right while the watcher could not see spam and became wrong the moment it could.
+  It now asks the ledger: a spam letter the watcher recorded is accounted for, with a printed warning
+  that delivery is shaky; a spam letter nobody recorded is still a loss. Both directions were run
+  (control below).
+- **Gates.** `landing-contact-e2e.py` grew a failure section: five outcomes per language (network
+  abort, 500, 429, `success:false` at HTTP 200, and success), judged by what a person sees — URL
+  unchanged, the right line visible with the right words, text kept, button restored, focus on the
+  message, exactly one POST per submit. 150 → **910 checks**, 9 languages, 135 s.
+  `landing-sweep.py` checks the same in the files it ships: the two lines baked and hidden, their
+  order above the form, the alert roles, the colour rule, the sending label, the JSON path, the
+  `success === true` test, and that no `form.reset()` can appear in the handler.
+  **2051 → 2172 checks.**
+- **A fresh check for the watcher** in the sweep: the inbox script must search spam, or the sentence
+  "we read every message" is again a promise without a mechanism.
+
+**Controls.** Three hardlinked copies of the tree (`cp -al`; every edited file replaced, not edited in
+place, or the hardlink would cut the real page), served locally, battery run against each with
+`LANDING_ROOT`.
+
+- The old behaviour (`canAjax = false`): ten red lines, and the detail column still names the old
+  wounds — `chrome-error://chromewebdata/` for the abort, `https://api.web3forms.com/submit` for 500
+  and 429.
+- Sending works but any answer counts as success (`if (true)` instead of `success === true`): nine
+  red lines on 500/429/refused — the silent lie is caught.
+- Failure that clears the form (`form.reset()` in the error handler): four red lines, "текст не
+  потерян".
+- The first version of the failure section crashed with a traceback instead of reporting, because the
+  page it was judging had navigated away and its DOM was gone. Rewritten: one defect, one red line.
+- The canary, both directions, on the real mailbox: a temporary ledger without the test letter →
+  `FAILED 1`, "в леджере её нет — письмо потеряно"; the real ledger → `FAILED 0` plus
+  "пришла в СПАМ — сторож её увидел, но доставка шаткая". Losing a letter is still red; a letter
+  in spam is not a gate failure once it is on the record.
+
+**Checked after the change.** Sweep 2172 / 0. `tools/build.py --check`: 24 files match. Battery
+910 / 0 across nine languages. Real Chrome (CDP), real endpoint: the JSON POST from a foreign origin
+is allowed (CORS answered, body readable), a refusal arrives as `400 {"success":false}`, and a real
+submit returned `200 {"success":true,"message":"Form submitted successfully!"}` — the letter reached
+the mailbox, in spam.
+
+**Eyes on it.** Six screenshots (ru/hi/en × 420 px and 1280 px) of the failure state and four of the
+success state, in `evidence/visual-20261024-form/`. They found what no gate would have: the browser's
+default focus ring drew a thick black box around the message. Replaced with a ring in the message's
+own colour (green for sent, red for not sent), and the rule is now gated, so the box cannot come back.
+
+**What it cannot prove.** That Gmail will keep filing these letters as spam, or stop. That the JSON
+contract stays as documented — the live check would catch a change, but only when it runs. That an
+extension on the visitor's machine cannot block the `fetch`: then the person sees "not sent", resends,
+and we may get two letters instead of none — the failure is duplicated, not amplified. That the spam
+folder will be emptied by a human: the watcher now says the letter is in spam, but nothing moves it
+into the inbox, and deliverability itself is a reputation question no gate can answer. That a browser
+without `fetch` gets the same honesty: it navigates away on failure exactly as before, because without
+script there is nowhere to stay.
+
+And a note for the next reader: the refund-promise gate reddened on this very block, on the word
+"возврат" in two of my code comments ("return to the page", not "refund"). The comments were reworded
+rather than the gate widened — it is a blunt rule on purpose, and it is alive.
+
