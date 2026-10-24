@@ -4071,8 +4071,8 @@ What that fix did not reach: **the Turkish menu button** — the keyboard drawn 
 still reads "🧠 Soruyu adım adım çöz" where the other eight say *break down / analizar / розібрати*
 (`bot/i18n_extra.py`, the `solve` key of the `tr` block, line 218). The greeting was fixed, the button was not,
 so the Turkish page still carries a picture of a button that promises to solve — the one claim the page itself
-denies in `q10a`. The fix is one line in the bot, `gen_shots.py --langs tr --apply --stamp`, then one loop and
-one demo rebuilt. Not made here: the bot lives outside this repository.
+denies in `q10a`. The fix is one line in the bot, `gen_shots.py --langs tr --apply --stamp`, then the Turkish
+loop rebuilt. Not made here: the bot lives outside this repository.
 
 And the live bot is still running the pre-fix code: its process started at 12:14, the dictionaries were written
 at 17:58. Until the owner restarts the unit (`systemctl --user restart study-bot.service` — cron cannot restart
