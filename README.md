@@ -3600,3 +3600,84 @@ bottom of the frame is where the input bar is drawn and the eye still has to lik
 `src/locales/*.json` (+2 keys × 9), the nine built pages + `tools/lastmod.json`, and the skill
 `stars-bots-ops`: `scripts/landing-sweep.py` (+36), `scripts/landing-video-motion.py` (+36 and the
 still-frame tolerance), `scripts/landing-toggle-clear.py` (new, 56 checks).
+
+## The pictures we upload to launch platforms promised five free breakdowns and two languages (24.10.2026)
+
+**What was found.** `submission-kit/` holds the four 1920×1080 cards the owner uploads *by
+file* into the forms of PeerPush, OpenHunts, LaunchIgniter and the Product Hunt gallery. They
+were drawn on 15.10.2026 by a hand-assembled page, published by accident from `img/` until
+24.10.2026, and then moved out of the published tree so they would stop answering at
+`/img/screen1.png`. That move asked one question — "is this file part of the site?" — and the
+answer was no; nothing asked what the file *says*. OCR of the bytes as they shipped:
+
+- card 1, `t.me/UchiSamBot — First 5 breakdowns free`. The bot gives **two**: `FREE_TRIALS = 2`
+  in `bot/handlers.py`, `tools/prices.json` says two, and the page says "First 2" in five
+  places. Five is a promise the product does not keep.
+- card 4, `Works in Russian and English` and `One bot, two languages`, over a language menu
+  with two rows. The bot and all nine pages answer in nine languages; on eight of the nine
+  pages that is the main argument.
+- card 1's chat draws **six** menu buttons. The bot has had seven since 23.10 (`Invite a
+  friend`), and the previous block redrew all 27 page stills from `menu_kb()` — the four
+  cards that leave the building were not redrawn, because they are not in `shots.json`.
+
+Both false claims had already been cut out of the **videos** on 24.10 (the 35-second demo's
+outro and the RU captions). The videos were fixed; the stills that ride into other people's
+catalogues were not. A launch listing is where a new visitor meets the product first, and it
+was meeting a product with two languages and five free breakdowns.
+
+**Why nothing caught it.** Every gate the workshop has is pointed at the *published* tree:
+the sweep reads eleven pages, their markdown twins, the legal pages, `llms.txt`, `robots.txt`;
+`publish-tree.py` reads what `gh-pages` will contain; `landing-live-bytes.py` reads what the
+host actually serves. `submission-kit/` is deliberately outside all three, and the only gate
+that mentioned it was `publish-tree.py`'s fifth check, which asks that every *published* file
+be named by published text — these files are not published, so they were structurally
+invisible. The kit's own README said "four screenshots 1920×1080, made 15.10.2026", which was
+true and useless.
+
+**What was done.**
+
+1. `tools/submission-kit.py` — a generator, not a redraw. The four cards are composed in
+   Chromium from the *same* images the page shows (`img/shot1..3.webp`,
+   `tools/shots-gen/scenes/shot4.webp`), and every line of text is read from the dictionary:
+   `hero.title` / `hero.sub` / `hero.chip1` / `hero.chip3` for the first card, `how.s2t`/`s2d`
+   and `how.s3t`/`s3d` for the middle two, `hero.chip3` plus the nine names from `LABELS` in
+   `tools/build.py` for the last. Nothing is typed by hand, so the cards cannot keep their own
+   copy of a claim that later changes. The generator refuses to run if `hero.chip1` does not
+   contain the number in `prices.json`, and refuses to draw fewer than nine language names.
+2. `submission-kit/manifest.json` — written only by the generator: sha256 of each card, the
+   exact strings drawn, the free-breakdown and language counts, and sha256 of every input
+   (dictionary, prices, `build.py`, the four source images, three font subsets).
+3. Seven sweep checks (section `submission-kit`, 2412 → **2419**): the four files exist; each
+   is 1920×1080 by its PNG header; each matches the manifest byte for byte; the manifest
+   promises the same number of free breakdowns as `prices.json` and the same number of
+   languages as `LABELS`; the inputs still hash to what the manifest recorded ("the dictionary
+   was edited, the picture was not redrawn" is red); and no stale claim appears in the
+   manifest or in the kit's own README.
+4. Two failures the generator now catches that the first version shipped: Chromium's
+   `set_content` leaves `<img src="file://…">` empty, so the first set had a white phone and a
+   broken logo icon while every geometry check was green — the generator now fails on
+   `naturalWidth == 0` for both images. And the nine native names need glyphs the Latin
+   subsets do not carry: the card is checked against the union of the declared
+   `unicode-range` values (latin, latin-ext, vietnamese, the two Cyrillic names and हिन्दी)
+   before it is drawn, because OCR with `eng+rus` cannot see a tofu box.
+
+**Proof — mutations on a copy of the tree (`LANDING_ROOT`), live tree untouched.**
+
+| control | result |
+|---|---|
+| manifest deleted | `FAIL kit: манифест существует` |
+| one byte appended to `screen2.png` | `FAIL … screen2.png: байты не те, что в манифесте` |
+| `free_breakdowns` 2 → 3 in `prices.json` | `FAIL … манифест 2, prices.json 3` and `FAIL … перерисовать: tools/prices.json`; the generator itself refuses: `словарь обещает не 3 бесплатных разбора: 'First 2 breakdowns free'` |
+| `First 5 breakdowns free` appended to the kit README | `FAIL kit: … | First 5, 5 breakdowns` |
+| the whole sweep on that copy | `CHECKS: 2358, FAILED: 5`, one of them `FAIL [kit]` — the section is wired in, not just importable |
+
+Live tree afterwards: sweep **2419 / 0**, `submission-kit.py --check` 7 / 0, `landing-live-bytes.py`
+26 / 26 (the site itself was not touched by this block — the cards are not published).
+
+**What it cannot prove.** That the platforms already submitted to show the old files: PeerPush
+and the others store their own copy of an uploaded image, and nothing here can reach into
+their forms — re-uploading the four cards is the owner's click. That the *design* is what the
+owner wants: the layout (headline left, phone right, chips on the first card, whitespace under
+the short cards) is a default taken to finish the job, not a decision he made. And that four
+cards are the right number for those forms — the set was four on 15.10 and the platforms ask
+for one to five; keeping four was the least surprising choice, not a measured one.

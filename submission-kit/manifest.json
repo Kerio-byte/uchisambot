@@ -1,0 +1,65 @@
+{
+ "note": "Пишется только tools/submission-kit.py. Картинки для форм сторонних площадок: подписи берутся из src/locales/en.json, число бесплатных разборов — из tools/prices.json, названия языков — из LABELS tools/build.py. Свип сверяет байты с этим файлом и манифест с источниками (см. «submission-kit» в landing-sweep.py).",
+ "generated": "2026-10-24T12:51:49+03:00",
+ "canvas": [
+  1920,
+  1080
+ ],
+ "claims": {
+  "free_breakdowns": 2,
+  "languages": 9
+ },
+ "cards": {
+  "screen1.png": {
+   "card": "1",
+   "sha256": "d1526cc9e9d846f13e5cabb1bd00cb4a2c637b1c710e5b1c8f06ed2bb4093123",
+   "source": "card1",
+   "title": "Homework that finally makes sense",
+   "sub": "UchiSamBot breaks down your homework step by step, explains the topic in simple words, checks your answers and makes flashcards — right in Telegram, any time of day.",
+   "chips": [
+    "First 2 breakdowns free",
+    "9 languages"
+   ],
+   "foot": "Study Helper for school students"
+  },
+  "screen2.png": {
+   "card": "2",
+   "sha256": "dba173b2eae4fdb39d41e42d203b3ef4f71675511961cda758330bba44bfdd76",
+   "source": "card2",
+   "title": "Send a task",
+   "sub": "Type your question or snap a photo of the problem.",
+   "chips": [],
+   "foot": "Study Helper for school students"
+  },
+  "screen3.png": {
+   "card": "3",
+   "sha256": "6270a5cc61c80d9b9111548062e88da73c2305f9d7f96f121f161ff02d6638d7",
+   "source": "card3",
+   "title": "Get a breakdown",
+   "sub": "The bot breaks it down step by step and explains every move.",
+   "chips": [],
+   "foot": "Study Helper for school students"
+  },
+  "screen4.png": {
+   "card": "4",
+   "sha256": "571015d1ea0d664e2ff1d94feedc085724cc0c87dbf8df43f58a97022ffab7e2",
+   "source": "card4",
+   "title": "9 languages",
+   "sub": "English · Русский · Español · Português · हिन्दी · Bahasa Indonesia · Türkçe · Tiếng Việt · Українська",
+   "chips": [],
+   "foot": "Study Helper for school students"
+  }
+ },
+ "sources": {
+  "src/locales/en.json": "d835a0e0dbd0e35b4d37e7d69195d4765390f121c7af629fa580d61fab3b4d7c",
+  "tools/prices.json": "60486663b164064a1bbe57dc1a93a4528935487de8a7368ef1172623531f2e7f",
+  "tools/build.py": "ad6e0e17049d4485e0c23f7a9d616f3d64d5c3e85a2da54ddd4aac4670adcd37",
+  "card1": "621bfccf9d883efbed2573caf1d40f9a7940f678670c6bb7b1a03d6c59e1288d",
+  "card2": "e6dd26b59a7dbc66aa850f7b3bf36b083962613899cf8086fe7050480717fe9d",
+  "card3": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784",
+  "card4": "fe00b7c0ef9281de2e2a03e44d9ff0b57f40d185684d6851908fde52339524ab",
+  "fonts/langs-cyrillic.woff2": "022880ea8601ba4765b7b9e6b63b14fb68b992eef5691847ff189c3c3d096b74",
+  "fonts/langs-devanagari.woff2": "4bbbb1988309fe667c006e1a19d190b573cfc7ae34f3c67052b05309c65281f6",
+  "fonts/langs-vietnamese.woff2": "a9451023b76cb0661ca9d91e75c86c0b761c5b3a70544db64816c0a8dfa46f78"
+ }
+}
