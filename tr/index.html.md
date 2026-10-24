@@ -65,7 +65,7 @@ Bir arkadaşını davet et — o ilk ödevini çözünce sen bir ücretsiz çöz
 - Kayıt yok, kişisel bilgi istenmiyor.
 - Avrupa Birliği'nde (Finlandiya) kendi sunucumuzda çalışır.
 - Tüm yapay zekâ işlemleri kendi altyapımızda yapılır — sorular üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
-- Verileri istediğiniz zaman sildirebilirsiniz — ebeveynler bunu çocukları adına isteyebilir.
+- Verileri istediğin zaman sildirebilirsin — ebeveynler bunu çocukları adına isteyebilir.
 
 ## Sıkça sorulan sorular
 
@@ -113,11 +113,11 @@ Sıradan bir sohbet botundan farklı olarak burada bir öğretme yöntemi var: h
 
 Çözümleri yapay zekâ üretiyor, bu yüzden hata olabilir. Bot her adımı gösterir; böylece çözümü ders kitabınla ya da öğretmeninle karşılaştırabilirsin. Bir yanıt yanlış görünüyorsa formdan bize gönder: tüm mesajları okuyoruz.
 
-## Sorunuz ya da geri bildiriminiz var mı?
+## Sorunun ya da geri bildirimin var mı?
 
-Bize yazın — mesajınız ekibimize ulaşır, size e-postayla yanıt veririz. Spam yok, e-posta listesi yok.
+Bize yaz — mesajın ekibimize ulaşır, sana e-postayla yanıt veririz. Spam yok, e-posta listesi yok.
 
-E-postanızı yalnızca bu mesaja yanıt vermek için kullanırız.
+E-postanı yalnızca bu mesaja yanıt vermek için kullanırız.
 
 - [Mesaj gönder](https://kerio-byte.github.io/uchisambot/tr/#contact)
 - [Gizlilik Politikası (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)

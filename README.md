@@ -2944,3 +2944,102 @@ And a note for the next reader: the refund-promise gate reddened on this very bl
 "возврат" in two of my code comments ("return to the page", not "refund"). The comments were reworded
 rather than the gate widened — it is a blunt rule on purpose, and it is alive.
 
+## The page said «ты», and the one box where it asked you to write said «вы» (24.10.2026)
+
+**The gap.** For most of its length the landing speaks to the reader in one voice. The principle
+band: "чтобы ты мог самостоятельно решить похожую задачу". Three FAQ answers: "где ты застрял",
+"последний шаг делаешь ты сам". Step four of the how-to, the referral line. Then, for every line of
+the contact block, it switched to «вы»: "Ваш e-mail", "Ваше сообщение", "Используем ваш e-mail
+только чтобы ответить на обращение", "Спасибо! Мы получили ваше сообщение и ответим на указанный
+e-mail", "Напишите нам … ответим на вашу почту", "Проверьте связь и попробуйте ещё раз". Eight
+lines, and the switch lands exactly where the page asks a person to write to us and where it answers
+them — the moment the reader is asked to trust a stranger with an address.
+
+Ukrainian the same, eight lines. Turkish had the switch in the other direction and inside a single
+screen: the FAQ says "Birkaç dakika sonra yeniden dene — aşağıdaki formdan bize yaz", and the form
+directly under it said "Bize yazın … size e-postayla yanıt veririz". Politeness in Turkish is a
+suffix, so it was smeared across every label — adresiniz, mesajınız, metniniz, deneyin,
+çocuğunuzun — twelve lines, none of which a pronoun search would find. Indonesian held "kamu/mu"
+across the page and said "Anda" in the parents line and in both failure lines — the two lines
+written the night before, the ones a person reads when something has already gone wrong.
+
+Measured across all nine dictionaries, not assumed: es 24 informal keys and 0 formal (where "su/sus"
+is "his/her", not an address), pt 24 and 0, hi 21 on आप, vi 22 on bạn — four languages were already
+single-voice. So this was three and a half, not nine.
+
+**Why no gate saw it.** Every text gate compares the page with its dictionary: printed == dictionary.
+A page that contradicts itself satisfies both sides. Which voice the page uses had never been written
+down anywhere — it was an intention, not a fact.
+
+**What changed.** 33 strings in four dictionaries, in one direction: the page's dominant voice,
+informal. ru and uk: eight lines each, from "Ваш e-mail" to "Твой e-mail", "Спасибо! Мы получили
+твоё сообщение", "Проверь связь и попробуй ещё раз", "Напиши нам … ответим на твою почту". tr:
+twelve, from "Bize yazın … size" to "Bize yaz … sana", "E-posta adresin", "Mesajın", "E-postanı
+yalnızca bu mesaja yanıt vermek için kullanırız", "Bağlantını kontrol edip yeniden dene". id: three,
+"teks kamu masih ada di kolom" twice and "data anakmu".
+
+One line was not rewritten but made impersonal. The parents block's subtitle said "как мы бережём
+данные вашего ребёнка" — the only line on the page that speaks about a child to a parent, and the
+one place where the age of the reader is genuinely unknown. It now reads "как мы бережём данные
+детей" in ru and uk; impersonality costs nothing and cannot be wrong. The owner can reverse the
+direction in a word, but reversing means rewriting these 33 strings plus the ones that were already
+informal.
+
+**The gate is a registry, not a rule in code.** `tools/voice.json`: per language the chosen voice, the
+words that carry it (must), the words of the other voice (forbidden), and how many keys must carry
+the chosen voice (min_keys). English is in the registry explicitly, as "no distinction" — a
+forgotten language cannot pass as a clean one. Two sweep checks per language and one on the registry,
+2172 → 2189: no foreign voice anywhere in the dictionary; and the page and the contact block speak
+one voice — the must-words appear in `min_keys` keys and in at least one `contact.*` key, because a
+page that stopped addressing the reader at all would otherwise pass silently.
+
+Word boundaries are built per script. Devanagari does not tokenise — `[^\W\d_]+` splits "आपका" into
+"आपक", "स" — so a tokenizer would have made the Hindi check quietly vacuous while still counting as a
+check.
+
+**The gate found a second defect on the way.** Publishing moved to the `gh-pages` branch yesterday,
+and the freshness check guarding it compared `/index.html` and `/sitemap.xml`, on the reasoning that
+"one word changes both". Four dictionaries changed and the sweep printed ALL PASS while live
+ru/uk/tr/id were a build behind: a change in ru.json does not touch the English root, and sitemap.xml
+only moves when a date moves. The check now fetches all fifteen files the site serves — nine pages,
+privacy, terms, 404, sitemap, llms.txt, robots.txt — and compares bytes. Before publishing it named
+exactly the four stale pages; after publishing, all fifteen match.
+
+**Controls.** Three full copies of the tree (real copies, not hardlinks: the build writes in place),
+each broken one way and rebuilt so the build check stayed clean.
+
+- "Используем ваш e-mail…" restored in ru `contact.note` → red, naming `contact.note`;
+- every ты-form stripped from the ru dictionary → red on "страница и блок формы одной формы":
+  0 keys of the 5 needed, 0 in the form;
+- "E-posta adresiniz" restored in tr → red for tr, naming `contact.l_email`.
+
+The first version of the second control was worthless and said so by staying green: substring
+replacement without word boundaries turned "ответы" into "отвечеловек" and left the capitalised
+"Твой"/"Твоё" untouched, so seven must-keys survived. Rewritten with boundaries and both cases: 0
+keys, one red line.
+
+One measurement worth recording: a copy of the tree living outside `~/Projects/stars-bots/promo`
+reports 2133 checks instead of 2189, because some checks build paths from the parent directory
+(the neighbouring study-bot). A copy placed next to it reports 2189 / 0 — so the difference is a
+property of where the copy sits, not of the change.
+
+**Checked after the change.** `tools/build.py --check`: 24 files match. Sweep 2189 / 0. The freshness
+check proved itself in the right order: red on exactly four pages before publishing, green after.
+axe 0 violations on 12 pages; a11y-extra 124 / 0; wcag22 targets 43 / 0; env-prefs 45 / 0; viewports
+94 / 0; fonts 39 / 0; cwv 69 / 0; cross-engine 60 runs / 0 problems; third-party 108 / 0; en-leftovers
+0; Nu validator clean; external links 0 problems; live-assets clean; the contact battery 910 / 0
+across nine languages. Logs in `evidence/battery-20261024c/`.
+
+**Eyes on it.** Four languages (ru, uk, tr, id) at 420 px and 1440 px in
+`evidence/visual-20261024c-voice/`: PROBLEMS 0, no overflow, badges 8/8 in two rows on desktop and
+four on mobile, and the block read in each language — one voice, nothing clipped. The Turkish
+suffixes were checked on the screen, because that is the only place they are visible.
+
+**What it cannot prove.** That informal is the right voice for a page parents also read — the page
+was already informal in seven lines, but this is a taste call, reversible in a word. That the
+forbidden lists are complete for Turkish, where politeness lives in suffixes: only the listed forms
+are gated, and a new polite form would slip through. That no legal page contradicts the landing:
+privacy and terms speak «вы» in Russian on purpose and sit outside the registry. And that a reader
+notices at all — someone who came for homework help may never register the change; the point is that
+the page no longer reads like two companies.
+
