@@ -18,42 +18,46 @@
 # by captions.py. drawtext text_shaping defaults to on, so HarfBuzz shapes the
 # Devanagari conjuncts.
 #
-# Sources (overridable via env):
-#   KIT (default: $ROOT/../submission-kit-20261014)
-#     en -> $KIT/shots_en/shot2_task_en.png + shot3_answer_en.png
-#     ru -> $KIT/shots/shot2_task_ru.png    + shot3_answer_ru.png
-#   SHOTS_DIR (default: $ROOT/.shots-work)
-#     <lang> -> $SHOTS_DIR/<lang>/shot2.png + shot3.png
-#   If the shots-gen renders are gone:
-#     python3 tools/shots-gen/gen_shots.py --langs <l>[,<l>...]
+# Sources (24.10.2026): the page's own screenshots — img/shot2.webp + img/shot3.webp
+#   (en) or img/shot2-<lang>.webp + img/shot3-<lang>.webp. Before this the loop was
+#   cut from an external kit capture (en/ru) or from .shots-work renders (the other
+#   seven), so redrawing a screenshot left the video behind: after the 23.10 menu
+#   fix every loop still showed six buttons under a page that drew seven.
+#   Now the video is cut from the very file the page displays, and the ledger stores
+#   each source's sha256 — a new screenshot with an old loop is a sweep failure.
+#   No external catalogue and no render run is needed to rebuild a loop.
 #
 # Poster: last frame of the loop -> img/demo-poster[-<lang>].webp (540x1170),
 #   same rule as the original posters. It is part of the delivered page: a
 #   re-captioned loop with a stale poster would show the old words before play.
 #
 # Run from anywhere:  bash demo/build-web-loop-langs.sh [lang ...]
-#   default: es pt hi id tr vi uk       (en and ru are built the same way)
+#   default: all nine (en ru es pt hi id tr vi uk)
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
-KIT="${KIT:-$ROOT/../submission-kit-20261014}"
-SHOTS_DIR="${SHOTS_DIR:-$ROOT/.shots-work}"
 FB=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 FN=/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf
 
 LANGS=("$@")
-if [ ${#LANGS[@]} -eq 0 ]; then LANGS=(es pt hi id tr vi uk); fi
+if [ ${#LANGS[@]} -eq 0 ]; then LANGS=(en ru es pt hi id tr vi uk); fi
 
 cap1() { python3 "$HERE/captions.py" cap1 "$1"; }
 cap2() { python3 "$HERE/captions.py" cap2 "$1"; }
 font() { [ "$1" = hi ] && echo "$FN" || echo "$FB"; }
 
 sources() {  # sets SRC2 SRC3 for one language
-  case "$1" in
-    en) SRC2="$KIT/shots_en/shot2_task_en.png"; SRC3="$KIT/shots_en/shot3_answer_en.png" ;;
-    ru) SRC2="$KIT/shots/shot2_task_ru.png";    SRC3="$KIT/shots/shot3_answer_ru.png" ;;
-    *)  SRC2="$SHOTS_DIR/$1/shot2.png";         SRC3="$SHOTS_DIR/$1/shot3.png" ;;
-  esac
+  # 24.10.2026: источник — САМА КАРТИНКА СТРАНИЦЫ (img/shot2/3[-<lang>].webp), а не
+  # макет из внешнего каталога submission-kit и не свежий рендер .shots-work.
+  # Причина: 23.10 макеты перерисовали с седьмой кнопкой «Пригласить друга», а
+  # ролики остались нарезанными из старых файлов — девять видео показывали
+  # клавиатуру из шести кнопок, которой у бота не было никогда. Теперь ролик и
+  # скриншот — один и тот же файл байт в байт, и реестр demo/captions.json хранит
+  # sha256 источника: перерисовали скриншот, не перерезав ролик, — свип краснеет.
+  local SUF=""
+  [ "$1" != en ] && SUF="-$1"
+  SRC2="$ROOT/img/shot2${SUF}.webp"
+  SRC3="$ROOT/img/shot3${SUF}.webp"
 }
 
 ZP="scale=2880:6240,zoompan=z='min(zoom+0.0004,1.06)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
@@ -62,7 +66,8 @@ for L in "${LANGS[@]}"; do
   sources "$L"
   if [ ! -f "$SRC2" ] || [ ! -f "$SRC3" ]; then
     echo "MISSING: $SRC2 / $SRC3" >&2
-    echo "  (shots-gen renders: python3 $ROOT/tools/shots-gen/gen_shots.py --langs $L)" >&2
+    echo "  (the page's screenshot for this language — img/shotN[-<lang>].webp; generate:" >&2
+    echo "   python3 $ROOT/tools/shots-gen/gen_shots.py --langs $L --apply)" >&2
     exit 1
   fi
   F=$(font "$L"); C1=$(cap1 "$L"); C2=$(cap2 "$L")
