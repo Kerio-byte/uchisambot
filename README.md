@@ -3250,7 +3250,7 @@ line), `submission-kit/` (four screenshots + README), `img/shot4.webp` and
 `references/landing-qa.md`. No page, no text, no price and no picture the visitor sees
 changed.
 
-## The sentence left step 3 and stayed in the search result (24.10.2026)
+## The sentence left step 3 and stayed in the search result and in the screen reader (24.10.2026)
 
 **What was found.** The previous pass took "the bot solves it" out of step 3 and the hero
 subheadline in all nine languages. It left the same sentence in the one place a parent reads
@@ -3268,6 +3268,16 @@ which nobody checked against the registry. Second, the Turkish forbid list held 
 `çözüyor` but not the participle `çözen`: even with the meta keys added, the old string
 would have walked through.
 
+**The same sentence was also read aloud.** Chasing the head turned up a third copy that no
+dictionary could hold: the `aria-label` of the hero video — the sentence a screen reader
+announces before the clip. It was not in `src/locales/` at all. `tools/build.py` carried a
+`VIDEO_ALT` table of nine strings and substituted one for the English text at build time, so
+that translation lived inside the generator, where every dictionary gate is blind by
+construction. Six of the nine promised a solution: es «resuelve», pt «resolve», hi «हल करता
+है», id «menyelesaikan», tr «çözüyor», vi «giải bài». EN, RU and UK used the unit-name verbs —
+which is also why the sweep's only question about that attribute ("is it different from the
+English one?") answered yes for all of them.
+
 **The fix is two strings, in the page's own verbs.** Hindi now says the bot "समझाता है"
 (explains) — the verb of its own hero and step 3 — and "बताता है" for how it covers a topic,
 the verb step 3 uses for the reason behind a step. Turkish says "Ödevini adım adım çözmene
@@ -3277,15 +3287,22 @@ build: 148 and 159. The titles were **not** touched: "हल" and "çözüm" are
 names the way "разбор" is in Russian, step 3 sells them as a noun, and the previous block's
 decision that the unit keeps its name still holds.
 
-**The gate has two halves now.** The registry guards four keys (`how.s3d`, `hero.sub`,
-`meta.title`, `meta.desc`) and Turkish gained `\bçözen\b`. On top of that the sweep reads the
+The six aria-labels were rewritten by the same rule — each from that language's own hero or
+step 3: es «desglosa», pt «divide a tarefa em passos», hi «एक-एक स्टेप में समझाता है», id
+«membahas», tr «çözümünü adım adım gösteriyor», vi «trình bày lời giải». The table itself was
+then deleted: the video tag carries `data-i18n-attr="aria-label:demo.alt"`, the string sits in
+all nine dictionaries, and the generator no longer holds a single translated sentence.
+
+**The gate has two halves now.** The registry guards five keys (`how.s3d`, `hero.sub`,
+`meta.title`, `meta.desc`, `demo.alt`) and Turkish gained `\bçözen\b`. On top of that the sweep reads the
 **shipped head** of all nine pages — `<title>`, `meta[name=description]`, `og:title`,
 `og:description`, `twitter:title`, `twitter:description` and every JSON-LD `description` —
 and asks two questions: does each field equal the dictionary string (one source, five
 surfaces), and does any of them carry a forbidden verb. Six checks per language plus one on
-the registry itself: **2278 → 2333**.
+the registry itself, and one more per language for the video label (`aria-label` must equal
+`demo.alt` — the wiring that had silently fed the old table): **2278 → 2342**.
 
-**Controls: five mutations in a copy of the tree, each rebuilt before the sweep.**
+**Controls: seven mutations in a copy of the tree, each rebuilt before the sweep.**
 
 | mutation | expected red line | what it printed |
 |---|---|---|
@@ -3294,15 +3311,19 @@ the registry itself: **2278 → 2333**.
 | dictionary clean, `og:description` sabotaged in the built page | head gate is independent | `head: og/twitter copies == dictionary \| og:description` + `head: no solve claim before the click` while the dictionary check stayed green |
 | registry told to guard only the two body keys | the registry is watched | `claims registry guards the head keys \| keys=['how.s3d', 'hero.sub']` |
 | one JSON-LD description drifted | copies must match | `head: json-ld description == dictionary \| узлов 1` |
+| hi `demo.alt` back to «हल करता है» | dictionary, and only the dictionary | `claim: guarded keys do not promise a solution \| demo.alt: «हल कर»` — the equality check stayed green, because the rebuilt page agreed with the bad dictionary |
+| dictionary clean, video `aria-label` sabotaged in the built page | equality is independent | `video aria == dictionary \| «डेमो: … हल करता है।»` while the dictionary check stayed green |
 
 **Checked after the change.** `tools/build.py --check`: 24 files identical to a fresh build.
-Sweep **2333 / 0**. Nu validator: 0 real findings. `landing-en-leftovers.py`: 0.
+Sweep **2342 / 0**. Nu validator: 0 real findings. `landing-en-leftovers.py`: 0.
+`landing-a11y-extra.py`: 124 / 0. `landing-axe-audit.py`: 12 pages, 0 violations.
 `landing-render-check.py` with a local server: 4 pages, bullets 4, overflow 0, no JS errors.
-Before publishing, the sweep's publication check named exactly two stale addresses — `/hi/`
-and `/tr/` — which is the measurement that nothing else on the site moved. Published through
-`tools/publish-branch.sh` to both mirrors, Pages source read back as `gh-pages/`;
-`landing-live-bytes.py`: **26 / 26**. After the rebuild the full sweep is green, publication
-check included.
+The publication check did the measuring twice: after the meta half it named exactly two stale
+addresses (`/hi/`, `/tr/`), after the aria half exactly six (`/es/`, `/pt/`, `/hi/`, `/id/`,
+`/tr/`, `/vi/`) — each time the whole set of what had changed and nothing else. Published
+through `tools/publish-branch.sh` to both mirrors, Pages source read back as `gh-pages/`;
+`landing-live-bytes.py`: **26 / 26**, and the nine live pages were then read back one by one
+to see the shipped `aria-label` of each, not just the hash of a file.
 
 **What it cannot prove.** That a Hindi or Turkish reader hears "समझाता है" / "yardımcı olan"
 as teaching rather than as a softer promise of the same thing — that is a copywriter's ear,
@@ -3313,12 +3334,19 @@ fixed phrase. That no cached preview survives elsewhere: Telegram and the search
 their own copies of a link preview, and a fresh scrape is not something this repo can force.
 That the five surfaces are all of them: the page could grow a sixth copy of the description
 (`<meta name="application-name">`, a manifest, a second JSON-LD node) and the check would
-name it only if it matched one of the six patterns above.
+name it only if it matched one of the six patterns above. That the generator is now
+translation-free: a search of `tools/build.py` found one other per-language table — `LABELS`,
+the language names in their own script — which is data about the selector, not a sentence
+about the product, but that is a reading and not a gate. And that a screen-reader user hears
+the new label as help rather than as the same promise in different words: only a listener can
+say whether it lands.
 
-**Files.** `src/locales/hi.json`, `src/locales/tr.json` (one string each),
-`tools/claims.json` (two keys, one pattern, the note that records both passes),
-`hi/index.html`, `hi/index.html.md`, `tr/index.html`, `tr/index.html.md`,
-`tools/lastmod.json` (rebuilt), the skill `stars-bots-ops`: `scripts/landing-sweep.py` (+55),
-`references/landing-qa.md`. Live pages: `/hi/`, `/tr/`.
+**Files.** `src/locales/*.json` (nine files: `demo.alt` added to every one; `meta.desc` also
+rewritten in hi and tr), `index-src.html` (`data-i18n-attr` on the video), `tools/build.py`
+(`VIDEO_ALT` deleted, its substitution gone), `tools/claims.json` (five keys, one pattern, the
+note that records both passes), six language pages and the two md twins that changed with
+them, `tools/lastmod.json` (rebuilt), the skill `stars-bots-ops`:
+`scripts/landing-sweep.py` (+64), `references/landing-qa.md`. Live pages: `/es/`, `/pt/`,
+`/hi/`, `/id/`, `/tr/`, `/vi/`.
 
 
