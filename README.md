@@ -4158,3 +4158,76 @@ this block). Live bytes re-read: `/` and the eight language pages serve this bui
 (+19 checks), `evidence/block-20261024o/` (the real run, the mutated run, the after-measurement,
 the contrast table).
 
+## The particle took the comma with it, and nobody was asked about it (24.10.2026)
+
+**What was wrong.** Two sentences, printed on the page since the language pages were generated
+(15.10.2026) — one in the pricing answer, one in the contact card:
+
+> Подписки и автосписаний нет — платишь только когда сам решишь.
+> Используем твой e-mail только чтобы ответить на обращение.
+
+Both are subordinate clauses («когда сам решишь», «чтобы ответить») behind a subordinating
+conjunction that has an intensifying particle in front of it («только»). Russian punctuation puts the
+comma **before the particle**, not before the conjunction — gramota.ru, справочная служба: «если
+перед подчинительным союзом стоят усилительные частицы как раз, только, лишь, исключительно и т. п.,
+то запятая перед ними ставится вопреки интонации». Ukrainian puts it in the same place: «частки
+навіть, тільки, лише, хіба що перед підрядними сполучниками не відділяються» (the particle does not
+detach from the conjunction, so the comma stands before it — Український правопис §5.5 lists only
+не, і, то as comma-cancelling). Neither sentence had a comma at all, in either language.
+
+What makes it a defect rather than a style: the same file already does it right twice — «Бот
+объясняет каждый шаг и его смысл, чтобы ты мог самостоятельно решить похожую задачу», «…показывает
+каждый шаг и правило за ним, чтобы следующую задачу ты решил сам». The dictionary contradicted
+itself, and the wrong pair sat in the **pricing answer** (the most-asked question on the page) and in
+the **contact card** (the last thing a person reads before writing to us).
+
+**Why no gate saw it.** The typography block added earlier the same day reads punctuation: double
+spaces, a space before a mark, `...` instead of `…`, a hyphen instead of a dash between numbers,
+unpaired guillemets, a straight quote in ru/uk, and a deliberately short list of introductory words.
+It also said what it does not do: «ЧЕГО НЕ ДОКАЗЫВАЕТ: запятые в оборотах, которых нет в списке». A
+subordinate clause was exactly such an оборот. The word-level gates (claims, prices, numbers,
+glossary) read words; the meaning pass reads meaning. One comma, in two of the nine languages, sat
+between them.
+
+**Fixed.** Four strings, one character each: `src/locales/ru.json` (`q6a`, `contact.note`) and
+`src/locales/uk.json` (`q6a`, `contact.note`). Nothing else moved — the build rewrote `/ru/`,
+`/uk/` and their `.md` twins, and `tools/lastmod.json` moved exactly two dates. No English text, no
+layout: a comma is not a reflow.
+
+**The gate — one new class, plus a self-test so the class cannot rot.** `_particle_no_comma()`: for
+every «только/лишь» + «когда/если/чтобы/чтоб/пока/где» in Russian and «лише/тільки» + «коли/якщо/
+щоб/поки/де» in Ukrainian, the character before the particle must be a punctuation mark. Places where
+the particle follows a conjunction («и только если», «но только если» — both live in privacy/terms)
+are skipped on purpose: there the clause boundary is held by meaning, not by letters, and a red there
+would be false. The class runs inside the nine dictionary rows and the twelve page rows; the new
+2 549th check is a self-test — «Платишь только когда сам решишь» must come back red and «Платишь,
+только когда сам решишь» green, in both languages — so that a later "improvement" to the pattern
+cannot leave the gate green forever.
+
+One more thing changed in those rows: the page loop used to pick its rules by *script* (`ru` if the
+line had Cyrillic, else `en`), so Ukrainian pages were measured with **Russian** rules. Pages now
+carry their own language — that is how «лише коли» on `/uk/` gets caught by the page row and not only
+by the dictionary row.
+
+**Each side proven to fail.** The same tree before the fix: **2 548 checks / 4 failed** — the ru and
+uk dictionary rows and the ru and uk page rows, each naming its own sentence. After the fix, before
+publishing: 2 549 / 1, and that one was the publishing gate saying the live site still served
+yesterday's bytes. A mutated copy (`LANDING_ROOT`, old text put back into both dictionaries and both
+pages) reproduces the same four typography failures next to copy-only artifacts — no `.git`, no
+`evidence/`, no study-bot path — 11 failed there, 4 of them the defect.
+
+**What it cannot prove.** That a comma before the particle is what a reader *wants* — the norm is
+normative, and an ear may still prefer a rewording («платишь только тогда, когда…»); that call stays
+with the owner. Nor does the class cover the other subordinate clauses in these files: «который»,
+«если», «когда» without a particle are read only by the human pass, and the legal pages' «и только
+если» / «но только если» are still judged by meaning. It also reads Russian and Ukrainian only.
+
+**Numbers.** Sweep **2 549 / 0** after publishing; `tools/build.py --check` 24 / 24;
+`publish-tree.py --check` 109 files, 513 internal links, list complete; live bytes **26 / 26** match
+the tree; the `gh-pages` branch updated on both mirrors and the Pages source read back as
+`gh-pages/`.
+
+**Files.** `src/locales/ru.json`, `src/locales/uk.json`, `/ru/index.html`, `/uk/index.html` + their
+`.md` twins + `tools/lastmod.json` (build), `scripts/landing-sweep.py` in the `stars-bots-ops` skill,
+`evidence/block-20261024p/` (the pre-fix run, the post-fix run, the mutated copy, the final run).
+
