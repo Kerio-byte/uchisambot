@@ -4107,3 +4107,54 @@ its file. The `width`/`height` attributes may be a display size (a 1080×2340 sc
 **Files.** `scripts/landing-a11y-extra.py` in the `stars-bots-ops` skill (+27 checks),
 `evidence/block-20261024n/` (the mutated run, the real run, the zoom and geometry probes), `README.md` (this
 entry and the superseded note above).
+
+## The only two fields on the page were invisible until you typed in them (24.10.2026)
+
+**What was wrong.** The email field and the message box — the whole of the contact form — were white
+on a white card, outlined in `--line` (#E3EAF7). Against the white on both sides of that line the
+contrast is **1.21:1**; WCAG 1.4.11 asks for 3:1 for "visual information required to identify user
+interface components and states". The border is the only thing that says *you can write here*, and it
+was as good as absent. What a visitor actually saw was the placeholder, at 4.6:1 — and a placeholder
+disappears with the first character typed. Between those two moments the form was two unlabelled
+blank spaces on a white card, on a page whose background is #F7FAFF.
+
+**Why no gate saw it.** Every contrast gate on this site measures **text**: axe's `color-contrast`,
+the 4.5:1 rows in the sweep (`.btn`, `p`, the active chip), the AA battery. `landing-wcag22-targets.py`
+measures how big a target is, `landing-env-prefs.py` measures forced-colors, `landing-glyph-fallback.py`
+measures whether a glyph exists. The string `1.4.11` appeared in none of them. The gate that would
+have caught this is one nobody wrote, because a border had never been asked a question.
+
+**Fixed.** `index-src.html`, one declaration: the fields' border moves from `--line` to **#8490A6** —
+the page's own `--muted` (#50617F) at 70 % over white, **3.22:1** against the field and 3.08:1
+against the page background. Width stays 1 px, radius stays 12 px, the focus state (outline + border
+in the brand blue, 5.13:1) is untouched, so the layout does not move by a pixel. The build rewrote the
+nine language pages, their markdown twins and `tools/lastmod.json`; `tools/build.py --check` reproduces
+all 24 generated files.
+
+**The gate — 19 new checks in `landing-a11y-extra.py`.** Section F walks every page that carries
+`#contact-form` (nine of the eleven) and asks, per field, whether the boundary is *identifiable*: a
+border at ≥3:1 against both the field's own fill and what is outside it, or a fill that separates it
+from its surroundings at ≥3:1. Each check prints the three ratios it measured, so a red names the side
+that failed instead of the element. A floor check refuses to pass unless all nine pages were asked —
+the same floor the zoom block needed after it turned out to have measured three languages of nine.
+
+**Each side proven to fail.** On a copy of the tree with the old border put back (`LANDING_ROOT`, no
+site file touched) the battery goes **170 checks / 18 failed** — one per field per language, each
+naming the page, the field and `border/fill=1.21 border/outside=1.21`. The real tree: **170 / 0 in
+45 s**; axe stays at 12 pages / 0 violations.
+
+**What it cannot prove.** That 3.22:1 is *enough* to see the box in the sun on a cheap phone — the
+standard sets a floor, not a guarantee, and the owner's eye still decides whether a line or a fill is
+the right shape for this form. Nor does it say anything about the contact card's own 1.21:1 outline:
+the card is decoration, not a control, and stays as designed. And it reads only elements the page
+marks as form fields — a future `<select>` or file input is covered the day it appears, a custom
+`div` pretending to be one is not.
+
+**Numbers.** Sweep **2 548 / 0** after publishing; accessibility battery **170 / 0** (151 before
+this block). Live bytes re-read: `/` and the eight language pages serve this build.
+
+**Files.** `index-src.html`, `index.html` + the eight language pages + their `.md` twins +
+`tools/lastmod.json` (build), `scripts/landing-a11y-extra.py` in the `stars-bots-ops` skill
+(+19 checks), `evidence/block-20261024o/` (the real run, the mutated run, the after-measurement,
+the contrast table).
+
