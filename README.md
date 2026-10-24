@@ -4231,3 +4231,94 @@ the tree; the `gh-pages` branch updated on both mirrors and the Pages source rea
 `.md` twins + `tools/lastmod.json` (build), `scripts/landing-sweep.py` in the `stars-bots-ops` skill,
 `evidence/block-20261024p/` (the pre-fix run, the post-fix run, the mutated copy, the final run).
 
+
+## Every language was checked alone, and nobody asked whether the nine still agreed (24.10.2026)
+
+**What was searched.** The site is not short of gates: 2 549 checks on the markup and the nine
+dictionaries, axe on 12 pages (0 violations), the local vnu validator (no real findings — 126 known
+false «trailing slash on void elements»), live bytes byte-for-byte against the tree. Every one of
+those reads a language **by itself**: does `ru` have the right keys, does `hi` carry its own
+shots, does `tr` price the pack at 120 Stars. Not one of them ever asked the question that a
+translated page actually fails: *do the nine still say the same thing as each other?*
+
+That is how two of this project's worst defects lived: «First 5 breakdowns free» on the launch
+pictures while the page said two, and «çözen» (solves) in the Turkish description while the product
+sold the opposite. Each language was individually valid and beautiful; only the comparison was
+missing.
+
+**What was measured before touching anything** (read-only): numbers across the nine dictionaries
+(no drift); the DOM skeleton of the nine pages against the English one (390 elements, identical);
+`llms.txt` page titles against `meta.title` (9 of 9); the product unit's terminology inside each
+language — `desglose`, `pembahasan`, `phân tích`, `çözüm`, `हल` each hold one word for the breakdown,
+with `solución`/`lời giải` appearing only where a pupil's own solution is meant; the first phone
+screen upright (390×844 and 360×640, all nine — the hero button sits fully above the fold
+everywhere); and the published site opened in a real browser as a visitor, all nine languages.
+Nothing on the site was wrong.
+
+**What was wrong.** The new browser battery itself. On a deliberately wrong address it did not turn
+red — it **crashed**: `document.querySelector('details.lang-dd')` is `null` on a page that is not
+ours, and `.open = true` threw. A gate that falls over instead of reporting has the same defect as a
+gate that is always green: it cannot tell «everything is fine» from «I could not look». It was found
+by the negative control, not by the happy path — which is the whole reason the negative control is
+run.
+
+**Fixed.** `landing-live-runtime.py`: all four interactive checks now look for the element and return
+«not opened» instead of throwing, and the address is an environment variable (`LANDING_LIVE_BASE`)
+so the wrong-address control is reproducible. On a wrong address the battery now reports **121
+checks / 93 failed, exit 1**; on the real site **121 / 0**.
+
+**The gate — a new class: parity of the nine languages** (sweep 2 549 → 2 571). Three things, each
+of which has already gone wrong once in this project in another form:
+
+1. **Numbers.** «2 free breakdowns», «30 Stars», «5–60 seconds» are not translated. A number that
+   lives in one language only is either a translation slip or a promise the other eight do not make.
+   Comma decimals are normalised (`5,5` ≡ `5.5`), and the rule carries a three-case self-test —
+   equal sets pass, a missing number is caught, a decimal comma is not a difference.
+2. **Skeleton.** The nine pages come from one template, so the sequence of elements must be the
+   same. A section that disappears in one language is a template/build error, not a translation
+   one — exactly what a hand-edit to `/es/` produces. Attributes that *must* differ by language
+   (href, lang, hreflang, alt, aria-label, content, src, poster, id, name, action) are excluded, or
+   the gate would be red on every language by design. Self-test: a lost `<footer>` must be caught, a
+   changed `href`/`lang`/`alt` must not.
+3. **`llms.txt`.** The file written for machines is not generated from a template field the build
+   validates per language: its page titles are hand-written, so a rewritten headline can leave an
+   agent quoting the old name. Now each of the nine titles must end with that language's `meta.title`.
+
+**Each side proven to fail.** A copy of the tree (`LANDING_ROOT`, no `.git`, no `evidence/`), three
+breakdowns at once: «30 Stars» → «35 Stars» in `tr.json` with an honest rebuild; the `#parents`
+section cut out of `es/index.html`; the Hindi title in `llms.txt` rewritten. Result: the numbers
+class named **eight languages missing 35 and Turkish missing 30** — the drift is named, not just
+sensed; the skeleton class named the exact vanished subtree («нет 28
+(main[tabindex=-1]>section.sec)»); the `llms.txt` class printed both strings side by side. Full log
+in `evidence/block-20261024q/negative-three-mutations.txt`.
+
+**Two new batteries**, both with their own negative control, both in the `stars-bots-ops` skill:
+
+- `landing-live-runtime.py` — **121 checks**: the published site opened as a visitor on all nine
+  addresses (HTTP 200, console errors, failed requests, 4xx/5xx, broken images, video ready and
+  sized, the language's own font in `loaded`, eight switcher links, `html lang`, canonical, the
+  language menu, the FAQ, the sticky button after scrolling), plus `robots.txt`, `sitemap.xml`,
+  `llms.txt` and `og-en.png`. The bytes could match the build and the page still not work; this is
+  the check that would say so. On a wrong address: 93 failed.
+- `landing-first-screen.py` — **18 checks**: the hero button fully above the fold on 390×844 and
+  360×640 for all nine languages, with the heading, lead and video positions printed. Earlier
+  batteries only measured the phone **on its side** (844×390) for three languages. That is not how
+  the traffic arrives: Telegram, upright, sometimes a 360-pixel-wide budget phone, and a longer
+  language (Hindi, Vietnamese) pushing the button one line lower is enough to lose the tap. With a
+  heading pushed 600 px down, the battery reports 2 problems and exits 1.
+
+**What it cannot prove.** Parity proves that nine languages agree — not that any of them reads
+well; a native ear, and the owner's, are still the only instrument for that. It says nothing about
+numbers that live in the page rather than in a dictionary: `prices.json`, `answer-time.json` and the
+bot itself have their own gates. And only the first screen was measured, not the page behind it.
+
+**Numbers.** Sweep **2 571 / 0**; `tools/build.py --check` 24 / 24; `publish-tree.py --check` 109
+files, 513 internal links, list complete; live runtime **121 / 0**; first screen **18 / 0**; axe
+**12 pages / 0**; vnu: no real findings. The site itself was not changed by this block, so nothing
+was published — the publication checks inside the sweep are green, which means `gh-pages` already
+carries the current build.
+
+**Files.** `scripts/landing-sweep.py`, `scripts/landing-live-runtime.py`,
+`scripts/landing-first-screen.py` in the `stars-bots-ops` skill; `evidence/block-20261024q/`
+(the run before, the three-mutation copy, the live runtime positive and negative, the first-screen
+positive and negative, and the four probes that searched the site before any gate was written).
