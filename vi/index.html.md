@@ -91,7 +91,7 @@ Không. Mọi thứ hoạt động ngay trong Telegram — trên điện thoại
 
 ### Telegram Stars là gì?
 
-Stars (⭐) là đơn vị tiền tệ có sẵn của Telegram. Bạn nạp một lần ngay trong Telegram — ứng dụng hỗ trợ các cách thanh toán thông thường (thẻ, App Store hoặc Google Play) — rồi dùng chúng để trả cho các lần phân tích ngay trong cuộc trò chuyện. Không có đăng ký định kỳ và không tự động trừ tiền: bạn chỉ trả khi bạn muốn. Không cần Telegram Premium.
+Stars là đơn vị tiền tệ có sẵn của Telegram. Bạn nạp một lần ngay trong Telegram — ứng dụng hỗ trợ các cách thanh toán thông thường (thẻ, App Store hoặc Google Play) — rồi dùng chúng để trả cho các lần phân tích ngay trong cuộc trò chuyện. Không có đăng ký định kỳ và không tự động trừ tiền: bạn chỉ trả khi bạn muốn. Không cần Telegram Premium.
 
 ### Lấy Stars ở đâu?
 
