@@ -167,6 +167,19 @@ main{display:block}
 .video-toggle[data-state="play"] .ico-pause{display:none}
 .video-toggle[data-state="play"] .ico-play{display:block}
 @media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:0;text-align:center}.hero-left{display:contents}.hero-in h1{order:1}.hero-in .lead{order:2;margin-left:auto;margin-right:auto}.hero-in .cta-row{order:3;justify-content:center}.hero-in .hero-phone{order:4;margin:30px auto 4px}.hero-in .chips{order:5;justify-content:center}.hero-in .hero-badge{order:6}.hero{padding-top:34px}}
+/* Телефон БОКОМ (высота <= 430px) — 24.10.2026, замер: на pt, vi и uk главная кнопка
+   уходила за нижнюю кромку на 2–47 px (844x390 и 740x360). В альбомной ориентации
+   экран низкий, а герой одноколоночный и центрированный: 63 px шапки + 34 px отступа +
+   двухстрочный заголовок 40 px + лид в четыре строки съедали весь экран. Портрет это
+   не задевает (там высота 640 и 844), десктоп — тоже (высота окна больше 430 px).
+   Сжимаем вертикаль: шапка, отступ героя, кегль и поля лида. Кегль заголовка снижен
+   осознанно: 40 px при высоте 360 — это треть экрана на две строки. */
+@media(max-height:430px) and (orientation:landscape){
+  .top-in{height:52px}
+  .hero{padding-top:16px}
+  h1{font-size:clamp(26px,4.6vw,34px)}
+  .lead{font-size:17px;margin:10px 0 16px}
+}
 
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .steps li{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
