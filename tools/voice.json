@@ -1,0 +1,61 @@
+{
+  "note": "Один голос на страницу. Реестр для свипа: каким словом страница обращается к читателю (informal 'ты' или polite 'вы') и какие слова чужого голоса запрещены в словарях лендинга. Юридические страницы (privacy/terms) сюда НЕ входят: они двуязычные и по-русски обращаются на 'вы' намеренно. Повод: 24.10.2026 ru/uk говорили 'ты' в семи строках страницы и 'вы' во всех пяти строках блока формы, tr — 'sen' на странице и вежливое множественное в форме, id — 'kamu' и 'Anda' рядом.",
+  "measured": "2026-10-24",
+  "languages": {
+    "en": {
+      "voice": null,
+      "why": "английский не различает ты/вы: проверять нечего"
+    },
+    "ru": {
+      "voice": "informal",
+      "must": ["ты", "твой", "твоя", "твоё", "твои", "твоего", "твоей", "твою", "твоих", "твоим", "тебя", "тебе", "тобой", "сам"],
+      "forbidden": ["вы", "ваш", "ваша", "ваше", "ваши", "вашего", "вашей", "вашу", "ваших", "вашим", "вас", "вам", "вами"],
+      "min_keys": 5
+    },
+    "uk": {
+      "voice": "informal",
+      "must": ["ти", "твій", "твоя", "твоє", "твої", "твого", "твоєї", "твою", "твоїх", "тебе", "тобі", "тобою", "сам"],
+      "forbidden": ["ви", "ваш", "ваша", "ваше", "ваші", "вашого", "вашої", "вашу", "ваших", "вашим", "вас", "вам", "вами"],
+      "min_keys": 5
+    },
+    "es": {
+      "voice": "informal",
+      "must": ["tú", "tu", "tus", "te", "ti", "contigo"],
+      "forbidden": ["usted", "ustedes"],
+      "min_keys": 5,
+      "why": "su/sus не запрещены: на странице они значат 'его/её/их' (например, домашняя работа друга), а не обращение к читателю"
+    },
+    "pt": {
+      "voice": "informal",
+      "must": ["seu", "sua", "seus", "suas", "você", "te", "ti"],
+      "forbidden": ["senhor", "senhora"],
+      "min_keys": 5
+    },
+    "hi": {
+      "voice": "polite",
+      "must": ["आप", "आपका", "आपकी", "आपके", "आपको", "आपसे"],
+      "forbidden": ["तुम", "तुम्हारा", "तुम्हारी", "तुम्हारे", "तुम्हें", "तुमसे", "तू"],
+      "min_keys": 5,
+      "why": "хинди на этой странице обращается на आप; तुम/तू были бы фамильярны"
+    },
+    "id": {
+      "voice": "informal",
+      "must": ["kamu", "pesanmu", "emailmu", "anakmu", "jawabanmu", "gurumu", "temanmu", "soalmu", "catatanmu"],
+      "forbidden": ["anda"],
+      "min_keys": 5
+    },
+    "tr": {
+      "voice": "informal",
+      "must": ["sen", "senin", "sana", "seni", "senden", "dene", "yaz", "bak", "seç"],
+      "forbidden": ["siz", "sizin", "size", "sizi", "sizden", "yazın", "deneyin", "gönderin", "seçin", "bakın", "tıklayın", "adresiniz", "mesajınız", "mesajınızı", "sorunuz", "sorununuz", "şikayetiniz", "bildiriminiz", "metniniz", "e-postanız", "e-postanızı", "e-postanıza", "çocuğunuzun", "çocuğunuzu"],
+      "min_keys": 4
+    },
+    "vi": {
+      "voice": "polite",
+      "must": ["bạn"],
+      "forbidden": ["mày", "mi", "ngươi"],
+      "min_keys": 5,
+      "why": "вьетнамский здесь на bạn; mày/ngươi фамильярны или грубы"
+    }
+  }
+}

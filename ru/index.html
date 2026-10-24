@@ -511,7 +511,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       <div class="parents-head">
         <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4.5V13c0 4.6-3.2 8-8 9.5C7.2 21 4 17.6 4 13V6.5L12 2z"/><path d="M9.2 12.2l2 2 3.8-4.5"/></svg></div>
         <h2 id="parents-title">Родителям</h2>
-        <p>Коротко: как мы бережём данные вашего ребёнка.</p>
+        <p>Коротко: как мы бережём данные детей.</p>
         <a class="privacy-link" href="../privacy.html#ru">Подробнее — в Политике конфиденциальности</a>
       </div>
       <ul class="parents-list">
@@ -541,26 +541,26 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   <div class="wrap">
     <div class="contact rv" id="contact-card">
       <h2>Есть вопрос или отзыв?</h2>
-      <p class="contact-sub">Напишите нам — сообщение уйдёт команде, ответим на вашу почту. Без спама и рассылок.</p>
-      <p class="contact-ok" id="contact-ok" tabindex="-1" hidden>Спасибо! Мы получили ваше сообщение и ответим на указанный e-mail.</p>
-      <p class="contact-err" id="contact-err" role="alert" tabindex="-1" hidden>Сообщение не ушло. Проверьте связь и попробуйте ещё раз — текст остался в поле.</p>
-      <p class="contact-err" id="contact-err-busy" role="alert" tabindex="-1" hidden>Форма сейчас занята, сообщение не ушло. Попробуйте через минуту — текст остался в поле.</p>
+      <p class="contact-sub">Напиши нам — сообщение уйдёт команде, ответим на твою почту. Без спама и рассылок.</p>
+      <p class="contact-ok" id="contact-ok" tabindex="-1" hidden>Спасибо! Мы получили твоё сообщение и ответим на указанный e-mail.</p>
+      <p class="contact-err" id="contact-err" role="alert" tabindex="-1" hidden>Сообщение не ушло. Проверь связь и попробуй ещё раз — текст остался в поле.</p>
+      <p class="contact-err" id="contact-err-busy" role="alert" tabindex="-1" hidden>Форма сейчас занята, сообщение не ушло. Попробуй через минуту — текст остался в поле.</p>
       <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
         <input type="hidden" name="subject" value="UchiSamBot contact form" />
         <input type="hidden" name="from_name" value="UchiSamBot website" />
         <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/ru/?sent=1#contact-card" />
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
-        <label class="sr-only" for="cf-email">Ваш e-mail</label>
+        <label class="sr-only" for="cf-email">Твой e-mail</label>
         <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
-        <label class="sr-only" for="cf-msg">Ваше сообщение</label>
-        <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Ваш вопрос, отзыв или жалоба…"></textarea>
+        <label class="sr-only" for="cf-msg">Твоё сообщение</label>
+        <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="Твой вопрос, отзыв или жалоба…"></textarea>
         <button type="submit" class="btn">Отправить</button>
         <!-- Текст кнопки на время отправки (24.10): показывается только пока ждём ответ,
              берётся из словаря языка страницы, а не из JS (вторая копия текстов запрещена). -->
         <span id="cf-sending" hidden>Отправляем…</span>
       </form>
-      <p class="contact-note"><span>Используем ваш e-mail только чтобы ответить на обращение.</span> <a href="../privacy.html#ru">Политика конфиденциальности</a></p>
+      <p class="contact-note"><span>Используем твой e-mail только чтобы ответить на обращение.</span> <a href="../privacy.html#ru">Политика конфиденциальности</a></p>
     </div>
   </div>
 </section>
