@@ -358,8 +358,8 @@ def jsonld(d: dict, lang: str) -> str:
          "inLanguage": lang,
          "mainEntity": faq_entities(d, lang)},
     ]
-    return '<script type="application/ld+json">\n' + json.dumps(
-        {"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False) + "\n</script>"
+    return json.dumps({"@context": "https://schema.org", "@graph": graph},
+                      ensure_ascii=False)
 
 
 def shot_src(n: str, lang: str) -> str:
@@ -542,8 +542,12 @@ def bake(src: str, lang: str, dicts: dict) -> str:
     out = re.sub(r'<meta name="twitter:image" content="[^"]*">',
                  f'<meta name="twitter:image" content="{og_img}">', out)
 
-    # 5) JSON-LD
-    out = re.sub(r'<script type="application/ld\+json">.*?</script>', jsonld(d, lang), out, flags=re.S)
+    # 5) JSON-LD: единственный источник — jsonld() ниже; в шаблоне только маркер
+    #    (24.10.2026). Раньше шаблон нёс свою копию блока, и она отстала от словарей
+    #    на четыре вопроса. Подстановка по маркеру падает громко, регулярка — молча
+    #    (не совпала и всё), поэтому здесь assert, а не re.sub.
+    assert "{{JSONLD}}" in out, "в шаблоне нет маркера {{JSONLD}} — структурированные данные некуда положить"
+    out = out.replace("{{JSONLD}}", jsonld(d, lang))
 
     # 6) переключатель языка (aria-подпись — из словаря языка)
     out = re.sub(r'<div class="lang" role="group"[^>]*>.*?</div>',
