@@ -186,8 +186,15 @@ poster and re-stamps `demo/captions.json` (loop bytes, poster bytes, **and the s
 of both source screenshots**), and the sweep fails if you forget either — a redrawn
 screenshot with an old loop is red, not silent. The full 35 s demos are rebuilt the
 same way (`bash demo/build-full-demo.sh en|ru`): their scenes 1–3 are those same page
-screenshots, scene 4 (the language switch) has no page equivalent and still comes
-from `submission-kit-20261014` — see the open item in the 24 Oct entry.
+screenshots, and scene 4 (the language switch) is drawn by the shots generator into
+`tools/shots-gen/scenes/shot4[-ru].webp` from the bot's own `LANG_TITLES` — nine rows, the
+same list the bot answers with.
+
+> УСТАРЕВШЕЕ (до 24.10.2026, блок g): «scene 4 (the language switch) has no page equivalent
+> and still comes from `submission-kit-20261014`» — на той картинке было два языка
+> («Русский / English») при девяти в боте. Кадр переехал в генератор, каталог больше не
+> участвует; список публикации остался 109 файлов, потому что `scenes/` страница не
+> показывает (см. раздел «Кадр 4 полного демо» в журнале).
 
 Demo video weights: the eleven `demo/` files have soft budgets enforced by the QA sweep —
 full `uchiambot-demo.mp4` ≤1 MiB, `uchiambot-demo-ru.mp4` ≤1.5 MiB, the nine hero loops:
@@ -3980,3 +3987,71 @@ re-measured after the last three blocks' text, font and video changes: 69 checks
 skill (+58 checks), `evidence/block-20261024l/` (the before/after probe against
 `document.body.innerText`, per-page stats for all twelve pages, four negative controls), README (this
 section and the tool's bullet).
+
+## Every gate read the words; the marks between them belonged to nobody (24.10.2026)
+
+**The Russian answer to the page's most-read question had a missing comma for as long as that
+answer existed.** `q8a` — «Сколько времени занимает разбор?» — said "…разбор приходит прямо в чат,
+как правило за 5–60 секунд". The Ukrainian text of the same sentence, translated separately, says
+"як правило, за 5–60 секунд". One of the two was wrong, and the page could not tell which.
+
+**Why no gate saw it.** Every gate counts words. Prices are compared with `tools/prices.json`, the
+free count is pinned in five keys, the claim registry knows which verbs may not describe the bot,
+the glyph gate knows every character against a declared `unicode-range`, the reading copy proves
+which text the visitor actually sees. Between those words sit spaces, commas, dashes and quotation
+marks — and nobody owned them. The sweep stood at 2 526 checks and not one of them looked at a
+comma, because a comma is not a claim.
+
+**Found by building the missing gate, not by reading harder.** A typographic probe over the nine
+dictionaries (1 116 strings) and the twelve visible pages returned exactly one violation — the
+comma. Everything else was already clean: no double spaces, no space before a mark, no `...` where
+the ellipsis belongs, no hyphen between digits in place of the en dash, no unpaired «ёлочки» or
+brackets, no straight quote in a language that uses guillemets.
+
+**Fixed.** The comma is in `src/locales/ru.json` (`q8a`); the rebuild moved `ru/index.html`, its
+markdown twin and `tools/lastmod.json` and nothing else, and `tools/build.py --check` reproduces all
+24 generated files.
+
+**The gate — 22 new sweep checks.** Nine of them read a whole dictionary each, twelve read a page
+through `tools/page-text.py` (the same reader pass three uses, so template literals, the 404 and
+both halves of the bilingual legal pages are covered, with the quote rules chosen by the script of
+each line), and one floor check refuses to pass if the dictionaries were not all read. The classes
+are the mechanical ones above plus a short, deliberately unambiguous list of Russian and Ukrainian
+introductory phrases that always take a comma. "например" and "кстати" are **not** in that list: in
+parentheses and after a dash they need no comma, and a gate that cries on correct text stops being
+read.
+
+**Each class proven to fail on a copy of the tree** (`LANDING_ROOT`, no site file touched): a double
+space in the English `nav.how` → red, naming the key; the comma removed from the Russian dictionary
+→ red, naming `q8a`; the same sentence reverted in the built page → red on the page check with the
+sentence quoted. Three reds, each naming its own string.
+
+**What it still cannot prove.** Grammar: cases, agreement, word order, and the commas of
+constructions the short list does not name. Nor whether a translation means what the English means.
+It is a second pair of eyes on the marks, not a proofreader.
+
+**Numbers after the block.** Sweep **2 548 checks / 0 failed** (2 526 before; the only red before
+publishing was the live-site check, which compares the published page with the tree). 1 116
+dictionary strings and 12 pages are read for punctuation on every run.
+
+**Also in this block.** The *Editing* note above still claimed that scene 4 of the full demo comes
+from `submission-kit-20261014`. That open item was closed the same day (block g) and
+`demo/build-full-demo.sh` has read `tools/shots-gen/scenes/shot4[-ru].webp` since; the note now says
+what is true, and the old wording sits under it with its date instead of being deleted.
+
+**Found, and not fixable here — the words belong to the bot, not to the site.** The first screenshot
+on every language page is the bot's own greeting, drawn from `bot/i18n.py` / `bot/i18n_extra.py`. In
+three of the nine languages that greeting still promises that the bot *solves*: pt "resolvo
+problemas passo a passo", hi "सवालों को कदम-दर-कदम हल करता हूँ", tr "soruları adım adım çözüyorum" —
+the exact claim this site removed from its own step 3 and its meta description in the previous block
+(the claim registry bans those very verb forms). The Turkish menu button is labelled "🧠 Soruyu adım
+adım çöz" where the other eight say *break down*. So the page says "teaches, does not solve" and its
+own picture shows the bot saying the opposite. The picture is a quote, and a quote cannot be
+corrected on the site without correcting its source: three lines in the bot, then
+`gen_shots.py --langs pt,hi,tr --apply --stamp`, three loops rebuilt and a sweep. The bot's service
+restart is the owner's command — cron cannot restart systemd — and the bot lives outside this
+repository, so the change is reported rather than made here.
+
+**Files.** `src/locales/ru.json`, `ru/index.html` + `ru/index.html.md` (build), `tools/lastmod.json`,
+`scripts/landing-sweep.py` in the `stars-bots-ops` skill (+22 checks), `evidence/block-20261024m/`
+(the nine reading copies, two typographic probes, the negative-control run).
