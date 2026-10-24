@@ -4322,3 +4322,67 @@ carries the current build.
 `scripts/landing-first-screen.py` in the `stars-bots-ops` skill; `evidence/block-20261024q/`
 (the run before, the three-mutation copy, the live runtime positive and negative, the first-screen
 positive and negative, and the four probes that searched the site before any gate was written).
+## The phone on its side had no button (24.10.2026)
+
+The previous block closed the first screen **upright** and said in its own report that the phone on
+its side had only ever been measured for three languages, on one size. That gap was the block's
+work: measure the first screen in **landscape** for all nine languages, on two real screens.
+
+**What the measurement found.** At 844×390 (an iPhone on its side) and 740×360 (an ordinary Android
+on its side) the hero button of three languages ended below the bottom edge:
+
+| language | 844×390 | 740×360 |
+|---|---|---|
+| pt | 392 vs 390 — 2 px past | 378 vs 360 — 18 px past |
+| vi | 392 vs 390 — 2 px past | 378 vs 360 — 18 px past |
+| uk | 421 vs 390 — **31 px past** | 407 vs 360 — **47 px past** |
+
+The button is 55 px tall, so on the Ukrainian page held sideways it was almost entirely off screen
+at the moment the page opened. Nothing was broken in the markup: the hero in landscape is a single
+centred column, and the vertical budget simply ran out — 63 px header + 34 px hero padding + a
+two-line 40 px heading (96 px) + a four-line lead (115 px) + its 26 px bottom margin = 334 px of a
+360 px screen; the button started at 352.
+
+**The fix** is one media query, `@media(max-height:430px) and (orientation:landscape)`: header
+62→52 px, hero padding 34→16 px, heading `clamp(26px,4.6vw,34px)` instead of 40, lead 17 px with
+10/16 margins. The button now ends at 273 px on both landscape screens: 87 and 117 px of headroom.
+Portrait (640 and 844 tall) and desktop (window height above 430) are outside the query — checked by
+screenshot at 390×844 and 1440×900, both unchanged. A laptop window 1000×400 will get the compact
+hero too; that is a deliberate default, noted for the owner.
+
+**The gate grew from 18 checks to 36.** `scripts/landing-first-screen.py` now measures four screens
+per language: 390×844, 360×640, 844×390, 740×360 — the hero button, heading, lead and video
+positions printed for each.
+
+**Proven to fail.** A real copy of the tree (`cp -a`), the new rule cut out of the copy's
+`index-src.html`, an honest rebuild of the copy, the battery run against it with `LANDING_ROOT`:
+**six problems, exit 1**, naming exactly `land-844x390/pt, vi, uk` and `land-740x360/pt, vi, uk`.
+With the rule in place the same battery is 36 / 0.
+
+**The instrument was wrong once, too.** The first version of that negative control made the copy
+with `cp -al`. `tools/build.py` writes the finished pages in place, and through a hardlink that
+rewrote the **original** tree — the sweep immediately went red with «на диске не то, что даёт
+свежая сборка» on ten pages. The copy for a negative control has to be a real copy (`cp -a`); a
+hardlinked copy is only safe while nothing writes to it. Restored by an honest rebuild; the lesson
+went into the skill next to the negative-control rule.
+
+**Also re-checked after the shorter header.** The language menu computes its own height limit from
+the viewport and the sticky bar: at 740×360 it now caps at 292 px, scrolls, its last item is
+reachable, the sticky bar does not cover it, and there is no horizontal scroll — 0 problems across
+five screens (landscape en, hi, uk; portrait ru, vi).
+
+**What it cannot prove.** That the rest of the landscape page is fine — only the first screen, the
+menu and the sticky bar were measured. That 430 px is the right cut-off: it is the height where a
+landscape phone ends and a tablet window begins, not a measured threshold. And that 34 px is the
+right heading size on its side — it was chosen because 40 px took two lines and a third of the
+screen, which is taste, not a measurement.
+
+**Numbers.** Sweep **2 571 / 0**; `tools/build.py --check` 24 / 24; first screen **36 / 0**
+(negative control 6 / exit 1); live runtime **121 / 0**; live bytes 26 / 26; axe **12 pages / 0**;
+publish tree 109 files, 513 internal links. Published through `tools/publish-branch.sh` (main and
+`gh-pages`, both mirrors, `ls-remote` agrees at `e6f40ef`).
+
+**Files.** `index-src.html` (+ the nine built pages, `tools/lastmod.json`);
+`scripts/landing-first-screen.py` and `SKILL.md` in the `stars-bots-ops` skill;
+`evidence/block-20261024r/` (first screen 36, the landscape negative control, the menu regression,
+live bytes, live runtime, axe, the sweep after publishing).
