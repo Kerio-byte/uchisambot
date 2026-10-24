@@ -4386,3 +4386,64 @@ publish tree 109 files, 513 internal links. Published through `tools/publish-bra
 `scripts/landing-first-screen.py` and `SKILL.md` in the `stars-bots-ops` skill;
 `evidence/block-20261024r/` (first screen 36, the landscape negative control, the menu regression,
 live bytes, live runtime, axe, the sweep after publishing).
+
+## The phone on its side was wider than the breakpoint (24.10.2026)
+
+The previous block closed the sideways phone: it measured 844×390 and 740×360, found the hero button
+under the bottom edge on pt, vi and uk, and added the compact landscape query. Both of those screens
+are **narrower than 860 px** — and 860 is exactly where the layout stops being a phone: from 861 px
+the hero is a two-column desktop grid, the language switcher is a dropdown, and the sticky bar is
+switched off.
+
+A sideways phone is often wider than that. iPhone 16 is 874×402, iPhone XR/11/XS Max is 896×414,
+Pixel 7/8 are 915×412, iPhone 13/14 Pro Max is 926×428, iPhone 14/15/16 Pro Max is 932×430. On those
+the visitor got the **desktop** hero: two columns, `align-items:center` on `.hero-in`, so the text
+column was centred against the 648 px phone on its right and started 130 px down the page. The hero
+button ended at **435 px** (screen 402), **445 px** (screen 430), **459 px** (screens 412 and 414) —
+under the bottom edge in **all nine languages**: 45 measurements, 45 failures. And the sticky button
+is not there to save it, because it lives inside `max-width:860px`.
+
+Nothing was wrong with the markup; the media query was asking the wrong question. Width does not
+answer "is this screen short?" — the compact query already existed, but it only sized the type, and
+the two columns stayed centred. **The fix is one declaration inside it:
+`.hero-in{align-items:start}`.** After it the button ends at 258..341 px on all five wide screens —
+61 to 120 px of headroom per language.
+
+**The gate is a device table now, not round numbers.** `scripts/landing-first-screen.py` went from
+4 screens / 36 checks to **14 screens / 252 checks**: two upright (390×844, 360×640) and twelve
+sideways — 568×320 (iPhone SE), 667×375 (8/SE2-3), 736×414 (6/7/8 Plus), 812×375 (X/11 Pro/mini),
+844×390 (12/13/14), 851×393 (14 Pro/15), 874×402 (16), 896×414 (XR/11/XS Max), 915×412 (Pixel 7/8),
+926×428 (13/14 Pro Max), 932×430 (14/15/16 Pro Max), 740×360 (cheap Android). Each pair asserts the
+hero button is entirely above the bottom edge and that the page is no wider than the screen; the
+run also prints a per-screen worst language and its headroom, so 126 rows do not have to be read.
+
+**Proven to fail.** A real copy (`cp -a`), the one declaration cut out of the copy, an honest rebuild
+of the copy, the battery against it with `LANDING_ROOT`: **45 problems, exit 1**, naming exactly
+`land-874x402`, `land-896x414`, `land-915x412`, `land-926x428`, `land-932x430` × nine languages. With
+the declaration in place the same battery is 252 / 0.
+
+**The menu in the same band.** At those widths the header is the desktop one, so the language
+switcher is its own dropdown — nobody had opened it on a 430 px screen. Measured at 932×430 and
+874×402: nine entries, the list caps at 338 px and 292 px, scrolls with the "more below" shadow, the
+last language is reachable, Escape closes and returns focus to the summary. Added to
+`landing-a11y-extra.py` (two languages at 932×430 plus a page-error check): **170 → 187 checks**,
+still 0 failed.
+
+**What it cannot prove.** That iOS Safari lays these out the same way — everything here is Chromium;
+that 430 px is the right cut-off (it is the tallest landscape phone, not a measured threshold); that
+the rest of the page below the hero is fine in landscape — only the first screen and the menu were
+measured; and that the desktop two-column hero is the right layout for a sideways phone at all —
+this block kept it and only stopped it from centring, because a 900 px wide screen has room for two
+columns even when it is 400 px tall.
+
+**Numbers.** Sweep **2 571 / 0**; `tools/build.py --check` 24 / 24; first screen **252 / 0**
+(negative control 45 / exit 1); a11y-extra **187 / 0**; WCAG 2.2 **43 / 0**; viewports-extra
+**94 / 0**; axe **12 pages / 0**; live runtime **121 / 0**; live bytes **26 / 26**; publish tree
+109 files, 513 internal links. Published through `tools/publish-branch.sh` (main and `gh-pages`,
+both mirrors, `ls-remote` agrees at `017dcea` / `9a08cb9`).
+
+**Files.** `index-src.html` (+ the nine built pages, `tools/lastmod.json`);
+`scripts/landing-first-screen.py` (rewritten to the device table), `scripts/landing-a11y-extra.py`
+(+the 932×430 menu run) and `SKILL.md` in the `stars-bots-ops` skill;
+`evidence/block-20261024s/` (first screen 252, the wide negative control, the menu at 932×430,
+live bytes, live runtime, the sweep after publishing, four hero screenshots).
