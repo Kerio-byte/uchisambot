@@ -22,9 +22,11 @@ Live: https://kerio-byte.github.io/uchisambot/
   tracking. `python3 tools/build.py --check` renders the same 24 files into memory and
   compares them with the disk without writing a byte (23.10.2026); the sweep runs it, so
   a source edited without a rebuild is red instead of silently leaving the old page.
-- `tools/page-text.py` — flattens a built page into its visible text, one block per line, so it
-  can be read as an article rather than as markup (added 23.10.2026 for the meaning pass);
-  read-only, not part of the build: `python3 tools/page-text.py ru/index.html`.
+- `tools/page-text.py` — flattens a built page into the text a visitor can read, one block per
+  line, so it can be read as an article rather than as markup (added 23.10.2026 for the meaning
+  pass, rewritten 24.10.2026 on `HTMLParser`: entities decoded, `hidden`/`.sr-only`/`.hp` subtrees
+  skipped, a line ends where a block ends); read-only, not part of the build:
+  `python3 tools/page-text.py ru/index.html`. Its output is what five sweep checks read.
 - `tools/publish-tree.py` — the one list of what counts as the site (109 files), and `--check`
   for it: every listed file exists, no page links into the workshop, every internal reference
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
@@ -3914,3 +3916,67 @@ it asks to look instead of answering 0.
 grammatical; and that a woff2 file behind a declared range really contains the glyph — for
 that the browser battery remains the only answer, which is why it now measures the whole page
 instead of its visible half.
+
+## The page the editors read was not the page the visitor sees (24.10.2026)
+
+**The tool had three ways of showing something that is not on the page.** `tools/page-text.py` is
+not part of the site — it is the eye of pass three, the pass that reads the nine languages as an
+article instead of markup. It stripped tags with a regular expression, and the regex produced:
+
+1. **Entity names instead of characters.** The footer separates "Privacy Policy" and "Terms of
+   Service" with `&middot;`; the visitor sees `·`, the meaning pass read `&middot;` — three times
+   per page. No gate could see it: every gate reads the built page with its own code, where
+   `html.unescape` is already applied. The one reader that did not unescape was the one a human
+   uses.
+2. **Text the visitor never sees, printed as page text.** `#contact-ok`, `#contact-err`,
+   `#contact-err-busy` and the video stop button carry `hidden` until their minute comes; the tool
+   printed "Thank you! We received your message…" and "The message was not sent…" as ordinary
+   sentences, glued into the same paragraph as the question "Questions or feedback?" — a reader
+   could not tell where the page ends and the form's future state begins.
+3. **Random granularity.** The regex matched the outermost block and swallowed everything nested
+   inside it, so the whole FAQ came out as **one line of 2 176 characters** (English; 2 045
+   Russian, 2 059 Hindi) and the header as one line of 300. "One block per line" — the tool's own
+   contract — was untrue exactly where the block was a `div`.
+
+**Fixed** by parsing instead of pattern-matching: `HTMLParser` with `convert_charrefs=True`
+(entities become characters), subtrees of `hidden`, `.sr-only` and `.hp` skipped (screen-reader-only
+and honeypot text is not page text), a line closed by the **end** of a block tag rather than its
+start — so a step number stays with its heading ("1 Открой бота") instead of hanging alone — and a
+space inserted between adjacent inline elements, because `<span>English</span><span>Русский</span>`
+has no whitespace in the source and came out as "EnglishРусский".
+
+Result: **51 → 101 lines** per language page, longest line **2 176 → 297** (en), 2 045 → 270 (ru),
+2 059 → 319 (hi); entity names 3 → 0; the form's hidden states no longer inside the reading. The
+legal pages keep their long clauses (privacy's longest is 935 characters in both versions — a
+clause, not a swallowed section).
+
+**Five gates, all in the sweep (58 checks).** Entities decoded; hidden-block text absent — and the
+hidden text is taken **from the page** (`<tag … hidden>…</tag>`), so a new hidden state is covered
+the day it is written; a line floor per page (90 / 12 / 70 / 60), because a tool that prints half a
+page is not "empty", it is "not read"; the page's own `<h1>` must reach the output; and on the nine
+language pages no line may exceed 400 characters — twice the longest honest paragraph.
+
+**Each gate proven to fail for its own reason** (a copy of the tree through `LANDING_ROOT`, only
+the tool swapped):
+- the old regex tool back → **38 red**: entities (9 pages), hidden leaks (9), line floor (51 lines),
+  longest line 2 176;
+- `hidden` no longer skipped → **9 red**, one per language page, each naming the first leaked
+  sentence;
+- output truncated to 200 characters → **17 red** (floor, and the headline that never arrived);
+- `h1` skipped → **10 red**, each naming the missing headline.
+
+**What it cannot prove.** That the reading is what the eye sees: CSS is not modelled, so the video
+stop button prints both of its labels ("Пауза" and "Играть") although `data-state` shows one, and
+`display:none` from a stylesheet is unknown to it. Closed `<details>` are printed deliberately — the
+meaning pass has to read the FAQ answers, not only the questions — which is why its output is a
+reading copy, not a substitute for a screenshot; the browser batteries remain the only answer to
+"what is on the screen".
+
+**Numbers after the block.** Sweep 2 526 checks / 0 failed (2 468 before it). Core Web Vitals
+re-measured after the last three blocks' text, font and video changes: 69 checks / 0 failed, LCP
+192–336 ms on desktop and 1 048 ms on the throttled mobile profile, CLS ≤ 0.0055.
+
+**Files.** `tools/page-text.py` (rewritten), `scripts/landing-sweep.py` in the `stars-bots-ops`
+skill (+58 checks), `evidence/block-20261024l/` (the before/after probe against
+`document.body.innerText`, per-page stats for all twelve pages, four negative controls), README (this
+section and the tool's bullet).
