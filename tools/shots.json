@@ -1,5 +1,5 @@
 {
- "note": "Реестр макетов чата: sha256 каждого img/shotN[-<lang>].webp и ровно те строки, что нарисованы (тексты бота + кернед-строки макета). Пишется только генератором: python3 tools/shots-gen/gen_shots.py ... --apply --stamp. Свип сверяет его с bot/ и с байтами файлов.",
+ "note": "Реестр макетов чата: sha256 каждого img/shotN[-<lang>].webp и ровно те строки, что нарисованы (тексты бота + кернед-строки макета). Кадр 4 (экран /lang) лежит в tools/shots-gen/scenes/ — страница его не показывает. Пишется только генератором: python3 tools/shots-gen/gen_shots.py ... --apply --stamp. Свип сверяет его с bot/ и с байтами файлов.",
  "menu_keys": [
   "free_examples",
   "solve",
@@ -24,7 +24,8 @@
     "answer": "📚 Here's your breakdown:",
     "task_type_1": "explain in simple words",
     "task_type_2": "step-by-step",
-    "task_type_3": "check my solution"
+    "task_type_3": "check my solution",
+    "lang_menu": "🌍 Choose your language:"
    },
    "canned": {
     "header": "Study Helper",
@@ -44,8 +45,23 @@
     "3": {
      "file": "shot3.webp",
      "sha256": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784"
+    },
+    "4": {
+     "file": "tools/shots-gen/scenes/shot4.webp",
+     "sha256": "fe00b7c0ef9281de2e2a03e44d9ff0b57f40d185684d6851908fde52339524ab"
     }
-   }
+   },
+   "lang_titles": [
+    "🇷🇺 Русский",
+    "🇬🇧 English",
+    "🇪🇸 Español",
+    "🇧🇷 Português",
+    "🇮🇳 हिन्दी",
+    "🇮🇩 Bahasa Indonesia",
+    "🇹🇷 Türkçe",
+    "🇻🇳 Tiếng Việt",
+    "🇺🇦 Українська"
+   ]
   },
   "ru": {
    "texts": {
@@ -61,7 +77,8 @@
     "answer": "📚 Вот разбор:",
     "task_type_1": "объяснить тему простыми словами",
     "task_type_2": "разобрать по шагам",
-    "task_type_3": "проверить моё решение"
+    "task_type_3": "проверить моё решение",
+    "lang_menu": "🌍 Выбери язык / Choose language:"
    },
    "canned": {
     "header": "Учебный помощник",
@@ -81,8 +98,23 @@
     "3": {
      "file": "shot3-ru.webp",
      "sha256": "e14c03253ab83ccb586dda848be17f313bdf4da3a26227d5ff828ffbb17b472a"
+    },
+    "4": {
+     "file": "tools/shots-gen/scenes/shot4-ru.webp",
+     "sha256": "1147fe85db8a2f96199e06c71d077508bcd5323d2e932c077b54c9f21e201519"
     }
-   }
+   },
+   "lang_titles": [
+    "🇷🇺 Русский",
+    "🇬🇧 English",
+    "🇪🇸 Español",
+    "🇧🇷 Português",
+    "🇮🇳 हिन्दी",
+    "🇮🇩 Bahasa Indonesia",
+    "🇹🇷 Türkçe",
+    "🇻🇳 Tiếng Việt",
+    "🇺🇦 Українська"
+   ]
   },
   "es": {
    "texts": {
