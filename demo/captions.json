@@ -70,17 +70,17 @@
     },
     "pt": {
       "video": "uchiambot-demo-web-pt.mp4",
-      "sha256": "27cb2ac503292b7d2c2f5b792304b4d882d02aa21d106c0a2a63cbe90c0c8407",
-      "bytes": 458476,
+      "sha256": "ec630d18f2387fe02a6d7d04c313e7282f19f565eba1186c6f5f7b1d8bc74330",
+      "bytes": 454300,
       "sources": {
         "shot2": "shot2-pt.webp",
-        "shot2_sha256": "85823bdf7904d980834ee7b6b4d70780483bbf336ac65fa0f1ba95f633575be4",
+        "shot2_sha256": "3c25c01999a7553621490d95cb103ebaac690e67fbe4b80cacf8bb9522bbf1f1",
         "shot3": "shot3-pt.webp",
-        "shot3_sha256": "3f43c1dc39c426e0961ffddce001784dfac85ad9fdb49adc0ed34da677a7a766"
+        "shot3_sha256": "8fbec2f349a40e1dbf604a68bd6d837cb6c1389c87abf1def4f2e372462e700a"
       },
       "poster": "demo-poster-pt.webp",
-      "poster_sha256": "142829a0b0fb4194e71ff2e52ffd1285593d2289dead3a01d0c8ba1478f679b5",
-      "poster_bytes": 34770,
+      "poster_sha256": "4ef8f97d78589410a155138b6f69f1e4d6ccaf9ae8cc3d70c6e38f754e995e7c",
+      "poster_bytes": 34638,
       "joiner": " · ",
       "tail": "texto ou foto",
       "cap1": "2 · Envie uma tarefa — texto ou foto",
@@ -92,17 +92,17 @@
     },
     "hi": {
       "video": "uchiambot-demo-web-hi.mp4",
-      "sha256": "2b137c060c069d2e81d05bc4bbb26e10c9881cb1ac3c40fb30277256df72c3af",
-      "bytes": 356519,
+      "sha256": "3fcc50f210481e3cbc39253a4d1b5c3b9893be50c48f1a6ce549c6c29a516809",
+      "bytes": 353098,
       "sources": {
         "shot2": "shot2-hi.webp",
-        "shot2_sha256": "1783a556d11937e3bc4d9d5c44cc6dc565308dbeb74923a2633055ae23a11211",
+        "shot2_sha256": "26721eb2ccf503899577da9ecf661e3cc5b42a0f0707a78001d5c0bf5e125c2f",
         "shot3": "shot3-hi.webp",
-        "shot3_sha256": "f9097027414ba5d8e8d6aa31e7b8a665664cdedbd7497e94cbcbc29b2968e8ff"
+        "shot3_sha256": "55997729ee1d4b838e694936c0b9837d943cb9eb1db1f4e7918d96a12c1e5d20"
       },
       "poster": "demo-poster-hi.webp",
-      "poster_sha256": "4b4cd5f13ca00e797127df93d0c43c724bea578070ca61c5efba27c35ccb235a",
-      "poster_bytes": 25146,
+      "poster_sha256": "823b9cc65e93f1ad64564087c4da1c5db1b2fdd483b57b11482c6ee5dc9e8f4d",
+      "poster_bytes": 25132,
       "joiner": ". ",
       "tail": "टेक्स्ट या फोटो",
       "cap1": "2. सवाल भेजें — टेक्स्ट या फोटो",
@@ -136,17 +136,17 @@
     },
     "tr": {
       "video": "uchiambot-demo-web-tr.mp4",
-      "sha256": "358780831e571e2c3e7531cd00612c69de4bf782804b83ec460b4b8983cd0499",
-      "bytes": 399947,
+      "sha256": "235da1c1a9da4d13dcb64c2d8e84e58348d2d9de5eb62de14c71d42de61b87d7",
+      "bytes": 396614,
       "sources": {
         "shot2": "shot2-tr.webp",
-        "shot2_sha256": "8611b200acf08c3acc145a5457d05baff171a1f9c7108e87d7f8a97e1fdc1e50",
+        "shot2_sha256": "8f829de8d5f3c24ce8b99d49ed7f709b67b23a3d5e9af74e1b1f1213ad44eca5",
         "shot3": "shot3-tr.webp",
-        "shot3_sha256": "fd226b93a1e83df7864507bf8cfd39ad888f7806ae12dcb1fba8f2ee13d8c470"
+        "shot3_sha256": "8c3bad0d170dd0a0ef652fb728d909b6ae875b329af5226b6d907410fbd0c228"
       },
       "poster": "demo-poster-tr.webp",
-      "poster_sha256": "630a8e22e47329a4958b36f3ba3bce11023248a2e45fcb03cbb11890a86c1f1a",
-      "poster_bytes": 30204,
+      "poster_sha256": "9d7fe658bfaff4dff56ad8946b21fee81dec895be9c1e823ad79084b942c423d",
+      "poster_bytes": 29912,
       "joiner": " · ",
       "tail": "yazı ya da fotoğraf",
       "cap1": "2 · Ödevini gönder — yazı ya da fotoğraf",
