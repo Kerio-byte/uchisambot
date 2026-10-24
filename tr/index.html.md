@@ -1,6 +1,6 @@
 # UchiSamBot — adım adım ödev çözümü, Telegram'da
 
-> Ödevleri adım adım çözen, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve tekrar kartları hazırlayan bir Telegram botu. İlk 2 çözüm ücretsiz.
+> Ödevini adım adım çözmene yardımcı olan, konuları basit kelimelerle anlatan, çözümleri kontrol eden ve kartlar hazırlayan Telegram botu. İlk 2 çözüm ücretsiz.
 
 UchiSamBot ödevini adım adım çözmene yardımcı olur, konuyu basit kelimelerle anlatır, cevaplarını kontrol eder ve tekrar kartları hazırlar — tam da Telegram'ın içinde, günün her saati.
 
