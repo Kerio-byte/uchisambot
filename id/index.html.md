@@ -91,7 +91,7 @@ Tidak. Semuanya berjalan di dalam Telegram — di ponsel atau komputer.
 
 ### Apa itu Telegram Stars?
 
-Stars (⭐) adalah mata uang bawaan Telegram. Kamu isi ulang sekali di dalam Telegram — aplikasinya menawarkan pembayaran biasa (kartu, App Store, atau Google Play) — lalu kamu bayar pembahasan langsung di chat. Tanpa langganan dan tanpa perpanjangan otomatis: kamu hanya membayar saat kamu memang mau. Telegram Premium tidak diperlukan.
+Stars adalah mata uang bawaan Telegram. Kamu isi ulang sekali di dalam Telegram — aplikasinya menawarkan pembayaran biasa (kartu, App Store, atau Google Play) — lalu kamu bayar pembahasan langsung di chat. Tanpa langganan dan tanpa perpanjangan otomatis: kamu hanya membayar saat kamu memang mau. Telegram Premium tidak diperlukan.
 
 ### Dari mana mendapatkan Stars?
 
