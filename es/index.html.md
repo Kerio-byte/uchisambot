@@ -91,7 +91,7 @@ No. Funciona dentro de Telegram — en tu teléfono o computadora.
 
 ### ¿Qué son Telegram Stars?
 
-Stars (⭐) son la moneda interna de Telegram. Se recargan una vez dentro de Telegram — la app ofrece el pago habitual (tarjeta, App Store o Google Play) — y luego pagas los desgloses directamente en el chat. Sin suscripción ni renovación automática: solo pagas cuando tú decides. No hace falta Telegram Premium.
+Stars son la moneda interna de Telegram. Se recargan una vez dentro de Telegram — la app ofrece el pago habitual (tarjeta, App Store o Google Play) — y luego pagas los desgloses directamente en el chat. Sin suscripción ni renovación automática: solo pagas cuando tú decides. No hace falta Telegram Premium.
 
 ### ¿Dónde consigo Stars?
 
