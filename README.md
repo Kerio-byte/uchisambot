@@ -3043,3 +3043,73 @@ privacy and terms speak «вы» in Russian on purpose and sit outside the regis
 notices at all — someone who came for homework help may never register the change; the point is that
 the page no longer reads like two companies.
 
+## Step 3 said the bot does the homework; the same page said it does not (24.10.2026)
+
+The third step of the how-it-works block is the one a parent reads as "so what does my child get",
+and in all nine languages it said the bot **solves** the task: «Бот решает по шагам», "The bot solves
+it step by step", «El bot lo resuelve», «O bot resolve», «बॉट हर स्टेप में हल करता है», «Bot
+menyelesaikannya», «Bot adım adım çözer», «Bot giải từng bước», «Бот розв'язує крок за кроком». A few
+answers further down the same dictionary the FAQ answers "Is this cheating? No" and promises that for
+solutions the bot **stops one step before the answer**; the band under the features says "Not just
+answers"; the bot's own greeting says "I teach — I don't do your homework for you". So the page
+sold the one thing it spends a whole FAQ answer denying. Turkish was the worst: the hero subtitle,
+the step title and the step description all said «çözer» / «çözüm» — a reader could finish the hero
+convinced the bot does the homework.
+
+**The fix is one verb per language, taken from the page's own word for the thing.** EN "breaks it
+down", RU «разбирает» (the bot's own verb: «разбираю задачи по шагам»), UK «розбирає», ES
+«desglosa» (as in the hero), PT «percorre a solução», HI «समझाता है और हर कदम का कारण बताता है»,
+ID «membahasnya» (as in the hero), TR «çözümü adım adım gösterir», VI «trình bày lời giải», plus one
+hero line in Turkish: «ödevini adım adım çözmene yardımcı olur» — helps you solve it, not solves it.
+**The unit's name stays.** A breakdown is «разбор» / "breakdown" / «desglose» / «çözüm» / «हल»
+because that is what the bot itself calls it in the menu and in the price list; renaming the unit is
+a product decision, not a copy edit, and a page that renames the thing the bot sells is worse than a
+page that uses the product's word.
+
+**The gate.** `tools/claims.json` — the same shape as `voice.json`: `no_solve_claim` lists the keys
+that must not claim the bot does the work (`how.s3d`, `hero.sub`) and, per language, the verb forms
+that are forbidden; `last_step` requires the answer to q10a to keep its "one step before the answer"
+phrase, so the contradiction cannot be "fixed" by deleting the promise instead of the claim. The
+sweep gained 18 checks (2193 → 2211): registry readable, registry names its keys, registry covers
+all nine languages, every pattern compiles, and two checks per language. Reading the registry is not
+enough — a missing language or an uncompilable pattern would make the gate blind while green.
+
+**Controls.** Five mutations in five copies of the tree, each rebuilt so the build check stayed
+clean, each red with its own line:
+
+- ru `how.s3d` back to «Бот решает по шагам…» → red `claim: step 3 does not promise a solution`,
+  naming `how.s3d: «\bрешает\b»`;
+- tr `hero.sub` back to «…adım adım çözer…» → red for tr, naming `hero.sub: «\bçözer\b»`;
+- en `q10a` with the last-step phrase cut → red `claim: the last step stays with the student`;
+- tr dropped from the registry's `forbid` → red `claims registry covers nine languages`, printing
+  which eight are left;
+- a broken regex (`[незакрытый`) → red `claims registry patterns compile`.
+
+The fifth control found a defect in the gate itself: the first version compiled patterns inside the
+check but still fed the raw strings to `re.search`, so an uncompilable pattern killed the sweep with
+a traceback instead of producing a red line — the run was non-zero, but 2,200 checks never ran and
+nothing named the problem. Patterns are now compiled once, and the per-language loop only ever sees
+compiled objects.
+
+**Checked after the change.** `tools/build.py` rewrote the nine pages and their nine md twins, then
+`--check` matched all 24 files. Sweep 2211 / 0. Nu validator: 126 messages,
+all known-false trailing slashes, 0 real findings. en-leftovers 0. The visual pass over all nine
+languages at 420 px and 1440 px: PROBLEMS 0, badges 8/8 in two rows on desktop and four on mobile,
+no overflow outside the shots slider, no clipped text. The how-it-works block was photographed separately for
+every language (`evidence/visual-20261024d-claim/how/`) and measured card by card: no `line-clamp`,
+no clipped description, no card changing the row height. Published with `tools/publish-branch.sh`
+(115 files, both mirrors, source read back as `gh-pages/`); `landing-live-bytes.py` then compared
+the live site with the tree: 26 files, 26 match.
+
+**What it cannot prove.** That a reader ever took "solves" for a promise — the sentence also says
+"explains every move", and plenty of education products word it that way. That the new verb is the
+best one: it is a phrasing choice, reversible per language in one word. That the Turkish page is now
+consistent — its FAQ still says «bot soruyu çözerken cevaptan bir adım önce durur», and the bot's own
+Turkish greeting says «soruları adım adım çözüyorum»; those live in the bot, not on the landing, and
+changing them is a product decision. And that the unit's name («çözüm», «हल») does not carry the same
+"it does the homework" reading all by itself — that is the question the wording change cannot answer.
+
+**Files.** `src/locales/{en,ru,uk,es,pt,hi,id,tr,vi}.json` (one key each, tr two), `tools/claims.json`
+(new), `tools/lastmod.json`, the nine rebuilt pages and their md twins, `README.md`, the skill
+`stars-bots-ops`: `references/landing-qa.md` (section 24.10), `scripts/landing-sweep.py` (+18).
+

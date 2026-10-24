@@ -12,7 +12,7 @@ UchiSamBot desglosa tus tareas paso a paso, explica el tema con palabras sencill
 
 1. **Abre el bot** — Toca el botón y pulsa Start — no hay que instalar nada.
 2. **Envía tu tarea** — Escribe tu pregunta o haz una foto del ejercicio.
-3. **Recibe el desglose** — El bot lo resuelve paso a paso y explica cada acción.
+3. **Recibe el desglose** — El bot lo desglosa paso a paso y explica cada acción.
 4. **Ponte a prueba** — Pide que revisen tu solución, o consigue un resumen y tarjetas de repaso.
 
 ## Qué hay dentro

@@ -12,7 +12,7 @@ UchiSamBot breaks down your homework step by step, explains the topic in simple 
 
 1. **Open the bot** — Tap the button and press Start — nothing to install.
 2. **Send a task** — Type your question or snap a photo of the problem.
-3. **Get a breakdown** — The bot solves it step by step and explains every move.
+3. **Get a breakdown** — The bot breaks it down step by step and explains every move.
 4. **Check yourself** — Ask to check your solution, or get a summary and flashcards.
 
 ## What's inside
