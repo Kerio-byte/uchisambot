@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में</title>
+<meta name="description" content="Telegram बॉट, जो होमवर्क को स्टेप-बाय-स्टेप समझाता है, हर विषय को आसान शब्दों में बताता है, जवाब जाँचता है और फ्लैशकार्ड बनाता है। पहले 2 हल मुफ़्त।">
+<link rel="canonical" href="https://kerio-byte.github.io/uchisambot/hi/">
+<link rel="alternate" hreflang="en" href="https://kerio-byte.github.io/uchisambot/">
+<link rel="alternate" hreflang="ru" href="https://kerio-byte.github.io/uchisambot/ru/">
+<link rel="alternate" hreflang="es" href="https://kerio-byte.github.io/uchisambot/es/">
+<link rel="alternate" hreflang="pt" href="https://kerio-byte.github.io/uchisambot/pt/">
+<link rel="alternate" hreflang="hi" href="https://kerio-byte.github.io/uchisambot/hi/">
+<link rel="alternate" hreflang="id" href="https://kerio-byte.github.io/uchisambot/id/">
+<link rel="alternate" hreflang="tr" href="https://kerio-byte.github.io/uchisambot/tr/">
+<link rel="alternate" hreflang="vi" href="https://kerio-byte.github.io/uchisambot/vi/">
+<link rel="alternate" hreflang="uk" href="https://kerio-byte.github.io/uchisambot/uk/">
+<link rel="alternate" hreflang="x-default" href="https://kerio-byte.github.io/uchisambot/">
+<link rel="describedby" href="https://kerio-byte.github.io/uchisambot/llms.txt">
+<link rel="alternate" type="text/markdown" href="https://kerio-byte.github.io/uchisambot/hi/index.html.md">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kerio-byte.github.io/uchisambot/hi/">
+<meta property="og:title" content="UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में">
+<meta property="og:description" content="Telegram बॉट, जो होमवर्क को स्टेप-बाय-स्टेप समझाता है, हर विषय को आसान शब्दों में बताता है, जवाब जाँचता है और फ्लैशकार्ड बनाता है। पहले 2 हल मुफ़्त।">
+<meta property="og:image" content="https://kerio-byte.github.io/uchisambot/img/og-hi.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3D5AFE">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta property="og:site_name" content="UchiSamBot">
+<meta property="og:locale" content="hi_IN">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="id_ID">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="uk_UA">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में">
+<meta name="twitter:title" content="UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में">
+<meta name="twitter:description" content="Telegram बॉट, जो होमवर्क को स्टेप-बाय-स्टेप समझाता है, हर विषय को आसान शब्दों में बताता है, जवाब जाँचता है और फ्लैशकार्ड बनाता है। पहले 2 हल मुफ़्त।">
+<meta name="twitter:image" content="https://kerio-byte.github.io/uchisambot/img/og-hi.png">
+<meta name="twitter:image:alt" content="UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://kerio-byte.github.io/uchisambot/#org", "name": "UchiSamBot", "url": "https://kerio-byte.github.io/uchisambot/", "logo": "https://kerio-byte.github.io/uchisambot/img/logo-512.png", "sameAs": ["https://t.me/UchiSamBot"]}, {"@type": "WebSite", "@id": "https://kerio-byte.github.io/uchisambot/#website", "url": "https://kerio-byte.github.io/uchisambot/hi/", "name": "UchiSamBot", "inLanguage": "hi", "publisher": {"@id": "https://kerio-byte.github.io/uchisambot/#org"}}, {"@type": "SoftwareApplication", "@id": "https://kerio-byte.github.io/uchisambot/#app", "name": "UchiSamBot (Study Helper)", "applicationCategory": "EducationalApplication", "operatingSystem": "Telegram", "url": "https://t.me/UchiSamBot", "inLanguage": ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"], "description": "Telegram बॉट, जो होमवर्क को स्टेप-बाय-स्टेप समझाता है, हर विषय को आसान शब्दों में बताता है, जवाब जाँचता है और फ्लैशकार्ड बनाता है। पहले 2 हल मुफ़्त।", "offers": [{"@type": "Offer", "name": "पहले 2 स्टेप-बाय-स्टेप हल", "price": "0", "priceCurrency": "XTR"}, {"@type": "Offer", "name": "एक हल", "price": "30", "priceCurrency": "XTR"}, {"@type": "Offer", "name": "5 हल का पैक", "price": "120", "priceCurrency": "XTR"}, {"@type": "Offer", "name": "15 हल का पैक", "price": "300", "priceCurrency": "XTR"}]}, {"@type": "FAQPage", "@id": "https://kerio-byte.github.io/uchisambot/#faq", "inLanguage": "hi", "mainEntity": [{"@type": "Question", "name": "क्या यह नकल करना है?", "acceptedAnswer": {"@type": "Answer", "text": "नहीं। बॉट समझाता और सिखाता है: हर स्टेप और उसके पीछे का नियम दिखाता है, ताकि अगला सवाल आप खुद हल कर सकें।"}}, {"@type": "Question", "name": "कौन-कौन से विषय हैं?", "acceptedAnswer": {"@type": "Answer", "text": "गणित, अंग्रेज़ी, भौतिकी, रसायन विज्ञान और इतिहास — और सामान्य तौर पर कोई भी स्कूली सवाल, जहाँ आप अटक जाएँ।"}}, {"@type": "Question", "name": "यह किन भाषाओं में बात करता है?", "acceptedAnswer": {"@type": "Answer", "text": "नौ भाषाएँ: रूसी, अंग्रेज़ी, स्पेनिश, पुर्तगाली, हिंदी, इंडोनेशियाई, तुर्की, वियतनामी और यूक्रेनी। कभी भी /lang से बदलें।"}}, {"@type": "Question", "name": "भुगतान कैसे करें?", "acceptedAnswer": {"@type": "Answer", "text": "Telegram Stars से, सीधे चैट में। पहले 2 हल मुफ़्त हैं; इसके बाद आप एक हल या पैक खरीद सकते हैं।"}}, {"@type": "Question", "name": "क्या कुछ इंस्टॉल करना पड़ेगा?", "acceptedAnswer": {"@type": "Answer", "text": "नहीं। यह Telegram के अंदर ही चलता है — फ़ोन या कंप्यूटर पर।"}}, {"@type": "Question", "name": "Telegram Stars क्या हैं?", "acceptedAnswer": {"@type": "Answer", "text": "स्टार्स Telegram की अंदरूनी मुद्रा हैं। इन्हें Telegram के अंदर ही एक बार टॉप-अप करें — ऐप सामान्य भुगतान के तरीक़े (कार्ड, App Store या Google Play) सुझाता है — और फिर चैट में सीधे हल के लिए भुगतान करें। कोई सब्सक्रिप्शन नहीं और कोई ऑटो-रिन्यूअल नहीं: भुगतान तभी, जब आप चाहें। इसके लिए Telegram Premium की ज़रूरत नहीं।"}}, {"@type": "Question", "name": "स्टार्स कहाँ से मिलेंगे?", "acceptedAnswer": {"@type": "Answer", "text": "सीधे चैट में: जब आप हल खरीदने के लिए टैप करेंगे, Telegram भुगतान विंडो खोलेगा और स्टार्स कम हों तो बैलेंस टॉप-अप करने का विकल्प देगा। यह बैलेंस आपके Telegram अकाउंट में रहता है और हर उस बॉट में चलता है जो स्टार्स लेता है।"}}, {"@type": "Question", "name": "हल में कितना समय लगता है?", "acceptedAnswer": {"@type": "Answer", "text": "आम तौर पर एक मिनट से भी कम: आप सवाल भेजते हैं और हल सीधे चैट में आ जाता है — आम तौर पर 5–60 सेकंड में। अगर सर्वर व्यस्त है, तो इसमें दो मिनट तक लग सकते हैं।"}}, {"@type": "Question", "name": "अगर हल पूरा न हो पाए तो क्या होगा?", "acceptedAnswer": {"@type": "Answer", "text": "कुछ मिनट बाद फिर कोशिश करें — कभी-कभी थोड़ा लोड रहता है। बार-बार दिक्कत हो तो नीचे दिए फ़ॉर्म से हमें लिखें — हम देखेंगे।"}}, {"@type": "Question", "name": "यह आम AI चैटबॉट से कैसे अलग है?", "acceptedAnswer": {"@type": "Answer", "text": "आम चैटबॉट के उलट यहाँ सिखाने का तरीक़ा अपनाया जाता है: हर हल सारे स्टेप समझाता है, और जवाब निकालते समय बॉट आख़िरी स्टेप से पहले रुक जाता है — आख़िरी स्टेप आप खुद करते हैं। साथ ही, आपके सवाल हमारे अपने सर्वर पर ही रहते हैं — तीसरे पक्ष की AI सेवाओं को नहीं भेजे जाते।"}}, {"@type": "Question", "name": "क्या जवाब गलत हो सकते हैं?", "acceptedAnswer": {"@type": "Answer", "text": "जवाब AI से बनते हैं, इसलिए गलती हो सकती है। बॉट हर स्टेप दिखाता है, ताकि आप तर्क को किताब या शिक्षक के साथ जाँच सकें। अगर कोई जवाब गलत लगे, तो उसे फ़ॉर्म से हमें भेजें: हम हर संदेश पढ़ते हैं।"}}]}]}
+</script>
+<link rel="icon" href="../img/logo.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="64x64" href="../img/icon-64.png">
+<link rel="apple-touch-icon" href="../img/icon-180.png">
+<!-- Значки площадок лежат у нас (23.10.2026). Раньше здесь стояли preconnect/dns-prefetch
+     к чужим доменым: preconnect к launchigniter.com открывал TCP+TLS-соединение к площадке
+     ещё до отрисовки, то есть отдавал ей IP посетителя раньше, чем он что-то нажал.
+     Теперь страница не обращается ни к одному чужому серверу: единственное исключение —
+     api.web3forms.com, и только на этой странице, где стоит форма. -->
+<link rel="dns-prefetch" href="https://api.web3forms.com">
+<link rel="preload" href="../fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../img/demo-poster-hi.webp" as="image" type="image/webp">
+<style>
+@font-face{font-family:'UchiSam Langs';font-style:normal;font-weight:200 800;font-display:swap;src:url("../fonts/langs-cyrillic.woff2") format('woff2');unicode-range:U+0420,U+0423,U+0430,U+0438,U+0439,U+043A,U+043D,U+0440,U+0441,U+0443,U+044C,U+0457}
+@font-face{font-family:'UchiSam Langs';font-style:normal;font-weight:200 800;font-display:swap;src:url("../fonts/langs-vietnamese.woff2") format('woff2');unicode-range:U+1EBF,U+1EC7}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;src:url("../fonts/manrope-latin-ext.woff2") format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;src:url("../fonts/manrope-latin.woff2") format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Noto Sans Devanagari';font-style:normal;font-weight:400 800;font-display:swap;src:url("../fonts/noto-sans-devanagari.woff2") format('woff2');unicode-range:U+0900-097F,U+1CD0-1CF4,U+1CF7-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B0A}
+:root{
+  --brand:#3D5AFE; --brand-soft:#EAF0FF; --ink:#14203A; --muted:#50617F;
+  --bg:#F7FAFF; --card:#fff; --line:#E3EAF7;
+  --r:18px; --shadow:0 10px 30px rgba(30,60,140,.08); --shadow-2:0 18px 44px rgba(20,40,90,.20); interpolate-size:allow-keywords;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;font:16px/1.6 "UchiSam Langs","Manrope","Noto Sans Devanagari",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
+  background:var(--bg);-webkit-font-smoothing:antialiased}
+/* Кнопка НЕ наследует шрифт страницы: UA-таблица браузера выдаёт ей свой (на Linux —
+   Arial/Liberation Sans), и класс без font-family рисует текст чужой гарнитурой.
+   Так и вышло 24.10.2026: кнопке «пауза» дали видимое слово, а слово набралось
+   Liberation Sans — батарея глифов видит только НАРИСОВАННЫЙ текст, поэтому
+   иконка-кружок до этого была «чистой», а пилюля с подписью — уже нет. */
+button,input,select,textarea{font-family:inherit}
+/* height:auto обязателен: атрибуты width/height у картинки — это CSS-подсказки (height:1170px),
+   и при одной только ширине 100% браузер держит ВЫСОТУ из атрибута: кадр чата 1080x2340
+   рисовался 298x1170, то есть сжат по ширине на 45% (аватары в чате — эллипсы).
+   С height:auto пропорция файла сохраняется, атрибуты продолжают резервировать место. */
+img{max-width:100%;display:block;height:auto}
+a{color:var(--brand);text-decoration:none}
+/* Микровзаимодействия: заметный фокус с клавиатуры (2px brand) */
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:12px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.2;margin:0}
+p{margin:0}
+h1{font-size:clamp(30px,5.4vw,56px);font-weight:800;letter-spacing:-.03em}
+h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
+.sec{padding:56px 0 0}
+.sec-head{text-align:center;margin-bottom:34px}
+.sec-head p{color:var(--muted);margin-top:10px}
+/* Номер-надзаголовок секции: декоративный (вне текста H2 — требование SEO), только вид */
+.sec-head .sec-num{font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.16em;margin:0 0 8px}
+
+.top{position:sticky;top:0;z-index:10;background:rgba(247,250,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:22px;height:62px}
+.skip{position:fixed;left:10px;top:-60px;z-index:70;background:#0E1526;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
+.skip:focus{top:10px}
+main:focus{outline:none}
+main{display:block}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--ink)}
+.brand img{border-radius:12px}
+.nav{display:flex;gap:20px;margin-left:auto}
+.nav a{color:var(--muted);font-size:15px;font-weight:500;transition:color .15s ease}
+.nav a:hover{color:var(--ink)}
+.lang-dd{position:relative;margin-left:10px}
+.lang-dd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:12px;user-select:none;transition:background .15s ease,color .15s ease}
+.lang-dd summary::-webkit-details-marker{display:none}
+.lang-dd summary:hover{background:var(--brand-soft);color:var(--brand)}
+.lang-dd[open] summary{background:var(--brand-soft);color:var(--brand)}
+.lang-list{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-2);padding:8px;z-index:60;min-width:200px;display:grid;gap:2px;max-height:calc(100vh - 132px);overflow-y:auto;overscroll-behavior:contain}
+/* Список — девять пунктов по 44 px на тач-устройстве, это ~430 px. В ландшафте телефона
+   (390–320 px высоты) он выше экрана, а position:absolute внутри липкой шапки не даёт
+   доскроллить: нижние языки (vi, uk) были недоступны — проверить нечем, пункт за кадром,
+   список не скроллится (23.10.2026, замер: 844x390 — 2 языка из 9, 568x320 — 4 из 9).
+   Потолок высоты + внутренняя прокрутка возвращают все девять пунктов; 132 px = шапка
+   63 + отступ 8 + липкая кнопка 57 + запас. dvh там, где браузер его знает: 100vh на
+   телефоне считается по большому вьюпорту (с адресной строкой) и оставляет пункты под ней. */
+@supports(height:100dvh){.lang-list{max-height:calc(100dvh - 132px)}}
+/* Признак «ниже есть ещё»: когда список прокручивается, снизу внутри рамки появляется тень
+   (inset, внешняя тень не страдает), а прокрутка прилипает к границам пунктов. Без этого
+   обрезанный по нижнему краю пункт читается как недоделка, а не как «прокрути». */
+.lang-list{scroll-snap-type:y proximity;scrollbar-width:thin}
+.lang-list.more{box-shadow:inset 0 -18px 14px -14px rgba(20,40,90,.30),var(--shadow-2)}
+.lang-list>*{scroll-snap-align:start}
+.lang-list>*{display:flex;align-items:center;padding:9px 12px;border-radius:12px;font-size:14px;color:var(--ink);white-space:nowrap;font-weight:500;transition:background .12s ease,color .12s ease}
+.lang-list a:hover{background:var(--brand-soft);color:var(--brand)}
+/* .on объявлен ниже и с меньшей специфичностью базового селектора: текущий пункт — жирный и брендовый */
+.lang-list .on{background:var(--brand-soft);color:var(--brand);font-weight:700;cursor:default}
+@media(max-width:760px){.nav{display:none}}
+/* Тач-устройства: зоны нажатия не меньше 44px (WCAG), десктоп не затрагивается */
+@media(pointer:coarse){
+  .nav a,.lang-dd summary,.lang-list a,.lang-list span.on,.brand{min-height:44px;display:inline-flex;align-items:center}
+  .lang-list a{padding:8px 14px}
+  .cta-row a,a.btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+}
+
+.hero{padding:48px 0 8px}
+.hero-in{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center}
+.lead{color:var(--muted);font-size:18px;margin:18px 0 26px;max-width:560px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:#fff;font-weight:600;font-size:17px;
+  padding:14px 24px;border-radius:12px;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#2F49D8}
+.btn:active{transform:translateY(0)}
+.btn svg{flex:0 0 auto}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero-badge{margin-top:22px}
+.hero-badge a{display:inline-flex;align-items:center;min-height:24px}
+.hero-badge img{display:inline-block}
+.chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
+.chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
+.hero-phone{display:flex;flex-direction:column;align-items:center}
+.phone-frame{position:relative;display:inline-block;line-height:0}
+.hero-phone video{display:block;width:min(300px,72vw);height:auto;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow);background:#0B1020}
+/* Кнопка «пауза/играть» ПОД кадром, а не поверх него (24.10.2026): WCAG 2.2.2 требует
+   механизм остановки авто-движущегося ролика, но управление не имеет права закрывать
+   содержимое. На кадре 300 px круг 44 px в правом верхнем углу накрывал сразу два
+   нарисованных элемента чата — иконку батареи в строке состояния и меню «три точки»
+   (замер: скрыть кнопку → разница кадра 65x65 px у правого верхнего угла). Видимая
+   часть — только значок: подписи кнопки в словарях до 35 знаков (испанский), текст под
+   кадром поехал бы по ширине. Поэтому видимая часть — значок и короткое слово из
+   словаря (vbtn.pauseShort / vbtn.playShort: «Пауза»/«Смотреть»), а длинная подпись
+   «Пауза демо-видео» остаётся для скринридера. Имя обязано содержать видимое слово
+   (WCAG 2.5.3): 24.10.2026 «Пауза» ⊄ «Остановить демо-видео» — сторож в свипе.
+   44 px — тач-цель. */
+.media-ctrl{display:flex;align-items:center;justify-content:flex-end;width:min(300px,72vw);height:44px;margin:10px auto 0}
+.video-toggle{display:none;align-items:center;justify-content:center;gap:7px;height:44px;min-width:44px;padding:0 14px 0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font-weight:600;font-size:13px;line-height:1;letter-spacing:.01em;cursor:pointer;box-shadow:0 1px 3px rgba(11,16,32,.10);transition:background .15s ease,border-color .15s ease,transform .15s ease}
+/* hidden обязан реально скрывать: прежний display:grid перебивал UA-правило
+   [hidden]{display:none}, и кнопка «пауза» висела на кадре без скрипта — мёртвый
+   элемент управления (найдено 23.10.2026 при проверке страницы с выключенным JS). */
+.video-toggle:not([hidden]){display:inline-flex}
+.video-toggle:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
+.video-toggle:active{transform:scale(.96)}
+.video-toggle:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.video-toggle svg{width:18px;height:18px;display:block;fill:currentColor}
+/* Обе стороны подписи лежат в одной ячейке: ширина кнопки = длинному слову, поэтому
+   при смене состояния (клик человека или ролик снова в кадре) кнопка не прыгает по
+   ширине. Текст декоративен (aria-hidden) — имя кнопки всё равно даёт aria-label. */
+.vt-text{display:inline-grid}
+.vt-text>span{grid-area:1/1;white-space:nowrap}
+.video-toggle[data-state="play"] .vt-a{visibility:hidden}
+.video-toggle[data-state="pause"] .vt-b{visibility:hidden}
+.video-toggle .ico-play{display:none}
+.video-toggle[data-state="play"] .ico-pause{display:none}
+.video-toggle[data-state="play"] .ico-play{display:block}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:0;text-align:center}.hero-left{display:contents}.hero-in h1{order:1}.hero-in .lead{order:2;margin-left:auto;margin-right:auto}.hero-in .cta-row{order:3;justify-content:center}.hero-in .hero-phone{order:4;margin:30px auto 4px}.hero-in .chips{order:5;justify-content:center}.hero-in .hero-badge{order:6}.hero{padding-top:34px}}
+/* Телефон БОКОМ (высота <= 430px) — 24.10.2026, замер: на pt, vi и uk главная кнопка
+   уходила за нижнюю кромку на 2–47 px (844x390 и 740x360). В альбомной ориентации
+   экран низкий, а герой одноколоночный и центрированный: 63 px шапки + 34 px отступа +
+   двухстрочный заголовок 40 px + лид в четыре строки съедали весь экран. Портрет это
+   не задевает (там высота 640 и 844), десктоп — тоже (высота окна больше 430 px).
+   Сжимаем вертикаль: шапка, отступ героя, кегль и поля лида. Кегль заголовка снижен
+   осознанно: 40 px при высоте 360 — это треть экрана на две строки. */
+@media(max-height:430px) and (orientation:landscape){
+  .top-in{height:52px}
+  .hero{padding-top:16px}
+  h1{font-size:clamp(26px,4.6vw,34px)}
+  .lead{font-size:17px;margin:10px 0 16px}
+}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.steps li{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:12px;background:var(--brand-soft);color:var(--brand);font-weight:700;margin-bottom:12px}
+.steps h3{font-size:17px;margin-bottom:6px}
+.steps p{color:var(--muted);font-size:14.5px}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+.ico{width:42px;height:42px;border-radius:12px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.card h3{font-size:17px;margin-bottom:6px}
+.card p{color:var(--muted);font-size:14.5px}
+@media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cards{grid-template-columns:1fr}}
+
+.center{justify-content:center}
+
+/* Полоса-принцип: один тезис, без новой карточной сетки */
+.principle-band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:28px;padding:22px 4px;border-top:2px solid var(--brand);border-bottom:1px solid var(--line)}
+.principle-band h2{font-size:clamp(20px,2.5vw,26px);color:var(--brand);max-width:20ch}
+.principle-band p{color:var(--ink);font-size:15px;max-width:56ch}
+@media(max-width:680px){.principle-band{grid-template-columns:1fr;gap:8px}}
+
+/* Три кадра одной ширины: кадры чата — одна и та же пропорция 1080x2340, поэтому
+   равные колонки дают ровный ряд и одинаковые подписи. Прежние 1.2fr 1fr 1fr держались
+   на растянутых картинках (все три по 1170 px высотой): с честной пропорцией первый кадр
+   становился на 130 px выше остальных и ряд выглядел лестницей. */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.shots img{width:100%;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.shots figure{margin:0}
+.shots figcaption{margin-top:9px;text-align:center;font-size:13.5px;font-weight:600;color:var(--muted)}
+/* Кнопка сразу после кадров: закрывает разрыв «посмотрел — некуда нажать» (совет, P0-6, 22.10) */
+.shots-cta{margin:26px 0 0;text-align:center}
+.shots-cta .btn{min-height:48px}
+@media(max-width:860px){.shots-cta{margin-top:6px}}
+/* Мобильный рейл скриншотов (совет, раунд 1): карточка ~86%, снэп по краю; десктоп — три колонки, первый кадр крупнее */
+@media(max-width:860px){
+  .shots{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding:2px 2px 10px;scrollbar-width:none}
+  .shots::-webkit-scrollbar{display:none}
+  .shots figure{scroll-snap-align:start;scroll-snap-stop:always}
+}
+
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:14px}
+.price h3{font-size:16px;color:var(--muted);font-weight:600}
+.price .amount{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:10px 0 8px;color:var(--brand)}
+.price p{color:var(--muted);font-size:14.5px}
+.price.hot{border-color:#C9D6FF;background:linear-gradient(180deg,#F5F8FF,#fff)}
+@media(max-width:860px){.price-grid{grid-template-columns:1fr}}
+.price-fine{text-align:center;color:var(--muted);font-size:14px;margin-bottom:22px}
+.ref-band{display:flex;align-items:center;gap:14px;background:linear-gradient(90deg,#EAF0FF,#F2F7FF);border:1px solid #D7E1FF;border-radius:var(--r);padding:18px 22px;margin-top:8px}
+.ref-band svg{flex:0 0 auto;color:var(--brand)}
+.ref-band p{font-size:15px}
+
+.faq{max-width:760px;margin:0 auto}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq summary{list-style:none;cursor:pointer;padding:16px 20px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:color .15s ease}
+.faq summary:hover{color:var(--brand)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:20px;color:var(--brand);font-weight:500;line-height:1}
+.faq details[open] summary::after{content:"-"}
+/* Плавное раскрытие FAQ (~180мс). Где ::details-content не поддерживается — мгновенно, как раньше */
+.faq details::details-content{height:0;opacity:0;overflow:clip;transition:content-visibility .18s allow-discrete,opacity .18s ease,height .18s ease}
+.faq details[open]::details-content{height:auto;opacity:1}
+.faq details p{padding:0 20px 16px;color:var(--muted);font-size:15px}
+
+/* Блок «Родителям»: проверяемые факты о данных — из политики конфиденциальности */
+.parents-band{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr);gap:32px;align-items:start;background:linear-gradient(180deg,#F2F7FF,#fff);border:1px solid #D7E1FF;border-radius:var(--r);padding:30px 30px 26px;box-shadow:var(--shadow)}
+.parents-head h2{font-size:clamp(22px,2.6vw,27px)}
+.parents-head p{color:var(--muted);font-size:15px;margin-top:10px;max-width:44ch}
+.parents-head .privacy-link{display:inline-block;margin-top:14px;font-size:14.5px;font-weight:600;padding:1px 0;min-height:24px}
+.parents-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.parents-list li{display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.5}
+.parents-list svg{flex:0 0 auto;margin-top:3px;color:var(--brand)}
+@media(max-width:760px){.parents-band{grid-template-columns:1fr;gap:20px;padding:26px 22px 22px}}
+
+.band{background:#0E1526;border-radius:24px;padding:44px 30px;text-align:center;color:#fff;box-shadow:var(--shadow-2)}
+.band h2{color:#fff}
+.band p{color:#EAF0FF;margin:12px 0 24px;font-size:17px}
+.btn.light{background:#fff;color:var(--brand)}
+.btn.light:hover{background:var(--brand-soft)}
+
+footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
+.foot{text-align:center;color:var(--muted);font-size:14px}
+.foot .dim{color:#5C6E90;margin-top:8px;font-size:13px}
+/* 22.10.2026: восемь значков при ширине 1440 ложились 6+2 — вторая строка из двух
+   значков висела по центру и полоса выглядела недоделанной. Ограничение 780 px даёт
+   ровные 4+4 (сумма четырёх самых широких = 714, пятый значок уже не влезает). */
+.foot-badges{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 20px;margin:18px auto 0;max-width:780px}
+.foot-badges a{display:inline-flex;align-items:center;line-height:0}
+.foot-badges img{height:46px;width:auto;display:block}
+@media(max-width:700px){.foot-badges{gap:10px 14px}.foot-badges img{height:40px}}
+.contact{max-width:640px;margin:0 auto;text-align:left;background:#fff;border:1px solid #E3EAF7;border-radius:18px;padding:28px 26px}
+.contact h2{margin:0 0 8px}
+.contact-sub{margin:0 0 18px}
+.contact form{display:flex;flex-direction:column;gap:12px}
+.contact input,.contact textarea{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #8490A6;border-radius:12px;font:inherit;color:inherit;background:#fff}
+.contact input:focus,.contact textarea:focus{outline:2px solid #3D5AFE;outline-offset:1px;border-color:#3D5AFE}
+.contact textarea{resize:vertical;min-height:96px}
+.contact button.btn{align-self:flex-start;border:0;cursor:pointer;font:inherit;font-weight:600}
+.contact-note{font-size:13px;line-height:1.5;color:#5C6E90;margin:14px 0 0}
+.contact .hp{display:none!important}
+.contact .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* Подтверждение стоит ВЫШЕ формы (21.10): без JS сообщение и форма видны одновременно,
+   и человек должен прочитать «отправлено» до формы, а не после кнопки. */
+.contact-ok{color:#1B7F4B;font-weight:600;margin:0 0 16px}
+/* Отказ отправки (24.10): пока форма уходила обычным POST, любой отказ Web3Forms уводил
+   человека на чужую страницу («Internal Server Error» или страницу ошибки браузера), текст
+   пропадал, и никто не говорил, что сообщение НЕ ушло. Теперь отказ виден на своём месте,
+   на языке страницы, рядом с формой; цвет #B3261E на белом — контраст 6.5:1 (AA). */
+.contact-err{color:#B3261E;font-weight:600;margin:0 0 16px}
+/* Фокус на эти строки ставит скрипт (tabindex=-1), чтобы скринридер прочитал сообщение.
+   Браузерная рамка по умолчанию рисовала вокруг текста толстый чёрный прямоугольник —
+   видно глазами на ru/hi/en, телефон и десктоп. Своя рамка в цвет сообщения выглядит
+   намеренной и не спорит с оформлением. */
+.contact-ok:focus,.contact-err:focus{outline:2px solid currentColor;outline-offset:3px;border-radius:6px}
+/* Подтверждение после отправки формы БЕЗ JS (21.10): Web3Forms возвращает посетителя
+   на ?sent=1#contact-card, и целевой блок сам показывает подтверждение.
+   Раньше атрибут hidden снимал только скрипт — человек без JS видел пустую форму заново.
+   Потомки :target понимает любой браузер (в отличие от :has, которого нет в старых).
+   21.10: правило показывает ТОЛЬКО сообщение. Форму больше не прячем: адрес подтверждения
+   можно скопировать и переслать, и тогда чужой человек остался бы без формы и без связи.
+   Класс .stale (ставит скрипт при чужом/подделанном адресе) снимает и само сообщение —
+   чтобы не обещать «мы получили ваше сообщение» тому, кто ничего не отправлял. */
+#contact-card:target:not(.stale) #contact-ok{display:block}
+
+/* Липкая кнопка снизу на телефоне: видна после 700px, прячется у формы и подвала */
+.sticky-cta{display:none}
+@media(max-width:860px){
+  /* Нижняя липкая кнопка (59 px) перекрывала сфокусированный вопрос FAQ: браузер докручивал
+     элемент ровно к нижней кромке экрана. Резерв снизу = высота кнопки + запас (WCAG 2.4.11). */
+  html{scroll-padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+  .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 14px;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
+  .sticky-cta.show{transform:none;visibility:visible}
+  .sticky-cta .btn{width:100%;min-height:44px;padding:10px 18px;font-size:16px;border-radius:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sticky-cta{transition:none}.faq details::details-content{transition:none}}
+/* Reveal при прокрутке: только opacity; без JS/IO всё видно сразу */
+html.js .rv{opacity:0}
+html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
+@media(prefers-reduced-motion:reduce){html.js .rv{opacity:1!important;transition:none!important}}
+/* Тема высокой контрастности снимает авторские фоны: возвращаем рамку нажимаемым узлам
+   (submit имел border:0 через .contact button.btn — селектор повторяем, иначе проигрыш по специфичности) */
+@media(forced-colors:active){.btn,.contact button.btn,.lang-dd summary{border:1px solid}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">सामग्री पर जाएं</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top">
+      <img src="../img/logo.svg" alt="UchiSamBot का लोगो" width="34" height="34">
+      <span>UchiSamBot</span>
+    </a>
+    <nav class="nav">
+      <a href="#how">यह कैसे काम करता है</a>
+      <a href="#features">सुविधाएँ</a>
+      <a href="#pricing">कीमतें</a>
+      <a href="#faq">सवाल-जवाब</a>
+    </nav>
+    <details class="lang-dd"><summary aria-label="भाषा: हिन्दी"><svg class="globe" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><ellipse cx="8" cy="8" rx="2.9" ry="6.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M1.9 5.9h12.2M1.9 10.1h12.2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg><span lang="hi">हिन्दी</span></summary><div class="lang-list"><a href="../" lang="en" hreflang="en">English</a><a href="../ru/" lang="ru" hreflang="ru">Русский</a><a href="../es/" lang="es" hreflang="es">Español</a><a href="../pt/" lang="pt" hreflang="pt">Português</a><span class="on" aria-current="page" lang="hi">हिन्दी</span><a href="../id/" lang="id" hreflang="id">Bahasa Indonesia</a><a href="../tr/" lang="tr" hreflang="tr">Türkçe</a><a href="../vi/" lang="vi" hreflang="vi">Tiếng Việt</a><a href="../uk/" lang="uk" hreflang="uk">Українська</a></div></details>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="hero" id="top">
+  <div class="wrap hero-in">
+    <div class="hero-left">
+      <h1>होमवर्क, जो अब आख़िरकार समझ में आता है</h1>
+      <p class="lead">UchiSamBot आपके होमवर्क को एक-एक स्टेप में समझाता है, विषय को आसान शब्दों में बताता है, आपके जवाब जाँचता है और फ्लैशकार्ड बनाता है — सीधे Telegram में, दिन के किसी भी समय।</p>
+      <div class="cta-row">
+        <a class="btn" href="https://t.me/UchiSamBot?start=src_landing_hi" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          <span>Telegram में खोलें</span>
+        </a>
+      </div>
+      <div class="chips">
+        <span class="chip">पहले 2 स्टेप-बाय-स्टेप हल मुफ़्त</span>
+        <span class="chip">कोई नया ऐप नहीं — सीधे Telegram में</span>
+        <span class="chip">9 भाषाएँ</span>
+      </div>
+      <p class="hero-badge"><a href="https://launchigniter.com/product/uchisambot-study-helper?ref=badge-uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/launchigniter.svg" alt="LaunchIgniter पर फ़ीचर्ड" width="212" height="55" decoding="async" onerror="(this.closest('a')||this).style.display='none'"></a></p>
+    </div>
+    <div class="hero-phone">
+      <div class="phone-frame">
+        <!-- autoplay в разметке НЕТ намеренно (23.10.2026): движение стартует только из
+             скрипта, который САМ создаёт кнопку остановки. Без JS или при падении скрипта
+             посетитель видит постер: ни ролика без механизма остановки (WCAG 2.2.2), ни
+             мёртвой кнопки «пауза». Заодно prefers-reduced-motion честно работает и без JS. -->
+        <video id="hero-video" width="540" height="1170" muted loop playsinline preload="metadata" poster="../img/demo-poster-hi.webp" aria-label="डेमो: बॉट सवाल को एक-एक स्टेप में समझाता है।">
+          <source src="../demo/uchiambot-demo-web-hi.mp4" type="video/mp4">
+        </video>
+      </div>
+      <!-- WCAG 2.2.2: авто-движущийся ролик обязан иметь механизм остановки.
+           Кнопка живёт ПОД кадром, в своей строке (24.10.2026): на кадре она накрывала
+           иконку батареи и меню чата. hidden — до инициализации скриптом; без JS кнопка
+           не показывается. -->
+      <div class="media-ctrl">
+        <button class="video-toggle" id="video-toggle" type="button" hidden data-state="pause"
+                aria-label="डेमो वीडियो रोकें" data-play-label="डेमो वीडियो चलाएँ"
+               >
+          <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4.5v15a1 1 0 0 0 1.5.9l11-7.5a1 1 0 0 0 0-1.8l-11-7.5A1 1 0 0 0 8 4.5z"/></svg>
+          <span class="vt-text" aria-hidden="true"><span class="vt-a">रोकें</span><span class="vt-b">चलाएँ</span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="sec-head"><p class="sec-num" aria-hidden="true">01</p><h2>यह कैसे काम करता है</h2></div>
+    <ol class="steps">
+      <li class="rv"><span class="num">1</span><h3>बॉट खोलें</h3><p>बटन पर टैप करें और Start दबाएँ — कुछ भी इंस्टॉल नहीं करना।</p></li>
+      <li class="rv"><span class="num">2</span><h3>सवाल भेजें</h3><p>अपना सवाल लिखें या सवाल की फ़ोटो खींचकर भेजें।</p></li>
+      <li class="rv"><span class="num">3</span><h3>स्टेप-बाय-स्टेप हल पाएँ</h3><p>बॉट हर स्टेप समझाता है और उसके पीछे का कारण बताता है।</p></li>
+      <li class="rv"><span class="num">4</span><h3>अपना हल जाँचें</h3><p>अपना हल जाँचने को कहें, या सारांश और फ्लैशकार्ड पाएँ।</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="sec-head"><p class="sec-num" aria-hidden="true">02</p><h2>अंदर क्या-क्या है</h2></div>
+    <div class="cards">
+      <div class="card rv">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
+        <h3>स्टेप-बाय-स्टेप हल</h3><p>हर कदम समझाया जाता है — सिर्फ़ आख़िरी जवाब नहीं।</p>
+      </div>
+      <div class="card rv">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <h3>फ़ोटो से सवाल</h3><p>किताब से सीधे सवाल की फ़ोटो खींचें।</p>
+      </div>
+      <div class="card rv">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8z"/></svg></div>
+        <h3>आसान भाषा</h3><p>आसान से मुश्किल तक, एक धैर्यवान ट्यूटर की तरह।</p>
+      </div>
+      <div class="card rv">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 5-5.5"/></svg></div>
+        <h3>जवाब की जाँच</h3><p>बताता है कि गलती ठीक कहाँ हुई है।</p>
+      </div>
+      <div class="card rv">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="14" height="12" rx="2"/><path d="M7.5 4.5h10A2.5 2.5 0 0 1 20 7v10"/></svg></div>
+        <h3>सारांश और फ्लैशकार्ड</h3><p>टेस्ट से पहले रिवीज़न के छोटे कार्ड।</p>
+      </div>
+      <div class="card rv">
+        <div class="ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg></div>
+        <h3>दिन के किसी भी समय</h3><p>अटक जाएँ तो ट्यूटर का इंतज़ार नहीं करना पड़ेगा।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec principle-sec" aria-labelledby="principle-title">
+  <div class="wrap">
+    <div class="principle-band rv">
+      <h2 id="principle-title">सिर्फ़ जवाब नहीं। अगला सवाल खुद हल करना सीखें।</h2>
+      <p>हर चरण का तरीका समझें, ताकि इसी तरह का अगला सवाल आप खुद हल कर सकें।</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="subjects">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-num" aria-hidden="true">03</p>
+      <h2>स्कूल के विषय</h2>
+      <p>और कोई भी स्कूली सवाल, जहाँ आप अटक जाएँ।</p>
+    </div>
+    <div class="chips center">
+      <span class="chip big rv">गणित</span>
+      <span class="chip big rv">अंग्रेज़ी</span>
+      <span class="chip big rv">भौतिकी</span>
+      <span class="chip big rv">रसायन विज्ञान</span>
+      <span class="chip big rv">इतिहास</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="shots">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-num" aria-hidden="true">04</p>
+      <h2>बॉट के साथ असली चैट</h2>
+      <p>हल ऐसा दिखता है — बॉट 9 भाषाओं में काम करता है।</p>
+    </div>
+    <div class="shots">
+      <figure class="shot rv"><img src="../img/shot1-hi.webp" width="540" height="1170" alt="UchiSamBot की स्वागत स्क्रीन" loading="lazy"><figcaption>बॉट खोलें</figcaption></figure>
+      <figure class="shot rv"><img src="../img/shot2-hi.webp" width="540" height="1170" alt="UchiSamBot को सवाल भेजना" loading="lazy"><figcaption>सवाल भेजें</figcaption></figure>
+      <figure class="shot rv"><img src="../img/shot3-hi.webp" width="540" height="1170" alt="UchiSamBot से स्टेप-बाय-स्टेप हल" loading="lazy"><figcaption>स्टेप-बाय-स्टेप हल पाएँ</figcaption></figure>
+    </div>
+    <p class="shots-cta"><a class="btn" href="https://t.me/UchiSamBot?start=src_landing_hi_shots" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      <span>Telegram में खोलें</span></a></p>
+  </div>
+</section>
+
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-num" aria-hidden="true">05</p>
+      <h2>कीमतें</h2>
+      <p>भुगतान Telegram Stars से, सीधे चैट में।</p>
+    </div>
+    <div class="price-grid">
+      <div class="card price rv"><h3>पहले 2 स्टेप-बाय-स्टेप हल</h3><div class="amount">मुफ़्त</div><p>बॉट आज़माएँ — पैसे देने की ज़रूरत नहीं।</p></div>
+      <div class="card price rv"><h3>5 हल का पैक</h3><div class="amount">120 स्टार्स</div><p>हर हल पर लगभग 24 स्टार्स — 20% बचत।</p></div>
+      <div class="card price hot rv"><h3>15 हल का पैक</h3><div class="amount">300 स्टार्स</div><p>हर हल पर लगभग 20 स्टार्स — 33% बचत।</p></div>
+    </div>
+    <p class="price-fine">एक हल — 30 स्टार्स।</p>
+    <div class="ref-band rv">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/><path d="M19 8v6M16 11h6"/></svg>
+      <p>दोस्त को बुलाएँ — जब वे अपना पहला सवाल हल करेंगे, आपको एक और मुफ़्त हल मिलेगा।</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec-head"><p class="sec-num" aria-hidden="true">06</p><h2>सवाल-जवाब</h2></div>
+    <div class="faq">
+      <details class="rv"><summary>क्या यह नकल करना है?</summary><p>नहीं। बॉट समझाता और सिखाता है: हर स्टेप और उसके पीछे का नियम दिखाता है, ताकि अगला सवाल आप खुद हल कर सकें।</p></details>
+      <details class="rv"><summary>कौन-कौन से विषय हैं?</summary><p>गणित, अंग्रेज़ी, भौतिकी, रसायन विज्ञान और इतिहास — और सामान्य तौर पर कोई भी स्कूली सवाल, जहाँ आप अटक जाएँ।</p></details>
+      <details class="rv"><summary>यह किन भाषाओं में बात करता है?</summary><p>नौ भाषाएँ: रूसी, अंग्रेज़ी, स्पेनिश, पुर्तगाली, हिंदी, इंडोनेशियाई, तुर्की, वियतनामी और यूक्रेनी। कभी भी /lang से बदलें।</p></details>
+      <details class="rv"><summary>भुगतान कैसे करें?</summary><p>Telegram Stars से, सीधे चैट में। पहले 2 हल मुफ़्त हैं; इसके बाद आप एक हल या पैक खरीद सकते हैं।</p></details>
+      <details class="rv"><summary>क्या कुछ इंस्टॉल करना पड़ेगा?</summary><p>नहीं। यह Telegram के अंदर ही चलता है — फ़ोन या कंप्यूटर पर।</p></details>
+      <details class="rv"><summary>Telegram Stars क्या हैं?</summary><p>स्टार्स Telegram की अंदरूनी मुद्रा हैं। इन्हें Telegram के अंदर ही एक बार टॉप-अप करें — ऐप सामान्य भुगतान के तरीक़े (कार्ड, App Store या Google Play) सुझाता है — और फिर चैट में सीधे हल के लिए भुगतान करें। कोई सब्सक्रिप्शन नहीं और कोई ऑटो-रिन्यूअल नहीं: भुगतान तभी, जब आप चाहें। इसके लिए Telegram Premium की ज़रूरत नहीं।</p></details>
+      <details class="rv"><summary>स्टार्स कहाँ से मिलेंगे?</summary><p>सीधे चैट में: जब आप हल खरीदने के लिए टैप करेंगे, Telegram भुगतान विंडो खोलेगा और स्टार्स कम हों तो बैलेंस टॉप-अप करने का विकल्प देगा। यह बैलेंस आपके Telegram अकाउंट में रहता है और हर उस बॉट में चलता है जो स्टार्स लेता है।</p></details>
+      <details class="rv"><summary>हल में कितना समय लगता है?</summary><p>आम तौर पर एक मिनट से भी कम: आप सवाल भेजते हैं और हल सीधे चैट में आ जाता है — आम तौर पर 5–60 सेकंड में। अगर सर्वर व्यस्त है, तो इसमें दो मिनट तक लग सकते हैं।</p></details>
+      <details class="rv"><summary>अगर हल पूरा न हो पाए तो क्या होगा?</summary><p>कुछ मिनट बाद फिर कोशिश करें — कभी-कभी थोड़ा लोड रहता है। बार-बार दिक्कत हो तो नीचे दिए फ़ॉर्म से हमें लिखें — हम देखेंगे।</p></details>
+      <details class="rv"><summary>यह आम AI चैटबॉट से कैसे अलग है?</summary><p>आम चैटबॉट के उलट यहाँ सिखाने का तरीक़ा अपनाया जाता है: हर हल सारे स्टेप समझाता है, और जवाब निकालते समय बॉट आख़िरी स्टेप से पहले रुक जाता है — आख़िरी स्टेप आप खुद करते हैं। साथ ही, आपके सवाल हमारे अपने सर्वर पर ही रहते हैं — तीसरे पक्ष की AI सेवाओं को नहीं भेजे जाते।</p></details>
+      <details class="rv"><summary>क्या जवाब गलत हो सकते हैं?</summary><p>जवाब AI से बनते हैं, इसलिए गलती हो सकती है। बॉट हर स्टेप दिखाता है, ताकि आप तर्क को किताब या शिक्षक के साथ जाँच सकें। अगर कोई जवाब गलत लगे, तो उसे फ़ॉर्म से हमें भेजें: हम हर संदेश पढ़ते हैं।</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="parents" aria-labelledby="parents-title">
+  <div class="wrap">
+    <div class="parents-band rv">
+      <div class="parents-head">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4.5V13c0 4.6-3.2 8-8 9.5C7.2 21 4 17.6 4 13V6.5L12 2z"/><path d="M9.2 12.2l2 2 3.8-4.5"/></svg></div>
+        <h2 id="parents-title">माता-पिता के लिए</h2>
+        <p>संक्षेप में: हम आपके बच्चे के डेटा का कैसे ख़याल रखते हैं।</p>
+        <a class="privacy-link" href="../privacy.html">गोपनीयता नीति पढ़ें (EN/RU)</a>
+      </div>
+      <ul class="parents-list">
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>कोई साइन-अप नहीं और निजी जानकारी की ज़रूरत नहीं।</span></li>
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>यह यूरोपीय संघ (फ़िनलैंड) में हमारे अपने सर्वर पर चलता है।</span></li>
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>AI की सारी प्रोसेसिंग हमारी ही इन्फ़्रास्ट्रक्चर पर होती है — सवाल किसी तीसरे पक्ष की AI सेवा को नहीं भेजे जाते।</span></li>
+        <li><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>डेटा हटाने के लिए हमसे कभी भी कह सकते हैं — माता-पिता अपने बच्चे की ओर से ऐसा कर सकते हैं।</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="band rv">
+      <h2>अभी किसी सवाल पर अटके हैं?</h2>
+      <p>इसे बॉट को भेजें — पहले 2 हल मुफ़्त हैं।</p>
+      <a class="btn light" href="https://t.me/UchiSamBot?start=src_landing_hi_band" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        <span>Telegram में खोलें</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="contact rv" id="contact-card">
+      <h2>कोई सवाल या सुझाव है?</h2>
+      <p class="contact-sub">हमें लिखें — आपका संदेश हमारी टीम तक पहुँचता है, और हम आपके ईमेल पर जवाब देते हैं। कोई स्पैम नहीं, कोई मेलिंग लिस्ट नहीं।</p>
+      <p class="contact-ok" id="contact-ok" tabindex="-1" hidden>धन्यवाद! हमें आपका संदेश मिल गया है और हम आपके ईमेल पर जवाब देंगे।</p>
+      <p class="contact-err" id="contact-err" role="alert" tabindex="-1" hidden>संदेश नहीं भेजा गया। कनेक्शन जाँचें और फिर कोशिश करें — आपका पाठ अभी भी बॉक्स में है।</p>
+      <p class="contact-err" id="contact-err-busy" role="alert" tabindex="-1" hidden>फ़ॉर्म अभी व्यस्त है, इसलिए संदेश नहीं भेजा गया। एक मिनट बाद कोशिश करें — आपका पाठ बॉक्स में है।</p>
+      <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="f3eafc0c-996f-4090-aff4-63c993612a2c" />
+        <input type="hidden" name="subject" value="UchiSamBot contact form" />
+        <input type="hidden" name="from_name" value="UchiSamBot website" />
+        <input type="hidden" name="redirect" value="https://kerio-byte.github.io/uchisambot/hi/?sent=1#contact-card" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" aria-hidden="true" />
+        <label class="sr-only" for="cf-email">आपका ईमेल</label>
+        <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="you@example.com" />
+        <label class="sr-only" for="cf-msg">आपका संदेश</label>
+        <textarea id="cf-msg" name="message" rows="4" required maxlength="3000" placeholder="आपका सवाल, सुझाव या शिकायत…"></textarea>
+        <button type="submit" class="btn">संदेश भेजें</button>
+        <!-- Текст кнопки на время отправки (24.10): показывается только пока ждём ответ,
+             берётся из словаря языка страницы, а не из JS (вторая копия текстов запрещена). -->
+        <span id="cf-sending" hidden>भेजा जा रहा है…</span>
+      </form>
+      <p class="contact-note"><span>हम आपका ईमेल सिर्फ़ इस संदेश का जवाब देने के लिए इस्तेमाल करते हैं।</span> <a href="../privacy.html">गोपनीयता नीति (EN/RU)</a></p>
+    </div>
+  </div>
+</section>
+
+<div class="sticky-cta" id="sticky-cta">
+  <a class="btn" href="https://t.me/UchiSamBot?start=src_landing_hi_sticky" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    <span>Telegram में खोलें</span>
+  </a>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p><strong>UchiSamBot</strong> — <span>स्कूली बच्चों के लिए पढ़ाई में मददगार</span></p>
+    <p class="dim"><span>भुगतान Telegram Stars से होते हैं।</span></p>
+    <p class="dim"><a href="../privacy.html">गोपनीयता नीति (EN/RU)</a> &middot; <a href="../terms.html">सेवा की शर्तें (EN/RU)</a></p>
+    <p class="dim foot-partners"><a href="https://realisticai.io">Realistic AI</a> &middot; <a href="https://aitooltrek.com">AI Tool Trek</a> &middot; <a href="https://www.basedtools.ai/">Based Tools AI</a></p>
+    <div class="foot-badges" role="group" aria-label="लॉन्च प्लेटफ़ॉर्म पर फ़ीचर्ड">
+      <a href="https://fazier.com/launches/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/fazier.svg" width="103" height="44" alt="Fazier पर फ़ीचर्ड" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <a href="https://startupbase.io/products/uchisambot-study-helper?utm_source=startupbase&utm_medium=badge&utm_campaign=launch-badge-light" target="_blank" rel="noopener noreferrer"><img src="../img/badges/startupbase.svg" alt="StartupBase पर फ़ीचर्ड" width="300" height="80" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <a href="https://showmebest.ai" target="_blank" rel="noopener"><img src="../img/badges/showmebest.webp" alt="ShowMeBestAI पर फ़ीचर्ड" width="240" height="60" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/liftoff-launched.webp" alt="LiftOff पर फ़ीचर्ड" width="360" height="120" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/liftoff-day.webp" alt="LiftOff पर दिन का नंबर 1" width="360" height="120" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <!-- Startup Fame отдаёт значок с HTTP 200, но Chrome режет ответ как ORB (ERR_BLOCKED_BY_ORB),
+           поэтому горячая ссылка молча пряталась своей onerror и площадок было видно 7 из 8.
+           Файл отдан с нашего домена (img/badges/startupfa.svg), ссылка по-прежнему ведёт на площадку. -->
+      <a href="https://startupfa.me/s/-51?utm_source=kerio-byte.github.io" target="_blank" rel="noopener"><img src="../img/badges/startupfa.svg" alt="Startup Fame पर फ़ीचर्ड" width="171" height="54" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <a href="https://openhunts.com" target="_blank" rel="noopener"><img src="../img/badges/openhunts.webp" alt="OpenHunts Club पर फ़ीचर्ड" width="486" height="105" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <a href="https://auraplusplus.com/projects/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/auraplusplus.svg" alt="Aura++ पर फ़ीचर्ड" width="150" height="44" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // После отправки Web3Forms возвращает на ?sent=1&t=<токен>#contact-card.
+  // Токен выдаём сами в момент отправки и держим в sessionStorage: адрес подтверждения
+  // можно скопировать, переслать или открыть в другой вкладке — тогда человек ничего не
+  // отправлял, и врать ему «мы получили сообщение» нельзя, а форму прятать тем более.
+  // Без JS работает CSS по :target (см. стили выше): сообщение видно, форма остаётся.
+  var form = document.getElementById('contact-form');
+  var ok = document.getElementById('contact-ok');
+  var card = document.getElementById('contact-card');
+  if (!form || !ok || !card) return;
+  var err = document.getElementById('contact-err');
+  var errBusy = document.getElementById('contact-err-busy');
+  var sending = document.getElementById('cf-sending');
+  var btn = form.querySelector('button[type="submit"]');
+  var btnLabel = btn ? btn.textContent : '';
+  var busy = false;
+  // fetch+FormData есть у всех живых браузеров; у очень старых — обычная отправка (ниже).
+  var canAjax = !!(window.fetch && window.FormData && window.JSON && window.Promise);
+
+  function stored(){ try { return sessionStorage.getItem('ucs_sent') || ''; } catch(e){ return ''; } }
+  function focusEl(el){ try { el.focus({ preventScroll: false }); } catch(e){} }
+  function hideErrors(){ if (err) err.hidden = true; if (errBusy) errBusy.hidden = true; }
+
+  // «Отправлено»: спрятать форму, показать подтверждение, убрать адрес, поставить на место якоря.
+  function confirmSent(){
+    hideErrors();
+    form.style.display = 'none';
+    ok.hidden = false;
+    // Из адреса убираем ?sent=1&t=… вместе с якорем: «ссылка на спасибо» не должна
+    // оставаться в строке браузера. После очистки браузер прыгает наверх, поэтому
+    // ставим карточку на место якоря вручную (мгновенно, без плавной прокрутки) — иначе
+    // человек после отправки видит верх страницы и не знает, что сообщение ушло.
+    try { history.replaceState(null, '', location.pathname); } catch(e){}
+    try {
+      var de = document.documentElement, prev = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
+      card.scrollIntoView({ block: 'start' });
+      de.style.scrollBehavior = prev;
+    } catch(e){}
+    // Фокус объявляет подтверждение скринридеру (без него чтение начинается с начала
+    // страницы). Firefox ставит фокус на документ уже ПОСЛЕ нашего скрипта (шаг «перейти
+    // к якорю»), поэтому повторяем — иначе там фокус остаётся на body.
+    var announce = function(){ try { ok.focus({ preventScroll: true }); } catch(e){} };
+    announce();
+    setTimeout(announce, 150);
+  }
+
+  // «Не ушло»: сказать это на языке страницы и НЕ терять написанное.
+  function showError(which){
+    var el = which === 'busy' ? (errBusy || err) : err;
+    if (!el) return;
+    if (el === err && errBusy) errBusy.hidden = true;
+    if (el === errBusy && err) err.hidden = true;
+    el.hidden = false;
+    focusEl(el);
+  }
+
+  function release(){
+    busy = false;
+    if (!btn) return;
+    btn.disabled = false;
+    btn.removeAttribute('aria-busy');
+    btn.textContent = btnLabel;
+  }
+
+  form.addEventListener('submit', function(ev){
+    // Токен нужен только тому пути, где браузер сам уходит на Web3Forms и возвращается
+    // на ?sent=1&t=…: без JS и в очень старых браузерах. Выдаём его всегда, до развилки.
+    var redir = form.querySelector('input[name="redirect"]');
+    if (redir && redir.value.indexOf('#contact-card') >= 0) {
+      var t = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      try { sessionStorage.setItem('ucs_sent', t); } catch(e){}
+      redir.value = redir.value.replace(/[?&]t=[^&#]*/g, '').replace('#contact-card', '&t=' + t + '#contact-card');
+    }
+    // Очень старый браузер: не мешаем обычной отправке — страницу уведёт сам Web3Forms.
+    if (!canAjax) return;
+    // 24.10: отправка без ухода со страницы. Причина — отказы. Раньше любой отказ
+    // (обрыв сети, 500, 429, «Invalid Access Key», письмо, съеденное фильтром) уводил
+    // человека на чужую страницу с голым текстом ошибки: сайта нет, текста нет,
+    // и никто не сказал, что сообщение НЕ ушло. Проверено зондом на трёх отказах.
+    ev.preventDefault();
+    if (busy) return;
+    busy = true;
+    hideErrors();
+    if (btn) {
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      if (sending) btn.textContent = sending.textContent;
+    }
+    var data = new FormData(form);
+    data.delete('redirect');            // ответ ждём телом JSON: поле redirect в теле не нужно
+    var body = {};
+    data.forEach(function(v, k){ body[k] = v; });
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function(r){
+      return r.text().then(function(txt){
+        var j = null;
+        try { j = JSON.parse(txt); } catch(e){}
+        // Web3Forms отвечает 200 и на отказ тоже (success:false), поэтому мало смотреть
+        // на код ответа: успех — только явное success:true. Непонятный ответ считаем
+        // отказом: пусть человек отправит ещё раз, чем будет ждать ответа на письмо,
+        // которого нет.
+        if (r.ok && j && j.success === true) { confirmSent(); return; }
+        showError(r.status === 429 || r.status === 503 || r.status >= 500 ? 'busy' : 'plain');
+      });
+    }).catch(function(){
+      showError('plain');
+    }).then(release);
+  });
+
+  var hasCard = location.hash === '#contact-card';
+  var sent = /[?&]sent=1/.test(location.search);
+  if (!hasCard && !sent) return;
+  var q = (location.search.match(/[?&]t=([^&#]*)/) || [])[1] || '';
+  if (!sent || !q || q !== stored()) {
+    // Чужой/подделанный адрес: показываем форму, подтверждение не подсовываем.
+    card.classList.add('stale');
+    return;
+  }
+  confirmSent();
+})();
+</script>
+<script>
+(function(){
+  // Hero-видео: тихий луп; уважаем reduced-motion и saveData — им показываем постер.
+  var v = document.getElementById('hero-video');
+  if (!v) return;
+  var reduce = false, save = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  try { save = !!(navigator.connection && navigator.connection.saveData); } catch(e){}
+  if (reduce || save) { v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
+  // Кнопка остановки (WCAG 2.2.2). Появляется только здесь: без скрипта это был бы
+  // мёртвый элемент управления. Обе подписи (пауза и играть) приходят из словаря
+  // языка при сборке страницы: data-play-label — вторая сторона.
+  var btn = document.getElementById('video-toggle');
+  if (!btn) return;
+  var userPaused = false, userStarted = false, onScreen = true;
+  var labelPause = btn.getAttribute('aria-label') || '';
+  var labelPlay = btn.getAttribute('data-play-label') || labelPause;
+  // Видимое слово подписи (24.10.2026): значок без слова читался как кнопка самого
+  // телефона на кадре. Переключение слова делает CSS по [data-state], которое ставит
+  // sync(); обе стороны лежат в одной ячейке grid, поэтому ширина кнопки не прыгает.
+  function canPlay(){
+    // reduced-motion/saveData гасят автозапуск, но НЕ запрещают ручной запуск:
+    // если человек сам нажал «играть», его выбор сильнее настройки системы.
+    return !userPaused && !document.hidden && onScreen && (userStarted || (!reduce && !save));
+  }
+  function sync(){
+    var paused = v.paused;
+    btn.setAttribute('aria-label', paused ? labelPlay : labelPause);
+    btn.setAttribute('data-state', paused ? 'play' : 'pause');
+    btn.hidden = false;
+  }
+  function play(){
+    try { var p = v.play(); if (p && p.catch) p.catch(function(){}); } catch(e){}
+  }
+  btn.addEventListener('click', function(){
+    if (v.paused) { userPaused = false; userStarted = true; play(); }
+    else { userPaused = true; try { v.pause(); } catch(e){} }
+    sync();
+  });
+  v.addEventListener('play', sync);
+  v.addEventListener('pause', sync);
+  // Вне экрана луп не декодируем (батарея телефона), а когда ролик снова в кадре —
+  // продолжаем, если человек не останавливал сам.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(es){
+      onScreen = es[es.length - 1].isIntersecting;
+      if (!onScreen) { try { v.pause(); } catch(e){} }
+      else if (canPlay()) play();
+    }, {threshold: 0.15}).observe(v);
+  }
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) { try { v.pause(); } catch(e){} }
+    else if (canPlay()) play();
+  });
+  // Автозапуска в разметке НЕТ: ролик стартует только здесь — после того как найден
+  // механизм остановки (btn выше) и с оглядкой на настройки человека. Так выключенный
+  // или упавший JS не оставляет ни движения без кнопки, ни мёртвой кнопки.
+  if (!reduce && !save) play();
+  sync();
+})();
+</script>
+<script>
+(function(){
+  // Reveal при прокрутке (микровзаимодействие): только opacity, контент всегда в DOM.
+  // Отключается при reduced-motion; без IntersectionObserver ничего не прячется.
+  try { if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch(e){}
+  if (!('IntersectionObserver' in window)) return;
+  var els = document.querySelectorAll('.rv');
+  if (!els.length) return;
+  document.documentElement.classList.add('js');
+  var io = new IntersectionObserver(function(entries){
+    for (var i = 0; i < entries.length; i++){
+      if (entries[i].isIntersecting){ entries[i].target.classList.add('rv-in'); io.unobserve(entries[i].target); }
+    }
+  }, {rootMargin: '0px 0px -8% 0px', threshold: 0.06});
+  for (var j = 0; j < els.length; j++) io.observe(els[j]);
+})();
+</script>
+<script>
+(function(){
+  // Липкая кнопка на телефоне: после 700px; прячется там, где на экране уже есть
+  // своя кнопка — у формы (#contact), у подвала и у кнопки после скриншотов (22.10):
+  // иначе две одинаковые «Открыть в Telegram» стоят в 100 px друг от друга.
+  var bar = document.getElementById('sticky-cta');
+  if (!bar) return;
+  var mq = window.matchMedia('(max-width:860px)');
+  var contact = document.getElementById('contact');
+  var foot = document.querySelector('footer');
+  var shotsCta = document.querySelector('.shots-cta');
+  var scrolled = false, nearEnd = false;
+  function sync(){
+    if (bar.classList) bar.classList.toggle('show', !!(scrolled && !nearEnd && mq.matches));
+  }
+  function onScroll(){
+    scrolled = (window.pageYOffset || document.documentElement.scrollTop || 0) > 700;
+    sync();
+  }
+  if ('IntersectionObserver' in window){
+    var vContact = false, vFoot = false, vShots = false;
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++){
+        var e = entries[i];
+        if (contact && e.target === contact) vContact = e.isIntersecting;
+        else if (foot && e.target === foot) vFoot = e.isIntersecting;
+      }
+      nearEnd = vContact || vFoot;
+      sync();
+    }, {rootMargin: '0px 0px -20% 0px'});
+    if (contact) io.observe(contact);
+    if (foot) io.observe(foot);
+    // Своя кнопка после кадров: отдельный наблюдатель без нижнего отступа — прячем
+    // липкую, как только кнопка появилась в кадре хотя бы краем, иначе на коротком
+    // участке прокрутки на экране две одинаковые кнопки.
+    if (shotsCta){
+      var ioS = new IntersectionObserver(function(entries){
+        vShots = entries[0].isIntersecting;
+        nearEnd = vContact || vFoot || vShots;
+        sync();
+      }, {threshold: 0});
+      ioS.observe(shotsCta);
+    }
+  }
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+  else if (mq.addListener) mq.addListener(sync);
+  window.addEventListener('scroll', onScroll, {passive: true});
+  window.addEventListener('resize', sync, {passive: true});
+  onScroll();
+})();
+</script>
+<script>
+(function(){
+  // Меню языков — это <details>: раскрывается по клику и Enter, но САМО не закрывается
+  // ни по Escape, ни по клику мимо (проверено 23.10.2026 в Chromium, WebKit и Firefox).
+  // На телефоне раскрытый список из девяти языков накрывает первый экран, а убрать его
+  // можно было только повторным нажатием в тот же заголовок высотой 44 px. Здесь —
+  // привычное поведение раскрывающегося меню: Escape закрывает и возвращает фокус на
+  // заголовок (как требует паттерн disclosure), клик вне меню закрывает без переноса фокуса.
+  // Без скрипта меню остаётся обычным <details> и работает как раньше.
+  var dd = document.querySelector('details.lang-dd');
+  if (!dd) return;
+  var sum = dd.querySelector('summary');
+  var list = dd.querySelector('.lang-list');
+  // Тень «ниже есть ещё» — только пока список действительно прокручивается и не дочитан
+  // до конца (23.10.2026: на коротком экране список прокручивается, обрезанный пункт без
+  // признака прокрутки читается как дефект вёрстки).
+  function more(){
+    if (!list) return;
+    var rest = list.scrollHeight - list.clientHeight - list.scrollTop;
+    list.classList.toggle('more', rest > 2);
+  }
+  // Потолок высоты ставим по ЦЕЛЫМ пунктам: CSS-потолок (max-height:calc(100dvh - 132px))
+  // режет шестой пункт посередине буквы — на глаз это «сломанная вёрстка», а не «прокрути».
+  // Считаем, сколько пунктов реально влезает выше липкой кнопки, и обрезаем по границе.
+  function fit(){
+    if (!list || !dd.open || !list.children.length) return;
+    var cs = getComputedStyle(list);
+    var pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+            + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+    var gap = parseFloat(cs.rowGap || cs.gap) || 0;
+    var rowH = list.children[0].getBoundingClientRect().height;
+    if (!rowH) return;
+    var top = list.getBoundingClientRect().top;
+    var bar = document.querySelector('.sticky-cta');
+    var barH = 0;
+    if (bar) {
+      var bcs = getComputedStyle(bar);
+      if (bcs.visibility === 'visible') barH = bar.getBoundingClientRect().height + 8;
+    }
+    var avail = window.innerHeight - top - barH - 8;
+    var rows = Math.max(2, Math.min(list.children.length, Math.floor((avail - pad + gap) / (rowH + gap))));
+    list.style.maxHeight = (pad + rows * rowH + (rows - 1) * gap) + 'px';
+    more();
+  }
+  if (list) list.addEventListener('scroll', more, {passive:true});
+  // Поворот телефона меняет высоту без открытия меню: пересчитать и потолок, и тень.
+  window.addEventListener('resize', fit, {passive:true});
+  dd.addEventListener('toggle', function(){
+    if (dd.open) { if (window.requestAnimationFrame) requestAnimationFrame(fit); else fit(); }
+    else if (list) list.classList.remove('more');
+  });
+  function close(focus){
+    if (!dd.open) return;
+    dd.open = false;
+    if (focus && sum) { try { sum.focus({preventScroll: true}); } catch(e){ sum.focus(); } }
+  }
+  document.addEventListener('keydown', function(e){
+    // Esc — старое имя клавиши в IE/старом Edge; лишним не будет.
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    close(true);
+  });
+  document.addEventListener('click', function(e){
+    if (!dd.open) return;          // клик, которым меню ОТКРЫЛИ, сюда попадает до toggle
+    if (dd.contains(e.target)) return;  // клик по заголовку закрывает сам <details>
+    close(false);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — UchiSamBot</title>
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#3D5AFE">
+<link rel="icon" href="https://kerio-byte.github.io/uchisambot/img/logo.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="64x64" href="https://kerio-byte.github.io/uchisambot/img/icon-64.png">
+<style>
+/* Шрифты: latin для английского текста + три мини-сабсета переключателя
+   (cyrillic/vietnamese/devanagari — ровно глифы девяти названий, см. tools/lang-fonts.json).
+   Полные сабсеты по письменностям здесь не нужны: текста на них на 404 нет. */
+@font-face{font-family:'Manrope';font-style:normal;font-weight:200 800;font-display:swap;src:url("https://kerio-byte.github.io/uchisambot/fonts/manrope-latin.woff2") format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'UchiSam Langs';font-style:normal;font-weight:200 800;font-display:swap;src:url("https://kerio-byte.github.io/uchisambot/fonts/langs-cyrillic.woff2") format('woff2');unicode-range:U+0420,U+0423,U+0430,U+0438,U+0439,U+043A,U+043D,U+0440,U+0441,U+0443,U+044C,U+0457}
+@font-face{font-family:'UchiSam Langs';font-style:normal;font-weight:200 800;font-display:swap;src:url("https://kerio-byte.github.io/uchisambot/fonts/langs-devanagari.woff2") format('woff2');unicode-range:U+0926,U+0928,U+0939,U+093F,U+0940,U+094D}
+@font-face{font-family:'UchiSam Langs';font-style:normal;font-weight:200 800;font-display:swap;src:url("https://kerio-byte.github.io/uchisambot/fonts/langs-vietnamese.woff2") format('woff2');unicode-range:U+1EBF,U+1EC7}
+:root{--brand:#3D5AFE;--brand-deep:#2338A8;--brand-soft:#EAF0FF;--ink:#14203A;--muted:#50617F;--bg:#F7FAFF;--card:#fff;--line:#E3EAF7;--r:18px}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--ink);
+  font:16px/1.6 "UchiSam Langs","Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.card{width:100%;max-width:620px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:0 10px 30px rgba(30,60,140,.08);padding:32px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:20px;font-weight:800;letter-spacing:-.02em}
+.code{font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--brand);margin:0 0 8px}
+h1{font-size:clamp(22px,4.6vw,30px);line-height:1.25;letter-spacing:-.02em;margin:0 0 10px}
+p{margin:0 0 20px;color:var(--muted)}
+.langs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0;list-style:none}
+.langs a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--line);
+  border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600}
+.langs a:hover{border-color:var(--brand);color:var(--brand)}
+.langs a[aria-current]{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-deep)}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;border-radius:12px;
+  background:var(--brand);color:#fff;font-weight:700;text-decoration:none}
+.btn:hover{background:#2F49D6}
+.alt{font-weight:600;color:var(--ink)}
+footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer a{color:var(--muted)}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+@media (forced-colors:active){.btn,.langs a{border:1px solid}}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="brand"><img src="https://kerio-byte.github.io/uchisambot/img/logo.svg" alt="" width="34" height="34">UchiSamBot</div>
+  <p class="code">404</p>
+  <h1>This page doesn't exist</h1>
+  <p>The link may be out of date, or the address has a typo. Pick your language — the site is the same in all nine.</p>
+  <ul class="langs">
+    <li><a href="https://kerio-byte.github.io/uchisambot/" hreflang="en" lang="en" aria-current="true">English</a></li><li><a href="https://kerio-byte.github.io/uchisambot/ru/" hreflang="ru" lang="ru">Русский</a></li><li><a href="https://kerio-byte.github.io/uchisambot/es/" hreflang="es" lang="es">Español</a></li><li><a href="https://kerio-byte.github.io/uchisambot/pt/" hreflang="pt" lang="pt">Português</a></li><li><a href="https://kerio-byte.github.io/uchisambot/hi/" hreflang="hi" lang="hi">हिन्दी</a></li><li><a href="https://kerio-byte.github.io/uchisambot/id/" hreflang="id" lang="id">Bahasa Indonesia</a></li><li><a href="https://kerio-byte.github.io/uchisambot/tr/" hreflang="tr" lang="tr">Türkçe</a></li><li><a href="https://kerio-byte.github.io/uchisambot/vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li><li><a href="https://kerio-byte.github.io/uchisambot/uk/" hreflang="uk" lang="uk">Українська</a></li>
+  </ul>
+  <div class="acts">
+    <a class="btn" href="https://t.me/UchiSamBot?start=src_landing_404">Open UchiSamBot in Telegram</a>
+    <a class="alt" href="https://kerio-byte.github.io/uchisambot/">Go to the home page</a>
+  </div>
+  <footer>UchiSamBot — step-by-step homework help in Telegram ·
+    <a href="https://kerio-byte.github.io/uchisambot/privacy.html">Privacy</a> · <a href="https://kerio-byte.github.io/uchisambot/terms.html">Terms</a></footer>
+</main>
+</body>
+</html>
