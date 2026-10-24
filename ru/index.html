@@ -342,15 +342,26 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
    чтобы не обещать «мы получили ваше сообщение» тому, кто ничего не отправлял. */
 #contact-card:target:not(.stale) #contact-ok{display:block}
 
-/* Липкая кнопка снизу на телефоне: видна после 700px, прячется у формы и подвала */
+/* Липкая кнопка внизу на телефоне: видна после 700px, прячется у формы и подвала.
+   Порог «телефон/десктоп» — НЕ только ширина (25.10.2026): телефон боком шире 860 px
+   (874…932) получал десктопную раскладку и терял кнопку совсем. Замер на 932x430:
+   кнопка героя кончается на 313-й строке, следующая — на 2921-й, это 6.2 экрана
+   прокрутки без единого действия. Теперь полоса живёт у любого устройства с грубым
+   указателем (телефон, планшет), а на мыши не появляется. */
 .sticky-cta{display:none}
-@media(max-width:860px){
+@media(max-width:860px), (hover:none) and (pointer:coarse){
   /* Нижняя липкая кнопка (59 px) перекрывала сфокусированный вопрос FAQ: браузер докручивал
      элемент ровно к нижней кромке экрана. Резерв снизу = высота кнопки + запас (WCAG 2.4.11). */
   html{scroll-padding-bottom:calc(78px + env(safe-area-inset-bottom))}
   .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 14px;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
   .sticky-cta.show{transform:none;visibility:visible}
   .sticky-cta .btn{width:100%;min-height:44px;padding:10px 18px;font-size:16px;border-radius:12px}
+}
+/* Широкий экран с грубым указателем (телефон боком, планшет): полоса на всю ширину,
+   кнопка по центру и не во весь экран — иначе на 932 px она читается как баннер. */
+@media (hover:none) and (pointer:coarse) and (min-width:861px){
+  .sticky-cta{justify-content:center}
+  .sticky-cta .btn{flex:0 1 420px;max-width:420px;margin:0 auto}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sticky-cta{transition:none}.faq details::details-content{transition:none}}
 /* Reveal при прокрутке: только opacity; без JS/IO всё видно сразу */
@@ -858,7 +869,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   // иначе две одинаковые «Открыть в Telegram» стоят в 100 px друг от друга.
   var bar = document.getElementById('sticky-cta');
   if (!bar) return;
-  var mq = window.matchMedia('(max-width:860px)');
+  var mq = window.matchMedia('(max-width:860px), (hover:none) and (pointer:coarse)');
   var contact = document.getElementById('contact');
   var foot = document.querySelector('footer');
   var shotsCta = document.querySelector('.shots-cta');
