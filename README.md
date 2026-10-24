@@ -3113,3 +3113,72 @@ changing them is a product decision. And that the unit's name («çözüm», «�
 (new), `tools/lastmod.json`, the nine rebuilt pages and their md twins, `README.md`, the skill
 `stars-bots-ops`: `references/landing-qa.md` (section 24.10), `scripts/landing-sweep.py` (+18).
 
+## The page Google reads had no gate, and its copy in the template was four answers behind (24.10.2026)
+
+**What was found.** The sweep is the gate every block runs, and every check in it asks the
+visitor's page: texts, prices, fonts, links, alt text, the form, the videos. `grep -c 'ld+json'`
+over `landing-sweep.py` returned **0** — the structured data produced by `tools/build.py` was never
+examined there, on any of the nine pages. One other script did look: `landing-live-assets.py`
+compares the live FAQ text to the live page, loosely (`a in b or b in a`), and asks nothing about
+the offers, the language fields, how many blocks a page carries, or the template. And the template
+`index-src.html` carried a **second, hand-written copy of the same block**: 2,891 bytes of
+`Organization` / `WebSite` / `SoftwareApplication` / `FAQPage` that the build replaced wholesale on
+every run. Invisible on the site — and therefore invisible to everyone, including the people
+editing it. It had drifted to **7 questions out of 11**, said `"inLanguage": ["en","ru"]` on a
+nine-language site, and held the prices as text.
+
+**The same file had drifted in three more places.** The inline English inside a `data-i18n`
+element is the fallback `rep_i18n` returns when a dictionary key is missing — and three of them no
+longer matched `src/locales/en.json`: `how.s3d` still said **"The bot solves it step by step and
+explains every move"** (the claim two commits above this one removed from the page), `shots.cap`
+still said "Real screenshots" (the honest wording is "this is what a breakdown looks like"), and
+`q8a` still promised "10–60 seconds" where the page now says 5–60 with a two-minute ceiling. None
+of that was visible, because the build always overrides it. All of it was one missing key away
+from shipping on nine pages in English.
+
+**The fix is one source and one marker.** `index-src.html` now holds
+`<script type="application/ld+json">{{JSONLD}}</script>`; `jsonld()` returns the payload only, and
+`bake()` **asserts** the marker is present instead of running a `re.sub` that would simply not match
+and leave the old copy in place — silent substitution was the actual defect, the stale copy was its
+symptom. The template fell from 71,840 to 69,081 bytes. The three inline defaults now say what the
+dictionary says.
+
+**The gate: 66 new checks (2211 → 2277).** Per language, seven: exactly one `ld+json` block; it
+parses; the four node types appear once each; `inLanguage` on `WebSite` and `FAQPage` is the page's
+language and `SoftwareApplication` lists all nine; the offers' prices and currency equal
+`tools/prices.json`; the number of `mainEntity` questions equals the `<details class="rv">` items a
+visitor opens; and every question and answer equals the visible text of that item. Globally, three:
+the template carries no payload, the marker is present, and the template's built-in English — 105
+element texts, 2 field placeholders, 2 attribute labels — equals `en.json`. That last one is the
+check that would have caught "solves" two commits ago.
+
+**Controls: eight mutations, each red with its own line** — inline text back to "The bot solves it";
+the payload put back into the template; `pack5` repriced 120 → 125; the `ld+json` tag broken on the
+Russian page; one FAQ item deleted from the Ukrainian page; `"inLanguage": "tr"` → `"en"` on the
+Turkish page; the JSON broken on the English page; one visible answer rewritten. Each run was the
+full sweep on the real tree; every file was restored from a snapshot afterwards and its sha256
+compared before the next control. A second harness ran the same eight against isolated copies to
+prove the checks fail on their own evidence, not on some neighbouring gate going red first.
+
+**Checked after the change.** `tools/build.py --check`: 24 files match a fresh build. The nine
+pages, the md twin, `sitemap.xml`, `llms.txt` and `404.html` are **byte-identical** before and
+after — this block changed what the source says, not what the visitor sees, and the sha256 list is
+the proof. Sweep 2277 / 0. The nine pages still carry one `<script type="application/ld+json">`
+each; `privacy.html`, `terms.html` and `404.html` carry none, by design.
+
+**What it cannot prove.** That a crawler will do anything with this markup: Google limited FAQ rich
+results in 2023 to authoritative government and health sites, so the FAQ block is more likely to be
+read as context than rendered as a widget. That `XTR` is accepted as a price currency by every
+consumer of the file — it is Telegram's code for Stars, not a national currency. That the markup is
+*complete* for rich results: there is no `aggregateRating`, because the product has no ratings yet
+and inventing them would be the one lie this whole file is built to prevent. That the FAQ text was
+unwatched before: `landing-live-assets.py` compared it on the live site, loosely — what was
+unwatched is everything else, and the whole of it inside the sweep. And that the template copy would
+ever have shipped: today the build always wins — the point is that nobody was checking, and a
+`re.sub` that stops matching fails silently by design.
+
+**Files.** `index-src.html` (payload → `{{JSONLD}}`, three inline defaults), `tools/build.py`
+(`jsonld()` returns the payload; `bake()` asserts the marker), the skill `stars-bots-ops`:
+`scripts/landing-sweep.py` (+66), `references/landing-qa.md` (section 24.10). No page, no image and
+no dictionary value changed.
+
