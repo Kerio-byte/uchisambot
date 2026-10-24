@@ -3855,3 +3855,62 @@ pages + their md twins + `tools/lastmod.json`, and in the skill `stars-bots-ops`
 ru and uk) and `evidence/visual-20261024j/` (the visual pass this build was measured with).
 
 
+
+## The one character the page did not set itself lived in the half of the FAQ nobody opens (24.10.2026)
+
+**The coverage gate had an exception, and the exception was wrong.** Since 22.10 the sweep
+proves that every character of visible text on all twelve pages falls inside a declared
+`unicode-range` — the lock that appeared after «हिन्दी» was drawn by a system font on the
+404. One character was excused by name:
+
+    _EMOJI_OK = {0x2B50}   # ⭐ — системный эмодзи-шрифт, подмены тут нет
+
+That comment was a guess, not a measurement. Asked the browser directly
+(`CSS.getPlatformFontsForNode`), the answer to "What are Telegram Stars?" — the sentence
+"Stars (⭐) are Telegram's built-in currency" in nine languages — is drawn by two fonts:
+Manrope for 294 glyphs and **Noto Color Emoji** for the star. Where an emoji font exists the
+page shows a colour emoji inside a Manrope sentence (different height, weight and drawing);
+where it does not, a tofu box. It was the only glyph on the site that we did not ship.
+
+**Why the glyph battery had been green.** It measures what was painted. The FAQ lives in
+`<details>`; closed, its text has no boxes, `CSS.getPlatformFontsForNode` throws on those
+nodes and the battery skipped them without counting. The honest line "12 pages / 0
+substitutions" was measured on 2 992 glyphs of 4 899 — the same run with the FAQ open finds
+the star immediately. The blind spot was exactly the size of the part of the page nobody had
+opened.
+
+**Fixed.** The parenthetical is gone from `q6a` in all nine dictionaries and from the
+template: the sentence names the currency in words, and the glyph added nothing except a
+foreign font. After the rebuild `grep -c '⭐'` is 0 on every page, on the markdown twins and
+in `llms.txt`.
+
+**Four gates, each proven to fail.**
+1. The exemption is deleted: coverage has no privileged characters. Putting U+2192 into the
+   hero → red, naming `U+2192(→)`.
+2. Every `@font-face` must declare `unicode-range` (4–6 faces per page). A range-less face
+   claims the whole table and makes the coverage question meaningless.
+3. Character floor per page (3 500 / 13 000 / 6 500 / 260): a 27-character stub of
+   `404.html` → red. A check that reads nothing is green for free.
+4. The glyph battery opens all `<details>` before measuring, prints how many nodes it
+   skipped, and holds a glyph floor (3 600 / 15 000 / 8 000 / 280). The same script with the
+   opening line removed measures 2 992 glyphs and now says НЕДОМЕРЕНО instead of zero.
+
+Also: no character from the emoji blocks may appear in any landing dictionary — checked at
+the source, not only in the build.
+
+**Numbers after the block.** Sweep 2 468 checks, 0 failed (before publishing only the
+live-site check was red). Glyph battery 12 pages, 0 substitutions, 0 under-measured —
+4 545–5 434 glyphs per language page, privacy 17 851, terms 9 483, 404 347. Visual pass 0
+problems on 18 screenshots, keyboard/a11y battery 124/0, validator 0 real findings. The
+submission kit was redrawn because its input dictionary changed (the gate is right: text
+changed → the pictures are checked again), and its four cards came out byte-stable, which
+says the star never reached them.
+
+**Cost.** The battery is slower — it now lays out the open page — and its floor will have to
+be lowered deliberately if a page legitimately loses a fifth of its text. That is the point:
+it asks to look instead of answering 0.
+
+**What it still cannot prove.** That a string added in a language we do not read is
+grammatical; and that a woff2 file behind a declared range really contains the glyph — for
+that the browser battery remains the only answer, which is why it now measures the whole page
+instead of its visible half.

@@ -91,7 +91,7 @@ No. It works inside Telegram — on your phone or computer.
 
 ### What are Telegram Stars?
 
-Stars (⭐) are Telegram's built-in currency. You top them up once inside Telegram — the app offers the usual payment (card, App Store or Google Play) — and then pay for breakdowns right in the chat. No subscription and no auto-renewal: you only pay when you choose to. Telegram Premium is not required.
+Stars are Telegram's built-in currency. You top them up once inside Telegram — the app offers the usual payment (card, App Store or Google Play) — and then pay for breakdowns right in the chat. No subscription and no auto-renewal: you only pay when you choose to. Telegram Premium is not required.
 
 ### Where do I get Stars?
 
