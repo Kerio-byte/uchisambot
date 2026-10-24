@@ -2862,8 +2862,11 @@ languages became the browser's or the API's English.
 The same probe turned up the other end of the same promise. The page tells the visitor "we read
 every message" (q11a, nine languages). The only mechanism behind that sentence was a watcher
 searching the mailbox every ten minutes — and its query had no `in:spam`. The first letter I sent
-through the new path arrived, and Gmail filed it under SPAM: the watcher answered "No messages
-found" while the site had already told the sender "we received your message".
+through the new path (from a local copy of the page, not the live site) arrived, and Gmail filed it
+under SPAM: the watcher answered "No messages found" while the site had already told the sender "we
+received your message". The same letter sent later from the live origin landed in the inbox — so the
+classification follows the referrer, not the new code, and it can go either way. The blind spot is the
+query, not the sender.
 
 **What changed.**
 
@@ -2914,11 +2917,14 @@ place, or the hardlink would cut the real page), served locally, battery run aga
   "пришла в СПАМ — сторож её увидел, но доставка шаткая". Losing a letter is still red; a letter
   in spam is not a gate failure once it is on the record.
 
-**Checked after the change.** Sweep 2172 / 0. `tools/build.py --check`: 24 files match. Battery
-910 / 0 across nine languages. Real Chrome (CDP), real endpoint: the JSON POST from a foreign origin
-is allowed (CORS answered, body readable), a refusal arrives as `400 {"success":false}`, and a real
-submit returned `200 {"success":true,"message":"Form submitted successfully!"}` — the letter reached
-the mailbox, in spam.
+**Checked after the change.** Sweep 2172 / 0 on the live tree. `tools/build.py --check`: 24 files
+match. Battery 910 / 0 across nine languages. Real Chrome (CDP), real endpoint: the JSON POST from a
+foreign origin is allowed (CORS answered, body readable), a refusal arrives as `400 {"success":false}`,
+and a real submit returned `200 {"success":true,"message":"Form submitted successfully!"}`. Delivery
+was confirmed in the mailbox, not by the answer: from the live page, letter `1a16b585a63e481b` (stamp
+03:38:32) arrived in the inbox with the stamp and the reply-to address intact; an earlier one sent from
+a local copy of the page arrived in spam — which is how the watcher's blind spot was found. Live run of
+the battery against the published site: 13 / 0. Live page sha256 equals the built `index.html`.
 
 **Eyes on it.** Six screenshots (ru/hi/en × 420 px and 1280 px) of the failure state and four of the
 success state, in `evidence/visual-20261024-form/`. They found what no gate would have: the browser's
