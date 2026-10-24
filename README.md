@@ -3528,3 +3528,75 @@ fit measurement), `tools/shots-gen/mockup.html` (two-button rows), `tools/shots-
 (re-stamped: 9 loops + 2 full demos, 0 problems), `demo/build-full-demo.sh` (all inputs from the
 repo), both demos, `evidence/block-20261024g-*.txt`, and the skill `stars-bots-ops`:
 `scripts/landing-sweep.py` (+8 checks).
+
+## The pause button sat on the chat's battery icon and its menu (24.10.2026)
+
+**What was found.** The hero control that keeps WCAG 2.2.2 honest (the loop starts by itself, so
+there must be a way to stop it) was an absolutely positioned 44 px circle in the top-right corner
+of the phone frame. The frame is 300 px wide on a phone, so that corner is where the drawn chat
+keeps two of its own elements: the battery in the status bar and the three-dot menu in the header.
+Nobody had measured what the circle covers — the block that added it wrote "the button sits in the
+empty right side of the chat header, covers no text", which was true about text and wrong about
+everything else.
+
+The measurement is a subtraction, not an opinion: screenshot the video's rectangle with the button,
+hide the button, screenshot again, diff. At 420 px the changed region is **65 × 65 px**, at 1440 px
+**95 × 99 px**, both anchored to the frame's top-right corner — the circle, its shadow and the two
+icons it covers.
+
+**Why no gate saw it.** The sweep asserted the opposite of the truth: `video toggle in phone frame`
+required the button to be *inside* the frame — the defect itself as a requirement, written when the
+button was added. The browser battery measured size, labels, click, keyboard, off-screen stop and
+`prefers-reduced-motion`, all of which the button did correctly. And the previous entry had filed
+that corner under "what it cannot prove — the owner's eye decides": it was not taste, it was two
+covered icons, and taste was never the question.
+
+**What is on the page now.** The control left the frame. It sits under it in its own row, right
+edges aligned, 10 px gap, 44 px tall, and the row keeps its height whether the button is hidden or
+not — so the script that reveals it (and a page without JavaScript) shifts nothing (the CLS/LCP
+battery stays at 69 checks / 0 failures). The shape is a pill with a glyph **and a word**: tested with the
+glyph alone, the button read as part of the phone — an icon under a phone frame looks like the
+phone's own control. The word comes from the dictionary on both sides (`vbtn.pauseShort` /
+`vbtn.playShort`, nine languages: Pause/Play, Пауза/Играть, Pausa/Reproducir, Pausar/Reproduzir,
+रोकें/चलाएँ, Jeda/Putar, Duraklat/Oynat, Tạm dừng/Phát, Пауза/Відтворити) and both sit in one grid
+cell, so the pill is as wide as the longer word and does not jump when the state flips. The long
+"Pause the demo video" stays as `aria-label` — the visible word is `aria-hidden`, so a screen reader
+hears one name, not two.
+
+**Proven by mutation.** A copy of the tree with the control lifted back over the frame (60 px up,
+own paint layer) turns the new battery red: 6 failures — geometry (`gap=-60px`) and pixels (a
+95 × 99 px difference inside the frame) at both widths. On the real page the same battery is 56
+checks / 0 and the diff inside the video rectangle is **empty**, which is the only statement worth
+making here: the control covers nothing.
+
+**A gate fired on my own sentence.** The first build after the change failed `нет обещаний
+возврата` — the refund policy gate — because a CSS comment said the button does not jump "при
+возврате ролика". The word was harmless and the gate read it exactly as designed; the comment was
+rewritten ("ролик снова в кадре"). Worth recording: the policy gates read the built page, comments
+included.
+
+**A flaky check, fixed rather than tolerated.** `nojs en: кадр стоит` compares two no-JavaScript
+frames 0.9 s apart and failed on one run and passed on the next with the same build. The diff was
+**10 pixels in a 4 × 5 box out of 137 100** (0.007%) — Chromium repainting a few pixels when the
+decoder attaches, not motion. A zero-tolerance pixel gate that flips on its own teaches people to
+ignore red, so the check now allows 40 px or 0.05% of the clip and prints the number it saw; real
+motion changes tens of thousands.
+
+**Checked after the change.** `build.py --check` 24 files identical (a clean `git clone` of the
+mirror rebuilds byte-identical — verified separately today); sweep **2412 / 0** (was 2376: +36
+checks, four per language); `landing-video-motion.py` **444 / 0** (was 408: the visible word in both
+states); axe **0 violations on 12 pages**; a11y-extra **124 / 0**; wcag22 **43 / 0**; cwv **69 / 0**;
+visual pass (18 loads, 9 languages × 2 widths) **0 problems**; external links **0 problems**; live
+bytes **26 / 26**; `landing-toggle-clear.py` **56 / 0**; published to `gh-pages` on both mirrors,
+Pages source read back as `gh-pages/`.
+
+**What it cannot prove.** That a word under the frame is the shape the owner wants — the pill is a
+default, the alternative (glyph alone) is measurably worse and the owner's word overrides this. And
+that no later video re-cut puts something interesting in the frame's bottom-right, where the
+control now sits below: the control is outside the media, so nothing can be under it, but the
+bottom of the frame is where the input bar is drawn and the eye still has to like the pairing.
+
+**Files.** `index-src.html` (markup, `.media-ctrl`, `.video-toggle`, `.vt-text`, `sync()`),
+`src/locales/*.json` (+2 keys × 9), the nine built pages + `tools/lastmod.json`, and the skill
+`stars-bots-ops`: `scripts/landing-sweep.py` (+36), `scripts/landing-video-motion.py` (+36 and the
+still-frame tolerance), `scripts/landing-toggle-clear.py` (new, 56 checks).

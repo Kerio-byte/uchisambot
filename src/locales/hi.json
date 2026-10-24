@@ -120,5 +120,7 @@
   "logo.alt": "UchiSamBot का लोगो",
   "lang.aria": "भाषा",
   "vbtn.pause": "डेमो वीडियो रोकें",
-  "vbtn.play": "डेमो वीडियो चलाएँ"
+  "vbtn.play": "डेमो वीडियो चलाएँ",
+  "vbtn.pauseShort": "रोकें",
+  "vbtn.playShort": "चलाएँ"
 }

@@ -120,5 +120,7 @@
   "logo.alt": "UchiSamBot logosu",
   "lang.aria": "Dil",
   "vbtn.pause": "Tanıtım videosunu duraklat",
-  "vbtn.play": "Tanıtım videosunu oynat"
+  "vbtn.play": "Tanıtım videosunu oynat",
+  "vbtn.pauseShort": "Duraklat",
+  "vbtn.playShort": "Oynat"
 }

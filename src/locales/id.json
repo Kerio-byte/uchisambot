@@ -120,5 +120,7 @@
   "logo.alt": "Logo UchiSamBot",
   "lang.aria": "Bahasa",
   "vbtn.pause": "Jeda video demo",
-  "vbtn.play": "Putar video demo"
+  "vbtn.play": "Putar video demo",
+  "vbtn.pauseShort": "Jeda",
+  "vbtn.playShort": "Putar"
 }
