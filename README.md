@@ -4039,7 +4039,9 @@ from `submission-kit-20261014`. That open item was closed the same day (block g)
 `demo/build-full-demo.sh` has read `tools/shots-gen/scenes/shot4[-ru].webp` since; the note now says
 what is true, and the old wording sits under it with its date instead of being deleted.
 
-**Found, and not fixable here — the words belong to the bot, not to the site.** The first screenshot
+**Found, and not fixable here — the words belong to the bot, not to the site.** *(Superseded the same evening,
+18:01 — the source was fixed and the pictures were redrawn; see the next entry. The text stays as it was
+written, because it records what the site could and could not do on its own.)* The first screenshot
 on every language page is the bot's own greeting, drawn from `bot/i18n.py` / `bot/i18n_extra.py`. In
 three of the nine languages that greeting still promises that the bot *solves*: pt "resolvo
 problemas passo a passo", hi "सवालों को कदम-दर-कदम हल करता हूँ", tr "soruları adım adım çözüyorum" —
@@ -4055,3 +4057,53 @@ repository, so the change is reported rather than made here.
 **Files.** `src/locales/ru.json`, `ru/index.html` + `ru/index.html.md` (build), `tools/lastmod.json`,
 `scripts/landing-sweep.py` in the `stars-bots-ops` skill (+22 checks), `evidence/block-20261024m/`
 (the nine reading copies, two typographic probes, the negative-control run).
+
+**The picture's words were repaired at the source; one button is still left** (24.10.2026, evening)
+
+The paragraph above ended with "the change is reported rather than made here". Half an hour later the three
+lines were fixed where they live — in the bot's own dictionaries, `study-bot` commit `064051c` ("the greeting
+promised to solve problems; the product explains them step by step") — and the site stopped quoting the old
+text: `python3 tools/shots-gen/gen_shots.py --langs pt,hi,tr --apply --stamp` redrew nine screenshots in the
+three languages, the three web loops were cut again from those screenshots (18:00), and
+`demo/captions.json` / `tools/shots.json` were restamped. Sweep **2 548 checks / 0 failed**.
+
+What that fix did not reach: **the Turkish menu button** — the keyboard drawn in the first and third screenshots
+still reads "🧠 Soruyu adım adım çöz" where the other eight say *break down / analizar / розібрати*
+(`bot/i18n_extra.py`, the `solve` key of the `tr` block, line 218). The greeting was fixed, the button was not,
+so the Turkish page still carries a picture of a button that promises to solve — the one claim the page itself
+denies in `q10a`. The fix is one line in the bot, `gen_shots.py --langs tr --apply --stamp`, then one loop and
+one demo rebuilt. Not made here: the bot lives outside this repository.
+
+And the live bot is still running the pre-fix code: its process started at 12:14, the dictionaries were written
+at 17:58. Until the owner restarts the unit (`systemctl --user restart study-bot.service` — cron cannot restart
+systemd), a Portuguese, Hindi or Turkish student who presses Start gets the old greeting while the page above
+the button shows the new one.
+
+**Zoom was measured on three of nine languages, and nobody asked whether the text survived it** (24.10.2026)
+
+Found: the WCAG 1.4.4 block of `landing-a11y-extra.py` zoomed three pages — en, ru, hi, the ones the author
+reads himself. The other six languages were never zoomed, though 640×512 is exactly a 1280×1024 laptop after
+two Ctrl+'+' presses, and a long translation is what breaks first. The block also asked only the easy question:
+"does the page scroll sideways". A box with a fixed height and `overflow:hidden` never scrolls — it loses words
+silently, and no battery asked about that.
+
+Did: `ZOOM_LANGS = PAGES` (11 pages instead of 3) and a second question on every page — `zoom200 <page>:
+nothing cut off` reads every element whose own content is taller or wider than its box, skipping `.sr-only` /
+`.hp` (they clip themselves on purpose), the horizontal slider, and `text-overflow: ellipsis` (a design
+decision, not a loss).
+
+Numbers: 33 zoom checks (11 pages × 3), battery **151 checks / 0 failed** in 42 s. Teeth proven on a mutated
+copy of the site: the vi page — a language that had never been zoomed — got a 24 px box holding 77 px of text
+and one unbreakable word. `zoom200 vi: nothing cut off` FAIL (`DIV 640x77>640x24`), `zoom200 vi: no h-scroll`
+FAIL (548 px), and the older reflow gate fired too (868 px at 320). The other ten pages stayed green: the gate
+names the page that broke instead of painting the whole battery red.
+
+**Also measured, nothing to fix** (24.10.2026): every `<img>` on all 12 pages — 125 of them — was compared with
+its file. The `width`/`height` attributes may be a display size (a 1080×2340 screenshot is declared 540×1170 for
+2× screens, a 2400×600 badge is declared 240×60), so the question is not equality but shape: 0 distorted, every
+`srcset` descriptor equals the real pixel width of its file, and all nine preview cards plus the legal one are
+1200×630 — the 1.91:1 crop a chat client makes.
+
+**Files.** `scripts/landing-a11y-extra.py` in the `stars-bots-ops` skill (+27 checks),
+`evidence/block-20261024n/` (the mutated run, the real run, the zoom and geometry probes), `README.md` (this
+entry and the superseded note above).
