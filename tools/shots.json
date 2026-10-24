@@ -162,7 +162,7 @@
     "plans": "💰 Preços",
     "invite": "🎁 Convidar um amigo",
     "help": "❓ Ajuda",
-    "welcome": "🎓 Olá! Sou o UchiSamBot, o Assistente de Estudos.\n\nEu explico os assuntos com palavras simples, resolvo problemas passo a passo, verifico as suas soluções e faço resumos e cartões de revisão. Eu ensino — não faço a tarefa por você, para que você aprenda de verdade.\n\nIdioma: 🇧🇷 Português.\nTrocar com /lang",
+    "welcome": "🎓 Olá! Sou o UchiSamBot, o Assistente de Estudos.\n\nEu explico os assuntos com palavras simples, analiso os problemas passo a passo, verifico as suas soluções e faço resumos e cartões de revisão. Eu ensino — não faço a tarefa por você, para que você aprenda de verdade.\n\nIdioma: 🇧🇷 Português.\nTrocar com /lang",
     "task_received": "✅ Tarefa recebida!\n\nTipo de análise:\n1️⃣ Explicar com palavras simples\n2️⃣ Resolver passo a passo\n3️⃣ Verificar a minha solução\n\nResponda com 1, 2 ou 3 ou toque num botão abaixo.",
     "answer": "📚 Aqui está a sua análise:",
     "task_type_1": "explicar com palavras simples",
@@ -178,15 +178,15 @@
    "shots": {
     "1": {
      "file": "shot1-pt.webp",
-     "sha256": "7fa437fc44ab2a67b911b69d23d194c6111faaeab3f38742bde61e57a2f44dd9"
+     "sha256": "cb92abc6067d465526fda5570022be4e136759a2b880fb8629a0e32ee0b5b06d"
     },
     "2": {
      "file": "shot2-pt.webp",
-     "sha256": "85823bdf7904d980834ee7b6b4d70780483bbf336ac65fa0f1ba95f633575be4"
+     "sha256": "3c25c01999a7553621490d95cb103ebaac690e67fbe4b80cacf8bb9522bbf1f1"
     },
     "3": {
      "file": "shot3-pt.webp",
-     "sha256": "3f43c1dc39c426e0961ffddce001784dfac85ad9fdb49adc0ed34da677a7a766"
+     "sha256": "8fbec2f349a40e1dbf604a68bd6d837cb6c1389c87abf1def4f2e372462e700a"
     }
    }
   },
@@ -199,7 +199,7 @@
     "plans": "💰 कीमतें",
     "invite": "🎁 दोस्त को बुलाएँ",
     "help": "❓ मदद",
-    "welcome": "🎓 नमस्ते! मैं UchiSamBot हूँ — आपका स्टडी हेल्पर।\n\nमैं विषयों को आसान शब्दों में समझाता हूँ, सवालों को कदम-दर-कदम हल करता हूँ, आपके जवाब जाँचता हूँ और दोहराने के लिए नोट्स/फ्लैशकार्ड बनाता हूँ। मैं सिखाता हूँ — आपका होमवर्क नहीं करता, ताकि आप खुद सीखें।\n\nभाषा: 🇮🇳 हिन्दी।\nबदलने के लिए /lang",
+    "welcome": "🎓 नमस्ते! मैं UchiSamBot हूँ — आपका स्टडी हेल्पर।\n\nमैं विषयों को आसान शब्दों में समझाता हूँ, सवालों को एक-एक कदम में समझाता हूँ, आपके जवाब जाँचता हूँ और दोहराने के लिए नोट्स/फ्लैशकार्ड बनाता हूँ। मैं सिखाता हूँ — आपका होमवर्क नहीं करता, ताकि आप खुद सीखें।\n\nभाषा: 🇮🇳 हिन्दी।\nबदलने के लिए /lang",
     "task_received": "✅ सवाल मिल गया!\n\nहल का प्रकार:\n1️⃣ आसान शब्दों में समझाएँ\n2️⃣ कदम-दर-कदम हल\n3️⃣ मेरा हल जाँचें\n\n1, 2 या 3 लिखें या नीचे बटन दबाएँ।",
     "answer": "📚 ये रहा आपका हल:",
     "task_type_1": "आसान शब्दों में समझाना",
@@ -215,15 +215,15 @@
    "shots": {
     "1": {
      "file": "shot1-hi.webp",
-     "sha256": "13d744585fb128f28656c82be8cc8a47c46e8a465f3e5837df141f7cefe16a37"
+     "sha256": "fb7c84850be53885b927854e6375f4f76d6281e64714693dbb6c4f761f7674aa"
     },
     "2": {
      "file": "shot2-hi.webp",
-     "sha256": "1783a556d11937e3bc4d9d5c44cc6dc565308dbeb74923a2633055ae23a11211"
+     "sha256": "26721eb2ccf503899577da9ecf661e3cc5b42a0f0707a78001d5c0bf5e125c2f"
     },
     "3": {
      "file": "shot3-hi.webp",
-     "sha256": "f9097027414ba5d8e8d6aa31e7b8a665664cdedbd7497e94cbcbc29b2968e8ff"
+     "sha256": "55997729ee1d4b838e694936c0b9837d943cb9eb1db1f4e7918d96a12c1e5d20"
     }
    }
   },
@@ -273,7 +273,7 @@
     "plans": "💰 Fiyatlar",
     "invite": "🎁 Arkadaşını davet et",
     "help": "❓ Yardım",
-    "welcome": "🎓 Merhaba! Ben Ders Yardımcısı.\n\nKonuları basit kelimelerle anlatıyorum, soruları adım adım çözüyorum, çözümlerini kontrol ediyorum ve tekrar için özet ve kartlar hazırlıyorum. Öğretirim — ödevini senin yerine yapmam, böylece gerçekten öğrenirsin.\n\nDil: 🇹🇷 Türkçe.\nDeğiştirmek için /lang",
+    "welcome": "🎓 Merhaba! Ben Ders Yardımcısı.\n\nKonuları basit kelimelerle anlatıyorum, soruları adım adım açıklıyorum, çözümlerini kontrol ediyorum ve tekrar için özet ve kartlar hazırlıyorum. Öğretirim — ödevini senin yerine yapmam, böylece gerçekten öğrenirsin.\n\nDil: 🇹🇷 Türkçe.\nDeğiştirmek için /lang",
     "task_received": "✅ Aldım!\n\nÇözüm türü:\n1️⃣ Basit kelimelerle anlat\n2️⃣ Adım adım çözüm\n3️⃣ Çözümümü kontrol et\n\n1, 2 ya da 3 yaz veya aşağıdaki butona bas.",
     "answer": "📚 İşte çözümün:",
     "task_type_1": "basit kelimelerle anlat",
@@ -289,15 +289,15 @@
    "shots": {
     "1": {
      "file": "shot1-tr.webp",
-     "sha256": "886a4e37001141c0f356ccb2e5714bc8e11d2cb386ac2da4f2c6630491bfde63"
+     "sha256": "9d968d8cdcb3711a2070a528ec5f11ac14f8c463e70015684fe1fa50907af53f"
     },
     "2": {
      "file": "shot2-tr.webp",
-     "sha256": "8611b200acf08c3acc145a5457d05baff171a1f9c7108e87d7f8a97e1fdc1e50"
+     "sha256": "8f829de8d5f3c24ce8b99d49ed7f709b67b23a3d5e9af74e1b1f1213ad44eca5"
     },
     "3": {
      "file": "shot3-tr.webp",
-     "sha256": "fd226b93a1e83df7864507bf8cfd39ad888f7806ae12dcb1fba8f2ee13d8c470"
+     "sha256": "8c3bad0d170dd0a0ef652fb728d909b6ae875b329af5226b6d907410fbd0c228"
     }
    }
   },
