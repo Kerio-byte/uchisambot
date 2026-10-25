@@ -399,7 +399,15 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
      целиком, чтобы дыры не было. Значок LaunchIgniter в герое грузится сразу и печатается. */
   .foot-badges{display:none!important}
   .shots{grid-template-columns:repeat(3,1fr)!important;grid-auto-flow:row!important;
-    grid-auto-columns:auto!important;overflow:visible!important;scroll-snap-type:none!important}
+    grid-auto-columns:auto!important;overflow:visible!important;scroll-snap-type:none!important;
+    /* Лента тянется по ширине листа, а высота снимка — это 2,17 его ширины: на альбомном
+       A4 фигура выходит 324×730 px при высоте листа 703 px, каждая уезжает на свой лист,
+       и один лист остаётся вообще без единого знака (замер 25.10.2026: 11 листов,
+       лист 5 — 0 знаков во всех девяти языках). На бумаге телефон печатается одного
+       размера — 678 px, столько у ленты на портретном A4. По центру — потому что
+       заголовок раздела на бумаге центрирован, а лента шириной в лист была с ним заодно;
+       на портретном листе 678 px и есть вся ширина набора, центрировать нечего. */
+    max-width:678px;margin-left:auto;margin-right:auto}
   a{color:#111!important;text-decoration:underline}
   .btn,.contact button.btn{background:#fff!important;color:#111!important;
     border:1px solid #44506A;box-shadow:none!important}
