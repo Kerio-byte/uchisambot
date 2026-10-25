@@ -215,7 +215,8 @@ BADGE_ALTS = [
     # 23.10.2026: все значки лежат у нас (img/badges/), чужих адресов на страницах больше нет.
     # Старые адреса оставлены в образцах как второй вариант: так сборка понимает и архивную
     # страницу из git, и новый локальный файл, а не падает «совпадений 0» на пустом месте.
-    (r"(?:https://launchigniter\.com/api/badge/|(?:\.\./)?img/badges/launchigniter\.svg)", "LaunchIgniter"),
+    # 25.10.2026: LaunchIgniter из списка убран вместе со значком в герое — площадка удалила
+    # нашу страницу (200 + «Product Not Found»), ссылка вела в пустоту.
     (r"(?:https://fazier\.com/api/v1/|(?:\.\./)?img/badges/fazier\.svg)", "Fazier"),
     (r"(?:https://statics\.startupbase\.io/site/badges/|(?:\.\./)?img/badges/startupbase\.svg)", "StartupBase"),
     (r"(?:https://showmebest\.ai/badge/|(?:\.\./)?img/badges/showmebest\.webp)", "ShowMeBestAI"),
