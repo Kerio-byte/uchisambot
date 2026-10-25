@@ -5659,3 +5659,78 @@ favour of the right-margin rule).
 `landing-a11y-extra.py` (section D: three checks per measurement, the floor, the docstring),
 `docs/council-20261015.md` (the sweep count and what it now covers), `evidence/block-20261025i/`
 (sweep before and after publication, the battery logs, the negative control, the three-engine spot check of the live site), and this entry.
+
+## The header row was proven in one engine, and the form had never been measured with the keyboard up (25.10.2026)
+
+Two parameters had never varied in any battery this project owns: **the engine** — every wide
+battery is Chromium — and **the height** — each battery fixes the screen and keeps it until the
+run ends. The previous entry named the first limit itself: the three-engine check of the new
+header rule was *"a spot check, not a gate"*. The second limit had never been named, and it sits
+on the only conversion path the page has: the contact form on a phone, where the keyboard takes
+half the screen the moment a finger touches the field.
+
+**The header, in three engines.** The rule of 25.10 (`@media(max-width:760px){.top-in{justify-content:space-between;gap:0}.lang-dd{margin-left:0}}`)
+was counted, not measured, everywhere except Chromium: Portuguese at 340 px kept 2 px of spare.
+The width of a word comes from our own woff2, but the shaper is the engine's — a different one
+can set the same letters a pixel or two wider, and 2 px of spare is not a margin. `landing-header-engines.py`
+measures the row in Chromium, Firefox and WebKit at nine languages × six widths of the ordinary
+page (320, 340, 420, 760, 761, 900) and × three widths under the WCAG 1.4.12 overrides
+(320, 340, 420): four checks per run — the document is not wider than the screen, the switcher's
+right edge stays inside the page margin, the logo does not touch the switcher, the header menu
+does not touch it either. **973 checks, 0 failed** (243 runs plus a floor). All nine languages put
+the switcher's right edge exactly on the margin in all three engines, which is what the rule
+promised.
+
+Width 761 is not decoration: it is the first width **without** the phone rule, and it had never
+been measured by anyone — the tablet battery starts at 768, the phone batteries stop at 760, so
+seven pixels of desktop layout with a visible header menu lived between them. They are clean.
+
+**The negative control, and a weak one that lied.** Removing the rule from a copy of the tree
+turns the same battery red in five places: pt `ddRight=317.5` against a limit of 300, id 313.5,
+uk 324.2 **and** the document 324 px wide on a 320 px screen (a 4 px sideways pan), plus uk at 340.
+The first attempt at this control replaced the rule with `.top-in{gap:0}` — half the fix left in
+place — and produced exactly **one** red. A control that keeps half the fix is a control that
+hides the defect; the entry records it because the weaker version looked convincing.
+
+**The keyboard.** On 320×568 — the smallest phone the batteries know — an open keyboard leaves
+308 px of visible page. `landing-keyboard-form.py` taps the e-mail field, shrinks the viewport the
+way Android Chrome does (layout viewport = screen minus keyboard), and measures nine checks per
+run at nine languages × three phones (320×568 → 308, 360×800 → 500, 390×844 → 500): no sideways
+scroll; the field being typed into is visible for at least 60% of its height; the sticky bar is
+not shown while the form is in frame; the send button fits entirely in the frame after scrolling
+to it and is not covered by the bar; the typed text survives the keyboard opening; the page stays
+at the form instead of jumping to the top; after the keyboard closes the bar does not cover the
+form. **244 checks, 0 failed.** The 60% threshold is deliberate: a browser scrolls to the caret,
+not to the frame, and the probe showed the input's bottom edge sitting 4 px under the line at
+320×568 — demanding the whole frame would be a gate that cries wolf on every run.
+
+**A harness failure worth writing down.** The re-run of the tablet battery failed instantly with
+`Address already in use`: the header probe was holding port 8266, which is the tablet battery's
+default. That is the harness fighting itself, not the site; the same battery re-ran green
+(1 804 checks, 0). Batteries with fixed ports cannot be run in parallel.
+
+**Regression — the whole battery after the last CSS change.** 29 batteries, 12 124 checks, 0
+failures, plus the static sweep 2 748 / 0 and axe on 12 pages, 0 violations: a11y-extra 267,
+wcag22-targets 43, first-screen 252, text-clip 148, rotate 288, tablet-menu 162, tablet-page
+1 804, landscape-page 956, backtab 120, deeplink 684, video-motion 444, viewports-extra 94,
+env-prefs 45, fonts 39, cwv 69, third-party 108, print 147, print-main 213, print-paper 969,
+print-pages 391, print-contrast 3 543, live-runtime 121, the two new batteries 973 + 244; runs
+without a checks count: visual pass 18 screens, render-check 11 pages, browser smoke 18,
+cross-engine 60, glyph fallback 12 pages, Nu 11 pages, link audit 11 pages. Nothing was published:
+the site tree did not change in this block, and the sweep's publication checks read the live bytes
+green against the tree.
+
+**What this does not prove.** That WebKit-on-Linux is Safari-on-iOS: same engine family, different
+build, different font stack underneath. That shrinking the viewport is the same event as a Gboard
+appearing: the height is a fair approximation and the browser's own scroll-into-view heuristic is
+not reproduced, which is exactly why the gate asks for 60% and not 100%. That printing **from a
+phone** works: Chrome on Android lays the page out at the viewport width, `page.pdf()` lays it out
+at the paper width, so the phone-print case is not covered by any battery here and is not claimed —
+it would need a real device. And that the new gates would have caught today's site: they are green
+now, which is the only thing they say.
+
+**Files.** `docs/council-20261015.md` (two batteries added to "what guards this"), the skill's
+`scripts/landing-header-engines.py` and `scripts/landing-keyboard-form.py` (new, with their
+docstrings carrying the numbers), `references/landing-qa.md` (the two holes, the controls and four
+pitfalls), `SKILL.md` (the CSS-change battery list), `evidence/block-20261025j/` (29 battery logs,
+the header log, the keyboard log, both negative controls, the tablet re-run), and this entry.
