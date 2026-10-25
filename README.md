@@ -4655,3 +4655,85 @@ and the publish tree are untouched and nothing was re-published. `scripts/landin
 `scripts/landing-backtab.py` and `SKILL.md` in the `stars-bots-ops` skill;
 `evidence/text-clip-20261025T032328.json` (148), `evidence/backtab-20261025T032735.json` (120), their
 two control files.
+
+## Eleven batteries sat out the last CSS change, and nobody had ever turned the phone (25.10.2026)
+
+Two gaps, one block.
+
+**The first is not a defect but an absence of evidence.** The rule on this project is explicit — any change to CSS
+or `@font-face` invalidates every browser battery, because a rule that moves one box moves all eleven pages. The
+last four CSS commits (24.10 14:12, 22:34, 23:53, 25.10 01:26) changed the pause button's typeface, the sticky
+bar's media query from width to pointer, the landscape band under 430 px, and the tablet zone. What ran after them:
+the tablet batteries (02:19–03:01), the backward Tab walk and the text-clip battery (03:23–03:58). What did not:
+axe (last run 22.10), a11y-extra (23.10), wcag22, env-prefs, viewports-extra, fonts, cwv, render-check,
+cross-engine (all 22.10), and `landing-video-motion.py` (24.10 09:37 — three hours *before* the pause button was
+changed to the site's own typeface). Nine batteries and the one script whose subject had just been edited were
+sitting in the past. That is the exact shape of the failure this rule was written for: the site is green because
+nothing is looking.
+
+So they were all re-run against the current build, in order, each one's full output kept:
+`build --check` 24/24; sweep **2598 / 0**; render-check **ALL OK** (mobile single column, no-JS path, no JS errors);
+axe 12 pages **0 violations**; a11y-extra **187 / 0**; wcag22 targets **43 / 0**; env-prefs **45 / 0**;
+viewports-extra **94 / 0**; fonts **39 / 0**; cwv **69 / 0**; cross-engine **60 runs, 0 problems** (426 s);
+video-motion **444 / 0**; browser-smoke **18 runs, 0 problems**; external links 0 problematic; publish tree 513
+internal links, nothing missing and nothing from the workshop. **3831 numeric checks, zero failures** — and,
+separately, the published branch compared byte for byte with the working tree: 109 of 109 files identical, so the
+world is not showing yesterday's build.
+
+**The second gap is a class nobody had measured: the rotation.** Every measurement on this site happened *at rest*:
+the page was opened at a size and measured at that size. Rotation is a different event — it resizes the window of a
+*live* page. Two `resize` handlers wake up (the sticky bar's `sync`, the language list's `fit`), the browser
+recomputes every `IntersectionObserver` on its own, and scroll anchoring rewrites `scrollY` to keep the reader's
+content in place. A bug here does not look like a broken page; it looks like a phone turned sideways and a language
+menu whose last three languages are behind the edge.
+
+`scripts/landing-rotate.py` (port 8277, `--control`): four real portrait/landscape pairs (390×844 iPhone 14,
+375×667 iPhone SE, 412×915 Pixel, 768×1024 iPad) × en/ru/hi × Chromium and WebKit = **24 runs, 288 checks**.
+Per run: **A** the rotation is not a reload (a marker set in `window` survives both turns) and the document is
+never wider than the screen in any of the three states; **B** the block that stood at the top edge before the turn
+is still on screen after it (within ¾ of a screen), and a deeply scrolled page is not thrown back to the top;
+**C** the sticky bar, after a turn and *without any scroll*, keeps its rule — no second copy of the button when
+`#contact`, the footer or the shots CTA is in frame, and present, ≤64 px and pinned to the bottom otherwise;
+**D** the language list, opened *before* the turn, still fits afterwards (bottom inside the screen, at least two
+items visible), and after turning back its pixel cap returns to the previous value — proof the recalculation
+happened rather than "was cut once and stayed cut"; **E** back at the starting size, the document height and the
+vertical position of the hero heading, `#pricing`, `#contact` and the footer equal a **fresh load** at that size
+within ±2 px — otherwise a layout from another size is still in the page; **F** no JS errors.
+
+**288 / 0.** The number worth keeping: the language list's cap goes **430 → 292 → 430 px** in *both* engines, and
+the document height returns with **0 px** of drift on all 24 runs, so the return to portrait is the same page the
+visitor would have got by loading it fresh. Three traps, and all three were the harness's:
+
+1. "The last section above the top edge" looks like the reader's place, and is not: when the screen gets shorter
+   and the scroll position moves, a *different* section becomes the last one above the edge. Twelve correct pages
+   went red in WebKit before the check was replaced by an absolute anchor — the block under the top edge, and
+   where that block ended up on screen after the turn.
+2. The list's cap is set by `fit()` inside `requestAnimationFrame`, not by CSS, and a fixed 300 ms pause is a
+   promise about the browser that the browser has not made: on the **first** page of each pair in WebKit the
+   battery read the CSS value (712 px) and then compared it with the recomputed 430 — that is CSS compared with JS,
+   not a stale layout. It now waits for the inline value to appear, up to two seconds, and says so if it never does.
+3. The centre of the screen is not a reference point either: the centre of a 390 px-high screen is a different
+   place in the document than the centre of an 844 px-high one, so "the section under the centre" changes by
+   design. Another twelve red pages, all correct.
+
+The control removes the mechanism instead of the symptom: before load, the page's `addEventListener` is wrapped so
+`resize` and `orientationchange` are never registered — the page keeps its portrait cap. **18 of 288 go red**, and
+the split is the interesting part: all eighteen are D1 on the three *phone* pairs (cap stuck at 430 px on a 390 px
+screen, the list's bottom at 486 px, the lower languages behind the edge), while the iPad pair stays green because
+430 px still fits a 768 px-high landscape screen. The control discriminates; it does not paint everything red.
+A control that does not redden the class it was written for means the battery is blind, and this one is not.
+
+**What the battery cannot prove.** That a real device rotation is a viewport resize. iOS and Android re-create the
+visual viewport, collapse toolbars, and re-lay out on their own schedule; Playwright's `set_viewport_size` is the
+closest approximation available here, not the thing itself. A hardware rotation that behaves differently would not
+show up in these 288 checks.
+
+**Numbers.** build `--check` 24 / 24; sweep 2598 / 0; axe 12 pages / 0; a11y-extra 187 / 0; wcag22 43 / 0;
+env-prefs 45 / 0; viewports 94 / 0; fonts 39 / 0; cwv 69 / 0; cross-engine 60 / 0; video-motion 444 / 0;
+smoke 18 / 0; external links 0 / 0; publish tree 513 links / 0; published branch 109 / 109 identical;
+rotation **288 / 0** (control 288 / 18 red).
+
+**Files.** No site file changed — the re-run is proof and the new battery is proof, so the nine pages, the
+template and the publish tree are untouched and nothing was re-published. `scripts/landing-rotate.py` and
+`SKILL.md` in the `stars-bots-ops` skill; `evidence/block-20261025b/` (every battery's full output),
+`evidence/rotate-20261025T045054.json` (288) and `evidence/rotate-control-20261025T045354.json` (18 red).
