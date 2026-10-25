@@ -40,6 +40,9 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);color:v
 footer a{color:var(--muted)}
 :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 @media (forced-colors:active){.btn,.langs a{border:1px solid}}
+/* Бумага (25.10.2026): у .btn фон var(--brand), текст белый, а браузер печатает без фонов —
+   кнопка «Open UchiSamBot in Telegram» выходила белым прямоугольником без надписи. */
+@media print{.btn{background:#fff;color:#111;border:1px solid #44506A}}
 </style>
 </head>
 <body>

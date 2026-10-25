@@ -370,6 +370,48 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 /* Тема высокой контрастности снимает авторские фоны: возвращаем рамку нажимаемым узлам
    (submit имел border:0 через .contact button.btn — селектор повторяем, иначе проигрыш по специфичности) */
 @media(forced-colors:active){.btn,.contact button.btn,.lang-dd summary{border:1px solid}}
+/* ---------- БУМАГА (25.10.2026) ----------
+   До этой правки страница печаталась как оглавление: замер на A4 без фонов (так печатает
+   браузер по умолчанию) дал 8 листов, из них 6 почти пустых — номер раздела и заголовок
+   («01 How it works», «05 Pricing», «06 FAQ»), а под ними ничего. Причин было три, и все
+   три — «экранное» поведение, у которого на бумаге нет условий:
+   1) появление по прокрутке: 37 блоков из 37 имеют opacity:0, пока их не догонит
+      IntersectionObserver; на листе прокрутки нет — блоки остаются прозрачными;
+   2) браузер не печатает фоны: тёмная полоса призыва (#0E1526) и синие кнопки
+      (var(--brand)) теряют фон, а текст в них белый — белое на белом;
+   3) лента скриншотов на телефоне — горизонтальная прокрутка (1771 px содержимого
+      в 678 px окна): на бумагу попадала треть первого снимка.
+   Что делает блок: снимает прозрачность, возвращает тёмным плашкам тёмный текст на белом,
+   убирает экранную мебель (меню, липкая кнопка, «к содержанию», кнопка видео, рамка с
+   видео), разворачивает ленту в три колонки, подчёркивает ссылки и печатает адрес бота
+   один раз в подвале (на бумаге кнопки не нажимаются), держит карточки от разрыва
+   страницей. Ответы FAQ раскрывает скрипт ниже по beforeprint — в CSS это сделать нельзя. */
+@media print{
+  @page{margin:12mm 10mm}
+  html,body{background:#fff!important;color:#111!important}
+  html.js .rv{opacity:1!important;transform:none!important;transition:none!important}
+  .hero-in{grid-template-columns:1fr!important}
+  .band{background:#fff!important;color:#111!important;border:1px solid #B9C4D6;box-shadow:none!important}
+  .band h2,.band p,.band .dim{color:#111!important}
+  .top,.sticky-cta,.skip,.video-toggle,.hero-phone{display:none!important}
+  /* Значки площадок в подвале — lazy-картинки: на бумагу они не попадают (браузер снимает
+     макет раньше, чем до них доходит ленивая загрузка), и оставалась дыра. Убираем полосу
+     целиком, чтобы дыры не было. Значок LaunchIgniter в герое грузится сразу и печатается. */
+  .foot-badges{display:none!important}
+  .shots{grid-template-columns:repeat(3,1fr)!important;grid-auto-flow:row!important;
+    grid-auto-columns:auto!important;overflow:visible!important;scroll-snap-type:none!important}
+  a{color:#111!important;text-decoration:underline}
+  .btn,.contact button.btn{background:#fff!important;color:#111!important;
+    border:1px solid #44506A;box-shadow:none!important}
+  .foot::after{content:"t.me/UchiSamBot";display:block;margin-top:10px;font-weight:700;font-size:13px}
+  .card,.price,.shot,.steps li,.ref-band,.parents-band,.band,.faq details{break-inside:avoid}
+  footer .foot{break-inside:avoid}
+  h1,h2,h3,.sec-head,.sec-num{break-after:avoid}
+  .sec{padding-top:22px}
+  .faq summary::after{content:""!important}
+  .faq details p{margin:0 20px 14px}
+  .shot img,.phone-frame{box-shadow:none!important}
+}
 </style>
 <script>
 /* Прибытие по ссылке с якорем (#pricing, #contact) — это не нажатие в меню, и плавная
@@ -880,6 +922,28 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     }
   }, {rootMargin: '0px 0px -8% 0px', threshold: 0.06});
   for (var j = 0; j < els.length; j++) io.observe(els[j]);
+})();
+</script>
+<script>
+(function(){
+  // Печать: на бумаге FAQ раскрывается целиком. В CSS это невозможно — содержимое
+  // закрытого <details> прячет сам браузер (::details-content), и оно не печатается:
+  // замер 25.10.2026 — на листе остались 11 вопросов и ни одного ответа, то есть
+  // половина справочной части страницы (и самая полезная) терялась. beforeprint
+  // срабатывает и при Ctrl+P, и при «Сохранить как PDF»; после печати состояние
+  // возвращается, закрытые вопросы остаются закрытыми.
+  var faq = document.querySelectorAll('.faq details');
+  if (!faq.length || !window.addEventListener) return;
+  var opened = [];
+  window.addEventListener('beforeprint', function(){
+    for (var i = 0; i < faq.length; i++){
+      if (!faq[i].open){ faq[i].open = true; opened.push(faq[i]); }
+    }
+  });
+  window.addEventListener('afterprint', function(){
+    for (var i = 0; i < opened.length; i++) opened[i].open = false;
+    opened = [];
+  });
 })();
 </script>
 <script>

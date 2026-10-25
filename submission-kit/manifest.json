@@ -1,6 +1,6 @@
 {
  "note": "Пишется только tools/submission-kit.py. Картинки для форм сторонних площадок: подписи берутся из src/locales/en.json, число бесплатных разборов — из tools/prices.json, названия языков — из LABELS tools/build.py. Свип сверяет байты с этим файлом и манифест с источниками (см. «submission-kit» в landing-sweep.py).",
- "generated": "2026-10-24T15:59:06+03:00",
+ "generated": "2026-10-25T11:35:01+02:00",
  "canvas": [
   1920,
   1080
@@ -53,7 +53,7 @@
  "sources": {
   "src/locales/en.json": "e53895fdeca3f6dc5207ad223e20c9fae5524b71f4359fc5ddda598930d1007e",
   "tools/prices.json": "60486663b164064a1bbe57dc1a93a4528935487de8a7368ef1172623531f2e7f",
-  "tools/build.py": "ad6e0e17049d4485e0c23f7a9d616f3d64d5c3e85a2da54ddd4aac4670adcd37",
+  "tools/build.py": "455939131eb67cce8aeb3407696302deea47f651d88d1c5f9e076c2b98982147",
   "card1": "621bfccf9d883efbed2573caf1d40f9a7940f678670c6bb7b1a03d6c59e1288d",
   "card2": "e6dd26b59a7dbc66aa850f7b3bf36b083962613899cf8086fe7050480717fe9d",
   "card3": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784",
