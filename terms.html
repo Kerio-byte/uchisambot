@@ -63,8 +63,12 @@ footer .foot-badges img{height:46px;width:auto;display:block}
 .skip:focus{top:10px}
 main:focus{outline:none}
 /* Бумага (25.10.2026): «Skip to content» — position:fixed, браузер печатает такие узлы на
-   каждом листе, и текст ссылки попадал на страницу условий рядом с абзацами. */
-@media print{.skip{display:none}}
+   каждом листе, и текст ссылки попадал на страницу условий рядом с абзацами.
+   Второе (25.10.2026): полоса значков площадок в подвале — lazy-картинки, до бумаги они не
+   догружаются (замер: naturalWidth 0 у всех трёх), на листе оставалась дыра 46 px, а полоса
+   уезжала на следующий лист. Условия печатались шестью листами, шестой — пустой. */
+@media print{.skip{display:none}.foot-badges{display:none}
+  footer{margin-top:28px;padding-bottom:0}}
 </style>
 </head>
 <body>

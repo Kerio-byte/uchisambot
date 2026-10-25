@@ -63,8 +63,17 @@ footer .foot-badges img{height:46px;width:auto;display:block}
 .skip:focus{top:10px}
 main:focus{outline:none}
 /* Бумага (25.10.2026): «Skip to content» — position:fixed, браузер печатает такие узлы на
-   каждом листе, и текст ссылки попадал на страницу политики рядом с абзацами. */
-@media print{.skip{display:none}}
+   каждом листе, и текст ссылки попадал на страницу политики рядом с абзацами.
+   Второе (25.10.2026): полоса значков площадок в подвале — lazy-картинки, до бумаги они не
+   догружаются (замер: naturalWidth 0 у всех трёх), на листе оставалась дыра 46 px.
+   Третье (25.10.2026): политика печаталась восемью листами, и последний был почти пустой —
+   одна строка подвала «Home · Privacy Policy · Terms of Service», краска 0.07 %. Уплотнили
+   бумажный вариант (поля разделов, отступ подвала) — стало семь листов, подвал на последнем
+   вместе с разделом 9. `break-before:avoid` на подвале оставлен как страховка: он не даёт
+   подвалу уехать на отдельный лист, если на будущем тексте места хватит впритык. */
+@media print{.skip{display:none}.foot-badges{display:none}
+  main{padding-top:8px} h3{margin-top:10px}
+  footer{margin-top:8px;padding:10px 0 0;break-before:avoid}}
 </style>
 </head>
 <body>
