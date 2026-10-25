@@ -5736,3 +5736,115 @@ docstrings carrying the numbers), `references/landing-qa.md` (the two holes, the
 pitfalls), `SKILL.md` (the CSS-change battery list), `evidence/block-20261025j/` (37 logs:
 the 29 harness batteries, the tablet re-run, the two new gates, both negative controls,
 the sweep, axe), and this entry.
+
+## A browser setting that grows only the text pushed the header off the screen (25.10.2026)
+
+Thirty-one batteries have measured how this page behaves at a different *scale*: zoom at 200 %,
+the WCAG 1.4.12 spacing overrides, rotation, a short landscape screen, an open keyboard. None of
+them measured a different *kind* of scale — the browser's own **minimum font size**. Chrome and
+Edge offer it as a slider that stops at 24 px; Firefox has the same control under Settings →
+Fonts → Advanced (the `font.minimum-size.*` prefs). It raises the text and nothing else: boxes,
+padding and a rigid header row keep their pixels. Zoom moves both, so no zoom test can reproduce
+it, and the phone header row fitted earlier the same day had been counted in pixels.
+
+**What it did.** At a 24 px minimum, on a 320 px screen the Ukrainian page scrolled sideways by
+32 px, Portuguese by 21, Indonesian by 13. At 761 px — the first width where the header menu
+appears, and a width no battery had touched until the previous block — Russian scrolled sideways
+by 124 px, Ukrainian by 116, Portuguese by 98, Spanish by 86. At 900 px Russian put the switcher
+5 px past the margin; at 1024 px everything was clean. The cause was one line,
+`.top-in{height:62px}`: a rigid row that could neither wrap nor give the switcher less room than
+its own words.
+
+**A defect the setting did not create, only exposed.** At the ordinary font, Indonesian at
+320–340 px had always been squeezed: its label is 166 px wide, the logo takes 147, and the row
+has 280–300 px. With wrapping forbidden the browser did what flexbox does — it shrank the box, and
+"Bahasa Indonesia" broke into two lines inside a 38 px pill (measured: label height 44.8 px
+against a one-line 22.4). No battery ever saw it, because nothing overflowed and nothing was
+clipped: every box sat inside the margins, the words were simply the wrong shape. A screenshot of
+the old state is kept in the evidence folder.
+
+**The fix, and its price.** The row wraps (`flex-wrap:wrap`, `min-height` instead of `height`),
+nothing in it may shrink (`flex:0 0 auto` on the brand, the menu and the switcher) and the
+language label cannot break (`white-space:nowrap`). Wrapping rather than truncating: a cut language
+name is worse than a second line. The price is named — Indonesian at 320–340 px now carries a
+two-row header, 74 px instead of 62; it is the only place where the content genuinely does not
+fit, and one word from the owner ends it. Russian, Portuguese, Vietnamese and Ukrainian at 761 px
+with a 24 px minimum get three rows (brand, menu, switcher): that is what "nothing fits" looks like
+when no word may be lost.
+
+**The consequence that had to be fixed too.** A taller sticky header broke anchor arrival.
+`html{scroll-padding-top:84px}` is 63 px of header plus 21 px of air; with two rows the heading
+landed 12 px *under* the header at 320 px and 52 px under it at 761. A script at the end of the
+body now measures the header and sets the padding to its height plus 20 px — and only when the
+header is taller than usual: at 63 px it removes the inline style, the CSS rule stays in force,
+and the ordinary 84 px landing is untouched (the arrival battery still measures it). One detail
+cost a red line and is worth the sentence: Firefox jumps to the fragment while parsing, *before*
+the script runs, so setting the padding was not enough there — 5.4 px of air left at 761 px with
+a 78.6 px header. The script therefore re-places the target once, instantly, right after it has
+measured the header, and never on resize.
+
+**The gate.** `landing-min-font.py` runs two engines at two levels (16 and 24 px), six widths
+(320, 340, 420, 761, 900, 1440) and nine languages, five of them on the wide widths, with ten
+checks per run plus part 0 — "at the ordinary font nothing moved". The checks: the setting applied;
+no sideways scroll; nothing outside the right edge; the switcher inside the margin; a hit landing
+on the switcher; a target of at least 44×24; the label on one line; neighbours not overlapping when
+they share a row; the header under 45 % of the screen; the open language list inside the viewport;
+and an anchor landing below the header with air. **1 554 checks, 0 failed.**
+
+**Two controls, because one was not enough.** The copy with the three CSS rules reverted and the
+padding script cut out gives **1 532 checks, 82 failures** — sideways scroll, the switcher past the
+margin, the torn label, the dead hit-test, the list outside the frame: the defects this block
+found, each in the language and width where it lived. That copy also carries *yesterday's* header,
+which never grew, so the anchor check passes there and proves nothing; the anchor fix therefore has
+its own control, which strips only the script out of the served HTML (`context.route`, the way the
+arrival battery does it) and counts substitutions: **9 checks, 6 failures, both engines**, the
+heading 11.6 px and 51.8 px under the header.
+
+**A trap worth writing down.** The first version of the gate proved the setting had applied by
+reading `getComputedStyle(summary).fontSize`. Chromium reports the raised size (14 → 24 px);
+**Firefox keeps reporting 14 px** while laying the text out at 24 — 39 red lines on a healthy
+page. A minimum font size is geometry, so the gate now measures geometry: the label's height
+against a one-line probe in the same engine. The Chromium route is the engine setting behind the
+slider (`--blink-settings=minimumFontSize`); the profile route (`webkit.webprefs.minimum_font_size`
+in a prepared profile) was tried first and does nothing under Playwright's headless profile — the
+label stayed at 14 px — so the gate's docstring says which of the two it uses instead of implying
+it is the dialog.
+
+**Regression.** Eighteen batteries after the change, **7 202 checks, 0 failures**: a11y-extra 267,
+header-engines 973, first-screen 252, viewports-extra 94, tablet-menu 162, landscape-page 956,
+rotate 288, keyboard-form 244, wcag22-targets 43, text-clip 148, deeplink 684, backtab 120,
+env-prefs 45, print-main 213, print-paper 969, cwv 69, live-runtime 121 and the new gate 1 554.
+Around them: the static sweep **2 775 / 0** (now including the three new checks and the publication
+pair), axe **0 violations on 12 pages**, the link audit 11 pages / 0 problems, Nu 11 pages / no
+findings, the browser smoke 18 pages clean, the render check 11 pages `ALL OK`, the cross-engine
+sweep 60 runs / 0 problems, and the live checks — 26 of 26 bytes identical, assets, runtime 121 / 0.
+
+Two batteries had to be taught that a header can now be two rows: `landing-a11y-extra.py` and
+`landing-header-engines.py` both compared the logo's right edge with the switcher's left edge across
+*anything*, which was true while the row could not wrap. They reddened 4 and 24 times on a healthy
+page, and both now compare only neighbours that share a row.
+
+**One battery did not finish, and it is not the site.** `landing-tablet-page.py` hangs right after
+its two screenshots — the Chromium process disappears, Playwright waits on a socket forever. It
+hangs in exactly the same place, with the same silence, when pointed at yesterday's tree
+(`LANDING_ROOT` at the previous commit), which is what makes it a harness problem and not this
+change; the previous block saw the same battery lose its browser once. Its subject — the tablet
+layout and the sticky bar — is covered by tablet-menu, viewports-extra, header-engines,
+landscape-page, rotate and first-screen, all green. It is written down here rather than quietly
+dropped, and it stays an open item for the harness.
+
+**What this does not prove.** That the headless flag is byte-for-byte the user's slider: it flips
+the same Blink setting the preference feeds, but the preference route could not be exercised
+headless, and that is why both engines were measured instead of one. That a real phone with this
+setting behaves identically: both engines were measured, no device was touched. That a three-row
+sticky header is pleasant: it is the honest alternative to a 124 px sideways scroll, not a design
+choice. And that the settings users actually pick are 16 and 24: those are "large" and the top of
+Chrome's slider, the two ends that matter.
+
+**Files.** `docs/council-20261015.md` (three new static checks in "what guards this"),
+`scripts/landing-min-font.py` (new, its docstring carrying the numbers), `scripts/landing-sweep.py`
+(two header checks, one anchor check, the old phone-rule string updated), `scripts/landing-a11y-extra.py`
+and `scripts/landing-header-engines.py` (both compared the logo with the switcher by X across rows,
+which the wrap turned into 4 and 24 false reds — now row-aware), `evidence/block-20261025k/`
+(the gate, both controls, the whole harness after the change, the old-state screenshots), and this
+entry.
