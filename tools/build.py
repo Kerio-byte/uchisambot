@@ -224,7 +224,9 @@ BADGE_ALTS = [
     # 22.10.2026: значок Startup Fame отдаётся с нашего домена (ORB резал горячую ссылку),
     # поэтому здесь два варианта src: свой файл и старый чужой адрес.
     (r"(?:https://startupfa\.me/badge\?|(?:\.\./)?img/badges/startupfa\.svg)", "Startup Fame"),
-    (r"(?:https://cdn\.openhunts\.com/badges/|(?:\.\./)?img/badges/openhunts\.webp)", "OpenHunts Club"),
+    # 25.10.2026: OpenHunts Club убран вместе со значком — площадка не держит нашей страницы:
+    # её карта сайта перечисляет 3 837 проектов, нашего среди них нет, а прямой адрес отвечает
+    # 200 страницей «Project Not Found». Значок вёл на главную, и проверить обещание было нечем.
     (r"(?:https://auraplusplus\.com/images/badges/|(?:\.\./)?img/badges/auraplusplus\.svg)", "Aura++"),
 ]
 

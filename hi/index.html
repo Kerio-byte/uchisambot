@@ -724,14 +724,25 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     <div class="foot-badges" role="group" aria-label="लॉन्च प्लेटफ़ॉर्म पर फ़ीचर्ड">
       <a href="https://fazier.com/launches/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/fazier.svg" width="103" height="44" alt="Fazier पर फ़ीचर्ड" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
       <a href="https://startupbase.io/products/uchisambot-study-helper?utm_source=startupbase&utm_medium=badge&utm_campaign=launch-badge-light" target="_blank" rel="noopener noreferrer"><img src="../img/badges/startupbase.svg" alt="StartupBase पर फ़ीचर्ड" width="300" height="80" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
-      <a href="https://showmebest.ai" target="_blank" rel="noopener"><img src="../img/badges/showmebest.webp" alt="ShowMeBestAI पर फ़ीचर्ड" width="240" height="60" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <!-- 25.10.2026, блок «полоса обещала семь площадок»: значок ShowMeBestAI вёл на главную
+           площадки, хотя своя страница продукта у неё есть и названа в её карте сайта
+           (/ai-tools/kerio-byte-github-io-uchisambot). Пока ссылка шла на главную, проверить
+           обещание было нечем: главная списка продуктов не показывает. Теперь ведёт на нашу
+           страницу — и её проверяет гейт мягкой 404. -->
+      <a href="https://showmebest.ai/ai-tools/kerio-byte-github-io-uchisambot" target="_blank" rel="noopener"><img src="../img/badges/showmebest.webp" alt="ShowMeBestAI पर फ़ीचर्ड" width="240" height="60" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
       <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/liftoff-launched.webp" alt="LiftOff पर फ़ीचर्ड" width="360" height="120" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
       <a href="https://lift-off.sh/p/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/liftoff-day.webp" alt="LiftOff पर दिन का नंबर 1" width="360" height="120" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
       <!-- Startup Fame отдаёт значок с HTTP 200, но Chrome режет ответ как ORB (ERR_BLOCKED_BY_ORB),
            поэтому горячая ссылка молча пряталась своей onerror и площадок было видно 7 из 8.
            Файл отдан с нашего домена (img/badges/startupfa.svg), ссылка по-прежнему ведёт на площадку. -->
       <a href="https://startupfa.me/s/-51?utm_source=kerio-byte.github.io" target="_blank" rel="noopener"><img src="../img/badges/startupfa.svg" alt="Startup Fame पर फ़ीचर्ड" width="171" height="54" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
-      <a href="https://openhunts.com" target="_blank" rel="noopener"><img src="../img/badges/openhunts.webp" alt="OpenHunts Club पर फ़ीचर्ड" width="486" height="105" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
+      <!-- 25.10.2026: значок OpenHunts Club убран. Ссылка вела на главную площадки, поэтому
+           проверять обещание было нечем; вопрос задали её собственному каталогу: карта сайта
+           перечисляет 3 837 страниц проектов, нашей среди них нет, а прямой адрес
+           /projects/uchisambot-study-helper отвечает кодом 200 страницей «Project Not Found»
+           (служебную нагрузку Next.js с нашим слагом видит только поиск по сырому телу).
+           Значок без страницы — то же, что значок LaunchIgniter: обещание, которого нечем
+           подтвердить. Значков семь: 4 + 3. -->
       <a href="https://auraplusplus.com/projects/uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/auraplusplus.svg" alt="Aura++ पर फ़ीचर्ड" width="150" height="44" loading="lazy" decoding="async" onerror="(this.closest('a')||this).style.display='none'" /></a>
     </div>
   </div>
