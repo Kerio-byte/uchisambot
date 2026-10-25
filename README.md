@@ -412,9 +412,14 @@ once in the footer (`t.me/UchiSamBot` — a button cannot be pressed on paper) a
 and the footer from breaking across sheets; a four-line `beforeprint` handler opens every FAQ
 answer and `afterprint` closes it again (the answers are the useful half of a kept printout).
 Measured: 7–8 A4 sheets per language, no blank sheet, no light-on-white text, no
-`position:fixed`. Covered by `landing-print.py` (126 checks: nine languages × layout
-assertions + the PDF's own text, answer text and page count) with a control that strips the
-block and turns 99 checks red; eight static markers hold the same strings in the sweep.
+`position:fixed`. The footer also loses its screen spacing on paper (`padding:10px 0 0;
+margin-top:20px` instead of 44/56/34 px): with the screen numbers the block stands 274 px tall,
+does not fit the 241 px left on the sheet and moves away whole, so the eighth sheet carried the
+footer and nothing else in Russian (25.10.2026, entry below). Covered by `landing-print.py`
+(147 checks: nine languages × layout assertions + the PDF's own text, answer text and page
+count) with a control that strips the block and turns 111 checks red; eight static markers hold
+the same strings in the sweep. Where a section heading lands and whether the footer stands alone
+on the last sheet is `landing-print-main.py` (213 checks, 25.10.2026).
 The three pages outside the generator print under their own rule: `privacy.html` and
 `terms.html` lose the skip link and the footer badge strip (three lazy pictures that never
 reach a print layout — a 46 px hole on the sheet), and the policy is compacted so its footer
@@ -5071,3 +5076,59 @@ legibility, not pagination. Nothing was printed on a real printer or on paper.
 **Files.** `privacy.html`, `terms.html` (the print block, the badge strip, the compaction);
 `landing-print-pages.py` (new), `landing-print-contrast.py` (new), `landing-sweep.py` (+2 markers) and
 `SKILL.md` in the `stars-bots-ops` skill; this entry and the "Printing" paragraph above.
+
+## The landing printed eight sheets, and the eighth was the footer (25.10.2026)
+
+Three print batteries measured this page. `landing-print.py` reads the print layout and the PDF of
+all nine languages, `landing-print-pages.py` asks where a heading lands — but only on the policy,
+the terms and the 404 — and `landing-print-contrast.py` measures legibility on a sheet. Nobody asked
+the two questions that only make sense on a sheet with nine sections: **where does a section heading
+land on the nine language pages**, and **what exactly is on their last sheet**.
+
+**The footer printed as a sheet of its own.** In Russian the page came out as eight sheets, and the
+eighth carried five lines: the bot's title, the payments line, the policy links, the badge names and
+`t.me/UchiSamBot` — 196 characters and 0.56 % ink. Ukrainian and Indonesian also ran to eight
+(309/0.85 % and 335/1.02 %). Measured from the paper, the foot of the seventh sheet in Russian held
+85 mm of nothing. The cause was not text: `footer{padding:44px 0 34px;margin-top:56px}` is screen
+spacing, and it lives on paper too. The block stands 274 px tall, the sheet had 241 px left, and
+`footer .foot{break-inside:avoid}` moved the whole thing to a fresh sheet rather than split it.
+
+**Fixed by giving the footer paper spacing**, the same way the policy was fixed yesterday:
+`@media print{footer{padding:10px 0 0;margin-top:20px}}` — 166 px instead of 274. Russian goes from
+eight sheets to seven, and its last sheet now carries 544 characters, twelve of them not the footer.
+The other seven languages did not change: en/es/pt/hi/tr/vi stay at seven sheets, and their last
+sheets already carried the form's closing line above the footer.
+
+**Ukrainian and Indonesian still print eight.** Their first big gap is earlier: three phone
+screenshots sit in one row, each `figure.shot` is 495 px tall and `break-inside:avoid` keeps it
+whole, so on sheet two a 365–385 px remainder cannot take the rail and the sheet ends with 96–101 mm
+of blank paper. Cutting a screenshot in half to save a sheet was rejected — the picture is the
+argument, and a half picture on two sheets is worse than a spare sheet. The numbers are recorded in
+`tools/print-sheets.json`, one budget per language: a regression above it is red, and a page that
+gets shorter means the budget comes down by hand.
+
+**The gate was blind in the way it was first written.** The first version asked whether the last
+sheet carried any line that the footer's `innerText` does not contain. With the screen paddings
+restored as a control it turned **one** check red instead of two: pdftotext and `innerText` break
+lines differently, and the printed address is generated content (`.foot::after`) that `innerText`
+never sees. The footer text is now assembled with its pseudo-element, and the question is answered
+by volume instead: last sheet characters ÷ footer characters. The thinnest real sheet is ×1.61
+(uk), the defect is ×1.09 (ru), so the threshold sits at ×1.20 in the gap between them. With that,
+`--mutate footerpad` turns two checks red on Russian: eight sheets, and a footer alone on the last.
+
+**Numbers.** New `landing-print-main.py`: **213 checks, 0 problems** — per language: `pdfinfo` agrees
+with the text chunking, sheets within budget, no sheet under 0.15 % ink, no sheet ending with its own
+`h1/h2/h3`, no sheet under 200 characters before the last, and the footer not alone on the last.
+Measured both on the tree and, after publishing, on `kerio-byte.github.io/uchisambot/` — same sheet
+counts and same per-sheet characters, so the live site prints what the tree prints. Re-run because
+the print CSS changed: `landing-print.py` **147 / 0**, `landing-print-pages.py` **52 / 0**,
+`landing-print-contrast.py` **3 543 / 0**, sweep **2 707 / 0**, `build.py --check` **24 / 24**.
+
+**What this does not prove.** Chromium's PDF only, and no real printer. A blank third of a sheet
+before the screenshots rail (96–101 mm in uk/id) stays: a 495 px figure cannot be split across
+sheets without cutting the picture, and that trade was refused, not missed. Nothing here says the
+page is worth printing — only that if someone does, no sheet is wasted on the footer alone.
+
+**Files.** `index-src.html` (the footer rule in `@media print`), every built page, `tools/print-sheets.json`
+(new); `landing-print-main.py` (new) and `SKILL.md` in the `stars-bots-ops` skill; this entry and the
+"Printing" paragraph above.
