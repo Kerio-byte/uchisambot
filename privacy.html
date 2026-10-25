@@ -70,9 +70,13 @@ main:focus{outline:none}
    одна строка подвала «Home · Privacy Policy · Terms of Service», краска 0.07 %. Уплотнили
    бумажный вариант (поля разделов, отступ подвала) — стало семь листов, подвал на последнем
    вместе с разделом 9. `break-before:avoid` на подвале оставлен как страховка: он не даёт
-   подвалу уехать на отдельный лист, если на будущем тексте места хватит впритык. */
+   подвалу уехать на отдельный лист, если на будущем тексте места хватит впритык.
+   Четвёртое (25.10.2026, приёмка): правила печати писались селекторами на элемент
+   (`main{padding-top:8px}`, `.foot-badges{display:none}`) и молча проигрывали каскад
+   классовым правилам экрана (`.wrap{padding:0 20px}`, `footer .foot-badges{display:flex}`).
+   Теперь оба селектора не слабее экранных — иначе объявленное правило просто не действует. */
 @media print{.skip{display:none}footer .foot-badges{display:none}
-  main{padding-top:8px} h3{margin-top:10px}
+  main.wrap{padding-top:0} h3{margin-top:10px}
   footer{margin-top:8px;padding:10px 0 0;break-before:avoid}}
 </style>
 </head>
