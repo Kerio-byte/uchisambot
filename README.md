@@ -415,6 +415,15 @@ Measured: 7–8 A4 sheets per language, no blank sheet, no light-on-white text, 
 `position:fixed`. Covered by `landing-print.py` (126 checks: nine languages × layout
 assertions + the PDF's own text, answer text and page count) with a control that strips the
 block and turns 99 checks red; eight static markers hold the same strings in the sweep.
+The three pages outside the generator print under their own rule: `privacy.html` and
+`terms.html` lose the skip link and the footer badge strip (three lazy pictures that never
+reach a print layout — a 46 px hole on the sheet), and the policy is compacted so its footer
+does not sit alone on a sheet (7 sheets instead of 8, the last one carrying section 9);
+`404.html` prints as one sheet with its button as dark ink. Measured by
+`landing-print-pages.py` (52 checks: page count from `pdfinfo`, ink per sheet, no heading at
+the foot of a sheet) and `landing-print-contrast.py` (3 543 checks: every element with its own
+text on twelve pages in Chromium, Firefox and WebKit, against the white sheet and against its
+own plate).
 Without JavaScript the FAQ still prints closed — that limitation is the browser's, not a hidden
 promise.
 
@@ -5000,3 +5009,65 @@ ran against `kerio-byte.github.io/uchisambot/` and `/ru/`: 37 of 37 blocks trans
 0 in print, the band's text `rgb(17, 17, 17)`, `t.me/UchiSamBot` in the footer, the first FAQ answer
 present in the PDF, seven sheets for English and eight for Russian — the published page and the tree
 print the same way.
+
+## The policy's last sheet carried one line, and the badges were a hole (25.10.2026)
+
+The print block measured the landing page and stopped at its edge. The three pages outside the
+generator got one rule each — `skip{display:none}` on the policy and the terms, the button's colours
+on the 404 — and nobody asked the two questions that only make sense on a sheet: **what is on the
+last sheet**, and **what is on the page at all**. Both had answers.
+
+**The badge strip printed as a hole.** `privacy.html` and `terms.html` carry the same "Featured on"
+strip as the landing page, and the landing page hides it in print for a measured reason: the nine
+logos are `loading="lazy"` pictures, a print layout never scrolls to them, so they arrive as
+nothing. On the legal pages the strip was not hidden. Measured in print media: `.foot-badges` present,
+`display:flex`, height 46 px, and all three images `naturalWidth 0` — a 46 px band of blank paper
+between the footer links and the bottom of the sheet, the same defect that was fixed on the landing
+page and missed one file over.
+
+**The policy's last sheet was a single line of footer.** An A4 print of `privacy.html` came out as
+**eight sheets**, and the eighth carried `Home · Privacy Policy · Terms of Service` — nothing else.
+Ink on that sheet: **0.07 %**, while the seven before it carry 6–8 %. The terms were fine (5 sheets,
+the last one 4.25 % ink with section 9 on it), so the defect was the policy's length, not the
+rule. Compacting the paper layout — `main{padding-top:8px}`, `h3{margin-top:10px}`,
+`footer{margin-top:8px;padding:10px 0 0;break-before:avoid}` — puts section 9 and the footer on the
+same sheet: **7 sheets instead of 8**, last sheet 2 097 characters and 5.9 % ink. `break-before:avoid`
+alone was tried first and does nothing (measured: still 8 sheets) — the engine cannot pull a block
+backwards that does not fit; it only refuses to push it forward. It stays as a guard for the day a
+paragraph is added and the footer would fit by a hair.
+
+**The gate was wrong before the site was.** The first version of the new battery read the PDF with
+`pdftotext -layout` and split on `\f` — but `pdftotext` ends *every* sheet with a form feed, so the
+split leaves an empty tail, and that tail was reported as "sheet 9 is empty" on the policy, "sheet 6"
+on the terms, "sheet 2" on the 404. `pdfinfo` said 8, 5 and 1. The same mistake then sent the 404's
+`body{min-height:100vh}` to the workshop for a fix it did not need: the page has printed as one sheet
+all along (`pdfinfo: Pages 1`), and `min-height:100vh` on paper is exactly one page, which centres the
+404 where it belongs. That change was reverted, not shipped. The battery now cross-checks
+`pdfinfo Pages` against the number of text chunks and judges emptiness by **ink**, not by text
+length: 0.07 % is a sheet with one line on it, and only a picture-less, line-less sheet reads 0.
+
+**Numbers.** New `landing-print-pages.py`: **52 checks, 0 problems** — per page: page count agreement
+between `pdfinfo` and the text chunking, ink per sheet ≥ 0.15 %, no sheet empty of text, no sheet
+ending with one of the page's own `h1/h2/h3`, no sheet ending in a one-or-two-word fragment, and no
+sheet under 200 characters before the last. Sheets: policy 7, terms 5, 404 1; ink 5.9–8.3 %, 4.2–6.5 %,
+1.7 %. Its control, `--mutate strip`, removes the print rules from the loaded page and turns **3
+checks red** (policy back to 8 sheets with a 0.07 % last sheet, plus the skip link's text surfacing at
+the foot of two sheets). Second battery, `landing-print-contrast.py`: **3 543 checks, 0 problems** —
+twelve pages (nine languages plus the policy, the terms and the 404) × three engines (Chromium,
+Firefox, WebKit) × every element that carries its own text, each measured against a white sheet (the
+browser drops backgrounds by default) and against its own background, at WCAG thresholds (4.5, 3.0 for
+large text). Its control, `--mutate noprint`, deletes `@media print` and turns **135 checks red** (five
+elements per page per engine: the two CTAs, the closing band's heading and paragraph, the form's
+button). Re-run because the CSS changed: sweep **2 705 / 0** (2 703 + the two new markers; before
+publishing the only red is the live site still serving the old build), `landing-print.py` **147 / 0**,
+`build.py --check` **24 / 24**.
+
+**What this does not prove.** Chromium's PDF is the only paper that was actually produced: Firefox and
+WebKit were measured as *CSS applied in print media*, not as a PDF — Playwright prints to PDF only in
+Chromium, and this machine's Firefox is a snap whose `--print-to-pdf` writes nothing (checked: a
+screenshot from the same headless run works, the PDF flag does not). The 1 181 elements per engine are
+legibility, not pagination. Nothing was printed on a real printer or on paper.
+
+**Files.** `privacy.html`, `terms.html` (the print block, the badge strip, the compaction);
+`landing-print-pages.py` (new), `landing-print-contrast.py` (new), `landing-sweep.py` (+2 markers) and
+`SKILL.md` in the `stars-bots-ops` skill; this entry and the "Printing" paragraph above.
