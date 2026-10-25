@@ -395,6 +395,29 @@ and the language-switcher summary. The light design does not react to
 declaration). Covered by `landing-env-prefs.py` (45 checks, forced-colors screenshots
 included) and by the sweep's `fc btn border` marker on every language page.
 
+Printing (added 25.10.2026): until this block the page had no print rules, and a printout of
+it was a table of contents — an A4 sheet carrying `01 How it works`, `02 What's inside`, …
+with blank paper under every heading (8 sheets, 6 of them nearly empty on English). Three
+screen-only behaviours caused it, and none of them has a condition on paper: the reveal
+(`html.js .rv{opacity:0}`) waits for a scroll that a sheet never performs, so 37 of 37 blocks
+stayed transparent; the browser prints without backgrounds, so the white text on the dark band
+(`#0E1526`) and on the brand-blue buttons printed white on white; and the phone shots sit in a
+horizontal rail (1 771 px of content in a 678 px window), of which only a third of the first
+screenshot reached the paper. Closed FAQ answers do not print at all — the inside of a
+`<details>` is the browser's to hide and CSS cannot reopen it. The `@media print` block at the
+end of the stylesheet releases the reveal, turns the band and the buttons into dark ink on
+white, hides the screen furniture (header menu, sticky bar, skip link, video toggle, the 648 px
+video frame), lays the three shots out as one row, underlines links, prints the bot address
+once in the footer (`t.me/UchiSamBot` — a button cannot be pressed on paper) and keeps cards
+and the footer from breaking across sheets; a four-line `beforeprint` handler opens every FAQ
+answer and `afterprint` closes it again (the answers are the useful half of a kept printout).
+Measured: 7–8 A4 sheets per language, no blank sheet, no light-on-white text, no
+`position:fixed`. Covered by `landing-print.py` (126 checks: nine languages × layout
+assertions + the PDF's own text, answer text and page count) with a control that strips the
+block and turns 99 checks red; eight static markers hold the same strings in the sweep.
+Without JavaScript the FAQ still prints closed — that limitation is the browser's, not a hidden
+promise.
+
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
@@ -4897,3 +4920,77 @@ block, so their last full run stands (`evidence/block-20261025c/`).
 **Files.** `README.md` (six paragraphs in the descriptive section, the marker, this entry);
 `docs/council-20261015.md` (new, thirty rows); `scripts/landing-sweep.py` (+3 checks) and
 `SKILL.md` in the `stars-bots-ops` skill.
+
+## The page printed as a table of contents (25.10.2026)
+
+Forty-one batteries on this site look at a screen — a phone held upright, a phone held sideways, a
+tablet nobody had measured, a keyboard walking backwards. None of them looked at paper, and paper is
+the one place where the page keeps none of its promises: there is no scroll to reveal what scroll
+hides, no click to open what a click hides, and — the part that decides everything — the browser
+prints **without backgrounds** unless a reader ticks a box in a dialog nobody opens.
+
+The first honest print of the English page (A4, print background off, the browser's own default)
+came out as **eight sheets, six of them nearly empty**. Sheet one carried the hero and the four
+steps. Sheets two to eight carried the section numbers and their headings — `01 How it works`,
+`02 What's inside`, `03 School subjects`, `04 Real chats with the bot`, `05 Pricing`, `06 FAQ`,
+`For parents`, the final call to action, the contact form — and blank paper underneath. Ink per
+sheet, measured on the rendered pages: 15 %, then 1.3 %, 1.1 %, 0.06 %, 0.6 %, 0.1 %, 0.2 %, 0.4 %.
+The prices, the eleven FAQ answers, the parents paragraph and the whole form were not on the paper
+at all.
+
+Three screen behaviours, each with no condition on a sheet:
+
+| what | why it is invisible on paper | measured |
+| --- | --- | --- |
+| the reveal (`html.js .rv{opacity:0}`) | waits for a scroll, and a sheet never scrolls | 37 of 37 blocks transparent |
+| white text on the dark band (`#0E1526`, `color:#fff`) and on every brand-blue button | the background is dropped, the text stays white | 2 blocks + every CTA |
+| the shots rail (`overflow-x`, `grid-auto-columns:86%`) | the window is printed, not the scroll | 1 771 px of content in 678 px → a third of one screenshot |
+
+A fourth was not layout at all: a closed `<details>` is hidden by the browser's own internals, so the
+printed FAQ was eleven questions with a `+` and no answers — the half of the page a reader keeps
+paper for. CSS cannot reopen it (`::details-content{content-visibility:visible}` changed nothing in
+Chromium 141); `beforeprint` can, and `afterprint` closes the questions again.
+
+**The fix** is one `@media print` block at the end of the stylesheet plus eleven lines of script:
+release the reveal; print the band and the buttons as dark ink on white with a border; hide the
+screen furniture (header menu, sticky bar, skip link, video toggle, the 648 px video frame, and the
+footer badge strip — its nine logos are lazy-loaded pictures that never reach a print layout, so the
+strip printed as a hole); lay the three shots out as one row; underline links; print the bot address
+once at the bottom (`t.me/UchiSamBot`, because a button cannot be pressed on paper); keep cards, FAQ
+items and the footer from breaking across sheets; and open every FAQ answer before the snapshot. The
+three hand-written pages outside the generator got the same treatment — `privacy.html` and
+`terms.html` lose the `position:fixed` "Skip to content" link (Chromium printed it in the middle of
+the policy text, where it has no business on a sheet), and `404.html` gets its button back: white
+text on a dropped brand background printed as an empty rectangle. That last one had to be fixed in
+`tools/build.py`, because the 404 page is generated — a hand edit to `404.html` was silently
+overwritten by the next build, which is the workshop teaching the same lesson it taught on 23.10.
+
+**Numbers.** New battery `landing-print.py`: **147 checks, 0 problems** — nine languages × twelve
+layout assertions, plus the PDF's own text (the first FAQ answer of each language in its own words,
+no sheet under 20 characters, no more than twelve sheets), plus the three standalone pages. Its
+control, `--mutate strip`, deletes the print block from the loaded page and turns **111 checks red**
+(twelve per language and three on the standalone pages — every family fails in every language),
+which is the only reason to trust the green. Sheets per language: 7–8; the thinnest sheet carries
+1.9 % ink (Russian's last page, 170 characters), the shots sheet 16–17 % (it is mostly pictures).
+The rest of the block, unchanged in purpose and re-run because the CSS changed: sweep **2 701 / 0**
+(2 620 + nine `foot-badges` markers; before publishing exactly one check is red — the live site still
+serves the previous build), render-check ALL OK with no JS errors, axe 12 pages 0 violations,
+a11y-extra 187/0, WCAG 2.2 targets 43/0, keyboard backwards 120/0, text-clip 148/0, environment
+preferences 45/0, viewports 94/0, fonts 39/0, Core Web Vitals 69/0, rotations 288/0, deep link 684/0,
+video motion 444/0, first screen 252/0, tablet 1 804/0, tablet menu 162/0, landscape 956/0, glyph
+fallback 12 pages 0 substitutions, visual pass 0 problems, smoke 18 runs 0 problems, links 11 pages
+0 problems, `build.py --check` 24/24, cross-engine 60 runs 0 problems, Nu validator 14 known-false
+messages per page (unchanged). The launch-platform cards were **re-stamped, not redrawn**: the gate
+"inputs are not newer than the manifest" went red the moment `tools/build.py` changed (it is one of
+the ten inputs), the generator produced all four PNGs byte-identical (`sha256sum -c` before and
+after), so only the manifest's hash list moved — which is the point of that gate: it makes you look.
+
+**What this does not prove.** Only Chromium was measured — the engine this house has batteries for;
+Firefox and Safari print the same CSS in their own way, and nothing was checked on a real printer or
+on paper. The footer address is `t.me/UchiSamBot` without the `start=` tag: on paper that tag had
+nowhere to land, so a printed page cannot tell us which language the reader came from.
+
+**Files.** `index-src.html` (the `@media print` block, the `beforeprint` handler); `tools/build.py`
+(the 404 page's print rule); `privacy.html`, `terms.html` (the skip link); every built page;
+`README.md` (a "Printing" paragraph in the descriptive half and this entry); `landing-print.py` (new)
+and `landing-sweep.py` (+9 markers) and `SKILL.md` in the `stars-bots-ops` skill.
