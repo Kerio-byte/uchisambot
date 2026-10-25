@@ -398,12 +398,18 @@ included) and by the sweep's `fc btn border` marker on every language page.
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
 StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
 badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
-screens), lazy-loaded official assets (all hotlinked from the platforms except the
-Startup Fame one — see below), links open in a new tab with
+screens), lazy-loaded official assets served from this repository (`img/badges/`, nine
+files, byte-identical to what the platforms serve — see "the last thing the page asked of
+other people's servers", 23.10.2026), links open in a new tab with
 `rel="noopener"`. Badge links point at the platform's product page where one exists
-(Fazier: `fazier.com/launches/uchisambot-study-helper`; the hotlinked badge asset uses
-the canonical single-slash path `fazier.com/api/v1/public/…`). `privacy.html` /
+(Fazier: `fazier.com/launches/uchisambot-study-helper`). `privacy.html` /
 `terms.html` carry the required LiftOff + Startup Fame badges in the same style.
+
+> SUPERSEDED (22.10 → 23.10.2026), kept for history: until 23.10 every badge but Startup
+> Fame was a hotlink to the platform's own asset, and the Fazier one had to be written as
+> the canonical single-slash path `fazier.com/api/v1/public/…`. The 23.10 pass moved all
+> nine badges into `img/badges/` and removed every third-party badge URL, so no request
+> leaves a page for a platform until the visitor clicks.
 
 Badge strip shape (22.10.2026): eight badges on a 1440 screen used to wrap 6+2 — the
 two-badge second row sat centered under the first and the strip read as unfinished. The
@@ -412,7 +418,7 @@ longer fits), so it forms two even rows of four; on a 420 screen it stays two pe
 
 Earned award badge (21.10.2026): on 19 Oct 2026 LiftOff placed UchiSamBot (Study Helper)
 #1 in its daily competition and issued a proof badge for it. It is the platform's own
-asset, hotlinked like the rest — `/images/badges/day/badge1DayLight.webp`, 360×120 — and
+asset, stored locally like the rest — `img/badges/liftoff-day.webp`, 360×120 — and
 sits next to the LiftOff launch badge in the same strip, on the nine language pages and on
 both legal pages. Because it is not a "Featured on" badge it gets its own dictionary line,
 `badge.award` ("No. 1 of the Day on LiftOff" / "Продукт дня №1 на LiftOff" …): `tools/build.py`
@@ -447,20 +453,22 @@ will. The exact bytes now live at `img/badges/startupfa.svg` (10 258 bytes, sha2
 `ef22f5c2…`), the link still points at `startupfa.me/s/-51`, and `tools/build.py` fails
 the build (`audit_local_assets`) when any `src|href|poster="img/…"` reference has no file
 on disk — so a missing local badge breaks CI instead of vanishing from the page. The sweep
-pins the local path on all nine pages plus the file itself, and the browser smoke treats
-it as the one badge that must stay visible and loaded while every platform host is blocked.
+pins the local path on all nine pages plus the file itself; since 23.10 it is simply one of
+the nine local files — the first one that had to be moved.
 
-Badge failure fallback (21.10.2026): every badge but Startup Fame is a hotlink to the platform's own
-asset, and those edges do throttle. A fresh 9-language × 2-viewport capture found at
-least one badge request with `naturalWidth=0` in 5 of 18 renders; an 18-page browser
-smoke run saw `startupfa.me` fail on 10 pages while a single request to the same URL
-returned 200. A visitor on such a render saw the browser's broken-image glyph plus alt
-text. Each of the nine external badges (one in the hero, eight in the footer) now
-carries `onerror="(this.closest('a')||this).style.display='none'"`: an asset that
-cannot load removes its own link from the strip and the remaining badges reflow.
-Nothing changes when the asset loads. The QA sweep asserts the fallback on all nine
-language pages, and the browser smoke blocks every badge host at the network layer and
-requires 9 of 9 links hidden, 0 visible broken images and no horizontal overflow.
+Badge failure fallback (21.10.2026, still in place): when the badges were hotlinks the
+platforms' edges throttled — a fresh 9-language × 2-viewport capture found at least one
+badge request with `naturalWidth=0` in 5 of 18 renders, and an 18-page browser smoke run
+saw `startupfa.me` fail on 10 pages while a single request to the same URL returned 200. A
+visitor on such a render saw the browser's broken-image glyph plus alt text. Each of the
+nine badges (one in the hero, eight in the footer) carries
+`onerror="(this.closest('a')||this).style.display='none'"`: an asset that cannot load
+removes its own link from the strip and the remaining badges reflow, and the sweep asserts
+that handler on all nine language pages. Since 23.10 the files come from our own host, so
+the handler is belt-and-braces rather than the only line of defence; the browser smoke now
+cuts our own badge files at the network layer instead of the platforms' — all nine blocked
+means nine links hidden, no broken icon and no horizontal overflow, while one blocked file
+hides exactly that link and leaves the other eight loaded.
 
 Social preview cards (`og:image`): every language page points at its OWN 1200×630
 card, `img/og-<lang>.png` (`og-en.png` for the root page). Until 21 Oct 2026 all nine
@@ -608,16 +616,18 @@ statistics as "(no tag)" and cannot be told apart from any other untagged source
 The QA sweep checks the tag in all nine twins and in `llms.txt` and fails if the
 bare link comes back.
 
-Privacy policy vs the site's real data flows (21.10.2026): the policy named
-GitHub Pages and Web3Forms only, while every page loads nine hotlinked badge
-images from eight launch platforms — the visitor's browser asks each platform for
-the picture, so that platform sees the visitor's IP address and the site it came
-from — and the contact form keeps a token in `sessionStorage`, which the policy
-never mentioned. Section 7 of `privacy.html` (EN and RU) now lists the eight
-platforms with their domains, says what the platform sees and that the rest is
-covered by its own policy, states that the site itself sets no cookies and runs
-no analytics, advertising or third-party scripts, and explains the session token;
-"Last updated" moved to 21 October 2026 in both language parts. The sweep now ties
+Privacy policy vs the site's real data flows (21.10.2026, rewritten 23.10.2026): the
+policy named GitHub Pages and Web3Forms only, while every page then loaded nine hotlinked
+badge images from eight launch platforms — the visitor's browser asked each platform for
+the picture, so that platform saw the visitor's IP address and the site it came from — and
+the contact form keeps a token in `sessionStorage`, which the policy never mentioned.
+Section 7 of `privacy.html` (EN and RU) lists the eight platforms with their domains, says
+what the platform sees and that the rest is covered by its own policy, states that the site
+itself sets no cookies and runs no analytics, advertising or third-party scripts, and
+explains the session token; "Last updated" moved to 21 October 2026 in both language parts
+and to 23 October 2026 after the badges moved home, where the same section now says the
+pictures are ours and a request leaves only when the visitor clicks a platform. The sweep
+still ties
 the policy to the fact instead of to a wish: a `BADGE_PLATFORMS` registry, every
 external image host on the nine language pages plus the two legal pages and
 `404.html` must be registered *and* named in the policy, the registry may not list
@@ -772,9 +782,11 @@ rest reported 8/8 at the same minute. A fixed 1800 ms wait after scrolling was r
 platforms' CDNs — the probe read `naturalWidth` before the image had answered, and on a
 retry the same pages loaded 8/8 within 1.8 s. The pass now waits for `img.complete` on
 every badge, reloads once to tell a transient miss from a broken asset, and names the
-missing file instead of just a count. Those seven assets are hotlinked by the platforms'
-terms, so a single CDN miss hides that link (`onerror`) rather than breaking the page —
-distinguishing "not yet" from "broken" is the whole point of the wait.
+missing file instead of just a count. At that time those seven assets were hotlinked by
+the platforms' terms, so a single CDN miss hid that link (`onerror`) rather than breaking
+the page — distinguishing "not yet" from "broken" is the whole point of the wait. Since
+23.10 the files are local and the wait still does its job: it separates "our host was slow"
+from "the file is gone", and the onerror fallback covers the second.
 
 Static markers went into the sweep as well (2 × 9 languages), because a CSS regression
 must fail without a browser: `.foot-badges{… max-width:780px … flex-wrap:wrap}` and the
@@ -4819,3 +4831,69 @@ a11y-extra 187 / 0; wcag22 43 / 0; env-prefs 45 / 0; viewports 94 / 0; fonts 39 
 **Files.** `index-src.html` and the nine built pages, `tools/lastmod.json`; `scripts/landing-deeplink.py`,
 `scripts/landing-sweep.py` (+2 checks) and `SKILL.md` in the `stars-bots-ops` skill;
 `evidence/block-20261025c/`, `evidence/deeplink-run-20261025.json`, `evidence/deeplink-control-20261025.json`.
+
+## Thirty decisions were carried out; the file that explains the site had stopped agreeing (25.10.2026)
+
+The council (designer, marketer, SEO) met on 15 October in two rounds and its decisions
+drove ten days of work. Nobody had ever held that list against the site *as a list*. Some
+decisions got a static marker in the sweep on 17.10; the rest lived in prose, in chat rooms
+and in this README, and prose is what rots.
+
+So I read all six round files again (they live outside the site, in the room archive), wrote the
+decisions down as thirty separate rows, and checked every row against the tree and a
+browser rather than against my memory of commits: the hero's visual order at 420×760 in all
+nine languages, the sticky bar's height in all nine at 320 and 420, the 404 page at three
+widths, the live host byte-for-byte, the sitemap's eleven addresses, the font budgets, the
+badge strip, the tags, the reveal rule. The table is `docs/council-20261015.md`, and the
+short answer is: **thirty of thirty were carried out.** One was repealed by the owner
+(GSC/Bing verification, 16.10 — the site is temporary, promotion waits for the domain
+move). Three are deviations with a measured reason written next to them: the badge files
+live here instead of being hotlinks, the font budget is 160 KB instead of 100 (nine scripts
+do not fit in 100), the sticky bar is 59 px instead of 56 (the button inside is 46, and
+shrinking it to hit the number would make the target smaller than a finger).
+
+Two decisions had no gate at all, and both are load-bearing for money:
+
+| decision | how it is kept today | what breaks without a gate |
+| --- | --- | --- |
+| mobile order: title → lead → button → video → chips | `.hero-left{display:contents}` + `order:1..6`, and nothing else | delete `.hero-phone{order:4}` and the video drops 700 px below the chips while the platform badge floats above it — every existing battery stays green |
+| "the reveal must not delay the hero CTA" | the button's wrapper simply has no `rv` class | add `rv` and the main action is `opacity:0` until the observer fires |
+
+Both are now sweep checks with controls: dropping the `order` rule gives **9 red**
+(`phone: None`), restoring it gives 0; adding `rv` to the wrapper gives **9 red**
+(`class=cta-row rv`), removing it gives 0.
+
+**The real find was in the documentation.** Every gate on this site reads pages. None reads
+the prose that tells the next editor what the pages do. On 23.10 all nine launch badges
+moved into `img/badges/` — the page stopped asking other people's servers for a picture
+before the visitor clicked anything — and the privacy policy was rewritten in both languages
+to say exactly that. The descriptive half of this README, the part above the diary that a new
+editor reads first, still said the opposite in **six places**: "all hotlinked from the
+platforms except the Startup Fame one", "the hotlinked badge asset uses `fazier.com/api/v1/…`",
+the award badge "hotlinked like the rest", "every badge but Startup Fame is a hotlink", the
+browser smoke that "requires 9 of 9 links hidden", and the privacy paragraph that described
+the old flow as current. Two days of a true page and a false description. That is precisely
+the failure the stale-mention rule exists for, and it is invisible to every battery we own.
+
+The descriptive section is corrected in six places, and the hotlink era is kept as history
+under an explicit `SUPERSEDED (22.10 → 23.10.2026)` marker rather than deleted: the diary
+entries from 21–23 October describe the measurements that produced the change and must stay
+readable. A new sweep check holds the line — with the pages serving the badges themselves,
+the descriptive part (everything above the first dated heading) may not call them hotlinks,
+and the mutation is the pre-fix README, which turns it red naming all three phrases.
+
+**Numbers.** sweep **2619 / 0** (2600 + 2 hero guards + 1 documentation guard); `build.py
+--check` 24/24 (no page was rebuilt — this block changed no page); live bytes 26/26 with the
+404 probe answering HTTP 404 and our own page; live assets 0 problems, sitemap 11/11 = 200;
+hero order measured in nine languages as h1 → lead → button → video → chips → badge; sticky
+bar 59 px in all nine with a one-line label at 320 and 420; 404 page at 320×568, 420×760 and
+1024×768 with no overflow, no clipped text and only the inline legal links below 24 px
+(exempt as inline text).
+
+**What this does not prove.** That the council's decisions were right — only that each one
+is present. And it does not re-run the browser batteries: the pages did not change in this
+block, so their last full run stands (`evidence/block-20261025c/`).
+
+**Files.** `README.md` (six paragraphs in the descriptive section, the marker, this entry);
+`docs/council-20261015.md` (new, thirty rows); `scripts/landing-sweep.py` (+3 checks) and
+`SKILL.md` in the `stars-bots-ops` skill.
