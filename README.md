@@ -451,19 +451,31 @@ green).
 The three pages outside the generator print under their own rule: `privacy.html` and
 `terms.html` lose the skip link and the footer badge strip (three lazy pictures that never
 reach a print layout — a 46 px hole on the sheet), keep a section heading on the sheet with its
-text, and are compacted on paper (paragraphs 9 px, lists 10/4, `h2` 20/8) so that the footer does
-not take a sheet of its own; `404.html` prints as one sheet with its button as dark ink.
+text, and are compacted on paper (paragraphs 9 px, lists 10/4, `h2` 20/8; on `terms.html` 7 px,
+10/3, 16/7) so that the footer does not take a sheet of its own; `404.html` prints as one sheet
+with its button as dark ink.
+All three declare **`@page{margin:6mm}`** (25.10.2026, evening): without it the top line of every
+sheet sat at −1.2 mm — above the paper's edge, with the tops of the letters gone — and the sides
+5.3 mm from the edge, because page margins are the only thing that repeats on every sheet (a
+container's padding guards the first sheet's top and the last one's bottom, nothing in between).
+Six millimetres is the cheapest margin that puts a letter beyond 4 mm: after it the top gap is
+4.8 mm, the sides 11 mm, the bottom 5.6 mm. 8 mm and the landing's 12/10 mm were measured and
+rejected — on A5 they hand the policy a sheet carrying 88 characters, and 12/10 costs two sheets
+on A4.
 Measured on **all four sheets the dialog offers** — A4 portrait, Letter, A4 landscape, A5 — by
-`landing-print-pages.py` (**354 checks**, 12 page × paper pairs, budget
+`landing-print-pages.py` (**391 checks**, 12 page × paper pairs, budget
 `tools/print-pages-papers.json`): page count from `pdfinfo` against the text chunking, ink per
 sheet, no sheet ending with a heading or with a two-word fragment, no non-final sheet under 200
 characters, the footer not alone (last-sheet characters ÷ footer characters > 1.20), no printed line
-wider than 210 mm and sheets within budget; its controls `--mutate` turn **17 checks red** and
-`--mutate colwidth` **2 red** (the two legal pages in landscape, where the line reaches 286.9 mm
-without the `.wrap` cap). Their longest printed line is 199.8 mm on A4, 205.4 on Letter, 206.1 on
-landscape and 137.6 on A5 — the column is theirs already, so the landing's rule was measured there
-and deliberately not added: it would have cost Letter/privacy a sheet of its own (7 → 8, the eighth
-the footer alone). Contrast on the same pages is
+wider than 210 mm, no word nearer than 4 mm to any paper edge and sheets within budget; its
+controls `--mutate` turn **22 checks red**, `--mutate colwidth` **2 red** (the two legal pages in
+landscape, where the line reaches 274.8 mm without the `.wrap` cap) and `--mutate nopage` **8 red**
+(privacy and terms on all four papers; `404` stays green at 27–85 mm from every edge, which is the
+truth — the defect was never there). Their longest printed line is 199.8 mm on A4, 205.4 on Letter,
+206.1 on landscape and 137.6 on A5 — the column is theirs already, so the landing's column rule was
+measured there and deliberately not added: it would have cost Letter/privacy a sheet of its own
+(7 → 8, the eighth the footer alone); the landing's *margins* are not the landing's *column* and
+were added, at 6 mm rather than 12/10. Contrast on the same pages is
 `landing-print-contrast.py` (3 543 checks: every element with its own text on twelve pages in
 Chromium, Firefox and WebKit, against the white sheet and against its own plate).
 Without JavaScript the FAQ still prints closed — that limitation is the browser's, not a hidden
@@ -5351,3 +5363,76 @@ that measure narrow — on portrait A4 the same page still prints 178 mm lines.
 and its reason); `landing-print-paper.py` and `landing-print-pages.py` (the line-width check in both,
 a `colwidth` control in both), one sweep marker on each of the nine pages in the `stars-bots-ops`
 skill; this entry and the "Printing" paragraph above.
+
+## The policy's first line was printed above the edge of the paper (25.10.2026)
+
+The previous block ended with one item written down and not started: *"the legal pages declare no
+`@page` margins while the landing declares 12/10 mm, so under a zero-margin print they run 5 mm from
+the paper edge and otherwise take their margins from the reader's dialog."* This block took it, and
+the first measurement found the sentence too kind.
+
+**What was actually on the paper.** Printed with no margins, `privacy.html` and `terms.html` put the
+top line of *every* sheet at **−1.2 mm** — above the paper's edge, not "5 mm from" it. The tightest
+word on A4 is «7.» on sheet 7, on A5 «Условия» on sheet 5, on Letter «A» on sheet 2: on a real
+printer those lines lose the tops of their letters. The sides sat at 5.3 mm, the bottom at 0.1 mm. The
+`404.html` card was never near an edge (27–85 mm) — it is centred in a card, and it is the honest
+control: the defect belongs to flowing text, not to the site.
+
+**Why the containers could not fix it.** A container's `padding` guards the top of the first sheet
+and the bottom of the last one; everything in between is the paper's business. Only `@page` margins
+repeat on every sheet, which is why the landing has had them since the first print block and the
+legal pages had none — they were written before anyone printed more than the landing.
+
+**Why no battery had caught it.** Every print battery prints through Chromium with zero margins, so
+the defect was present in every one of the 354 green checks: they counted sheets, ink and line width,
+and never asked where the first word of a sheet stands. That is now a check of its own.
+
+**How much margin to buy.** Measured, not guessed — the same twelve page × paper pairs with `@page`
+margins of nothing, 6, 8, 10 and 12/10 mm, reading the gap from every word to every edge:
+
+| margin | top gap | privacy A4 / Letter / landscape / A5 | terms A4 / Letter / landscape / A5 |
+| --- | --- | --- | --- |
+| none | −1.2 mm | 7 / 7 / 10 / 13 | 5 / 5 / 7 / 8 |
+| 6 mm | 4.8 mm | 8 / 8 / 10 / 15 | 5 / 6 / 7 / 9 |
+| 8 mm | 6.7 mm | 8 / 8 / 10 / 16 | 5 / 6 / 7 / 10 |
+| 12/10 mm (the landing's) | 10.7 mm | 9 / 9 / 11 / 18 | 6 / 6 / 8 / 10 |
+
+Twelve-ten is out at once: it costs the policy two sheets on A4 and five on A5, and its last sheet
+carries 193 characters. Eight millimetres is out for a subtler reason — on A5 it buys a sixteenth
+sheet holding 88 characters, and on Letter a sixth for the terms holding 89, which is the
+footer-alone defect this site has already fixed twice. Six millimetres is the cheapest margin that
+puts a letter beyond the 4 mm floor: after it the top gap is 4.8 mm, the sides 11.0–11.4, the bottom
+5.6, on all four papers and all three pages.
+
+**What the six millimetres cost, and to whom.** The policy goes 7 → 8 sheets on A4 and Letter and
+13 → 15 on A5; the terms go 8 → 9 on A5 only, because their paper rhythm was tightened at the same
+time (`p` 9 → 7 px, `li` 4 → 3, `h2` 20/8 → 16/7, `h3` 16/6 → 14/5) to hold Letter at five sheets —
+without it the same margins added a sixth sheet holding one footer line. The policy kept the looser
+rhythm on purpose: tightening it changed no sheet count and only moved 300 characters off the last
+sheet, and a fuller last sheet reads better than a denser page. But the cost falls on a print that
+almost nobody makes. **Against the print a reader actually gets** — the dialog's default margin of
+0.4 in, which is 10.16 mm — the numbers were 8 / 9 / 17 sheets for the policy and 6 / 6 / 10 for the
+terms; with the page's own 6 mm they are 8 / 8 / 15 and 5 / 5 / 9. Nothing gets worse; the two
+papers where the reader's default was wider than the page's own margin get better by a sheet or two.
+
+**The gate.** `landing-print-pages.py` now measures the gap from every word to all four paper edges,
+on every sheet, and refuses anything under **4 mm** — the width of the unprintable strip on a
+consumer laser, 3 mm on an inkjet. Twelve new checks; the battery reads **391 checks, 0 problems**,
+where the count above 354 comes from the five extra sheets the margins buy. Controls: `--mutate
+nopage` puts the margins back to zero and turns **8 checks red** — privacy and terms on all four
+papers, `404` green because it truly is far from every edge — `--mutate colwidth` still **2 red**
+(274.8 mm lines in landscape without the `.wrap` cap), `--mutate` now **22 red** instead of 17,
+because stripping the print CSS also exposes the edges.
+
+**What this does not prove.** Chromium's own PDF writer, not a printer: `@page` wins there even when
+the margin is explicitly passed as zero, and the interactive dialog's "None" was not tested — no
+script can click it. The 4 mm floor is a convention, not a measurement of the reader's hardware; a
+printer with a 6 mm dead zone would still trim the first line on paper printed with no margins, which
+is why the guard is a floor and not a promise. And the budgets in `tools/print-pages-papers.json`
+were raised by hand for the sheets this block bought — a budget that only ever rises stops being a
+budget, so each number carries its reason in the file.
+
+**Files.** `privacy.html`, `terms.html`, `404.html` (the `@page` rule; 404's lives in
+`tools/build.py`), `tools/print-pages-papers.json` (four budgets and the reason), `landing-print-pages.py`
+(the edge check, the `nopage` control, 391 checks); one sweep marker in the `stars-bots-ops` skill;
+this entry and the "Printing" paragraph above.
