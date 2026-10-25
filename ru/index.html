@@ -372,6 +372,27 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
    (submit имел border:0 через .contact button.btn — селектор повторяем, иначе проигрыш по специфичности) */
 @media(forced-colors:active){.btn,.contact button.btn,.lang-dd summary{border:1px solid}}
 </style>
+<script>
+/* Прибытие по ссылке с якорем (#pricing, #contact) — это не нажатие в меню, и плавная
+   прокрутка превращала его в полёт через 4–6 экранов: замер 25.10.2026 — 1120 мс на
+   #pricing (4817 px) и 1400 мс на #contact (7533 px), а нажатая во время полёта стрелка
+   его останавливала, и человек оказывался за 3587 px до тарифа, который обещала ссылка.
+   WebKit (Telegram на iOS) и режим reduced-motion так не делают — там прибытие мгновенное.
+   Поэтому при якоре в адресе страница до первого касания прыгает мгновенно, а плавность
+   включается на первом pointerdown/keydown/wheel/touchstart — раньше, чем случится клик
+   по пункту меню, для которого она и написана. */
+(function(){
+  if (!location.hash) return;
+  var de = document.documentElement;
+  if (!de) return;
+  de.style.scrollBehavior = 'auto';
+  var back = function(){ de.style.scrollBehavior = ''; };
+  var types = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  for (var i = 0; i < types.length; i++){
+    window.addEventListener(types[i], back, {capture: true, passive: true, once: true});
+  }
+})();
+</script>
 </head>
 <body>
 
