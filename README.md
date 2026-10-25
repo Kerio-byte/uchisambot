@@ -4994,3 +4994,9 @@ nowhere to land, so a printed page cannot tell us which language the reader came
 (the 404 page's print rule); `privacy.html`, `terms.html` (the skip link); every built page;
 `README.md` (a "Printing" paragraph in the descriptive half and this entry); `landing-print.py` (new)
 and `landing-sweep.py` (+9 markers) and `SKILL.md` in the `stars-bots-ops` skill.
+
+**Printed from the live site, not from the working tree.** After publishing, the same measurement
+ran against `kerio-byte.github.io/uchisambot/` and `/ru/`: 37 of 37 blocks transparent on screen,
+0 in print, the band's text `rgb(17, 17, 17)`, `t.me/UchiSamBot` in the footer, the first FAQ answer
+present in the PDF, seven sheets for English and eight for Russian — the published page and the tree
+print the same way.
