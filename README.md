@@ -434,19 +434,36 @@ section heading, which is centred. Landscape went 11 → 10 sheets, no sheet is 
 thinnest sheet in any language carries 110 characters; portrait A4 and Letter did not change by a
 single character per sheet. Letter prints 8 sheets where portrait A4 prints 7 (en/es/pt/hi/tr/vi)
 and A5 prints 12–14 — measured, budgeted in `tools/print-papers.json`, and not treated as a defect.
-Gate: `landing-print-paper.py` (**939 checks**, 9 languages × Letter / A4 landscape / A5), whose
-control `--mutate railwidth` turns **18 checks red**.
+The text column had no cap at all, which only showed on a wide sheet: `main` is unbounded and the
+inner `.wrap{max-width:1060px}` is 280 mm — wider than every paper the dialog offers — so on A4
+landscape the prose ran the full 277 mm of text area and its longest line reached **260 mm (ru),
+244 mm (en)**, against 178 mm on portrait A4. Now
+`@media print{main,body>footer{max-width:210mm;margin-inline:auto}}` — the paper column is never
+wider than the sheet's short side. Portrait A4 (190 mm), Letter (196) and A5 (128) are untouched by
+arithmetic and by measurement (same sheets, same characters per sheet); landscape lines fall to
+191.7–199.7 mm, and eight languages stay at 10 sheets while Indonesian takes 11 (the extra sheet
+carries 480 characters — real text, not a footer). The rule is held by the line-width check below
+and by a static marker on each of the nine pages.
+Gate: `landing-print-paper.py` (**969 checks**, 9 languages × Letter / A4 landscape / A5), whose
+control `--mutate railwidth` turns **18 checks red** and `--mutate colwidth` turns **7 red** (the
+languages whose line actually reaches the edge; `hi` and `uk` never did, which is why they stay
+green).
 The three pages outside the generator print under their own rule: `privacy.html` and
 `terms.html` lose the skip link and the footer badge strip (three lazy pictures that never
 reach a print layout — a 46 px hole on the sheet), keep a section heading on the sheet with its
 text, and are compacted on paper (paragraphs 9 px, lists 10/4, `h2` 20/8) so that the footer does
 not take a sheet of its own; `404.html` prints as one sheet with its button as dark ink.
 Measured on **all four sheets the dialog offers** — A4 portrait, Letter, A4 landscape, A5 — by
-`landing-print-pages.py` (**342 checks**, 12 page × paper pairs, budget
+`landing-print-pages.py` (**354 checks**, 12 page × paper pairs, budget
 `tools/print-pages-papers.json`): page count from `pdfinfo` against the text chunking, ink per
 sheet, no sheet ending with a heading or with a two-word fragment, no non-final sheet under 200
-characters, the footer not alone (last-sheet characters ÷ footer characters > 1.20) and sheets
-within budget; its control `--mutate` turns **17 checks red**. Contrast on the same pages is
+characters, the footer not alone (last-sheet characters ÷ footer characters > 1.20), no printed line
+wider than 210 mm and sheets within budget; its controls `--mutate` turn **17 checks red** and
+`--mutate colwidth` **2 red** (the two legal pages in landscape, where the line reaches 286.9 mm
+without the `.wrap` cap). Their longest printed line is 199.8 mm on A4, 205.4 on Letter, 206.1 on
+landscape and 137.6 on A5 — the column is theirs already, so the landing's rule was measured there
+and deliberately not added: it would have cost Letter/privacy a sheet of its own (7 → 8, the eighth
+the footer alone). Contrast on the same pages is
 `landing-print-contrast.py` (3 543 checks: every element with its own text on twelve pages in
 Chromium, Firefox and WebKit, against the white sheet and against its own plate).
 Without JavaScript the FAQ still prints closed — that limitation is the browser's, not a hidden
@@ -5269,3 +5286,68 @@ reader picked is the paper we measured.
 **Files.** `privacy.html`, `terms.html` (the two print blocks), `tools/print-pages-papers.json` (new),
 `tools/lastmod.json`; `landing-print-pages.py` (rewritten for four papers), two new sweep markers per
 legal page in the `stars-bots-ops` skill; this entry and the "Printing" paragraph above.
+
+## A landscape sheet set its text 260 mm wide (25.10.2026)
+
+Yesterday's block measured this and left it to its own block in one line: "cap the column on a wide
+sheet and pay for it in sheets". Measuring it before fixing it changed both the size of the defect
+and the price of the fix.
+
+**The old number was inflated by the tool.** "Median 97 characters per line, max 137" came from
+counting rows of `pdftotext -layout`. On a wide sheet that tool puts the three cards of one grid row
+on one row of text: 137 "characters" were three different cards standing side by side, and the
+"line" ran from the left edge of the first to the right edge of the third. Measured by coordinates
+instead (`pdftotext -bbox`: words on one baseline within ±2 pt and no gap over 8 pt are one line; a
+gap of tens of points is the next card), the defect is real but different: the longest line of
+**running text** on A4 landscape was **260 mm in Russian, 244 mm in English and 253 mm in Spanish
+and Portuguese**, against **178 mm** on portrait A4 — about 100 characters where the site's own
+portrait measure is 85. Hindi was already at 195 mm and Ukrainian at 192 mm, which is why those two
+never looked wrong.
+
+**Cause.** The shots strip got a cap on paper (678 px) because a phone 324×730 px does not fit a
+703 px sheet. The text column never got one and never needed one on portrait: `main` is unbounded,
+but the inner `.wrap{max-width:1060px}` is 280 mm, more than every paper the dialog offers, so only a
+sheet wider than 280 mm could expose it — and the landscape sheet is 297 mm with 277 mm of text
+area.
+
+**Fix.** `@media print{main,body>footer{max-width:210mm;margin-left:auto;margin-right:auto}}` — the
+paper column is never wider than the sheet's short side, and the footer sits in the same column
+instead of starting at the sheet's left margin. The rule is a no-op on portrait A4 (190 mm of text
+area), Letter (196) and A5 (128) by arithmetic, and the measurements agree to the character: Letter
+and A5 came back with the same sheets and the same characters per sheet as before the rule. On A4
+landscape the longest line fell to **191.7–199.7 mm across the nine languages**.
+
+**Sheets: eight languages unchanged, one +1.** Landscape stayed at 10 sheets in eight languages;
+Indonesian needs 11, and that eleventh sheet carries 480 characters — real text pushed over, not a
+footer alone. The trade was taken deliberately (a 196.8 mm line instead of 251 mm for one sheet in
+one language) and written into `tools/print-papers.json` next to the number, because a budget that
+grows without a reason stops being a budget.
+
+**The legal pages were measured and left alone.** Their column is not the sheet's: `.wrap{max-width:
+820px}` is 217 mm, so their longest printed line is 199.8 mm on A4, 205.4 on Letter, 206.1 on
+landscape and 137.6 on A5 — under the threshold already. The landing's rule was tried there first
+and reverted: on Letter it costs the policy a sheet of its own (7 → 8, the eighth holding the footer
+and nothing else), which is exactly the defect the previous block removed. One thing measured and
+not fixed, because it is a different block: the legal pages declare no `@page` margins while the
+landing declares 12/10 mm, so under a zero-margin print they run 5 mm from the paper edge and
+otherwise take their margins from the reader's dialog. Giving them the landing's margins costs
+privacy 7 → 9 sheets on A4 and 13 → 18 on A5 with the footer alone on the last one — measured, not
+started.
+
+**The gate.** Both print batteries now refuse a printed line wider than **210 mm**, measured by word
+coordinates, on every sheet of every paper: 27 new checks in `landing-print-paper.py` (**969 checks,
+0 problems**) and 12 in `landing-print-pages.py` (**354, 0**). Controls prove the check bites where
+the defect was and only there: `--mutate colwidth` takes the cap off and turns **7 checks red** in
+landscape (the seven languages whose line actually reaches the edge — Hindi and Ukrainian stay green
+at 195 and 192 mm), while portrait, Letter and A5 stay green; on the legal pages the same mutation
+turns **2 red** (privacy and terms in landscape, 286.9 mm without their `.wrap` cap).
+
+**What this does not prove.** Chromium's PDF only, no real printer. The cap moves page breaks, so the
+Indonesian budget is one number standing between a reader and a half-empty sheet. And 210 mm is still
+about 90 characters: this block brings a wide sheet back to the site's own measure, it does not make
+that measure narrow — on portrait A4 the same page still prints 178 mm lines.
+
+**Files.** `index-src.html` (the rule), the nine built pages, `tools/print-papers.json` (one number
+and its reason); `landing-print-paper.py` and `landing-print-pages.py` (the line-width check in both,
+a `colwidth` control in both), one sweep marker on each of the nine pages in the `stars-bots-ops`
+skill; this entry and the "Printing" paragraph above.
