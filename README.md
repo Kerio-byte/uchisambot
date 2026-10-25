@@ -5709,7 +5709,8 @@ not to the frame, and the probe showed the input's bottom edge sitting 4 px unde
 default. That is the harness fighting itself, not the site; the same battery re-ran green
 (1 804 checks, 0). Batteries with fixed ports cannot be run in parallel.
 
-**Regression — the whole battery after the last CSS change.** 29 batteries, 12 124 checks, 0
+**Regression — the whole battery after the last CSS change.** 31 batteries (the 29 of the
+harness plus the two new ones), 12 124 checks, 0
 failures, plus the static sweep 2 748 / 0 and axe on 12 pages, 0 violations: a11y-extra 267,
 wcag22-targets 43, first-screen 252, text-clip 148, rotate 288, tablet-menu 162, tablet-page
 1 804, landscape-page 956, backtab 120, deeplink 684, video-motion 444, viewports-extra 94,
@@ -5732,5 +5733,6 @@ now, which is the only thing they say.
 **Files.** `docs/council-20261015.md` (two batteries added to "what guards this"), the skill's
 `scripts/landing-header-engines.py` and `scripts/landing-keyboard-form.py` (new, with their
 docstrings carrying the numbers), `references/landing-qa.md` (the two holes, the controls and four
-pitfalls), `SKILL.md` (the CSS-change battery list), `evidence/block-20261025j/` (29 battery logs,
-the header log, the keyboard log, both negative controls, the tablet re-run), and this entry.
+pitfalls), `SKILL.md` (the CSS-change battery list), `evidence/block-20261025j/` (37 logs:
+the 29 harness batteries, the tablet re-run, the two new gates, both negative controls,
+the sweep, axe), and this entry.
