@@ -482,14 +482,17 @@ Without JavaScript the FAQ still prints closed — that limitation is the browse
 promise.
 
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
-StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ (LaunchIgniter
-badge sits in the hero, as its platform requires). Uniform 46 px height (40 px on small
-screens), lazy-loaded official assets served from this repository (`img/badges/`, nine
-files, byte-identical to what the platforms serve — see "the last thing the page asked of
-other people's servers", 23.10.2026), links open in a new tab with
-`rel="noopener"`. Badge links point at the platform's product page where one exists
-(Fazier: `fazier.com/launches/uchisambot-study-helper`). `privacy.html` /
-`terms.html` carry the required LiftOff + Startup Fame badges in the same style.
+StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ and the LiftOff
+"day" award. Uniform 46 px height (40 px on small screens), lazy-loaded official assets
+served from this repository (`img/badges/`, eight files, byte-identical to what the
+platforms serve — see "the last thing the page asked of other people's servers",
+23.10.2026), links open in a new tab with `rel="noopener"`. Badge links point at the
+platform's product page where one exists (Fazier:
+`fazier.com/launches/uchisambot-study-helper`). `privacy.html` / `terms.html` carry the
+required LiftOff + Startup Fame badges in the same style. 25.10.2026: the LaunchIgniter
+badge that used to sit in the hero is gone — the platform deleted our product page and
+the badge led to "Product Not Found"; the hero now ends with the three chips, and every
+remaining badge is checked for a live page, not just for HTTP 200 (see that entry).
 
 > SUPERSEDED (22.10 → 23.10.2026), kept for history: until 23.10 every badge but Startup
 > Fame was a hotlink to the platform's own asset, and the Fazier one had to be written as
@@ -5436,3 +5439,70 @@ budget, so each number carries its reason in the file.
 `tools/build.py`), `tools/print-pages-papers.json` (four budgets and the reason), `landing-print-pages.py`
 (the edge check, the `nopage` control, 391 checks); one sweep marker in the `stars-bots-ops` skill;
 this entry and the "Printing" paragraph above.
+
+## The hero badge pointed at a product the platform had deleted (25.10.2026)
+
+The print thread ended last block with the legal pages getting "@page{margin:6mm}". One default of
+the print dialog had never been measured: the checkbox that is already ticked when the dialog
+opens — "Headers and footers". Measured first, before assuming anything. With Chromium's own
+date/title line at the top and URL/page-number line at the bottom, the header's ink sits at
+5.6-7.5 mm from the top on every sheet and the first line of body text starts at 8.0 mm on a
+continuation sheet — a 0.5 mm gap and no overlap; the footer's ink runs 289.9-292.0 mm on A4
+against a last line ending at 284.9 mm, a 5.1 mm gap; the sheet count is identical with the
+checkbox on and off on all four papers (landing 7 / 8 / 10 / 14, legal pages 8 / 5 / 1); and no
+row of ink covers more than 55% of the sheet width on any of the 78 sheets of the sixteen
+documents. Nothing to fix: the browser keeps its own lines inside the margin, and the site cannot
+switch that checkbox off from CSS.
+
+**Then the links.** All 70 external addresses still answered 200 — which is exactly why the
+defect had survived: 200 is not the same as "the page is still there". A content check found it
+in one line: `launchigniter.com/product/uchisambot-study-helper` answered **200** with the title
+**"Product Not Found - LaunchIgniter"**, and the platform's sitemap lists 2 824 product pages
+with our slug in none of them. That badge was in the hero — the third thing a visitor sees,
+after the headline and the button — and it was the only mark on the page whose click could prove
+nothing.
+
+**The first version of the gate stayed green, and that mattered.** The first content check
+searched the whole response for the product name and passed: the slug survives in the Next.js
+RSC payload of the "not found" page. The gate now strips `script/style/noscript/svg`, treats a
+`<title>` containing "not found", "404" or "не найден" as a failure, and looks for the name only
+in text a person can read. Failed first after that: red on exactly one address, the right one.
+A search engine can be fooled the same way, which is why the check reads text and title, not bytes.
+
+**Fix.** The hero badge is removed (its markup, its three CSS rules and the `order:6` step of the
+mobile hero), its file `img/badges/launchigniter.svg` is deleted (the published tree went from
+109 files to 108), the platform is gone from `BADGE_ALTS` in `tools/build.py`, and section 7 of
+the policy no longer lists it in either language — the policy now says seven platforms and names
+seven. The footer strip keeps its eight badges and still lays out 4 + 4; the hero ends with the
+three chips. The cost is named: the page loses its only above-the-fold third-party mark. The
+alternative — keeping the badge and pointing it at the platform's front page, as four other
+badges already do — was rejected, because the hero would then carry a claim whose page the
+platform has deleted. If the owner wants a mark back in the hero, the LiftOff "No. 1 of the Day"
+award is the one we can prove, and it would have to leave the footer strip (seven badges = 4 + 3,
+a ragged row).
+
+**Gate.** `landing-external-links.py` (stars-bots-ops) now requires every link whose path contains
+the product's slug to mention the product in its visible text: 40 links confirmed and 0 problems
+after the fix, 1 problem before it. Badges that lead to a platform's front page print a note
+instead ("the product cannot be checked on a front page") — those four stay a manual question,
+and only showmebest.ai's sitemap still lists us.
+
+**Regression.** Sweep 2 731 checks, 0 failed (badge counts 9 -> 8, localized alts 8 -> 7, hero
+mobile steps 6 -> 5); browser smoke: all eight badge files cut -> eight links hidden, one file cut
+-> seven visible, 0 problems; visual pass: 8/8 badges loaded, rows [4, 4], 0 problems; print 147
+checks, four papers 969, legal pages 391, first screen 252 — all clean; live tree comparison 26
+files OK and the 404 probe still answers with our own page. Published through
+`tools/publish-branch.sh` to both mirrors (`gh-pages`, 108 files), and the live pages no longer
+contain the dead address.
+
+**What this does not prove.** That the four home-page badges are still true: a platform's front
+page does not list its products, so nothing automatic can confirm those launches, and only
+showmebest.ai's sitemap confirmed itself. That remains a manual question for the next block, and
+it is written here rather than in a task list nobody opens.
+
+**Files.** `index-src.html` (markup, three CSS rules, the mobile order step), `tools/build.py`
+(`BADGE_ALTS`), `img/badges/launchigniter.svg` (deleted), `privacy.html` (section 7 in both
+languages and its own date), the nine built pages and their markdown twins, `tools/lastmod.json`,
+`sitemap.xml`; `landing-external-links.py` (the soft-404 check) and four counts in
+`landing-sweep.py`, `landing-browser-smoke.py`, `landing-visual-pass.py`; this entry and the
+footer paragraph above.
