@@ -482,17 +482,25 @@ Without JavaScript the FAQ still prints closed — that limitation is the browse
 promise.
 
 Footer: one centered "Featured on" strip of official launch-platform badges — Fazier,
-StartupBase, ShowMeBestAI, LiftOff, Startup Fame, OpenHunts Club, Aura++ and the LiftOff
-"day" award. Uniform 46 px height (40 px on small screens), lazy-loaded official assets
-served from this repository (`img/badges/`, eight files, byte-identical to what the
-platforms serve — see "the last thing the page asked of other people's servers",
-23.10.2026), links open in a new tab with `rel="noopener"`. Badge links point at the
-platform's product page where one exists (Fazier:
-`fazier.com/launches/uchisambot-study-helper`). `privacy.html` / `terms.html` carry the
-required LiftOff + Startup Fame badges in the same style. 25.10.2026: the LaunchIgniter
-badge that used to sit in the hero is gone — the platform deleted our product page and
-the badge led to "Product Not Found"; the hero now ends with the three chips, and every
-remaining badge is checked for a live page, not just for HTTP 200 (see that entry).
+StartupBase, ShowMeBestAI, LiftOff, Startup Fame, Aura++ and the LiftOff "day" award.
+Uniform 46 px height (40 px on small screens), lazy-loaded official assets served from this
+repository (`img/badges/`, seven files, byte-identical to what the platforms serve — see
+"the last thing the page asked of other people's servers", 23.10.2026), links open in a new
+tab with `rel="noopener"`. **Every** badge link points at our own page on the platform —
+no exceptions, because a badge that lands on a front page proves nothing. `privacy.html` /
+`terms.html` carry the required LiftOff + Startup Fame badges in the same style. 25.10.2026,
+two removals and one repair: LaunchIgniter's badge left the hero (the platform deleted our
+product page, the link led to "Product Not Found"); OpenHunts Club's badge left the strip
+(its catalogue of 3 837 projects has no page for us, and the badge pointed at the front
+page, where nothing could be checked); and ShowMeBestAI's badge was re-pointed from its
+front page to our page there, which its own sitemap had listed all along (see "the footer
+promised seven platforms", 25.10.2026).
+
+> SUPERSEDED (23.10 → 25.10.2026), kept for history: the strip carried eight badges, and
+> the paragraph read "Badge links point at the platform's product page where one exists
+> (Fazier: `fazier.com/launches/uchisambot-study-helper`)" — the words "where one exists"
+> were the hole: two badges pointed at front pages, and no gate asked whether the product
+> was on the platform at all.
 
 > SUPERSEDED (22.10 → 23.10.2026), kept for history: until 23.10 every badge but Startup
 > Fame was a hotlink to the platform's own asset, and the Fazier one had to be written as
@@ -503,7 +511,12 @@ remaining badge is checked for a live page, not just for HTTP 200 (see that entr
 Badge strip shape (22.10.2026): eight badges on a 1440 screen used to wrap 6+2 — the
 two-badge second row sat centered under the first and the strip read as unfinished. The
 strip is capped at `max-width:780px` (the four widest badges total 714 px, the fifth no
-longer fits), so it forms two even rows of four; on a 420 screen it stays two per row.
+longer fits), so it formed two even rows of four; on a 420 screen it was two per row.
+25.10.2026, after OpenHunts left: seven badges, four then three, centered — the 780 px cap
+now buys 4+3 on a desktop and 2+2+2+1 on a phone instead of 4+4. The strip stays a "row of
+four" by construction; whether seven should become six (drop the duplicate LiftOff launch
+badge, which leads to the same page as the award) or eight again (a real eighth platform)
+is the owner's call, not a layout accident.
 
 Earned award badge (21.10.2026): on 19 Oct 2026 LiftOff placed UchiSamBot (Study Helper)
 #1 in its daily competition and issued a proof badge for it. It is the platform's own
@@ -5506,3 +5519,73 @@ languages and its own date), the nine built pages and their markdown twins, `too
 `sitemap.xml`; `landing-external-links.py` (the soft-404 check) and four counts in
 `landing-sweep.py`, `landing-browser-smoke.py`, `landing-visual-pass.py`; this entry and the
 footer paragraph above.
+
+## The footer promised seven platforms; one of them had no page to show (25.10.2026)
+
+The previous block ended with a sentence it could not act on: four badges led to the front pages
+of launch platforms, a front page never lists its products, so nothing automatic could say whether
+we were still there. The honest next step was not to guess but to ask each platform the only
+question it can answer — does its own catalogue contain a page about us?
+
+**The index first, the page second.** Every platform publishes a sitemap; that is the list it
+makes for search engines, and a product that is not in it is not being shown to anyone who is not
+holding a direct link. ShowMeBestAI's sitemap (4 497 addresses) contains
+`showmebest.ai/ai-tools/kerio-byte-github-io-uchisambot`, and that page answers 200 with the
+product named five times in the text a person reads. The badge, however, pointed at
+`showmebest.ai` — the front page. So the claim was true and unprovable at the same time, and the
+cost of the unprovability was paid by the visitor: the click landed on a catalogue search instead
+of the page about the bot.
+
+**OpenHunts was the other kind of answer.** Its sitemap lists 4 077 addresses, 3 837 of them
+`/projects/…` pages. Not one of the 3 837 is ours, and the direct address
+`openhunts.com/projects/uchisambot-study-helper` answers **200** with the title **"Project Not
+Found"** — the same soft-404 shape as LaunchIgniter, and the same trap inside it: searching the raw
+response for the product name finds it twice, because the slug lives on in the Next.js RSC payload.
+Read only the text a person sees, and the name appears zero times. The badge pointed at
+`openhunts.com`, the front page, where this could never show.
+
+**What this cannot tell.** Whether we were ever listed there and the page was removed, or never
+listed at all. The usual way to settle that — the Internet Archive — is not evidence here: its CDX
+API returns an empty list even for pages that exist right now (LiftOff's product page and Fazier's
+launch page both came back empty), so "no capture" would only mean "the API answered nothing".
+Therefore the only thing that can be said is the thing that matters for a badge: there is no page
+today, and a badge is a promise about today.
+
+**Fix.** ShowMeBestAI's badge now points at our page there — the soft-404 gate checks it from now
+on like any other product link. OpenHunts' badge is removed with its markup, its file
+`img/badges/openhunts.webp` (published tree 108 → 107 files), its entry in `BADGE_ALTS` in
+`tools/build.py`, and its name from section 7 of the policy in both languages (seven platforms →
+six). The strip is seven badges now: 4 + 3 on a desktop, 2 + 2 + 2 + 1 on a phone, both centered.
+The cost is named: the second row is ragged, and one platform fewer appears on the page. Keeping
+the badge because "everyone else has eight" would have kept a promise nobody can check —
+the same trade the hero badge lost earlier today.
+
+**Gate.** `landing-external-links.py` used to print a note for a badge that lands on a front page
+("the product cannot be checked on a front page"). That note was the hole: it made an unverifiable
+badge look like a clean result for months. Now every link wrapping a file in `img/badges/` must land
+on a page whose visible text names the product; a front page fails by definition, and the printed
+reason says what to do — point the badge at our page or take it off. Negative control: putting
+`https://showmebest.ai` back into one built page turns the gate red on exactly that address
+(`значок ведёт туда, где продукта нет: no`, 1 problem), and the built page is restored afterwards.
+
+**Regression.** Sweep 2 739 checks, 0 failed except the publication staleness every unpublished
+build shows (footer hosts 7 → 6, localised alts 7 → 6, degrade-on-error 8 → 7, policy platforms
+seven → six, plus a new "no openhunts badge" check in all nine languages). Negative control for
+the sweep: adding the badge back reddens 23 checks, the new ones among them, and the tree is
+rebuilt clean afterwards. Browser smoke: 18 runs, 0 problems; cutting all seven files hides all
+seven links, cutting one leaves six visible. Visual pass: 9 languages × 2 viewports, 0 problems,
+badges 7/7, rows `[4, 3]` and `[2, 2, 2, 1]`. Print: 147 + 213 + 391 checks, 0 failed (the strip is
+`display:none` on paper, so pagination did not move). Submission kit redrawn — `tools/build.py` is
+one of its recorded inputs: four 1920×1080 cards, manifest rebuilt, 7/7 kit checks green.
+
+**What this does not prove.** That the six remaining pages will still be there tomorrow: a platform
+can delete a page the day after it is checked, and only the next run of the gate will see it. And
+it does not say a badge is worth its space — that is a marketing question, not a link question.
+
+**Files.** `index-src.html` (the ShowMeBestAI href, the OpenHunts block removed and explained in
+place), `tools/build.py` (`BADGE_ALTS`), `img/badges/openhunts.webp` (deleted), `privacy.html`
+(section 7 in both languages: six platforms, each picture leads to our page there), the nine built
+pages, `tools/lastmod.json`, `submission-kit/*` (four cards + manifest); `landing-external-links.py`
+(the badge rule, the dead duplicate `domain_alive` removed), `landing-sweep.py` (four counts and
+the "no openhunts badge" check), `landing-browser-smoke.py` (7 / 6), and this entry with the footer
+and strip-shape paragraphs above.
