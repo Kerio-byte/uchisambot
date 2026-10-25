@@ -74,9 +74,20 @@ main:focus{outline:none}
    Четвёртое (25.10.2026, приёмка): правила печати писались селекторами на элемент
    (`main{padding-top:8px}`, `.foot-badges{display:none}`) и молча проигрывали каскад
    классовым правилам экрана (`.wrap{padding:0 20px}`, `footer .foot-badges{display:flex}`).
-   Теперь оба селектора не слабее экранных — иначе объявленное правило просто не действует. */
+   Теперь оба селектора не слабее экранных — иначе объявленное правило просто не действует.
+   Пятое (25.10.2026, ночь): политику мерили только на A4 портрет, и на другой бумаге из того же
+   диалога печати дефекты вернулись. Letter: восемь листов, восьмой — подвал один (40 знаков,
+   краска 0.08 %). A4 альбом: лист 3 кончался заголовком «5. Your rights and deletion».
+   Причина у обоих одна — печатный блок не наследовал главную: там есть `break-after:avoid` на
+   заголовках и плотный бумажный ритм, здесь не было ни того, ни другого. Добавили и то и другое:
+   заголовок больше не остаётся один внизу листа, а бумажные отступы (9/10/4 px вместо 12/14/6)
+   освобождают место, чтобы подвал не уезжал на свой лист. Замер после правки держит батарея
+   landing-print-pages.py (четыре бумаги × три страницы) и бюджет tools/print-pages-papers.json. */
 @media print{.skip{display:none}footer .foot-badges{display:none}
-  main.wrap{padding-top:0} h3{margin-top:10px}
+  main.wrap{padding-top:0}
+  h1,h2,h3{break-after:avoid} li{break-inside:avoid}
+  h2{margin:20px 0 8px} h3{margin-top:16px;margin-bottom:6px}
+  p{margin-bottom:9px} ul{margin-bottom:10px} li{margin-bottom:4px}
   footer{margin-top:8px;padding:10px 0 0;break-before:avoid}}
 </style>
 </head>
