@@ -71,12 +71,18 @@ main:focus{outline:none}
    заголовком «12. Изменения» — раздел уехал на следующий лист один. На Letter подвал получал
    свой лист. Лечится тем же, что у главной и у политики: `break-after:avoid` на заголовках,
    `break-inside:avoid` на пунктах списка и плотный бумажный ритм. Батарея, которая это держит, —
-   landing-print-pages.py (четыре бумаги × три страницы), бюджет — tools/print-pages-papers.json. */
-@media print{.skip{display:none}footer .foot-badges{display:none}
+   landing-print-pages.py (четыре бумаги × три страницы), бюджет — tools/print-pages-papers.json.
+   Четвёртое (25.10.2026, вечер): как и у политики, не было `@page`, и при пустых полях в диалоге
+   печати верхняя строка каждого листа шла выше кромки (замер политики: −1.2 мм). Поставлено
+   `@page{margin:6mm}`. Тот же отступ на условиях стоил Letter шестого листа с одним подвалом
+   (89 знаков), поэтому бумажный ритм здесь плотнее, чем у политики: p 9 → 7, li 4 → 3,
+   h2 20/8 → 16/7, h3 16/6 → 14/5. Условия остаются 5 листами на A4 и Letter, 7 в альбоме,
+   9 на A5 (было 8 — это цена полей на самой маленькой бумаге). */
+@media print{@page{margin:6mm}.skip{display:none}footer .foot-badges{display:none}
   main.wrap{padding-top:0}
   h1,h2,h3{break-after:avoid} li{break-inside:avoid}
-  h2{margin:20px 0 8px} h3{margin-top:16px;margin-bottom:6px}
-  p{margin-bottom:9px} ul{margin-bottom:10px} li{margin-bottom:4px}
+  h2{margin:16px 0 7px} h3{margin-top:14px;margin-bottom:5px}
+  p{margin-bottom:7px} ul{margin-bottom:10px} li{margin-bottom:3px}
   footer{margin-top:10px;padding:10px 0 0;break-before:avoid}}
 </style>
 </head>
