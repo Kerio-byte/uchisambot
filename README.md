@@ -420,6 +420,22 @@ footer and nothing else in Russian (25.10.2026, entry below). Covered by `landin
 count) with a control that strips the block and turns 111 checks red; eight static markers hold
 the same strings in the sweep. Where a section heading lands and whether the footer stands alone
 on the last sheet is `landing-print-main.py` (213 checks, 25.10.2026).
+Beyond A4 portrait (added 25.10.2026): all four batteries printed one paper — `format='A4'`, no
+`landscape` argument, no other size — while the print dialog offers Letter beside A4 and a
+landscape switch, so both were one click away and neither had been looked at. On **A4 landscape**
+the page printed **11 sheets in all nine languages and sheet 5 carried exactly zero characters**
+(not almost empty: no text at all), because the phone strip takes the full text width and a
+screenshot's height is 2.17 of its width: 324×730 px on a landscape sheet whose box is 703 px tall,
+so `figure.shot{break-inside:avoid}` moved each phone to a sheet of its own and the captions
+trailed to the next one. Fixed by printing the phones at one size on paper —
+`.shots{max-width:678px;margin-inline:auto}` inside `@media print`; 678 px is exactly the strip's
+width on portrait A4, so a wider sheet no longer enlarges it, and it stays centred under the
+section heading, which is centred. Landscape went 11 → 10 sheets, no sheet is empty of text, the
+thinnest sheet in any language carries 110 characters; portrait A4 and Letter did not change by a
+single character per sheet. Letter prints 8 sheets where portrait A4 prints 7 (en/es/pt/hi/tr/vi)
+and A5 prints 12–14 — measured, budgeted in `tools/print-papers.json`, and not treated as a defect.
+Gate: `landing-print-paper.py` (**939 checks**, 9 languages × Letter / A4 landscape / A5), whose
+control `--mutate railwidth` turns **18 checks red**.
 The three pages outside the generator print under their own rule: `privacy.html` and
 `terms.html` lose the skip link and the footer badge strip (three lazy pictures that never
 reach a print layout — a 46 px hole on the sheet), and the policy is compacted so its footer
@@ -5132,3 +5148,63 @@ page is worth printing — only that if someone does, no sheet is wasted on the 
 **Files.** `index-src.html` (the footer rule in `@media print`), every built page, `tools/print-sheets.json`
 (new); `landing-print-main.py` (new) and `SKILL.md` in the `stars-bots-ops` skill; this entry and the
 "Printing" paragraph above.
+
+## The sheet was turned, and one page of paper carried no words at all (25.10.2026)
+
+Four print batteries measured this page, and all four printed one paper: `format='A4'`, no
+`landscape` argument, no other size. A print dialog puts «Альбомная» and «Letter» one click away
+from A4, so the page had two print layouts nobody had ever looked at. Measured on the tree:
+
+**A4 landscape: 11 sheets in all nine languages, and sheet 5 carried exactly zero characters.**
+Not "almost empty" — pdftotext returns nothing at all for that sheet, and it was also the palest
+on the page (0.35–0.59 % ink). Sheet 4 carried 67–103 characters (the section heading
+`04 Real chats with the bot` and its lead), sheet 6 the four captions that belong under the
+screenshots (406–497 characters, since the pricing section starts on the same sheet). The cause
+is the same arithmetic that once made the phone mockups 45 % thinner than their files: the strip
+is `repeat(3,1fr)` of the text width, and a phone screenshot is 2.17 times as tall as it is wide.
+Portrait A4 gives the strip 678 px — each figure 215×495 px inside a sheet box 1032 px tall,
+comfortable. Landscape gives it 1007 px — each figure 324×730 px inside a box 703 px tall: the
+figure is taller than the sheet it stands on, and `figure.shot{break-inside:avoid}` carries each
+one whole to a sheet of its own, with the captions flowing after it.
+
+**Fixed by printing the phones at one size on paper**: `.shots{max-width:678px}` inside
+`@media print` — 678 px is exactly what the strip measures on a portrait A4, so a wider sheet no
+longer enlarges it. Landscape went from **11 sheets to 10**, the zero-character sheet is gone, and
+the thinnest sheet in any language now carries 110 characters (ru; 112 uk, 115 hi, 126 es,
+129 id, 135 en, 142 pt, 147 vi). Portrait A4 and Letter did not move by a single character per
+sheet: compared sheet by sheet, character by character, before and after the change.
+
+**Centring came from looking, not from measuring.** With the cap alone the strip sat at the left
+edge of a 1007 px column while its own section heading is centred on the sheet — a 678 px block
+with 329 px of white to its right. `margin-inline:auto` puts the strip's centre at 524 px in a
+1047 px sheet, which is the heading's centre. On portrait A4 the strip is the full text width, so
+there is nothing to centre and nothing changed. This is the one part of the block that no battery
+would have caught: the numbers were green before the rule and after it.
+
+**Letter and A5 were measured, not fixed.** Letter prints 8 sheets where portrait A4 prints 7
+(en/es/pt/hi/tr/vi), because the sheet is 18 mm shorter and the same content needs one more sheet;
+no sheet is empty, and the strip fits (700×523 px in a 963 px box). A5 prints 12–14 sheets, and
+its sheet 6 carries 57–64 characters (125 in vi, 160 in pt) — the three phones with their captions
+and nothing else, which is a picture, not waste. Both are budgeted instead of "fixed": a page
+printed on a smaller sheet takes more sheets, and that is arithmetic, not layout.
+
+**The gate.** New `landing-print-paper.py`: **939 checks, 0 problems** — 9 languages × (Letter,
+A4 landscape, A5), and per language: `pdfinfo` agrees with the text chunking, no sheet empty of
+text, no sheet under 0.15 % ink, no sheet ending with its own `h1/h2/h3`, the footer not alone on
+the last sheet (last-sheet characters ÷ footer characters > 1.20, the threshold measured
+yesterday), and sheets within `tools/print-papers.json`. Control `--mutate railwidth` removes the
+cap and turns **18 checks red**: in all nine languages landscape returns to 11 sheets and to a
+sheet with zero characters. One static marker on each of the nine pages holds the rule in the
+sweep.
+
+**What this does not prove.** A5 landscape is not covered and will not be: three phones across a
+186 mm sheet is 62 mm per phone, and a phone screen 62 mm wide is 134 mm tall on a 128 mm sheet —
+no CSS makes that fit without printing the screen smaller than its own captions. And landscape
+sheets are printed with longer lines than portrait ones: median 97 characters against 84 (max 137
+against 94). That is a typographic decision — cap the column on a wide sheet and pay for it in
+sheets — so it is measured and left to its own block rather than quietly changed here. Chromium's
+PDF only, no real printer, and nothing here says anyone should print a landing page.
+
+**Files.** `index-src.html` (the strip rule in `@media print`), every built page,
+`tools/print-papers.json` (new); `landing-print-paper.py` (new), the sweep marker and `SKILL.md` in
+the `stars-bots-ops` skill; this entry and the "Printing" paragraph above.
