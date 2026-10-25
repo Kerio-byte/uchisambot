@@ -62,6 +62,9 @@ footer .foot-badges img{height:46px;width:auto;display:block}
 .skip{position:fixed;left:10px;top:-60px;z-index:70;background:#14203A;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
 .skip:focus{top:10px}
 main:focus{outline:none}
+/* Бумага (25.10.2026): «Skip to content» — position:fixed, браузер печатает такие узлы на
+   каждом листе, и текст ссылки попадал на страницу условий рядом с абзацами. */
+@media print{.skip{display:none}}
 </style>
 </head>
 <body>
