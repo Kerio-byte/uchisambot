@@ -382,6 +382,10 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     border:1px solid #44506A;box-shadow:none!important}
   .foot::after{content:"t.me/UchiSamBot";display:block;margin-top:10px;font-weight:700;font-size:13px}
   .card,.price,.shot,.steps li,.ref-band,.parents-band,.band,.faq details{break-inside:avoid}
+  /* Подвал на бумаге: экранные отступы (44/56/34 px) занимают 274 px и не дают блоку влезть
+     в остаток листа — он целиком уезжает на новый (ru/uk/id печатались на 8 листов, последний
+     только подвал). На бумаге отступ над подвалом — 20 px, под ним — 0. */
+  footer{padding:10px 0 0;margin-top:20px}
   footer .foot{break-inside:avoid}
   h1,h2,h3,.sec-head,.sec-num{break-after:avoid}
   .sec{padding-top:22px}
