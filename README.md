@@ -438,13 +438,17 @@ Gate: `landing-print-paper.py` (**939 checks**, 9 languages × Letter / A4 lands
 control `--mutate railwidth` turns **18 checks red**.
 The three pages outside the generator print under their own rule: `privacy.html` and
 `terms.html` lose the skip link and the footer badge strip (three lazy pictures that never
-reach a print layout — a 46 px hole on the sheet), and the policy is compacted so its footer
-does not sit alone on a sheet (7 sheets instead of 8, the last one carrying section 9);
-`404.html` prints as one sheet with its button as dark ink. Measured by
-`landing-print-pages.py` (52 checks: page count from `pdfinfo`, ink per sheet, no heading at
-the foot of a sheet) and `landing-print-contrast.py` (3 543 checks: every element with its own
-text on twelve pages in Chromium, Firefox and WebKit, against the white sheet and against its
-own plate).
+reach a print layout — a 46 px hole on the sheet), keep a section heading on the sheet with its
+text, and are compacted on paper (paragraphs 9 px, lists 10/4, `h2` 20/8) so that the footer does
+not take a sheet of its own; `404.html` prints as one sheet with its button as dark ink.
+Measured on **all four sheets the dialog offers** — A4 portrait, Letter, A4 landscape, A5 — by
+`landing-print-pages.py` (**342 checks**, 12 page × paper pairs, budget
+`tools/print-pages-papers.json`): page count from `pdfinfo` against the text chunking, ink per
+sheet, no sheet ending with a heading or with a two-word fragment, no non-final sheet under 200
+characters, the footer not alone (last-sheet characters ÷ footer characters > 1.20) and sheets
+within budget; its control `--mutate` turns **17 checks red**. Contrast on the same pages is
+`landing-print-contrast.py` (3 543 checks: every element with its own text on twelve pages in
+Chromium, Firefox and WebKit, against the white sheet and against its own plate).
 Without JavaScript the FAQ still prints closed — that limitation is the browser's, not a hidden
 promise.
 
@@ -5208,3 +5212,60 @@ PDF only, no real printer, and nothing here says anyone should print a landing p
 **Files.** `index-src.html` (the strip rule in `@media print`), every built page,
 `tools/print-papers.json` (new); `landing-print-paper.py` (new), the sweep marker and `SKILL.md` in
 the `stars-bots-ops` skill; this entry and the "Printing" paragraph above.
+
+## The policy was printed well on one of the four sheets the dialog offers (25.10.2026)
+
+The print block has been measured five times now — four batteries for the landing page, one for the
+legal pages — and every one of those runs printed **portrait A4**. The dialog beside it offers
+Letter, a landscape switch and A5. A probe of the three pages outside the generator on the three
+sheets nobody had used, before any fix:
+
+* **Letter / `privacy.html`: 8 sheets, and the eighth held 40 characters** — the footer line alone,
+  0.08 % ink. The same defect that was fixed on portrait A4 yesterday, one sheet of paper away.
+* **A4 landscape / `privacy.html`: sheet 3 ended with the heading "5. Your rights and deletion"** —
+  the section itself started on sheet 4.
+* **A5 / `terms.html`: sheet 8 ended with "12. Изменения"**, for the same reason.
+
+Portrait A4 was clean on all three pages (7 / 5 / 1 sheets), which is exactly why nobody had looked.
+
+**Cause, and it is not the paper.** The landing page's `@media print` carries two ideas the legal
+pages never received: `h1,h2,h3{break-after:avoid}` (a heading may not be the last thing on a sheet)
+and a paper rhythm tighter than the screen's. Without the first, a heading sits at the foot of a
+sheet; without the second, the policy's 15 section gaps and 40 paragraph gaps add up to more than a
+sheet, so on Letter — 18 mm shorter — the footer was pushed onto one of its own.
+
+**Fixed by giving both legal print blocks the same two ideas**: headings `break-after:avoid`, list
+items `break-inside:avoid`, and paper spacing (paragraphs 12 → 9 px, lists 14/6 → 10/4, `h2`
+30/10 → 20/8). After: **Letter 8 → 7 sheets**, footer back on the section sheet (ink 0.08 → 5.90 %,
+last sheet 2 418 characters); **A4 landscape stays 10 sheets but no sheet ends with a heading** and
+the thinnest sheet carries 2.03 % ink instead of 1.15 %; **A5 terms 9 → 8 sheets** with the heading
+back on its own section (thinnest sheet 1.52 → 5.19 % ink). Portrait A4 did not change in sheet
+count (7 / 5 / 1); its policy last sheet carries 1 826 characters against 2 097 before, because the
+compaction moved the break points and the footer now shares a fuller sheet.
+
+**The gate.** `landing-print-pages.py` was rewritten from one paper to four: 12 page × paper pairs,
+**342 checks, 0 problems**, budgets in `tools/print-pages-papers.json` (A4 7/5/1, Letter 7/5/1,
+landscape 10/7/1, A5 13/8/1). Every old check survived (page count from `pdfinfo` against the text
+chunking, ink per sheet, no heading at the foot, no two-word fragment, no non-final sheet under 200
+characters) and the footer ratio — last-sheet characters ÷ footer characters > 1.20, the threshold
+measured yesterday on the landing page — now runs on every pair instead of only on portrait A4. The
+control `--mutate` strips `@media print` and turns **17 checks red**, including `pdfinfo` disagreeing
+with the text chunking (8 against 7) because on A5 the stripped page leaves a sheet with no ink at
+all — which is why the two counts are compared rather than one trusted.
+
+**One false positive was fixed, not worked around.** The "sheet ends with a one- or two-word
+fragment" check fired on A5 / `404.html`, where the last line of the page is the footer link
+"Terms": a document's last line is allowed to be short — nothing follows it. The check now runs on
+every sheet except the last, and a heading is no longer reported twice (once as a heading, once as a
+fragment), which is what the A5 terms failure had been doing.
+
+**What this does not prove.** Chromium's PDF only, no real printer, and A5 landscape is still out
+of scope (a phone screen does not fit a 128 mm sheet without printing it smaller than its captions).
+The compaction moves break points on every paper, so the numbers in the budget are the only thing
+standing between a reader and a footer-only sheet: that is why it is a gate and not a note. And
+nothing here says a legal page needs to be printed at all — it says that when it is, the paper the
+reader picked is the paper we measured.
+
+**Files.** `privacy.html`, `terms.html` (the two print blocks), `tools/print-pages-papers.json` (new),
+`tools/lastmod.json`; `landing-print-pages.py` (rewritten for four papers), two new sweep markers per
+legal page in the `stars-bots-ops` skill; this entry and the "Printing" paragraph above.
