@@ -1,6 +1,6 @@
 # Privacy Policy
 
-UchiSamBot (Study Helper) · Last updated: 23 October 2026
+UchiSamBot (Study Helper) · Last updated: 25 October 2026
 
 **Language:** this document is published in English (this section) and Russian (the section below). There are no other language versions; on the other language pages the link here is marked “(EN/RU)”.
 
@@ -59,7 +59,7 @@ The bot is designed for school students. We recommend that younger students use 
 
 Our website is hosted on GitHub Pages. GitHub may keep standard technical logs (such as IP addresses) under its own privacy statement. If you send us a message through the contact form, the form is processed by Web3Forms (web3forms.com), which forwards your email address and message to us. We use them only to reply to you; you can ask us to delete them at any time (see section 5).
 
-The “Featured on” strip at the bottom of our pages shows pictures of the launch platforms where our bot is listed: LiftOff (lift-off.sh), StartupBase (startupbase.io), Fazier (fazier.com), ShowMeBestAI (showmebest.ai), OpenHunts Club (openhunts.com), Aura++ (auraplusplus.com), LaunchIgniter (launchigniter.com) and Startup Fame (startupfa.me). All of those pictures are stored on our own site and load from our own server, so opening a page sends no request to those platforms at all — they do not see your IP address and do not learn that you visited us. The pictures work only as links: clicking one takes you to the platform's site, and from that moment its own privacy policy applies. We pass nothing else to them. Three plain text links in our footer — Realistic AI (realisticai.io), AI Tool Trek (aitooltrek.com) and Based Tools AI (basedtools.ai) — lead to other sites; like the pictures, they send nothing until you click one.
+The “Featured on” strip at the bottom of our pages shows pictures of the launch platforms where our bot is listed: LiftOff (lift-off.sh), StartupBase (startupbase.io), Fazier (fazier.com), ShowMeBestAI (showmebest.ai), OpenHunts Club (openhunts.com), Aura++ (auraplusplus.com) and Startup Fame (startupfa.me). All of those pictures are stored on our own site and load from our own server, so opening a page sends no request to those platforms at all — they do not see your IP address and do not learn that you visited us. The pictures work only as links: clicking one takes you to the platform's site, and from that moment its own privacy policy applies. We pass nothing else to them. Three plain text links in our footer — Realistic AI (realisticai.io), AI Tool Trek (aitooltrek.com) and Based Tools AI (basedtools.ai) — lead to other sites; like the pictures, they send nothing until you click one.
 
 The site itself sets no cookies and runs no analytics, advertising or other third-party scripts.
 
@@ -77,7 +77,7 @@ Use the contact form on our website — we reply by email.
 
 ## Политика конфиденциальности
 
-UchiSamBot (Учебный помощник) · Обновлено: 23 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 25 октября 2026
 
 UchiSamBot (Учебный помощник) — телеграм-бот, который помогает школьникам разбираться с домашними заданиями: разбирает задачи по шагам, объясняет темы простыми словами, проверяет решения и делает конспекты для повторения. Здесь описано, какие данные обрабатывает бот и как. Политика относится к боту (t.me/UchiSamBot) и его сайту (kerio-byte.github.io/uchisambot). В этой политике «мы» — команда, которая ведёт UchiSamBot.
 
@@ -132,7 +132,7 @@ UchiSamBot (Учебный помощник) — телеграм-бот, кот
 
 Наш сайт размещён на GitHub Pages. GitHub может вести стандартные технические журналы (например, IP-адреса) в рамках своей политики конфиденциальности. Если вы отправите сообщение через контактную форму, её обработку выполняет сервис Web3Forms (web3forms.com), который пересылает нам ваш e-mail и текст сообщения. Мы используем их только для ответа; удалить их можно в любой момент по запросу (см. раздел 5).
 
-Полоса «Featured on» внизу страниц показывает картинки площадок запусков, где значится наш бот: LiftOff (lift-off.sh), StartupBase (startupbase.io), Fazier (fazier.com), ShowMeBestAI (showmebest.ai), OpenHunts Club (openhunts.com), Aura++ (auraplusplus.com), LaunchIgniter (launchigniter.com) и Startup Fame (startupfa.me). Все эти картинки хранятся на нашем сайте и загружаются с нашего сервера, поэтому при открытии страницы к площадкам не уходит ни одного запроса — они не видят ваш IP-адрес и не узнают, что вы заходили к нам. Картинки работают только как ссылки: нажатие ведёт на сайт площадки, и с этого момента действует её собственная политика конфиденциальности. Больше мы им ничего не передаём. Три обычные текстовые ссылки в подвале — Realistic AI (realisticai.io), AI Tool Trek (aitooltrek.com) и Based Tools AI (basedtools.ai) — ведут на другие сайты; как и картинки, они ничего не отправляют, пока вы по ним не нажмёте.
+Полоса «Featured on» внизу страниц показывает картинки площадок запусков, где значится наш бот: LiftOff (lift-off.sh), StartupBase (startupbase.io), Fazier (fazier.com), ShowMeBestAI (showmebest.ai), OpenHunts Club (openhunts.com), Aura++ (auraplusplus.com) и Startup Fame (startupfa.me). Все эти картинки хранятся на нашем сайте и загружаются с нашего сервера, поэтому при открытии страницы к площадкам не уходит ни одного запроса — они не видят ваш IP-адрес и не узнают, что вы заходили к нам. Картинки работают только как ссылки: нажатие ведёт на сайт площадки, и с этого момента действует её собственная политика конфиденциальности. Больше мы им ничего не передаём. Три обычные текстовые ссылки в подвале — Realistic AI (realisticai.io), AI Tool Trek (aitooltrek.com) и Based Tools AI (basedtools.ai) — ведут на другие сайты; как и картинки, они ничего не отправляют, пока вы по ним не нажмёте.
 
 Сам сайт не ставит cookie и не использует аналитику, рекламу и сторонние скрипты.
 
