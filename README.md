@@ -5589,3 +5589,70 @@ pages, `tools/lastmod.json`, `submission-kit/*` (four cards + manifest); `landin
 (the badge rule, the dead duplicate `domain_alive` removed), `landing-sweep.py` (four counts and
 the "no openhunts badge" check), `landing-browser-smoke.py` (7 / 6), and this entry with the footer
 and strip-shape paragraphs above.
+
+## The phone header had no room left, and the Ukrainian page proved it (25.10.2026)
+
+The text-spacing gate (WCAG 1.4.12) had been asking two pages — English and Russian — at one width,
+1280 px. That is the pair the author reads himself, and it is the same hole the zoom gate had until
+24 October: nine languages existed, two were measured. The first wider run (nine languages × 320,
+420 and 1280) answered with a defect that no screenshot would show, because the page did not look
+broken — it moved.
+
+**The measurement.** At 320 CSS px the header row is exactly as wide as the page margins:
+20 (padding) + 126 (logo) + 22 (gap) + 10 (switcher margin) + 122 (switcher) = 280 = 320 − 2×20.
+Zero slack. The WCAG 1.4.12 overrides (line-height 1.5, letter-spacing .12em, word-spacing .16em,
+paragraph spacing 2em) grow the brand 126 → 133 and, in Ukrainian, the switcher label 122 → 139:
+the row needs 304 px. The document becomes **324 px wide on a 320 px screen** — a 4 px pan, and the
+one thing a phone user with enlarged letter spacing could do about it is drag the page sideways.
+Two more languages failed the same run without any page scroll: Portuguese and Indonesian put the
+switcher's right edge at 318 and 314 px against a content edge of 300 — the control ate 18 and 14 px
+of the page's right margin, invisible to the eye and to every existing gate, which measured scroll
+and never the row itself.
+
+**Fix.** One rule, no new markup: on phones the row is `justify-content:space-between` with no gap,
+and the switcher loses its 10 px left margin — `@media(max-width:760px){.top-in{justify-content:space-between;gap:0}.lang-dd{margin-left:0}}`.
+The dead space between the logo and the switcher (32 px) becomes slack, and the switcher sits at the
+right margin, which is where the desktop layout already puts it after the nav. After the change: the
+document is 320 px wide in all nine languages, the switcher's right edge lands exactly on the margin
+(300 / 340 / 400 px at those widths), 8 px spare for the longest label at 320 and 2 px at 340 —
+the widest case is Portuguese at 340, not Ukrainian at 320, which is why the spare is counted, not
+assumed.
+
+**The visible cost, named.** The switcher now sits at the right margin instead of directly after the
+logo: at 420 px it moves 93 px right (its box went from 199–295 to 292–400), at 320 it moves 5 px
+(English) to 28 px (Hindi). Nothing overlaps, nothing is cut, the header keeps its 62 px height —
+but this is a layout decision on every phone, and one word from the owner reverts it. It was taken
+because the alternative was a red gate with an exception written next to it, and the exception is
+what this project has already paid for once: a note that made an unverifiable badge look clean for
+months.
+
+**Gate.** `landing-a11y-extra.py` section D was rewritten: nine languages × 320/420/1280 = 27
+measurements, three checks each — no horizontal scroll, no text cut by its own box (the actual
+1.4.12 requirement, measured with the same `CLIP_JS` the zoom gate uses), and the header row stays
+inside the margins (switcher's right edge ≤ content edge, brand's right edge ≤ switcher's left).
+A floor check asserts that 27 were asked, so a shortened language list cannot leave the section
+green and empty. Negative control: a copy of the tree with the rule stripped out fails exactly four
+checks — pt 318 > 300, id 314 > 300, uk 324 > 300 and uk scroll 4 px; with the rule the same battery
+is 267 checks, 0 failed. The sweep grew by a static guard per language page (nine checks, 2 748 in
+total) which is red if the rule disappears from a built page — behaviour is measured in the browser,
+the rule's presence is measured without one.
+
+**Regression.** Sweep 2 748 / 0 after publication (the same sweep, before publishing, showed only
+the staleness line — the live site was one build behind). WCAG 2.2 targets and focus 43 / 0;
+first-screen 252 / 0; visual pass nine languages × two viewports, problems 0, badges 7/7;
+browser smoke 18 runs, 0 problems; environment preferences 45 / 0; print of the main page 213 / 0
+(the header is `display:none` on paper, so pagination did not move). Published from
+`tools/publish-tree.py` — 107 files to both mirrors, Pages source read back as `gh-pages/`.
+
+**What this does not prove.** That the new position is the prettier one — that is taste, and the
+numbers above are not an argument about taste. That Firefox and WebKit agree: section D is Chromium
+only, as it always was. And that spacing wider than the standard's test values still fits: at 320,
+letter-spacing beyond .12em would need slack the header does not have, and the honest answer there
+is the two-row layout the wrap experiment showed (it changed the baseline look in four languages,
+so it was rejected in favour of the right-margin rule).
+
+**Files.** `index-src.html` (the media rule and its explanation), the nine built pages with their
+`og` headers untouched, `tools/lastmod.json`, `sitemap.xml`; `landing-sweep.py` (one check),
+`landing-a11y-extra.py` (section D: three checks per measurement, the floor, the docstring),
+`docs/council-20261015.md` (the sweep count and what it now covers), `evidence/block-20261025i/`
+(sweep before and after publication, the battery logs, the negative control), and this entry.
