@@ -98,7 +98,17 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
 .sec-head .sec-num{font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.16em;margin:0 0 8px}
 
 .top{position:sticky;top:0;z-index:10;background:rgba(247,250,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top-in{display:flex;align-items:center;gap:22px;height:62px}
+.top-in{display:flex;flex-wrap:wrap;align-items:center;gap:2px 22px;min-height:62px}
+/* Ряд шапки переносится, а не вылезает за экран. Причина — настройка браузера «минимальный
+   размер шрифта»: она увеличивает ТОЛЬКО текст, коробки остаются в px, и жёсткая строка
+   перестаёт помещаться. Замер 25.10.2026 при 24 px минимума: русская страница на 761 px
+   уезжала вбок на 124 px, украинская на 320 px — на 32 px. Перенос добавляет шапке строку,
+   но не теряет ни слова; тесно только у того, кто сам включил крупный шрифт. */
+/* Никто в ряду не сжимается: сжатие рвёт подпись языка на две строки (так и было у
+   индонезийской на 320–340 px до 25.10.2026: «Bahasa» и «Indonesia» в пилюле высотой 38 px).
+   Лучше лишняя строка шапки, чем разорванное слово. */
+.brand,.nav,.lang-dd{flex:0 0 auto}
+.lang-dd summary span{white-space:nowrap}
 .skip{position:fixed;left:10px;top:-60px;z-index:70;background:#0E1526;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
 .skip:focus{top:10px}
 main:focus{outline:none}
@@ -142,7 +152,7 @@ main{display:block}
    которых на интервалы хватает (после правки 320/320 и 8 px запаса у uk, 2 px у самого
    широкого пункта на 340 px). Проверка — landing-a11y-extra.py, раздел D: девять языков
    × 320/420/1280, обрезка текста своей коробкой и прокрутка вбок. */
-@media(max-width:760px){.top-in{justify-content:space-between;gap:0}.lang-dd{margin-left:0}}
+@media(max-width:760px){.top-in{justify-content:space-between;gap:2px 0}.lang-dd{margin-left:auto}}
 /* Тач-устройства: зоны нажатия не меньше 44px (WCAG), десктоп не затрагивается */
 @media(pointer:coarse){
   .nav a,.lang-dd summary,.lang-list a,.lang-list span.on,.brand{min-height:44px;display:inline-flex;align-items:center}
@@ -215,7 +225,7 @@ main{display:block}
    896x414 × 9 языков = 27 проверок, 27 провалов. Правим не размеры, а выравнивание:
    на низком экране колонки начинаются сверху, а не по центру. Кегль уже сжат выше. */
 @media(max-height:430px) and (orientation:landscape){
-  .top-in{height:52px}
+  .top-in{min-height:52px}
   .hero{padding-top:16px}
   .hero-in{align-items:start}
   h1{font-size:clamp(26px,4.6vw,34px)}
@@ -1101,6 +1111,40 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     if (dd.contains(e.target)) return;  // клик по заголовку закрывает сам <details>
     close(false);
   });
+})();
+</script>
+<script>
+/* Отступ якоря по НАСТОЯЩЕЙ высоте шапки (25.10.2026). В CSS scroll-padding-top:84px —
+   это 63 px шапки плюс 21 px воздуха. Но с этого дня шапка переносится (настройка браузера
+   «минимальный размер шрифта» растит только текст), и при двух строках верх цели уходил ПОД
+   неё: замер при минимуме 24 px — 12 px под шапкой на 320 px и 52 px на 761 px. Правим
+   отступ только когда шапка выше обычной: при 63 px inline-стиль снимается и работает CSS,
+   поэтому обычная страница не тронута — посадку на 84 px держит landing-deeplink.py.
+   Высоту пересчитываем на resize и после загрузки шрифтов: шрифт меняет высоту подписи. */
+(function(){
+  var hd = document.querySelector('.top');
+  if (!hd) return;
+  var fit = function(settle){
+    var h = hd.offsetHeight;
+    if (h <= 70) { document.documentElement.style.scrollPaddingTop = ''; return; }
+    document.documentElement.style.scrollPaddingTop = (h + 20) + 'px';
+    // Якорь браузер поставил ДО этого скрипта по CSS-ным 84 px (Firefox — сразу при разборе
+    // цели), и при высокой шапке цель оказывалась под ней: замер 25.10 — зазор 5.4 px в
+    // Firefox при 78.6 px шапки. Ставим заново один раз, пока человек не трогал страницу.
+    if (!settle || location.hash.length < 2) return;
+    var t = null;
+    try { t = document.querySelector(location.hash); } catch(e){ return; }
+    if (!t) return;
+    var de = document.documentElement, prev = de.style.scrollBehavior;
+    de.style.scrollBehavior = 'auto';
+    window.scrollTo(0, t.getBoundingClientRect().top + window.pageYOffset - h - 20);
+    de.style.scrollBehavior = prev;
+  };
+  fit(true);
+  window.addEventListener('resize', function(){ fit(false); });
+  if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+    document.fonts.ready.then(function(){ fit(false); });
+  }
 })();
 </script>
 </body>
