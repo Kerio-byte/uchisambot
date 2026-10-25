@@ -71,7 +71,7 @@ main:focus{outline:none}
    бумажный вариант (поля разделов, отступ подвала) — стало семь листов, подвал на последнем
    вместе с разделом 9. `break-before:avoid` на подвале оставлен как страховка: он не даёт
    подвалу уехать на отдельный лист, если на будущем тексте места хватит впритык. */
-@media print{.skip{display:none}.foot-badges{display:none}
+@media print{.skip{display:none}footer .foot-badges{display:none}
   main{padding-top:8px} h3{margin-top:10px}
   footer{margin-top:8px;padding:10px 0 0;break-before:avoid}}
 </style>
