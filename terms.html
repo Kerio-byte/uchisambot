@@ -66,9 +66,18 @@ main:focus{outline:none}
    каждом листе, и текст ссылки попадал на страницу условий рядом с абзацами.
    Второе (25.10.2026): полоса значков площадок в подвале — lazy-картинки, до бумаги они не
    догружаются (замер: naturalWidth 0 у всех трёх), на листе оставалась дыра 46 px, а полоса
-   уезжала на следующий лист. Условия печатались шестью листами, шестой — пустой. */
+   уезжала на следующий лист. Условия печатались шестью листами, шестой — пустой.
+   Третье (25.10.2026, ночь): мерили только A4 портрет. На A5 (148×210 мм) лист 8 кончался
+   заголовком «12. Изменения» — раздел уехал на следующий лист один. На Letter подвал получал
+   свой лист. Лечится тем же, что у главной и у политики: `break-after:avoid` на заголовках,
+   `break-inside:avoid` на пунктах списка и плотный бумажный ритм. Батарея, которая это держит, —
+   landing-print-pages.py (четыре бумаги × три страницы), бюджет — tools/print-pages-papers.json. */
 @media print{.skip{display:none}footer .foot-badges{display:none}
-  footer{margin-top:28px;padding-bottom:0}}
+  main.wrap{padding-top:0}
+  h1,h2,h3{break-after:avoid} li{break-inside:avoid}
+  h2{margin:20px 0 8px} h3{margin-top:16px;margin-bottom:6px}
+  p{margin-bottom:9px} ul{margin-bottom:10px} li{margin-bottom:4px}
+  footer{margin-top:10px;padding:10px 0 0;break-before:avoid}}
 </style>
 </head>
 <body>
