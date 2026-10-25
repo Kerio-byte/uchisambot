@@ -41,8 +41,10 @@ footer a{color:var(--muted)}
 :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 @media (forced-colors:active){.btn,.langs a{border:1px solid}}
 /* Бумага (25.10.2026): у .btn фон var(--brand), текст белый, а браузер печатает без фонов —
-   кнопка «Open UchiSamBot in Telegram» выходила белым прямоугольником без надписи. */
-@media print{.btn{background:#fff;color:#111;border:1px solid #44506A}}
+   кнопка «Open UchiSamBot in Telegram» выходила белым прямоугольником без надписи.
+   Поля @page (25.10.2026, вечер): без них при пустых полях в диалоге печати текст ложится на
+   кромку листа; 6 мм — как у политики и условий, один язык бумаги на весь сайт. */
+@media print{@page{margin:6mm}.btn{background:#fff;color:#111;border:1px solid #44506A}}
 </style>
 </head>
 <body>
