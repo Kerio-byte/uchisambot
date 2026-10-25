@@ -150,9 +150,6 @@ main{display:block}
 .btn:active{transform:translateY(0)}
 .btn svg{flex:0 0 auto}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-.hero-badge{margin-top:22px}
-.hero-badge a{display:inline-flex;align-items:center;min-height:24px}
-.hero-badge img{display:inline-block}
 .chip{background:#fff;border:1px solid var(--line);color:var(--muted);font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px}
 .chip.big{font-size:15px;padding:9px 16px;color:var(--ink);font-weight:600}
 .hero-phone{display:flex;flex-direction:column;align-items:center}
@@ -189,7 +186,7 @@ main{display:block}
 .video-toggle .ico-play{display:none}
 .video-toggle[data-state="play"] .ico-pause{display:none}
 .video-toggle[data-state="play"] .ico-play{display:block}
-@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:0;text-align:center}.hero-left{display:contents}.hero-in h1{order:1}.hero-in .lead{order:2;margin-left:auto;margin-right:auto}.hero-in .cta-row{order:3;justify-content:center}.hero-in .hero-phone{order:4;margin:30px auto 4px}.hero-in .chips{order:5;justify-content:center}.hero-in .hero-badge{order:6}.hero{padding-top:34px}}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:0;text-align:center}.hero-left{display:contents}.hero-in h1{order:1}.hero-in .lead{order:2;margin-left:auto;margin-right:auto}.hero-in .cta-row{order:3;justify-content:center}.hero-in .hero-phone{order:4;margin:30px auto 4px}.hero-in .chips{order:5;justify-content:center}.hero{padding-top:34px}}
 /* Телефон БОКОМ (высота <= 430px) — 24.10.2026, замер: на pt, vi и uk главная кнопка
    уходила за нижнюю кромку на 2–47 px (844x390 и 740x360). В альбомной ориентации
    экран низкий, а герой одноколоночный и центрированный: 63 px шапки + 34 px отступа +
@@ -396,7 +393,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   .top,.sticky-cta,.skip,.video-toggle,.hero-phone{display:none!important}
   /* Значки площадок в подвале — lazy-картинки: на бумагу они не попадают (браузер снимает
      макет раньше, чем до них доходит ленивая загрузка), и оставалась дыра. Убираем полосу
-     целиком, чтобы дыры не было. Значок LaunchIgniter в герое грузится сразу и печатается. */
+     целиком, чтобы дыры не было. В герое значка площадки больше нет (25.10.2026: площадка
+     удалила нашу страницу, и ссылка вела на «Product Not Found»), поэтому и прятать нечего. */
   .foot-badges{display:none!important}
   .shots{grid-template-columns:repeat(3,1fr)!important;grid-auto-flow:row!important;
     grid-auto-columns:auto!important;overflow:visible!important;scroll-snap-type:none!important;
@@ -493,7 +491,6 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
         <span class="chip">Tanpa aplikasi baru — langsung di Telegram</span>
         <span class="chip">9 bahasa</span>
       </div>
-      <p class="hero-badge"><a href="https://launchigniter.com/product/uchisambot-study-helper?ref=badge-uchisambot-study-helper" target="_blank" rel="noopener"><img src="../img/badges/launchigniter.svg" alt="Unggulan di LaunchIgniter" width="212" height="55" decoding="async" onerror="(this.closest('a')||this).style.display='none'"></a></p>
     </div>
     <div class="hero-phone">
       <div class="phone-frame">
