@@ -5645,14 +5645,17 @@ browser smoke 18 runs, 0 problems; environment preferences 45 / 0; print of the 
 `tools/publish-tree.py` — 107 files to both mirrors, Pages source read back as `gh-pages/`.
 
 **What this does not prove.** That the new position is the prettier one — that is taste, and the
-numbers above are not an argument about taste. That Firefox and WebKit agree: section D is Chromium
-only, as it always was. And that spacing wider than the standard's test values still fits: at 320,
-letter-spacing beyond .12em would need slack the header does not have, and the honest answer there
-is the two-row layout the wrap experiment showed (it changed the baseline look in four languages,
-so it was rejected in favour of the right-margin rule).
+numbers above are not an argument about taste. That the gate itself agrees across engines: section D
+is Chromium only, as it always was; the three failing pages were checked by hand on the live site
+(uk, pt, id at 320 with the same overrides) in Chromium, Firefox and WebKit — 320/320 and `ok=True`
+in all nine runs, so the rule is not a Chromium accident, but that is a spot check, not a gate.
+And that spacing wider than the standard's test values still fits: at 320, letter-spacing beyond
+.12em would need slack the header does not have, and the honest answer there is the two-row layout
+the wrap experiment showed (it changed the baseline look in four languages, so it was rejected in
+favour of the right-margin rule).
 
 **Files.** `index-src.html` (the media rule and its explanation), the nine built pages with their
 `og` headers untouched, `tools/lastmod.json`, `sitemap.xml`; `landing-sweep.py` (one check),
 `landing-a11y-extra.py` (section D: three checks per measurement, the floor, the docstring),
 `docs/council-20261015.md` (the sweep count and what it now covers), `evidence/block-20261025i/`
-(sweep before and after publication, the battery logs, the negative control), and this entry.
+(sweep before and after publication, the battery logs, the negative control, the three-engine spot check of the live site), and this entry.
