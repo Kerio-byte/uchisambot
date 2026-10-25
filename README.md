@@ -4577,3 +4577,81 @@ built pages and the publish tree are untouched and nothing was re-published. `sc
 `scripts/landing-tablet-menu.py` and `SKILL.md` in the `stars-bots-ops` skill;
 `evidence/tablet-page-20261025T024748.json` (1804), `evidence/tablet-menu-20261025T025600.json` (162),
 their two control files, and two screenshots of the bar on an upright and a sideways iPad.
+
+## The page was walked forwards; nobody walked it backwards (25.10.2026)
+
+The forward Tab walk with the sticky bar on screen has been measured (`landing-wcag22-targets.py`,
+2.4.11, nine languages). The backward walk never was — and it is the other edge of the screen and a
+different rule inside the browser. Tabbing down, the browser brings the focused element to the nearest
+edge, which is the bottom: there the bar is 59 px tall and `scroll-padding-bottom` reserves 78. Tabbing
+up, the same element arrives at the top edge, where the header is 63 px and `scroll-padding-top:84px`
+is meant to hold it back. Whether that reserve works in the opposite direction, and whether WebKit
+honours `scroll-padding` for focus scrolling the way Chromium does, was reading, not measurement.
+
+`scripts/landing-backtab.py`: three screens (390×844 phone, 768×1024 iPad, 1440×900 desktop), en/ru/hi,
+**Chromium and WebKit** — 18 page runs. Per run: a forward walk from the top and a backward walk from
+the last element, both tagged with an index before walking, so the two can be compared stop by stop.
+**A** no stop is hidden entirely (the WCAG 2.4.11 minimum); **B** no stop is hidden by more than half,
+containers taller than 60 % of the viewport excluded — the shots rail is legitimately taller than the
+screen and its top may sit under the header; **C** the backward walk visits exactly the same set of
+elements; **D** its order is exactly the forward order reversed; **E** the bar really was on screen
+during the walk (a check that never sees the bar proves nothing), ≤65 px, and is absent on the mouse;
+**F** no JS errors. **120 checks, 0 failed.**
+
+The margins are the interesting part, because "not hidden" can be true by a pixel: on every one of the
+18 runs, every focused element no taller than 60 % of the screen was **fully** visible — a share of
+**1.0**, which means not one pixel of it sat under the bar or under the header; the bar was on screen
+for **13–15** of the ~40 stops on touch screens and for **0** on the desktop.
+
+Three traps, all of them the harness's, not the page's. The first probe reported three "defects" on the
+phone and eight on the tablet — the skip link, the brand, the language summary and the nav links:
+elements *inside* the sticky header, which the code counted as "covered by the header", and at
+`scrollY 0` the header covers nothing. The
+second version compared the two walks naively and every page went red on order: the browser wraps
+around after the last element, so both lists ended with a duplicate of the element they started from.
+The reverse walk now stops when the circle closes, and the order is compared by position, not by list
+equality. The third: an element the page's own script creates after load (the video pause button) has
+no tag, so it silently dropped out of the set comparison — it now gets a tag the first time it takes
+focus.
+
+The control removes both `scroll-padding` reservations and inflates the bar to 200 px, and reddens
+**48 of 120** checks — with FAQ summaries *fully* hidden, which is exactly the class of defect the
+reserve was written for.
+
+## The word that did not fit stayed invisible to every gate (25.10.2026)
+
+"Page is not wider than the screen" is checked by half a dozen batteries. A box that hides its own
+overflow is invisible to all of them: the document is honest, the layout is honest, and the visitor
+reads "Study helper for school…" where the sentence continues behind the edge. At 320 px — a cheap
+Android, a first-generation iPhone SE — and in nine languages, where Turkish glues words together and
+Vietnamese and Hindi produce long unbreakable runs, this is not a theoretical class.
+
+`scripts/landing-text-clip.py`: two narrow screens (320×568, 360×640) × nine languages × two engines,
+**all `<details>` opened before the measurement** — otherwise the longest text on the page, the FAQ
+answers, is never measured at all. 303–304 elements per page. **A** nothing is clipped by its own box
+(`overflow-x: hidden|clip` and `scrollWidth > clientWidth`); **B** no `text-overflow: ellipsis` is
+actually truncating; **C** no block sits outside the screen horizontally unless it lives inside a
+scroll container. **148 checks, 0 failed.**
+
+Three exclusions keep the battery honest, and the first run is why they exist: `.sr-only` (1 px wide by
+design), anything inside a scroller — the shots rail and the language list are scroll containers where
+`scrollWidth > clientWidth` is the normal state, and without that exclusion the rail alone produced
+eight "defects" per page — and boxes with zero width.
+
+The control plants a nowrap heading in 120 px, a 60 px paragraph with an ellipsis and a footer pushed
+40 vw to the right: **108 of 148** checks go red, and all three classes, not just one.
+
+**What neither battery can prove.** That a hardware keyboard on an iPad behaves like Tab in an
+emulator; that Safari's collapsing toolbar scrolls the focused element the same way with a dynamic
+viewport; that a screen reader's virtual cursor lands where Tab lands. And that half the element is the
+right line for B — WCAG asks only that the focused element is not *entirely* hidden; the stricter line
+is this project's own, and it is deliberately stricter than the standard.
+
+**Numbers.** `tools/build.py --check` 24 / 24; sweep **2598 / 0**; text clipping **148 / 0** (control
+148 / 108 red); backward walk **120 / 0** (control 120 / 48 red).
+
+**Files.** No site file changed — both batteries are proof, not a fix, so the nine pages, the template
+and the publish tree are untouched and nothing was re-published. `scripts/landing-text-clip.py`,
+`scripts/landing-backtab.py` and `SKILL.md` in the `stars-bots-ops` skill;
+`evidence/text-clip-20261025T032328.json` (148), `evidence/backtab-20261025T032735.json` (120), their
+two control files.
