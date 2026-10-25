@@ -4737,3 +4737,85 @@ rotation **288 / 0** (control 288 / 18 red).
 template and the publish tree are untouched and nothing was re-published. `scripts/landing-rotate.py` and
 `SKILL.md` in the `stars-bots-ops` skill; `evidence/block-20261025b/` (every battery's full output),
 `evidence/rotate-20261025T045054.json` (288) and `evidence/rotate-control-20261025T045354.json` (18 red).
+
+## The link promised the price; the page took the reader on a 4,500-pixel tour (25.10.2026)
+
+Every anchor on this site has been measured — three batteries do nothing but press menu links and check that
+the block lands below the sticky header. All of them pressed the link **inside an already open page**. A link
+in a Telegram post arrives differently: the address carries `#pricing` before anything has happened, and the
+browser must travel on its own. That is an arrival, not a navigation, and nobody had measured it.
+
+Chromium animates it. `html{scroll-behavior:smooth}` is written for the reader who clicks a menu item; applied
+to the arrival it turns the jump into a flight: **#pricing — 1120 ms over 4817 px** (it starts 400 ms after
+commit and ends at 1520), **#contact — 1400 ms over 7533 px**. WebKit (Telegram on iOS is WKWebView) lands in
+one step, two samples 24 ms apart. And under `prefers-reduced-motion` Chromium is instant as well, because the
+page already carries `@media(prefers-reduced-motion){html{scroll-behavior:auto}}`. So the page had already
+decided an arrival should not be animated — it only decided that for the people who ask the operating system.
+
+The speed is the smaller half. **A key press during the flight stops it.** Measured at 560 ms:
+
+| the reader pressed | where `#pricing` ended up |
+| --- | --- |
+| ArrowDown | **3587 px below the top of the screen** |
+| PageDown | 382 px |
+| Space | 1046 px |
+| wheel −240 | 84 px — the flight continued |
+| tap on the hero | 84 px — the flight continued |
+
+The one thing that cancels the flight is the one thing a keyboard user does while wondering why the page is
+moving: he ends up four screens above the price the link promised, and nothing tells him. The wheel and the tap
+do *not* cancel it — I expected them to, measured, and was wrong.
+
+**The fix is nine lines in `<head>`**, and it is the technique the form already uses after a submit, where
+`confirmSent()` sets `scrollBehavior` to `auto` around its own `scrollIntoView` because clearing the query and
+the anchor throws the reader to the top. If the address carries a fragment, the document scrolls instantly until
+the first `pointerdown`/`keydown`/`wheel`/`touchstart`; smoothness comes back at the first contact, earlier than
+the click on the menu item that wants it. No fragment — nothing changes.
+
+**After:** the flight is 0 ms — a single movement sample, 364 ms after commit, at 84 px, in both engines.
+ArrowDown at 560 ms now moves the reader 40 px down *from the price*, which is his own scroll. That is the local
+server; the live host was asked the same question — `#pricing` and `#contact` stand at 84 px by `load` + 400 ms in
+both engines, with `scroll-behavior: auto` in effect on the served page.
+
+**The battery.** `scripts/landing-deeplink.py` (port 8278, `--control`): nine languages × six anchors (`#how`,
+`#subjects`, `#pricing`, `#faq`, `#contact`, `#main`) × Chromium and WebKit at 390×844 = 108 arrivals, six
+checks each — the block sits on `scroll-padding-top`; the arrival is complete by `load` + 400 ms; no late drift
+between 400 and 1600 ms; the target is not invisible (the reveal fired); its heading is below the header and in
+the top half of the screen; no JS errors. The other half guards the opposite direction: at 1440×900 in en/ru/hi
+a real click on a menu item must still be *smooth* (≥ 5 scroll events, not one), must still land on the padding,
+and a page loaded without a fragment must keep `scroll-behavior: smooth`. **684 checks, 0 failed.**
+
+**The control** rewrites exactly one line in the HTML as it is served (`auto` → `smooth`, through
+`context.route`, no copies of the tree) and counts what it rewrote: 108 pages, 216 lines — the second hit is the
+form's own line, which is the same string. **90 red: 45 A2 + 45 A3**, and the split is the proof: all 54 WebKit
+arrivals stay green (WebKit never flew), all nine `#main` stay green (they stand at the top of the document,
+there is nothing to fly over), and A1 stays green everywhere — the destination was always right; only the
+journey was wrong.
+
+**Two harness traps, both mine.** The first version navigated without the fragment (the anchor was in the check,
+not in the URL): 306 red on a correct page — and the numbers said so, `y=0` with `top` equal to the absolute
+offset. The second: `#main` is the skip link's target and stands on the 63rd line of the document, right under
+the header, so demanding `top == scroll-padding-top` from it demands a negative scroll — 36 more false reds.
+`landed()` now knows three legal outcomes (the padding, the bottom of the document, the top of the document),
+each written down with its reason, because the next block would otherwise "fix" a page that was never broken.
+
+**A cheap gate for a cheap failure.** The browser battery is not part of the sweep (the sweep has to stay fast),
+so the sweep got two static checks: the guard is present in all nine pages and stands inside `<head>`. Controlled
+the usual way — delete it from `ru` and move it to the end of `<body>` in `vi`: `[deeplink] guard есть во всех
+девяти страницах | нет в: ru` and `[deeplink] guard стоит в <head> | не в <head>: vi`, both naming the page, and
+after `build.py` the three files come back to the same sha (`22097bda`, `0990cfae`, `0d3ed728`).
+
+**What it cannot prove.** That Telegram's in-app browser behaves like Playwright. Both engines it uses were
+measured — Chromium on Android, WKWebView on iOS — but the in-app shell is not the same thing, and a real phone's
+fragment scroll happens against a warm cache and a real network, not a local server.
+
+**Numbers.** The page changed, so every battery ran again — nineteen of them, `evidence/block-20261025c/`:
+build `--check` 24/24; sweep **2600 / 0** (2598 plus the two new guards); render-check ALL OK; axe 12 pages / 0;
+a11y-extra 187 / 0; wcag22 43 / 0; env-prefs 45 / 0; viewports 94 / 0; fonts 39 / 0; cwv 69 / 0; cross-engine
+0 problems; rotate 288 / 0; landscape 956 / 0; tablet 1804 / 0; backtab 120 / 0; text-clip 148 / 0; first-screen
+252 / 0; video-motion 444 / 0; smoke 18 / 0; external links 0 / 0; publish tree 513 links / 0; deeplink
+**684 / 0** (control 90 red).
+
+**Files.** `index-src.html` and the nine built pages, `tools/lastmod.json`; `scripts/landing-deeplink.py`,
+`scripts/landing-sweep.py` (+2 checks) and `SKILL.md` in the `stars-bots-ops` skill;
+`evidence/block-20261025c/`, `evidence/deeplink-run-20261025.json`, `evidence/deeplink-control-20261025.json`.
