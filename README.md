@@ -6169,3 +6169,75 @@ rescues a real dropout: the battery's abort is a clean failure, not three second
 **Files.** `index-src.html` (the video script) and the nine built pages; `landing-video-failure.py`
 (new), `landing-sweep.py` (one marker), `SKILL.md`; evidence `block-20261026d/` — probe, timeline,
 battery run and control logs, regression logs; this entry.
+
+## The channel that accepted the request and said nothing (26.10.2026)
+
+The previous entry closed the class *the file never arrived* and named the one it could not close: a
+server that accepts the request and never answers fires **no event at all** — no `error`, no `load` —
+so any amount of listening for a failure sees nothing. It left the sentence "a watchdog on a
+slow-but-working link would hide a demo that was about to play" as the reason not to write one. That
+reason is right about *time* and wrong about *progress*, and the measurement says so.
+
+**What the visitor saw** (`evidence/block-20261026e/probe-before-fix.py`, 9 runs — en/ru/hi ×
+hanging request / throttled-but-alive / healthy, Chromium 390×844, every run sampled at 0.5, 3, 6,
+10 and 15 s). With the request hanging: `readyState = 0`, `networkState = 2` (`LOADING`), **0 bytes
+buffered**, **no JS error** — and the control, which had been showing *Play*, flips itself to
+**Pause** the moment `play()` is called and keeps saying *Pause* (`aria-label="Pause the demo
+video"`, ru «Пауза демо-видео», hi «डेमो वीडियो रोकें») for as long as the visitor is willing to
+watch. At 15 s the state is unchanged. Tapping it then is worse than nothing: it sets `userPaused`,
+pauses an element that never played, and issues **no second request** — the visitor cannot even ask
+again. On the same page, in the same 10 seconds, a healthy response gives `readyState = 4` with
+13.0 s buffered and playing. One page, one script, two answers — and the wrong one is silent.
+
+**The distinction the fix is built on.** A hanging connection is not a slow connection: a slow
+connection delivers **bytes** (`progress`), a hang delivers none, and a playing video delivers
+**time** (`timeupdate`). So the watchdog does not measure slowness, it measures *silence* — it
+records the buffered end and the `timeupdate` counter when it is armed and, 8 s later, requires
+**either** to have grown. Bytes arriving → slow link, no verdict. Ticks arriving → playing, no
+verdict. Neither → the control must stop claiming playback: it returns to *Play* and stays on
+screen (a hang is not a verdict, so unlike `failed` it does not hide), the frame is marked
+`data-video="stalled"`, and a tap is a **new attempt** (`load()` + play) rather than a pause. The
+first `progress`, `loadeddata`, `canplay` or `playing` clears the state, so a link that heals puts
+the button back on its own. 8 s is four times the slowest first-frame delay measured here (216
+kbit/s: `readyState = 2` with 1.8 s buffered at the second second) and shorter than a visitor waits
+for a button that does nothing.
+
+**Two things the engines taught, both by failing.** (1) `readyState` is not a liveness signal:
+WebKit kept `readyState = 4` on a stream that had gone silent, with `currentTime` frozen at 7.23 s
+for fourteen seconds — the first version of the fix trusted that number and stayed green on paper
+while the pill said *Pause* over a still frame. The counter that cannot lie is `timeupdate`.
+(2) With autoplay allowed and the mp4 hanging, **WebKit never fires `load`** (`goto` with
+`wait_until='load'` timed out at 30 s). Nothing visible depends on it — the page has no `load`
+listener — but the battery now navigates that scenario on `domcontentloaded`, and the fact is
+written here instead of being retried away.
+
+**Provision.** New battery `scripts/landing-video-hang.py`: **21 runs** — Chromium × four languages
+(en, ru, hi, uk), WebKit × three (en, hi, uk), seven scenarios: hang-at-start, tap-retries-after-heal,
+slow-but-alive (216 kbit/s, twelve samples), healthy, autoplay-hang, user-paused-then-hang, and
+hang-mid-file (the channel goes silent *after* playback started, connection held open). **144
+checks**, run in **265 s**: **144 / 0**. Control on the previous commit (`--control`,
+`git archive HEAD` in a temp tree), same battery: **144 / 45** — every hang run red with
+`state='pause'`, `label='Pause the demo video'`, `marker=None`; every retry red with `hits=1` and
+`rs=0 paused=True`. The slow-link scenario is the anti-overreach check and it is green on **both**
+trees on purpose: the watchdog must not exist there. The control also earned its keep by catching
+a flaky check of ours — the slow run asserts time, not `readyState`, because at 216 kbit/s the
+channel is *slower than the file* (27 KB/s against ~34 KB/s), so a starved buffer at the twelfth
+second is the channel's property, not a defect.
+
+**Provision, second half.** Four static markers in the sweep (watchdog counts silence, cleared by
+the first byte, keeps the control, tap retries — 9 pages, sweep now 2839 checks) so an edit cannot
+drop the watchdog silently. The whole video family re-run after the JS change: video-failure
+**228 / 0**, video-weight **129 / 0**, video-motion **444 / 0**, browser-smoke **18 runs, 0
+problems**, `build.py --check` **24 / 24**, `publish-tree.py --check` **495 links**.
+
+**What this does not prove.** That 8 s is the right number for a human — it is a bound derived from
+the fastest and slowest delivery measured here, not a study. That a retry after a long hang resumes
+anything: `load()` restarts the file from the first frame, so a visitor who had watched 6 s starts
+again at 0 — the honest alternative (resume where it stopped) needs a server that answers ranges,
+which GitHub Pages does but a hung connection never did. And the mid-file scenario needs a channel
+slower than the file to reproduce at all; on a fast link the whole 400 KB is buffered and there is
+nothing left to hang.
+
+**Files.** `index-src.html` (the video script) and the nine built pages; `landing-video-hang.py`
+(new), `landing-sweep.py` (four markers), `SKILL.md`; evidence `block-20261026e/` — probe, three
+engine probes, battery run and control logs, live check; this entry.
