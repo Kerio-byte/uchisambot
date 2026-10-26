@@ -6041,3 +6041,19 @@ the tap that returns `preload` to `auto`), the nine built pages, `sitemap.xml` a
 `video starts under preference gate`), `docs/council-20261015.md` (one line in "what guards this"),
 `SKILL.md` in the `stars-bots-ops` skill, `evidence/block-20261026b/` (the before-fix probe, its
 JSON, the battery's weight table and the control run), and this entry.
+
+## The badge question that was left "manual" answers itself when the links are product pages (26.10.2026)
+
+The entry of 25.10 ended with a sentence it could not close: "that the four home-page badges are
+still true … remains a manual question for the next block". Checked today, by the gate that owns that
+question rather than by memory: `landing-external-links.py` walks **69 URLs** and prints, next to
+every badge link, whether the product is named on the page it lands on. All **six** footer badges
+answer `значок ведёт на страницу, где продукт назван` — fazier, startupbase, showmebest, lift-off,
+startupfa and aura++ each lead to a product page that carries the name, not to a front page. **0
+problems.** The question was already answered when those front-page links were replaced (the two
+badges whose platforms had deleted the product are gone — the sweep forbids `launchigniter.com` and
+`openhunts.com` from coming back); today's run only proves the replacement holds.
+
+**What this does not prove.** That a platform will still list the product tomorrow: the check reads
+the page as it is now, and a platform deleting a listing tomorrow turns this gate red tomorrow, not
+today. That is the intended behaviour — a badge is a claim, and the claim is checked, not remembered.
