@@ -5848,3 +5848,93 @@ and `scripts/landing-header-engines.py` (both compared the logo with the switche
 which the wrap turned into 4 and 24 false reds — now row-aware), `evidence/block-20261025k/`
 (the gate, both controls, the whole harness after the change, the old-state screenshots), and this
 entry.
+
+> **Corrected on 26.10.2026:** the paragraph above about `landing-tablet-page.py` "hanging" is wrong.
+> The battery finished every time it was given more than its real duration, and it had already
+> finished at 22:18 the day before (1 804 / 0). What looked like a socket wait was a seven-minute run
+> killed by a five-minute timeout, and "the Chromium process disappears" was `ps | grep chrom` not
+> knowing that WebKit's process is called `MiniBrowser`. The harness now prints its progress, its
+> expected duration, and recovers from the one real crash that is there (llvmpipe). See the entry
+> below.
+
+## The battery that "hangs" was a five-minute timeout and a blind `ps` (26.10.2026)
+
+**The entry above said `landing-tablet-page.py` hangs** right after its two screenshots, that the
+Chromium process disappears and that Playwright waits on a socket forever. None of that is true, and
+this is the battery the project uses to judge eight iPad screens in two engines.
+
+**It finished seven times tonight, and it had finished yesterday.** English: 204 checks, 0 failed,
+80 s. Nine languages: **1 804 / 0 in 447 s** — Chromium 145 s, WebKit 302 s. And the file the
+previous block pointed at as evidence, `evidence/tablet-page-20261025T221832.json`, is not a crash
+dump: it holds 1 804 checks with 0 failures, written at 22:18. A battery with a hang in it does not
+write that file.
+
+**What the "hang" actually was.** The battery printed two lines and then nothing:
+`снимок: …tablet-tab-768x1024.png` and `…tablet-tab-1024x768.png`. Those are its only two prints, and
+they fall at the end of the first and the fifth Chromium screen — the second at ~140 s. Everything
+after them belongs to WebKit, which printed nothing until the final summary. A 300-second timeout
+therefore kills the process in WebKit's half, and the log ends exactly "right after its two
+screenshots", with `rc=143`. That is the whole observed signature: no socket wait, only a battery
+that needs 447 s and a person who waited 300.
+
+**Why the browser looked dead.** WebKit's process is called **MiniBrowser**; nothing in its name
+matches "chrom" or "webkit". `ps | grep chrom` prints nothing while WebKit is alive — and so does
+`ps | grep -E 'chrom|WebKit|WebContent'`, which is what this block's own sampler used: it printed
+`browser_procs=0 rss_mb=0` for two minutes of a healthy WebKit run, and the block nearly wrote the
+same wrong sentence a second time. `pgrep -a MiniBrowser` is the question that has an answer.
+
+**A real crash was there as well, and it is the engine's.** Three WebKit runs died for good tonight
+with `TargetClosedError: Page.evaluate: Target page, context or browser has been closed`, and the
+kernel log at the first of them — `llvmpipe-20[3137122]: segfault at 1fa` at 02:21:49 — names
+WebKitGTK's software rasterizer, not the page. The same nine languages pass 902 WebKit checks in the
+run before and the run after, so the page is not the suspect.
+
+**What the harness now does about all three.** It prints a line per engine and per screen, flushed,
+with seconds and the running check count, so silence is no longer indistinguishable from work. It
+prints the expected duration computed from measured cost (`PER_RUN_S`: Chromium 2 s, WebKit 4 s a
+run) — 7.5 min for the full sweep, against 7.4 measured. It writes `seconds` and `engine_restarts`
+into the JSON, so the next block reads the duration instead of guessing it. It arms a watchdog
+(`LANDING_WATCHDOG`, 1800 s): if the run ever does hang, it prints `WATCHDOG`, dumps its stack and
+exits 4, instead of waiting for someone else's timeout. It catches `TargetClosedError`, reopens the
+context, re-runs **that one language**, drops that language's half-written checks so the count cannot
+double, prints a `!` line and records the crash in `engine_restarts`. It gained `LANDING_ENGINES` to
+run one engine, and `LANDING_SELF_CRASH=1` to close a page on purpose and prove the recovery path
+without waiting for an accident.
+
+**The recovery path ran on real crashes, not only on a rehearsal.** The rehearsal: `LANDING_SELF_CRASH=1`,
+English, page closed by hand — 204 / 0, one restart recorded, count unchanged. Then the real thing,
+twice: `webkit/tab-1194x834/en` in the WebKit-only run, and `webkit/tab-810x1080/ru` in the final
+full run. Both printed the `!` line, retried, and finished with the normal count — 902 / 0 and
+1 804 / 0, with the crashed screen still producing its 117 checks.
+
+**Compositing off was measured and not adopted.** `WEBKIT_DISABLE_COMPOSITING_MODE=1` is the usual
+advice for llvmpipe crashes, so it was tested on nine languages: 902 WebKit checks, 0 red, the same
+names — and 55 details differing by 1–2 px. Then two runs in the *same* mode were compared: 72
+details differ by 1–2 px. The flag's effect is inside the run-to-run noise, so adopting it would have
+been a change with no measurable benefit and a false sense of a fix; the harness keeps the engine as
+it is and survives the crash with a retry.
+
+**The tablet area against the new header.** The header-wrap commit (01:32) had never been through
+this battery: every tablet number in the entry above was measured at 22:18, before it. Tonight's run
+is the first after the change — **1 804 / 0**, the header 63 px on the tablet and 63 px on the
+desktop probe in all 144 runs, the bar 59 px in 146 measurements (0 in the two desktop probes that
+require its absence).
+
+**Numbers.** tablet 1 804 / 0 in 447 s, one engine restart (English smoke 204 / 0 in 80 s; WebKit
+alone 902 / 0 in 293 s, one restart); control 404 checks / 52 red on two languages; rehearsal 204 / 0
+with one restart; compositing comparison 902 vs 902, 0 red both, 55 details apart, against 72 between
+two runs in one mode.
+
+**What this does not prove.** That llvmpipe will not crash again: it is the engine's software GL, and
+three runs died tonight; what changed is that a crash costs a retry instead of a red run or a silent
+night. That a retry is always safe: if a crash were ever caused by the page, the retry would crash
+again and the run would fail on the second attempt — the wanted behaviour, but not yet seen. That
+1–2 px of noise is harmless everywhere: it was measured on the bar's top edge, so any new check with
+a 1 px tolerance has to measure its own spread first. And nothing here makes the battery cheap: seven
+and a half minutes is a block's background job, not a step in the static sweep.
+
+**Files.** `scripts/landing-tablet-page.py` (progress, duration estimate, watchdog, retry,
+`LANDING_ENGINES`, `LANDING_SELF_CRASH`, `seconds` and `engine_restarts` in the JSON, docstring with
+the measured durations and both traps), `SKILL.md` in the `stars-bots-ops` skill,
+`evidence/block-20261026a/` (every run above, the kernel line, the comparison and summary scripts,
+their output), and this entry. No site file changed; nothing was re-published.
