@@ -918,15 +918,77 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   }
   function sync(){
     if (failed) { btn.hidden = true; return; }
-    var paused = v.paused;
-    btn.setAttribute('aria-label', paused ? labelPlay : labelPause);
-    btn.setAttribute('data-state', paused ? 'play' : 'pause');
+    // Висяк не прячет кнопку и не объявляет «паузу»: пока байты не пришли, играть нечего,
+    // поэтому контрол честно стоит в состоянии «играть» (26.10.2026).
+    var playing = !v.paused && !stalled;
+    btn.setAttribute('aria-label', playing ? labelPause : labelPlay);
+    btn.setAttribute('data-state', playing ? 'pause' : 'play');
     btn.hidden = false;
+  }
+  // Висяк (26.10.2026). Замер (evidence/block-20261026e/probe-before-fix.json, 9 прогонов):
+  // сервер принял запрос ролика и не отвечает — события `error` не будет НИКОГДА, у <video>
+  // остаётся networkState=2 (LOADING), readyState=0 и НОЛЬ байт, а кнопка уже с 10-й секунды
+  // писала «Пауза демо» и писала так, сколько человек ни смотрит (на здоровой отдаче та же
+  // страница в те же 10 с: readyState=4, 13 с буфера). Отличие висяка от медленного канала
+  // не в кадре, а в БАЙТАХ: медленный канал их отдаёт (`progress`), висяк — ни одного.
+  // Поэтому сторож сравнивает БУФЕР НА МОМЕНТ ВЗВОДА с текущим: прирост = канал живой
+  // (медленный канал под правило не попадает), ноль прироста за 8 с = молчание. Тот же
+  // счёт ловит и висяк ПОСЛЕ начала (обрыв посреди файла): его взводит событие `waiting`.
+  // Висяк — не приговор: кнопка остаётся, возвращается в «играть», а нажатие делает
+  // новую попытку (`v.load()`).
+  var WATCHDOG_MS = 8000;
+  var wd = null, stalled = false, wdMark = 0, wdTick = 0, ticks = 0;
+  function bytes(){
+    try { return v.buffered && v.buffered.length ? v.buffered.end(v.buffered.length - 1) : 0; } catch(e){ return 0; }
+  }
+  // Признак жизни — не readyState (в WebKit он остаётся 4 и на замолчавшем канале;
+  // замер 26.10: rs=4, currentTime стоит, кнопка писала «пауза»), а два независимых
+  // счётчика: прирос буфер и прошёл `timeupdate`. Оба молчат = висяк. Каждый `timeupdate`
+  // перевзводит сторожа с новым отсчётом — поэтому обрыв ПОСРЕДИ файла тоже виден, даже
+  // если движок не прислал `waiting` (WebKit в замере не прислал).
+  v.addEventListener('timeupdate', function(){ ticks++; watchdog(); });
+  function stopWatchdog(){ if (wd) { clearTimeout(wd); wd = null; } }
+  function watchdog(){
+    stopWatchdog();
+    wdMark = bytes();
+    wdTick = ticks;
+    wd = setTimeout(function(){
+      wd = null;
+      if (failed) return;                        // у отказа свой путь (ниже)
+      if (v.paused) return;                      // человек сам остановил
+      if (broke()) return;                       // это отказ, не висяк
+      if (ticks > wdTick) return;                // время идёт: ролик живой
+      if (bytes() > wdMark + 0.01) return;       // байты идут: медленно, но живой
+      stalled = true;
+      if (v.parentNode && v.parentNode.setAttribute) v.parentNode.setAttribute('data-video', 'stalled');
+      sync();
+    }, WATCHDOG_MS);
+  }
+  function clearStall(){
+    stopWatchdog();
+    if (!stalled) return;
+    stalled = false;
+    if (v.parentNode && v.parentNode.removeAttribute) v.parentNode.removeAttribute('data-video');
+    sync();
   }
   function play(){
     try { var p = v.play(); if (p && p.catch) p.catch(function(){}); } catch(e){}
+    watchdog();
   }
   btn.addEventListener('click', function(){
+    // Висяк: кнопка стоит в состоянии «играть», значит нажатие — это НОВАЯ ПОПЫТКА,
+    // а не пауза. `v.load()` рвёт зависший запрос и просит файл заново; если сервер
+    // ожил, игра начнётся с первого кадра (26.10.2026).
+    if (stalled) {
+      stalled = false;
+      if (v.parentNode && v.parentNode.removeAttribute) v.parentNode.removeAttribute('data-video');
+      userPaused = false; userStarted = true;
+      try { v.setAttribute('preload', 'auto'); } catch(e){}
+      try { v.load(); } catch(e){}
+      play();
+      sync();
+      return;
+    }
     if (v.paused) {
       userPaused = false; userStarted = true;
       // На медленном канале разметка стоит с preload="none": человек сам попросил ролик —
@@ -937,8 +999,8 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     else { userPaused = true; try { v.pause(); } catch(e){} }
     sync();
   });
-  v.addEventListener('play', sync);
-  v.addEventListener('pause', sync);
+  v.addEventListener('play', function(){ sync(); watchdog(); });
+  v.addEventListener('pause', function(){ stopWatchdog(); sync(); });
   // Отказ ролика (26.10.2026). Об одном и том же приходят ДВА разных события:
   //   * обрыв или 404 на выборе источника — `error` приходит на <source>, а у самого
   //     <video> остаётся networkState=3 (NETWORK_NO_SOURCE) и error=null;
@@ -948,10 +1010,10 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   // висит, а после нажатия честно пишет «Пауза», хотя кадр стоит.
   // Правило: одна тихая повторная попытка (медленная сеть — не приговор), вторая
   // ошибка — контрол уходит с экрана; `playing` возвращает и кнопку, и право на повтор.
-  var failed = false, retried = false;
   function broke(){ return v.networkState === 3 || !!v.error; }
   function giveUp(){
     failed = true;
+    stopWatchdog();
     try { v.pause(); } catch(err){}
     btn.hidden = true;
     if (v.parentNode && v.parentNode.setAttribute) v.parentNode.setAttribute('data-video', 'failed');
@@ -971,9 +1033,18 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     // момент networkState ещё не говорит «источников не осталось».
     srcs[si].addEventListener('error', function(){ setTimeout(onFail, 0); });
   }
+  // Живой канал: первый пришедший байт снимает сторожа и состояние висяка. `waiting` —
+  // единственный сигнал «браузер ждёт данных»: взвод здесь, снятие — на `progress`.
+  v.addEventListener('progress', clearStall);
+  v.addEventListener('loadeddata', clearStall);
+  v.addEventListener('canplay', clearStall);
+  v.addEventListener('waiting', watchdog);
   v.addEventListener('playing', function(){
     failed = false;
     retried = false;
+    stalled = false;
+    stopWatchdog();
+    if (v.parentNode && v.parentNode.removeAttribute) v.parentNode.removeAttribute('data-video');
     sync();
   });
   // Вне экрана луп не декодируем (батарея телефона), а когда ролик снова в кадре —
