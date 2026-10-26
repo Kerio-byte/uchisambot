@@ -6057,3 +6057,54 @@ badges whose platforms had deleted the product are gone — the sweep forbids `l
 **What this does not prove.** That a platform will still list the product tomorrow: the check reads
 the page as it is now, and a platform deleting a listing tomorrow turns this gate red tomorrow, not
 today. That is the intended behaviour — a badge is a claim, and the claim is checked, not remembered.
+
+## The visitor who came back got an entrance animation on a page he had already read (26.10.2026)
+
+Every battery until today walked the page one way: `goto`, look, scroll. A visitor does something
+else — he taps the main button, Telegram opens, he comes back with the browser's Back button and
+lands where he left off. Nobody had measured that walk. The closest gate, `landing-deeplink.py`,
+arrives by `#anchor` on a *fresh* document, which is a different state.
+
+**What the measurement found.** The reveal script hides every `.rv` block (`html.js .rv{opacity:0}`)
+and lets the IntersectionObserver show them. On a return the browser restores the scroll position
+*after* that script has run, and the observer delivers its first records on the *next* frame.
+Measured at DOMContentLoaded — the state that goes into the first paint — the pre-fix page showed
+**0 of 37 blocks** on the return (Chromium 390×844, all nine languages; WebKit **5 of 37**, where the
+browser had already painted the top). The visitor who came back to a page he had read got a fresh
+half-second fade from nothing, and blocks that had not entered the frame stayed transparent until
+he scrolled. The `#faq` arrival had the same shape: **8 of 11** cards transparent and `minOpacity 0`
+at the moment the browser had already jumped to them.
+
+**The fix** (`index-src.html`, the reveal script, ~15 lines). When `performance.getEntriesByType
+('navigation')[0].type === 'back_forward'` — with `performance.navigation.type === 2` as the fallback
+for engines without the newer API — the page shows *all* blocks before the first paint and never
+observes them. When the address carries a hash, the anchor's `.rv` chain is shown the same way. A
+normal arrival from the top takes neither branch: the entrance stays, because it is a designed
+microinteraction (council, item 25), and the battery measures that side too — 0 blocks pre-shown on
+a fresh load.
+
+**Provision.** New battery `landing-return.py` — 9 languages × Chromium-phone + WebKit-phone, 216
+checks (A: the entrance is intact and scrolling still reveals; B: return — all blocks shown, scroll
+restored, sticky band shown, video paused, typed address kept, 0 JS errors; C: `#faq` — every card
+shown). After: **216 / 0**. On the previous commit (`a1f8c3a`, in a worktree) the same battery is
+**216 / 54** — every B check (18) and every C check (36) red — while the A checks are green on both
+trees, which is what makes the red mean something: the battery separates "came back" from "came
+first" instead of failing everything red.
+
+**The metric had to learn the observer's own rule.** The first version of check A counted a block
+as "in the frame" when `top < innerHeight`, and painted a correct page red eight times: a 165 px
+block at the very bottom edge had 9.5 px (5.8 %) inside the *observer's* frame — that frame is
+shortened by `rootMargin: -8 %`, and a block needs 6 % of its own height — so the observer was right
+to stay silent. The check now mirrors the rule instead of approximating it.
+
+**What this does not prove.** That nothing is painted before DOMContentLoaded — those frames belong
+to the browser (blank, or the previous page) and no page script can reach them; what is proven is the
+document's state at the moment its own first paint is composed. And that a return is instant from
+**bfcache**: in this environment Chromium never restores from it (a plain `data:` page is not
+restored either, and `notRestoredReasons` comes back `masked`), so "the browser restored it
+instantly" stays unmeasured here. The measured path is the reload a returning visitor gets when
+bfcache is unavailable — the common case for a page carrying a video.
+
+**Files.** `index-src.html` (the revealed branch) and every built page; `landing-return.py` (new),
+one static marker in the sweep (the rule reached all nine built pages, 2794 checks) and `SKILL.md`
+in the `stars-bots-ops` skill; this entry.

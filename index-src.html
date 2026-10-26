@@ -966,7 +966,27 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
       if (entries[i].isIntersecting){ entries[i].target.classList.add('rv-in'); io.unobserve(entries[i].target); }
     }
   }, {rootMargin: '0px 0px -8% 0px', threshold: 0.06});
-  for (var j = 0; j < els.length; j++) io.observe(els[j]);
+  // Человек вернулся на страницу (26.10.2026). Замер: браузер ставит прокрутку на прежнее
+  // место ПОСЛЕ того, как этот скрипт отработал, а наблюдатель отдаёт первые записи только
+  // на следующем кадре. Значит, придя назад по кнопке браузера, посетитель получал входную
+  // анимацию на уже прочитанной странице: 0.5 с текст проявлялся из нуля, а блоки, которые
+  // в кадр не попали, оставались прозрачными до прокрутки. Здесь такой заход показывается
+  // сразу и целиком — вход не анимируется; заход по ссылке с #якорем сразу показывает сам
+  // якорь и его блоки. На ОБЫЧНОМ заходе сверху правило молчит: вход по-прежнему
+  // анимируется (это отдельное микровзаимодействие, решение совета 25).
+  var early = [];
+  try {
+    var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    var back = (!!nav && nav.type === 'back_forward') ||
+               (!!performance.navigation && performance.navigation.type === 2);
+    var hash = location.hash && location.hash.length > 1
+      ? document.getElementById(location.hash.slice(1)) : null;
+    for (var m = 0; m < els.length; m++){
+      var hit = back || (!!hash && (els[m] === hash || els[m].contains(hash) || hash.contains(els[m])));
+      if (hit){ els[m].classList.add('rv-in'); early.push(els[m]); }
+    }
+  } catch(e){}
+  for (var j = 0; j < els.length; j++) if (early.indexOf(els[j]) === -1) io.observe(els[j]);
 })();
 </script>
 <script>
