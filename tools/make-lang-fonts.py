@@ -33,9 +33,11 @@ NAMES = {
     "devanagari": "हिन्दी",
 }
 SRC = {
-    "cyrillic": "manrope-cyrillic.woff2",
-    "vietnamese": "manrope-vietnamese.woff2",
-    "devanagari": "noto-sans-devanagari.woff2",
+    "cyrillic": "fonts/manrope-cyrillic.woff2",
+    "vietnamese": "fonts/manrope-vietnamese.woff2",
+    # 26.10.2026: полный Noto переехал в tools/font-src — он больше не нужен странице
+    # (там сабсет под текст, tools/subset-deva.py) и не должен публиковаться как ассет.
+    "devanagari": "tools/font-src/noto-sans-devanagari.woff2",
 }
 DST = {
     "cyrillic": "langs-cyrillic.woff2",
@@ -54,7 +56,7 @@ def build(key: str) -> Path:
     opts.name_languages = ["*"]
     opts.notdef_outline = True
     opts.recalc_bounds = True
-    font = subset.load_font(str(FONTS / SRC[key]), opts)
+    font = subset.load_font(str(ROOT / SRC[key]), opts)
     sub = subset.Subsetter(options=opts)
     sub.populate(text=NAMES[key])
     sub.subset(font)
