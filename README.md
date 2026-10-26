@@ -6325,3 +6325,55 @@ step), `demo/captions.py` (WebP container reader, ffprobe sizes, two ledger fiel
 `demo/captions.json` (restamped); `landing-pixel-density.py` (new), `landing-sweep.py` (two markers),
 `SKILL.md` and `references/landing-batteries.md`; evidence `block-20261026f/` — probe, battery,
 control, before/after hero frames, sharpness numbers, live check; this entry.
+
+## The wider the screen, the fewer badges fitted, and on the narrowest phone one stood alone (26.10.2026)
+
+**What was found.** The footer strip of platform badges is the one block on all nine pages that
+geometry gates measured at two widths only — 420 and 1440 px in `landing-visual-pass.py` — and the
+sweep watched just two strings of its CSS. Walking it at sixteen widths, one pixel apart around every
+boundary, found two defects and one claim in the source that had quietly stopped being true.
+
+**What the measurement found.** (1) *A reverse step.* At 700 px four badges fitted in the first row,
+at 701 three, at 703 four again. The compact-size media query ended at 700, so the badge grew from 40
+to 46 px and the four badges in DOM order needed 602 + 3 × 20 = 662 px of inner width — while the
+footer's inner width is 661 at 701 and 662 at 702. For two pixels of screen the strip gets *worse* as
+the screen gets *wider*. (2) *A lone badge in the middle.* At 320 px (inner 280) the strip laid out
+2+1+2+2: the widest badge — ShowMeBestAI, 4.00 : 1, 160 px at height 40 — cannot pair with the next
+one (startupbase, 3.75 : 1, 150 px): 160 + 150 + 14 = 324 > 280. The forced single badge landed in the
+*second* row, between rows of two, so the strip read as broken rather than as wrapped. At 300 px it
+was 2+1+2+1+1 — two lone rows. (3) *A number that outlived its strip.* The comment above the rule
+still promised "ровные 4+4" and "сумма четырёх самых широких = 714" — true for the eight-badge strip
+of 22.10; the eighth badge went on 25.10 with OpenHunts, and today's four widest sum to 659 (602 in
+DOM order). Nothing recomputed it: the only gate near it checks that the gap string is present.
+
+**The fix.** The compact-size rule now ends at 702 px — the width where the grown badge stops costing
+a row (measured one pixel apart: 700 → 4+3, 701–702 → 3+4, 703 → 4+3). A second rule under 360 px
+sets the badge to 34 px and the gap to 8, where the pairs do close: 300–360 px now lay out 2+2+2+1 and
+the strip is 30–80 px shorter (160 px instead of 190 at 320 and 240 at 300). The comment was rewritten
+with numbers measured on the built page, and it names the badge that sets the ceiling.
+
+**In the sweep.** Two static markers per page — "badge strip grows at 702" and "badge strip narrow
+360" — so a later CSS edit that moves either boundary back turns red instead of shipping (2875 checks).
+The dynamic half is a new battery, `landing-badge-rows.py`: nine languages × sixteen widths = 144
+measurements, 1017 checks, and six invariants that did not exist anywhere before — all seven badges
+present and loaded; no row before the last holding fewer than two badges; no row wider than the strip;
+no horizontal scroll on the page; **a monotone layout** (as the screen grows the first row never loses
+a badge and the strip never gains a row); and at 1440 the strip lays out exactly 4+3 with the fifth
+badge provably not fitting, so the ceiling in the comment is computed, not written. Against the
+previous tree the same battery returns **27 failures** — nine languages × (300, 320) for the lone
+badge, nine languages × 702 for the reverse step — so the gate is proven on the defect, not on the fix.
+
+**What this does not prove.** That a person notices a 34 px badge instead of a 40 px one on a 320 px
+phone: the geometry is proven, the taste is not — 34 px is 85 % of 40 on a screen that is 82 % of a
+390 px one. That 300 px deserves a rule at all: it exists for Galaxy Fold closed and a handful of
+Android Go devices, and the alternatives were a lone badge or a strip wider than the screen. That the
+row capacity is monotone *everywhere*: at 600 px the strip wraps 3+4 and at 700 4+3, so the number in
+the first row still changes inside the 600–700 band — a wrap, not a defect, and the battery only
+requires that it never *falls* as the screen grows. That the nine built pages live in Telegram's own
+webview as they do in Chromium: the battery runs one engine, as every geometry battery here does.
+
+**Files.** `index-src.html` (two media queries and the comment above them) and the nine built pages
+with their markdown twins; `landing-badge-rows.py` (new), `landing-sweep.py` (two markers, 2857 →
+2875); `SKILL.md` and `references/landing-batteries.md`; this entry; evidence `block-20261026g/` — six
+probes (rows, widths, the 1-px walk across the boundary, narrow screens, and the two that disagreed
+before the truth was 1 px wide), battery run and control, sweep before and after, live check.
