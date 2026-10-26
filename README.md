@@ -6773,3 +6773,104 @@ the overflow clause), `landing-badge-rows.py` (`--control dense`, `arm()`, verdi
 four control logs, three clean logs, the ledger, and the overflow probe with its measurement
 table.
 
+
+## The window on a phone grew with the defect, and five batteries asked it anyway (26.10.2026)
+
+**The queue arrived with its own warning.** The previous entry ended with six batteries that
+compare `scrollWidth` with `innerWidth` while opening mobile contexts, and with the sentence that
+whether each of them is blind "has to be measured with a control the way this one was, not fixed
+by grep". This block measured first and fixed second.
+
+**Twelve windows, three numbers, one defect.** New `probe-iw-vs-dw.py` opens the windows the
+batteries open and reads `innerWidth`, `documentElement.clientWidth` and `scrollWidth` before and
+after a defect that adds 120 px of overflow. Chromium answered:
+
+| window | defect adds | innerWidth | clientWidth | old clause (sw ≤ iw+1) | new clause (sw ≤ cw+1) |
+|---|---|---|---|---|---|
+| desktop 320 / 640 / 420 / 1280, `is_mobile=False` | +120 | unchanged | unchanged | red | red |
+| phone and tablet 390×844, 844×390, 768×1024, 1024×768, `is_mobile=True` | +120 | **+120** | unchanged | **green** | red |
+
+Seven of the twelve windows were blind, and all seven were mobile: on a phone Chromium expands the
+layout viewport to fit the overflowing document, so the number the clause compared against grew by
+exactly the amount it was supposed to catch. The four `a11y-extra` clauses were **not** blind — they
+work on a desktop context, where the viewport does not grow — so a grep-driven "fix" of all six
+would have rewritten a battery that was already honest and proved nothing about it.
+
+**WebKit never had the defect, and would have hidden it.** The same probe in WebKit (five windows,
+`probe-webkit.py`): `innerWidth` stayed 390 / 844 / 768 / 1024 / 1440 and the old clause caught the
+overflow every time. So this was never "mobile is blind" — it was one engine's layout-viewport
+expansion, in the engine the phone actually runs. `landscape-page` and `tablet-page` run both
+engines: their width clause was blind in the chromium half and honest in the webkit half — exactly
+the shape a single green line in a log cannot show.
+
+**The fix is a different number, and both engines agree on it.** Five batteries now compare
+`scrollWidth` with `documentElement.clientWidth` and print all three numbers when they speak:
+`landing-render-check.py` (the phone clause), `landing-keyboard-form.py` (clause A),
+`landing-landscape-page.py` (clause A), `landing-rotate.py` (clause A after each turn) and
+`landing-tablet-page.py` (clause A). On clean pages `clientWidth == innerWidth` in every measured
+window in both engines, so the stricter-looking comparison is not stricter on an honest page —
+measured, not assumed. `landing-a11y-extra.py` moved to the same number too: its clause was honest,
+but the next reader copies the nearest line, and one number in six batteries is cheaper than a note.
+
+**The first shape of the control was too loud, and the noise was measured.** The defect was a body
+forced to `calc(100vw + 120px)`. It worked — the clause went red — but it also moved every box:
+`keyboard-form`'s tap on the message field waited 30 s for an input that now covered it, the control
+run took 103 s against 113 s for the whole 27-run battery, and it produced 8 reds where 6 were
+expected. The defect became an absolutely positioned pseudo-element 120 px past the right edge
+(`body::after`, out of flow). `probe-pseudo.py` measured it in 8 windows and both engines:
+`scrollWidth` +120 every time, the first button's left edge moved **0 px**, the new clause red
+every time. In `keyboard-form` the style tag exists only for the duration of the A measurement and
+is removed before the next tap.
+
+**What the controls returned — one red per measurement, no foreign reds.**
+
+- `render-check --control`: **5** width reds — the four desktop pages and the phone — in 11 s; the
+  phone line reads `sw=510 cw=390 iw=510`, which is the blindness written down as a number: the old
+  clause would have compared 510 with 510 and said "fine".
+- `keyboard-form --control`: **6 of 6** runs, one per language × device, 55 checks, **0 foreign
+  reds**, 28 s (clean run of the same battery: 244 checks, 0 failed, 113 s).
+- `landscape-page --control-wide` (en, ru): **12 of 12** — 2 languages × 2 engines × 3 screens, 96 s.
+- `tablet-page --control-wide` (en, ru, chromium): **16 of 16** — 2 languages × 8 screens, 37 s.
+- `rotate --control-wide` (en): **16 of 16** — 4 device pairs × 2 turns, 59 s.
+- `a11y-extra --control`: **49 of 49** — 11 reflow + 11 zoom + 27 text-spacing measurements, every
+  one naming `overflow=120`, and `iw=320` unchanged on the desktop windows.
+
+**Clean runs after the edits.** 244 (keyboard-form) + 956 (landscape) + 1 804 (tablet) + 288
+(rotate) + 267 (a11y-extra) = **3 559 checks, 0 failed**, plus `render-check` ALL OK. The five
+numbers match their pre-edit baselines (a11y-extra 267/0 from 25.10, landscape 956/0 and tablet
+1 804/0 measured earlier today), so this block moved the instrument, not the page. The five clean
+runs took 19 minutes on a quiet machine; their controls took 5.
+
+**The ledger counts batteries, not controls, and now says 28.** Two new `--control` flags
+(`keyboard-form`, `a11y-extra`) moved it from 26 to 28 — now 12 `--mutate`, 15 `--control`, 1
+`--selftest`, 1 pointer, **19 without anything**. The three `--control-wide` flags do not move the
+number, and that is worth saying out loud: they sit on batteries that already had a control, and the
+ledger's unit is a battery with at least one wired control. Five of the six questions from the last
+entry are closed; the sixth (`a11y-extra`) turned out not to be a defect and now has a control that
+says so.
+
+**A control nobody runs is memory; the runner runs them.** `landing-regress-all.py`'s `CONTROLS`
+went from 8 entries to 13, an entry may carry its own environment (`LANDING_LANGS`,
+`LANDING_ENGINES`) so a slow battery is proved on a subset instead of being left out, and a battery
+that needs a served root gets one in the control path as well — before this, `render-check` would
+have failed its control for want of a server, and the next reader would have concluded the page was
+broken. One command, `--controls`, answered **13 of 13 caught in 4.7 minutes**, the five new ones
+among them; a control that is written down but never run is a note, not a fact.
+
+**What this does not prove.** That the 19 batteries without controls are worth their green. That the
+same pattern is gone everywhere: five more scripts still compare `scrollWidth` with `innerWidth`
+(`landing-contact-e2e.py`, `landing-cross-engine.py`, `landing-visual-pass.py`,
+`landing-browser-smoke.py`, `landing-env-prefs.py`), two of them open mobile contexts, and this
+block did not measure whether their clauses are blind. That one mutation per battery exercises every
+clause: `render-check` asserts five things per page and the control touches one. That an injected
+pseudo-element is the same event as a source-level regression — a real edit also changes the built
+pages, and no tree was broken this time. And that the full 48-battery set is green: it was not
+re-run; only the five touched batteries (clean) and their controls were.
+
+**Files.** `landing-render-check.py` (`--control`, `WIDTH_JS`, `width` in every line),
+`landing-keyboard-form.py` (`--control`, `docCW`, clause A renamed to "with the keyboard open" — it
+was measured after the keyboard opened and called "without"), `landing-landscape-page.py`,
+`landing-tablet-page.py`, `landing-rotate.py` (`--control-wide`, `cw` in the reading, A compares with
+it), `landing-a11y-extra.py` (`--control`, `dw`/`sw` in the reading), `landing-regress-all.py`
+(`CONTROLS` 8 → 13, env per entry, server for controls); evidence `block-20261026n/` — three probes
+with their JSON, nine run logs and `summary.json`, the control logs of the runner.
