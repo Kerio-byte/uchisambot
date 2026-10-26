@@ -6230,6 +6230,12 @@ drop the watchdog silently. The whole video family re-run after the JS change: v
 **228 / 0**, video-weight **129 / 0**, video-motion **444 / 0**, browser-smoke **18 runs, 0
 problems**, `build.py --check` **24 / 24**, `publish-tree.py --check` **495 links**.
 
+**On the world, not only on the tree.** After the gh-pages publication,
+`evidence/block-20261026e/live-check.py` walks the live site (root, ru, hi; Chromium phone, 24
+checks, **24 / 0**): healthy — playing, `state=pause`, 13 s buffered; with the mp4 held at the
+browser — `state=play`, `data-video="stalled"`, control visible, exactly **one** request, and the
+label the visitor reads is the language's own («Смотреть демо-видео», «डेमो वीडियो चलाएँ»).
+
 **What this does not prove.** That 8 s is the right number for a human — it is a bound derived from
 the fastest and slowest delivery measured here, not a study. That a retry after a long hang resumes
 anything: `load()` restarts the file from the first frame, so a visitor who had watched 6 s starts
