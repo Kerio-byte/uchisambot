@@ -6108,3 +6108,58 @@ bfcache is unavailable — the common case for a page carrying a video.
 **Files.** `index-src.html` (the revealed branch) and every built page; `landing-return.py` (new),
 one static marker in the sweep (the rule reached all nine built pages, 2794 checks) and `SKILL.md`
 in the `stars-bots-ops` skill; this entry.
+
+## The demo's stop button had no answer for a file that never arrived (26.10.2026)
+
+Every battery until today measured the video's **successful** life: its weight, its autoplay, the
+pause, the poster, the two labels, the return from Back. The failure was never measured, and on a
+phone it is ordinary — a dropped connection, a 404 after a file is renamed, a file that arrives short.
+
+**What the measurement found** (`evidence/block-20261026d/probe-before-fix.py`, 99 measurements,
+en/ru/hi, Chromium 390×844). All three failures end with the poster on screen, the control on screen
+and **not one JS error**: the page is silent about a demo it cannot play. And the error arrives in two
+different places depending on how the fetch started:
+
+- fetch started by autoplay → `error` lands on the `<video>`, `error.code = 3`
+  (`MEDIA_ERR_DECODE`), `readyState = 1`;
+- fetch started by the button (`preload="none"`, then play) → `error` lands on the **`<source>`**, the
+  `<video>` keeps `error === null` and `networkState === 3` (`NETWORK_NO_SOURCE`), and **`paused` reads
+  `false`** while nothing is decoded (`timeline.txt`). `sync()` believes `paused`, so the button is
+  labelled *Pause* over a still frame, and tapping it again only waits: `play()` on an element with no
+  source queues a request that no source can satisfy.
+
+**The first fix was wrong, and the battery said so in numbers.** Listening to the `<video>` alone (the
+first shape, the one the probe happened to show) turned the truncated file green and left **five of
+the six scenarios red in both engines** — the commonest failure never reaches the element's own
+handler. The shipped rule listens to both, judges with one predicate (`networkState === 3 || error`),
+waits one task before believing a source error (so a second `<source>` could still win), retries
+**once** (`load()` + play, silent — a radio dropout is not a verdict), and on the second failure hides
+the control and marks the frame `data-video="failed"`. `playing` brings back both the control and the
+right to retry, so a dropout that heals does not leave a page that has given up. The poster stays in
+every case: a still frame of the demo is honest, a button that cannot act is not.
+
+**Provision.** New battery `scripts/landing-video-failure.py`: **38 runs** — Chromium × five languages
+(en, ru, hi, vi, uk) and WebKit × three (en, hi, uk — WebKit is what Telegram on iOS runs) over six
+scenarios: recover-by-tap, permanent abort, permanent 404, truncated body, healthy tap, autoplay
+recovery. **228 checks.** After the fix: **228 / 0**, 3.5 minutes. Control on the previous commit
+(`--control`, `git archive HEAD` in a temp tree): **228 / 95** — every permanent scenario red with
+"hidden=False display=flex", "paused=False" and "hits=1" (no retry request at all). Two checks are
+there to catch a fix that over-reaches: the video must be requested **exactly twice** in a failure (a
+retry, not a storm) and the document height must stay within 40 px of the healthy page (the control
+left the layout instead of breaking it). Both are green on the healthy path too, where the request
+count is **1** — the retry must not exist when nothing failed.
+
+**Provision, second half.** One static marker in the sweep (`video failure handled`, 9 pages, sweep
+now 2803 checks) so an edit cannot drop the handler silently; the whole family re-run after the JS
+change: video-motion **444 / 0**, video-weight **129 / 0**, browser-smoke **18 runs, 0 problems**,
+`build.py --check` **24 / 24**, `publish-tree.py --check` **495 links**.
+
+**What this does not prove.** A *hanging* connection: a server that accepts the request and never
+answers fires no error event at all, so the same dead control can still be offered, and no amount of
+listening for `error` will see it — that needs a watchdog, and a watchdog on a slow-but-working link
+would hide a demo that was about to play. Left open and named, not papered over. Also that the retry
+rescues a real dropout: the battery's abort is a clean failure, not three seconds of dead air.
+
+**Files.** `index-src.html` (the video script) and the nine built pages; `landing-video-failure.py`
+(new), `landing-sweep.py` (one marker), `SKILL.md`; evidence `block-20261026d/` — probe, timeline,
+battery run and control logs, regression logs; this entry.
