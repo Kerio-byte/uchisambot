@@ -6500,3 +6500,59 @@ markers in `landing-sweep.py` (2896 checks); `SKILL.md`, `references/landing-qa.
 battery, its negative control, four regression batteries (`landing-min-font.py` 1554/0,
 `landing-a11y-extra.py` 267/0, `landing-tablet-menu.py` 162/0, `landing-visual-pass.py`
 PROBLEMS 0), the sweep and the live-byte comparison.
+
+
+## The badge was alive and the gate was red, and the suite had never been run together (26.10.2026)
+
+Every block for a week ran four to six batteries and wrote "green". The sweep — 2,896
+checks over the files — runs on its own. Nobody had ever started the fifty-seven behavioural
+batteries in one pass, so "the suite passes" rested on the memory of past blocks, not on a
+run. `landing-regress-all.py` (new) is that run: every READ-ONLY battery in turn, its own
+timeout, one JSON journal holding the exit code, the `CHECKS/FAILED` line and the last six
+lines of output.
+
+**The suite's first finding was its own price.** Seventeen batteries took forty minutes. Two
+do not fit 420 s — `landing-cross-engine.py` (36 runs × two engines) and `landing-deeplink.py`
+— and `landing-header-engines.py` finished at 419.5 s, half a second under a ceiling that was
+meant to be generous. The rest of the alphabet did not fit the block's clock. A suite whose
+slowest member is measured in minutes is not an instrument to run after every edit; it is a
+weekly one, and now the journal says so instead of the estimate.
+
+**The only red was the gate, not the page.** `landing-external-links.py` failed on the Startup
+Fame badge: `https://startupfa.me/s/-51` answers **429** to a plain urllib request, with
+`server: Vercel` and `x-vercel-mitigated: challenge`. That is not a dead page — it is Vercel's
+anti-bot checkpoint, which lets a browser with JavaScript through and does not let a script
+in. A real Chromium gets the same address and draws it: `<title>` "UchiSamBot — review,
+pricing & alternatives | Startup Fame", the product named in the visible text ("UchiSamBot
+(Study Helper) is a Telegram bot for school students…"). The badge leads where it promises;
+the red was the gate's.
+
+**Two wrong repairs before the right one.** The first version judged the wall by the browser's
+*first response status* — but a page behind a passed challenge still reports the challenge code
+on the first response (measured on the platform's own front page: status 403, title "Startup
+Fame - Discover Awesome Startups", eighty lines of text: a live page whose first answer is
+403). The second version left the wait as soon as the title stopped looking like a checkpoint —
+and Vercel's challenge page has an **empty** title at first, so the loop exited on nothing and
+declared a live badge dead. Then, holding the real title, it read the body too early: the title
+of the real page arrives *before* its text, so the product was not there yet and the badge
+failed as "product not named" — on a page that names it three times. The final shape waits for
+*settled* text (two identical reads, ≥200 characters), judges by the rendered page, and treats
+a wall the browser cannot pass as **"not checked", exit code 2** — never a silent pass, never a
+false red.
+
+**Controls.** `--browser-probe URL` runs the same code against one address: the product page
+returns 0 with the product named, the platform's front page (alive, no product on it) returns 1.
+Same path, opposite verdicts — so the check discriminates instead of rubber-stamping. After the
+repair: 0 problems, 0 unverified, exit 0.
+
+**What this does not prove.** That 48 batteries is the whole set: ten are excluded by design
+(live mailbox, live bot, the real form send) and have their own conditions. That the thirty-one
+batteries this block's clock did not reach are green — they are one command away, and their last
+green comes from earlier blocks, which is exactly the memory this entry was written against. And
+the uncomfortable one: only seven of the fifty-eight batteries carry a negative control
+(`--mutate`), so for the other fifty-one a pass still cannot be told apart from a battery that
+measures nothing.
+
+**Files.** `landing-external-links.py` (browser verdict, `--browser-probe`, exit 2),
+`landing-regress-all.py` (new), `SKILL.md`; evidence `block-20261026j/` — the red run,
+both wrong repairs, the green run and both controls.
