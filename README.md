@@ -6571,9 +6571,10 @@ started at `landing-landscape-page.py` and finished the set.
 
 **A red that takes one second is the harness.** `landing-print-contrast.py`,
 `landing-render-check.py` and `landing-visual-pass.py` all died on
-`ERR_CONNECTION_REFUSED` to `[адрес]:8147` and `:8137`. Each of them says in its header
-"start `python3 -m http.server` first"; inside a block that was done by hand, so the battery
-looked alive. In the suite nobody raised the server, and three gates — 3 543 checks in
+`ERR_CONNECTION_REFUSED` to the loopback port each of their headers asks for. Each of them
+says in that header "start `python3 -m http.server` first"; inside a block that was done by
+hand, so the battery looked alive. In the suite nobody raised the server, and three gates —
+3 543 checks in
 `print-contrast` alone, the whole "white text prints as white on paper" sweep — had been
 measuring an empty port. The runner now owns that: `NEED_SERVER` names the port each battery
 declares in its header, the runner raises the server on the built tree, waits for the port to
@@ -6587,7 +6588,7 @@ the same species as the five-minute timeout two entries up. `header-engines` had
 at 419.5 s, half a second under it.
 
 **Two batteries wanted another interpreter.** `landing-page-lang.py` and `landing-stop-rule.py`
-import `bot.*` (aiogram, aiohttp). Under the hermes python they would have failed
+import `bot.*` (aiogram, aiohttp). Under the workspace interpreter they would have failed
 `No module named 'aiogram'` — a red of the runner. `NEED_BOT` runs them with
 `study-bot/venv/bin/python` in the bot's own directory; `page-lang` then answers in 4.6 s.
 
@@ -6620,3 +6621,76 @@ green: they need the live site, the mailbox and the bot, and were last measured 
 journal path bug), `landing-render-check.py` and `landing-visual-pass.py` (`--mutate`); evidence
 `block-20261026k/` — the 31-battery run, `coverage.py` and its table, both slow re-runs, three
 controls and three clean re-runs of the same three batteries.
+
+## The checks that read the words had never once been red (26.10.2026)
+
+**The premise came with a red.** The previous entry ended with the honest sentence that only
+a handful of the 48 batteries carry a negative control. Before any control could be written,
+the sweep answered **2 896 checks, 1 failed** — on the tree the previous block had committed as
+green. The hit was that block's own entry: it printed a loopback address with its port and the
+name of the automation package the suite runs under. The opsec gate reads every tracked file,
+not only the pages the site serves, and it is right to: the repository is public, so the
+notebook is read by people whether or not the site hides it. Two sentences were reworded — the
+addresses are described now, not printed — and the sweep answered 2 896 / 0. The lesson is
+ordering, not spelling: the entry gets written **before** the final sweep, otherwise the gate
+passes on a tree that does not yet contain the text it is meant to judge.
+
+**A battery that could not fail.** `landing-en-leftovers.py` hunts English sentences left on the
+eight translated pages. It printed its findings as JSON and never called `exit`: **0 findings
+and 500 findings both ended the process with code 0**, so the suite counted it as green
+evidence since 21.10. It now exits 1 on any finding and reports `CHECKS: 8, FAILED: 0`. The
+verdict was proven on a broken copy rather than by reading the code: nine pages copied, one
+English sentence written into the English page and into the Russian one — `FAILED: 1`, exit 1,
+the sentence quoted in the finding, and the same copy untouched stayed at 0.
+
+**Three more batteries were taught to fail, on copies, one defect each.**
+
+- `landing-page-lang.py`: one deep-link label on the Russian page misspelled (`_sticky` →
+  `_stickyx`). Result: **exactly one** problem, `ru` only, naming both sets of labels; the
+  other eight languages stayed green; the untouched copy answered 0.
+- `landing-price-parity.py`: two mutations, one on each side of the promise. The bot's pack of
+  15 raised by 10 → **exactly one** mismatch, `pack15`, 310 against 300. The shop window's pack
+  of 5 lowered by 1 → **exactly one** mismatch, `pack5`, 119 against 120. A mutation that only
+  proved "something went red" would not have told these apart.
+- `landing-links-audit.py`: four defects, one per class of link the battery claims to check — a
+  dead relative target, an anchor pointing at nothing, a duplicate `id`, a bot link without its
+  start label. Each produced **exactly one** finding of its own kind; the copy without them
+  produced none.
+
+Every control counts its substitutions first: a control that matches nothing reports green while
+having changed nothing, which is the failure it was written to expose.
+
+**The gap became a number, and the number was better than the last entry said.** New
+`landing-controls-ledger.py` reads the same set as the runner (the skip list is imported from
+it, so the two cannot drift) and counts a control only when a flag is *wired in the code* —
+`add_argument('--mutate'…)` or `'--flag' in sys.argv`; a mention in a comment does not count,
+and the sweep mentions `--mutate` only in a comment. The answer: **48 batteries, 23 with a
+control** (12 `--mutate`, 10 `--control`, 1 `--selftest`), **1 pointer only**, **24 with
+nothing**. Before this block it was 19 / 1 / 28. The earlier note "seven of fifty-eight" was
+not wrong so much as narrow: it counted `--mutate` alone, and the ten `--control` flags break a
+copy just as deliberately. `--control URL` in `landing-print-crossengine.py` is the one
+exception and is counted as a pointer: it points the battery at another build instead of
+breaking anything.
+
+**Controls are no longer remembered, they are run.** `landing-regress-all.py` gained a
+`CONTROLS` list and `--controls`: each entry names the arguments under which that battery is
+obliged to fail, success is exit code 0 and no "НЕ СРАБОТАЛ" in the output. Four entries, four
+caught, one command, 1.4 s. The controls are deliberately not part of the plain run —
+the plain run measures the page, the controls measure the instrument — but a control nobody
+runs is memory, and this block was written against memory.
+
+**What this does not prove.** That the other **24 batteries** are worth their green: they still
+have no control, and the ledger now prints their names on demand. That the four new controls
+prove more than the one defect each was given: a battery has several clauses and a single
+mutation exercises one of them. That the production path was exercised — the controls mutate
+copies, and only `en-leftovers` was also run against a broken tree through `--root`. And the
+uncomfortable one: nothing controls the controls, so a control that silently stops matching
+will report "caught" the day its own regex rots.
+
+**Files.** `landing-en-leftovers.py` (verdict, `--root`, `--mutate`), `landing-page-lang.py`
+(`--root`, `--mutate`), `landing-price-parity.py` (`--mutate bot|site`), `landing-links-audit.py`
+(`--root`, `--mutate` with four defects), `landing-controls-ledger.py` (new),
+`landing-regress-all.py` (`CONTROLS`, `--controls`, ledger in the skip list); evidence
+`block-20261026l/` — nine clean and mutated logs, the ledger, four runner journals, the broken
+tree that proves the verdict, and the sweep after the reworded entry.
+
