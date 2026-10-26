@@ -6938,8 +6938,7 @@ not see. `CONTROLS` went from 13 to 16; the ledger counts 29 of 48 batteries wit
 
 **Three batteries did not parse under the interpreter that has the browsers.** `contact-e2e`,
 `rotate` and `sweep` used f-strings with a backslash, or `','.join(...)` inside the expression —
-3.12-only syntax. The suite's own runs go through Hermes python 3.14 (the previous block's rotate
-log quotes `/home/jar/.hermes/tools/python-3.14.7…/socketserver.py`), so they ran there; but
+3.12-only syntax. The suite's own runs use python 3.14, so they ran there; but
 `python3 landing-rotate.py` under the uitest venv (3.11, the one whose webkit and chromium match the
 installed builds) died with `SyntaxError` before the first page. All three were rewritten without the
 3.12-only forms, and all **62** scripts now compile under 3.11 and 3.14. `landing-regress-all.py`
