@@ -27,8 +27,9 @@
 #   each source's sha256 — a new screenshot with an old loop is a sweep failure.
 #   No external catalogue and no render run is needed to rebuild a loop.
 #
-# Poster: last frame of the loop -> img/demo-poster[-<lang>].webp (540x1170),
-#   same rule as the original posters. It is part of the delivered page: a
+# Poster: last frame of the loop -> img/demo-poster[-<lang>].webp, in the loop's
+#   OWN resolution (720x1560 since 26.10.2026; was 540x1170, which a 3x phone had to
+#   stretch 1.56x). It is part of the delivered page: a
 #   re-captioned loop with a stale poster would show the old words before play.
 #
 # Run from anywhere:  bash demo/build-web-loop-langs.sh [lang ...]
@@ -81,9 +82,15 @@ for L in "${LANGS[@]}"; do
 [1:v]$ZP:d=174:s=2160x4680:fps=30,scale=720:1560,drawtext=$CAP:text='$C2',format=yuv420p,setsar=1[v2];\
 [v1][v2]xfade=transition=fade:duration=0.5:offset=7.2,format=yuv420p[vout]" \
    -map "[vout]" -c:v libx264 -preset veryslow -crf 30 -movflags +faststart -an "$OUT"
-  # Poster: last frame (n=389) -> 540x1170 webp, same as the original posters.
+  # Постер: последний кадр (n=389) в РЕЗОЛЮЦИИ САМОГО РОЛИКА (720x1560).
+  # 26.10.2026: до этого здесь стоял scale=540:1170, и файл был в 1,33 раза меньше
+  # кадра, который он заменяет. На телефоне с экраном 3x рамка ролика — 281-300 CSS px,
+  # то есть 843-900 пикселей экрана, а в файле было 540: браузер растягивал кадр в 1,56
+  # раза (замер evidence/block-20261026f/, зонд плотности). Теперь постер не мягче
+  # ролика ни на одном экране; ролик 720 px остаётся потолком (перекодировать девять
+  # лупов вдвое тяжелее — отдельное решение, не косметика).
   if [ "$L" = en ]; then POSTER="$ROOT/img/demo-poster.webp"; else POSTER="$ROOT/img/demo-poster-$L.webp"; fi
-  ffmpeg -y -v error -i "$OUT" -vf "select='eq(n,389)',scale=540:1170" -frames:v 1 \
+  ffmpeg -y -v error -i "$OUT" -vf "select='eq(n,389)'" -frames:v 1 \
     -c:v libwebp -quality 80 -compression_level 6 "$POSTER"
   # The ledger must describe the file that was just built.
   python3 "$HERE/captions.py" ledger "$L" >/dev/null
