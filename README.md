@@ -5939,3 +5939,105 @@ and a half minutes is a block's background job, not a step in the static sweep.
 the measured durations and both traps), `SKILL.md` in the `stars-bots-ops` skill,
 `evidence/block-20261026a/` (every run above, the kernel line, the comparison and summary scripts,
 their output), and this entry. No site file changed; nothing was re-published.
+
+## The hero video was 62–73 % of the page, and it downloaded before the first word (26.10.2026)
+
+Nobody had ever measured the byte weight of a visit. There are 56 batteries in the skill and 2 775
+static checks, and not one of them answered the question a person on a phone in Delhi actually asks:
+how much does this page pull before it is useful? The answer, measured for the first time this block
+on a cold context at 390×844 with every response counted and gzipped separately:
+
+| language | whole page, gzip | of it the video | without the video |
+|---|---|---|---|
+| en | 480 KB | 394 KB | 86 KB |
+| ru | 534 KB | 432 KB | 102 KB |
+| es | 504 KB | 416 KB | 87 KB |
+| pt | 527 KB | 437 KB | 89 KB |
+| hi | 537 KB | 338 KB | 199 KB |
+| id | 517 KB | 431 KB | 86 KB |
+| tr | 480 KB | 381 KB | 99 KB |
+| vi | 509 KB | 400 KB | 108 KB |
+| uk | 541 KB | 438 KB | 102 KB |
+
+**The video is not compressible and it was being fetched on every visit.** MP4 does not respond to
+gzip — the fourth column is what compression does to it: nothing. The markup carried
+`preload="metadata"`, which sounds frugal, but the script autoplays the loop, so the browser fetched
+the whole 344–444 KB file anyway, on the first screen, before the visitor had read the headline. On
+the slowest connections that one file costs more than the entire rest of the page (86–199 KB) with
+the poster included.
+
+**What changed.** The markup now ships `preload="none"`: with no script, no connection and no
+decision, nothing of the video is requested at all — the poster carries the hero. The script sets
+`preload="auto"` only when it has decided to autoplay. And that decision gained a third signal. It
+used to be two: `prefers-reduced-motion` and `navigator.connection.saveData`. Now it is three — the
+third is `effectiveType`, which the browser itself estimates as `slow-2g` / `2g` / `3g` / `4g`: on
+2G and 3G there is no autoplay, the visitor sees the poster and a play button, and the same rule
+covers them as everyone else (a manual tap always plays — the person's choice outranks the estimate
+of their channel).
+
+**One variable instead of two conditions in three places.** The old code repeated `!reduce && !save`
+in the initial start, inside `canPlay()` (which `IntersectionObserver` and `visibilitychange` call),
+and — implicitly — in the loop attribute. Adding a third signal to that shape means editing three
+lines and getting one of them wrong; the wrong one would restart the video from `visibilitychange`
+in open defiance of the rule. The gate now holds the shape, not just the line: the sweep requires
+`var auto = !reduce && !save && !slow;` **and** `if (auto) play();` in every one of the nine pages.
+That sweep check used to assert the old literal and went red nine times the moment the script
+changed — which is the check doing its job, and the reason it was rewritten rather than deleted.
+
+**A new battery, because a rule without a measurement is a comment.** `landing-video-weight.py`
+(skill `stars-bots-ops`, port 8271, read-only, evidence in `evidence/block-20261026b/`) — **129
+checks, 0 failed**:
+
+- **Weight per language:** the whole page ≤ 600 KB gzip, the page without the video ≤ 230 KB gzip
+  (hi is the heaviest at 199 KB — Devanagari), ≤ 15 requests, and exactly one video: the language's
+  own.
+- **On 3g** (the context's `navigator.connection` replaced by an init script, which is how Android
+  reports the real network type): the video is requested **zero** times, `readyState` is 0 — no data
+  at all — the poster is there, the button is visible and offers "play", and the video is paused.
+- **Then the tap:** the file arrives, the video plays, `preload` returns to `auto`. This is the check
+  that matters most, because an economy that leaves a dead button is worse than the bytes saved.
+- **The three old rules still hold:** `saveData` on 4g — no autoplay; `prefers-reduced-motion` — no
+  autoplay; plain 4g — autoplay works.
+- **No Network Information API at all** (Safari, Firefox): autoplay works. Not knowing the channel
+  must not punish the visitor.
+
+**The control ran on the previous tree, not on a rehearsal.** `git archive HEAD` into a scratch
+directory, `LANDING_ROOT` pointed at it: **63 red checks, 7 per language** — the video requested, 4
+of 4 ready state, `preload="metadata"`, the button offering "pause" because the video was already
+playing. Same battery, same page, one commit apart. The script now takes `LANDING_ROOT` and
+`LANDING_PORT` for exactly this reason.
+
+**A trap worth writing down.** `effectiveType` on desktop Chrome is always `4g` — measured under a
+real CDP throttle of 400 kbit/s with 400 ms latency, where the API still answered `4g`, `downlink 10`,
+`rtt 0`. So the rule is honest but blind on desktop, and it bites only where it was meant to: Android.
+Testing it therefore requires overriding `navigator.connection` in an init script — a real throttle
+would have produced a green run that proves nothing. The docstring says this instead of implying the
+battery measured a slow network end to end.
+
+**What was deliberately not done.** Cutting the file itself (a re-encode at 273 kbit/s for 720×1560 is
+already lean for a screencast with small text) and turning autoplay off on phones altogether (that
+would take the demo away from the many on LTE to save the few on 3G, and the hero's composition is
+on the owner's list of his own decisions, not mine). The measurable saving on a slow link is 344–444
+KB per visit; on 4G nothing changed.
+
+**Regression.** Static sweep **2 793 / 0** (was 2 775: three new checks per language replaced one),
+video-motion **444 / 0** (the stop button, Enter, off-screen pause and the reduce-context all still
+behave), cwv **69 / 0** (LCP still the poster, 276–396 ms on desktop, mobile above the fold),
+first-screen **252 / 0**, link audit 11 pages / 0 problems, external links 69 URLs / 0 problems,
+live bytes **26 / 26** identical and the 404 probe still ours. Published through
+`tools/publish-branch.sh` to both mirrors (107 files); the sweep's publication check — the one that
+went red between the edit and the push — is green again on the live tree.
+
+**What this does not prove.** That Android's estimate says `3g` exactly when the network is slow: the
+battery proves our logic given that value, not the value. That a 4G visitor is better off: they still
+download 344–444 KB, and the fix does not make the file smaller. And that the budgets are right:
+600/230/15 are today's numbers plus headroom, not an industry norm — the first future page that
+legitimately grows past them will have to argue with the gate.
+
+**Files.** `index-src.html` (the `preload` attribute, the `slow` signal, the single `auto` variable,
+the tap that returns `preload` to `auto`), the nine built pages, `sitemap.xml` and
+`tools/lastmod.json`; `scripts/landing-video-weight.py` (new), two checks in `scripts/landing-sweep.py`
+(`video preload none` / `video preload metadata gone` / `video slow-link rule`, and the rewritten
+`video starts under preference gate`), `docs/council-20261015.md` (one line in "what guards this"),
+`SKILL.md` in the `stars-bots-ops` skill, `evidence/block-20261026b/` (the before-fix probe, its
+JSON, the battery's weight table and the control run), and this entry.
