@@ -199,6 +199,24 @@ for _k, _v in LANG_FONTS.items():
         raise SystemExit(f"lang-fonts.json: {_v['file']} не существует — запусти tools/make-lang-fonts.py")
     if _f.stat().st_size != _v["bytes"]:
         raise SystemExit(f"lang-fonts.json: размер {_v['file']} разошёлся с реестром")
+# Сабсет деванагари под текст сайта (26.10.2026). Реестр генерирует tools/subset-deva.py.
+# Зачем: полный Noto Sans Devanagari — 121 192 Б — грузился на каждом заходе на /hi/
+# (19 % веса первого экрана), хотя страница использует 57 кодпойнтов из ~660. Сабсет
+# с тем же рисунком букв и всеми GSUB-фичами весит 70 КБ. Сборка читает реестр и
+# падает, если тексту страницы нужен кодпойнт, которого в сабсете нет.
+DEVA_FILE = ROOT / "tools" / "deva-subset.json"
+try:
+    DEVA = json.loads(DEVA_FILE.read_text(encoding="utf-8"))
+except (OSError, ValueError) as e:
+    raise SystemExit(f"нет/битый {DEVA_FILE}: сабсет деванагари без реестра ({e})")
+_deva_f = ROOT / DEVA["file"]
+if not _deva_f.is_file():
+    raise SystemExit(f"deva-subset.json: {DEVA['file']} не существует — запусти tools/subset-deva.py")
+if _deva_f.stat().st_size != DEVA["bytes"] or hashlib.sha256(_deva_f.read_bytes()).hexdigest() != DEVA["sha256"]:
+    raise SystemExit(f"deva-subset.json: {DEVA['file']} разошёлся с реестром — пересобери tools/subset-deva.py")
+if hashlib.sha256((ROOT / DEVA["source"]).read_bytes()).hexdigest() != DEVA["source_sha256"]:
+    raise SystemExit("deva-subset.json: исходный шрифт изменился — пересобери tools/subset-deva.py")
+DEVA_CHARS = DEVA["charters"]
 # Письменность каждого языка: полный сабсет этой письменности объявляется только
 # на его странице, мини-сабсет переключателя — наоборот, на всех ОСТАЛЬНЫХ.
 OWN_SCRIPT = {"ru": "cyrillic", "uk": "cyrillic", "vi": "vietnamese", "hi": "devanagari"}
@@ -427,10 +445,13 @@ def font_css(lang: str) -> str:
             f"font-display:swap;src:url(\"fonts/manrope-{name}.woff2\") format('woff2');"
             f"unicode-range:{rng}}}")
     if lang == "hi":
+        # 26.10.2026: не полный Noto (121 192 Б), а сабсет под текст сайта (69 960 Б).
+        # Реестр — tools/deva-subset.json, генератор — tools/subset-deva.py. Сборка ниже
+        # проверяет, что каждой букве страницы есть глиф в этом файле.
         parts.append(
             f"@font-face{{font-family:'Noto Sans Devanagari';font-style:normal;"
             f"font-weight:400 800;font-display:swap;"
-            f"src:url(\"fonts/noto-sans-devanagari.woff2\") format('woff2');"
+            f"src:url(\"{DEVA['file']}\") format('woff2');"
             f"unicode-range:{NOTO_RANGE}}}")
     return "\n".join(parts)
 
@@ -1164,6 +1185,15 @@ def main() -> None:
         assert "data-i18n-attr=" not in page, f"{lang}: остались непереведённые атрибуты"
         assert "{{BASE}}" not in page, f"{lang}: токен адреса сайта не заменён"
         assert "var I18N" not in page, f"{lang}: не вырезан JS-i18n"
+        # Деванагари (26.10.2026): каждая буква деванагари на ЛЮБОЙ странице (в шапке
+        # стоит «हिन्दी») обязана быть в сабсете, иначе браузер молча нарисует её
+        # системным шрифтом — другой рисунок букв посреди слова.
+        _deva_used = {ch for ch in page if "\u0900" <= ch <= "\u097f"}
+        _deva_missing = sorted(ch for ch in _deva_used if ch not in DEVA_CHARS)
+        if _deva_missing:
+            raise SystemExit(
+                f"{lang}: в тексте деванагари {[(c, f'U+{ord(c):04X}') for c in _deva_missing]}, "
+                f"а в сабсете их нет — запусти python3 tools/subset-deva.py")
         rel = "index.html" if lang == "en" else f"{lang}/index.html"
         out[rel] = page
         md = page_md(dicts[lang], lang)
