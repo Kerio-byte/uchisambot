@@ -6874,3 +6874,106 @@ was measured after the keyboard opened and called "without"), `landing-landscape
 it), `landing-a11y-extra.py` (`--control`, `dw`/`sw` in the reading), `landing-regress-all.py`
 (`CONTROLS` 8 → 13, env per entry, server for controls); evidence `block-20261026n/` — three probes
 with their JSON, nine run logs and `summary.json`, the control logs of the runner.
+
+
+## The window grew by exactly the defect, and two clauses were happy with it (26.10.2026)
+
+**The queue was a sentence, not a task.** The previous entry ended with five batteries still
+comparing `scrollWidth` with `innerWidth` — `contact-e2e`, `cross-engine`, `visual-pass`,
+`browser-smoke`, `env-prefs` — two of them opening mobile contexts, and with the words that whether
+each clause is blind "has to be measured with a control the way this one was, not fixed by grep".
+This block measured first and edited second.
+
+**Thirteen windows, the batteries' own contexts, one defect.** `probe-five-blind.py` reproduces each
+battery's context exactly (engine, viewport, `is_mobile`, `has_touch`, `device_scale_factor`,
+JavaScript on/off) and injects the same 120 px defect: an absolutely positioned `body::after` past
+the right edge, out of flow, so `scrollWidth` grows by 120 and no box moves (`dBtn=0` in all
+thirteen). The defect goes **into the markup** through `page.route`, not through `add_style_tag`,
+because `contact-e2e` measures with JavaScript disabled — one event, thirteen cases.
+
+| battery | engine | window | is_mobile | old clause `sw ≤ iw+1` | new clause `sw ≤ cw+1` |
+|---|---|---|---|---|---|
+| contact-e2e | chromium | 390×844, JS off | no | **red** (dIW=0) | red |
+| cross-engine | chromium | 420×915 | **yes** | **green, dIW=+120** | red |
+| cross-engine | webkit | 420×915 | yes | red (dIW=0) | red |
+| cross-engine | firefox | 420×915 | no (unsupported) | red | red |
+| cross-engine | ×3 | 1440×900 | no | red | red |
+| visual-pass | chromium | 420×844 | **yes** | **green, dIW=+120** | red |
+| visual-pass | chromium | 1440×900 | no | red | red |
+| browser-smoke | chromium | 1280×900 / 390×844 | no | red | red |
+| env-prefs | chromium / webkit | 420×915 | no | red | red |
+
+Two of thirteen were blind, both chromium with `is_mobile=True`: `innerWidth` grew by exactly the
+defect (420 → 540) while `clientWidth` stayed 420. All thirteen clauses written against
+`documentElement.clientWidth` went red, and on clean pages the three numbers are equal
+(`sw = cw = iw` in every row), so the stricter-looking comparison is not stricter on an honest page.
+
+**`cross-engine` was blind in a branch it does not run.** `run_engine` opens mobile contexts with
+`is_mobile=True` for every engine except firefox, and `main()` loops over `('webkit','firefox')`:
+chromium is never launched there. The live battery was honest by engine choice, not by design, and
+the blind branch sat one tuple entry away with a comment that gave no hint.
+
+**The loud control fires on the blind window — which is why nobody noticed.** Before the fix,
+`visual-pass --mutate` (a 3000 px wide div) went red on the mobile window as well: `doc=3000
+vw=1680`. Chromium clamps the layout-viewport growth at four times the width (420 → 1680), so a
+defect larger than the clamp still exceeds `innerWidth`, while a 120 px overflow sits inside the
+clamp and is invisible. A coarse control passes over a fine blindness — therefore the new control is
+120 px, not 3000.
+
+**Eight files, one number.** The five named batteries now compare `scrollWidth` with
+`documentElement.clientWidth`; `grep` then turned up three more with the same line —
+`header-engines` (document clause), `video-motion` (320 px clause), `toggle-clear` — all honest in
+their present contexts and all one `is_mobile=True` away from the same blindness, so all three moved
+to the same number. `cross-engine` keeps `overflowIw` deliberately: the control prints with it that
+the old clause was blind. `header-engines` keeps `innerWidth` for the switcher's right-edge limit —
+that clause measures a position inside the row, not the width of the document.
+
+**Two controls, and both print the blindness as a number.** `cross-engine --control`: chromium
+mobile, en — clean `sw=420 cw=420 iw=420`, after the defect `sw=540 cw=420 iw=540`; new clause red,
+old clause blind, in the same line. `visual-pass --control-wide` on en,ru × mobile,desktop: **4 of
+4** red, and the mobile line reads `doc=540 cw=420 iw=540`. With the loud defect the same battery
+produced 4 flags as well — the difference is that the soft defect is the one the old clause could
+not see. `CONTROLS` went from 13 to 16; the ledger counts 29 of 48 batteries with a wired control,
+1 pointer, 18 without anything.
+
+**Three batteries did not parse under the interpreter that has the browsers.** `contact-e2e`,
+`rotate` and `sweep` used f-strings with a backslash, or `','.join(...)` inside the expression —
+3.12-only syntax. The suite's own runs go through Hermes python 3.14 (the previous block's rotate
+log quotes `/home/jar/.hermes/tools/python-3.14.7…/socketserver.py`), so they ran there; but
+`python3 landing-rotate.py` under the uitest venv (3.11, the one whose webkit and chromium match the
+installed builds) died with `SyntaxError` before the first page. All three were rewritten without the
+3.12-only forms, and all **62** scripts now compile under 3.11 and 3.14. `landing-regress-all.py`
+compiles every battery before running it and journals `PARSE-ERROR` with the line number instead of
+a mysterious red.
+
+**Clean runs after the edits — the page did not move.** `sweep` 2 896 checks / 0 failed;
+`contact-e2e` 910 / 0 (135 s — the first time it ran at all under 3.11); `visual-pass` 18 windows,
+PROBLEMS 0 (131 s); `browser-smoke` 18 runs, 0 problems; `env-prefs` 45 / 0; `header-engines`
+973 / 0 (419 s); `toggle-clear` 56 / 0; `video-motion` 444 / 0 (104 s); `cross-engine` 60 runs,
+0 problems (426 s).
+
+**The controls, run by the runner rather than remembered.** `--controls`: **16 of 16 caught** in
+605 s. The two new entries sit on the two defects that differ in size, and both print the numbers
+they fired on: `visual-pass --control-wide` 4 windows of 4, `visual-pass --mutate` 4 of 4 (the loud
+block, which also exercises the element-level clause), `cross-engine --control` 1 of 1. Making
+`visual-pass` usable as a control took a small edit of its own: it used to exit 1 whenever it found
+anything, and the runner reads code 0 as "caught", so its control could never have been in the list —
+it now says `КОНТРОЛЬ ПОЙМАЛ` and exits 0 in the two mutation modes only.
+
+**What this does not prove.** That the 18 batteries without controls are worth their green. That one
+defect per battery exercises every clause: `visual-pass` asserts image aspect ratios, badge rows,
+clipped text and heading sizes in the same probe, and the width control touches one of them. That an
+injected pseudo-element is the same event as a source-level regression — a real edit also changes the
+built pages, and no tree was broken this time. That firefox's mobile emulation was measured:
+playwright has no `is_mobile` for it, so that column is honestly "not applicable", not "honest". And
+that the full 48-battery set was re-run: it was not.
+
+**Files.** `landing-cross-engine.py` (`overflow` on clientWidth, `overflowIw`, `--control`,
+`run_width_control`), `landing-visual-pass.py` (`clientW` in the probe and in both clauses,
+`--control-wide`, `WIDE_CSS`), `landing-browser-smoke.py`, `landing-contact-e2e.py` (and the f-string
+it could not parse), `landing-env-prefs.py`, `landing-header-engines.py`, `landing-video-motion.py`,
+`landing-toggle-clear.py`, `landing-rotate.py`, `landing-sweep.py`, `landing-regress-all.py`
+(compile gate, `CONTROLS` 13 → 16); evidence `block-20261026o/` — `probe-five-blind.py` and its JSON
+(13 windows × 3 numbers × before/after), `ctl-before-visual-pass.log` (the loud defect on the
+pre-fix battery), `ctl-wide-visual-pass.log`, `clean-*.log` for nine batteries, `run-battery.py`,
+`ledger.json`.
