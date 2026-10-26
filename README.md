@@ -174,8 +174,9 @@ seven es/pt/hi/id/tr/vi/uk loops added 17 Oct 2026), poster `img/demo-poster[-<l
 разбор`, ES `2 · Envía tu tarea — texto o foto` / `3 · Desglose paso a paso`. RU:
 rebuild with `demo/build-web-loop-ru.sh`; any language (and its poster):
 `demo/build-web-loop-langs.sh [lang …]` — same zoompan/drawtext pipeline as the
-kit build (13.0 s, 720×1560, x264 veryslow crf30; poster = frame 389 → 540×1170
-WebP). **Sources are the page's own screenshots** (24 Oct 2026): `img/shot2[-<lang>].webp`
+kit build (13.0 s, 720×1560, x264 veryslow crf30; poster = frame 389 → 720×1560
+WebP, the loop's own resolution since 26 Oct 2026 — a 540-wide poster was stretched
+1.56× by every 3× phone, see the diary entry "The still frame was softer"). **Sources are the page's own screenshots** (24 Oct 2026): `img/shot2[-<lang>].webp`
 and `img/shot3[-<lang>].webp` — the exact files the page displays, so a loop cannot
 show a bot the page does not show; rebuilding needs no render run and no external
 catalogue. Two deliberate render notes: the hi loop uses Noto Sans Devanagari Bold,
@@ -1186,10 +1187,14 @@ carry a literal `drawtext … text='…'`).
 **A second pair of eyes for the posters.** The ledger proves the poster is the file that was
 built with the loop, but not that it depicts the loop's last frame — a poster rendered from
 the wrong loop by the same recipe would still be stamped. `landing-poster-frames.py`
-(stars-bots-ops) extracts frame 389 of each loop, scales it to 540×1170 and compares it with
-the poster by RMSE. Calibration on all nine: a fresh poster scores 0.0102–0.0110; the stale
+(stars-bots-ops) extracts frame 389 of each loop and compares it with the poster by RMSE.
+Calibration on all nine: a fresh poster scores 0.0102–0.0110; the stale
 Russian one scored 0.0431 and the English poster with the old wording 0.0324. The threshold
 is 0.02, which separates the two classes with room on both sides.
+> УСТАРЕВШЕЕ (до 26.10.2026): тогда кадр для сравнения жёстко уменьшался до 540×1170.
+> Постер с 26.10.2026 — 720×1560, поэтому рамка сравнения берётся с постера; на новой
+> резолюции калибровка 0.00676–0.00790, чужой язык 0.1419–0.1490 (см. запись
+> «The still frame was softer than the film it stands in for»).
 
 **Rebuilt:** the EN loop (701 KB → 365 KB, captions now "Send a task" / "Step-by-step
 breakdown"), its poster, the RU page poster (re-cut from the RU loop, 52 KB), and both full
@@ -6247,3 +6252,76 @@ nothing left to hang.
 **Files.** `index-src.html` (the video script) and the nine built pages; `landing-video-hang.py`
 (new), `landing-sweep.py` (four markers), `SKILL.md`; evidence `block-20261026e/` — probe, three
 engine probes, battery run and control logs, live check; this entry.
+
+## The still frame was softer than the film it stands in for (26.10.2026)
+
+Every battery in this house measured the page as geometry: does the box fit, does the text wrap, does
+the picture sit where the layout put it. Twenty-odd of them ran at device scale 1 or 2, and not one
+ever asked how many pixels the **file** brings to a screen that asks for more. The three passes closed
+the layout; this is the other axis, and it was open the whole time.
+
+**What the measurement found.** `evidence/block-20261026f/` — a probe over nine languages × four
+profiles, `ratio = file pixels / (CSS width × devicePixelRatio)`, where 1.0 means "exactly enough" and
+anything below means the browser is inventing pixels. The hero frame is `width:min(300px,72vw)`: on a
+390-wide phone 280.8 CSS px, on a 420-wide one 302.4. At DPR 3 — every iPhone, most Android phones —
+that asks for **842–907 device pixels**. The poster file was **540**: ratio **0.641** (0.600 on the
+420 phone), while the video it stands in for is 720, ratio 0.855. So the still was a third softer than
+the film — and the still is exactly what a visitor on 3G, with data saving on, or with reduced motion
+sees *instead of* the film, plus what everyone sees for the first few hundred milliseconds. The
+visitors with the worst connection got the softest frame on the page. The rest of the tree was fine:
+the chat screenshots are 1080 px in a 297–616 CSS box (1.11–1.65 of what is asked; the tablet rail is
+the one place 12 % short), the platform badges 120–600 px at 40–46 CSS (1.0–6.5).
+
+**The fix is a resolution, not a design.** The poster is the loop's last frame, so the honest file is
+the frame's own size: 720×1560, no `scale` in the ffmpeg line — that `scale=540:1170` was the only
+thing inventing pixels. Nine posters, **+12.3 KB each** (pages are 100–211 KB gzip without the loop
+against a 230 KB budget; LCP 944–1024 ms against 2500). The build script now writes the poster at the
+loop's resolution, and the ledger stores both sizes read back **from the files** (`poster_size` from
+the WebP container, `video_size` from ffprobe) — so re-stamping the ledger cannot "agree" a shrunken
+poster with its film: the sweep compares the two numbers and goes red.
+
+**What the fix is worth, measured.** Hero frame at 390×3×, the mp4 blocked so the poster is all the
+browser can paint, before and after: sharpness (variance of Laplacian) **260.6 → 375.3 = +44 %**, and
+on the strip carrying the burned-in caption **113.5 → 249.2 = +120 %**. Only **1.4 %** of pixels differ
+by more than 16/255 — the signature of removed interpolation, not of a redrawn picture. The eye is a
+worse instrument here than the metric: shown both frames at 1:1, an image model called both "crisp",
+so this entry does not claim a visible improvement. It claims a file that no longer asks the screen to
+invent a third of its pixels, and the caption is where a human would notice first.
+
+**Provision.** New battery `scripts/landing-pixel-density.py` (port 8273, READ-ONLY, accepts
+`LANDING_ROOT`/`LANDING_PORT`): nine languages × five profiles (390 and 420 CSS px at 3×, tablet 760
+and desktop 1280 at 2×, plus a 1× control), **558 checks / 0**. Five rules, each from the measurement:
+poster = the loop's frame; poster ratio ≥ the film's ratio in the same box (0.855 at 390×3, 0.80 at
+420×3, 1.20 at 2×); no raster stretched more than 15 %; SVG counted separately, because a vector's
+`naturalWidth` is a number from the file (`fazier.svg` reports 103 px in any box) — and a check that
+vectors *were* counted, so the exclusion cannot become a hole; and the 1× control, which passes only
+if the probe is measuring at all. Two static markers in the sweep (9 × 2 = 18 checks, sweep now
+**2857 / 0**). Control on the previous commit (`git archive HEAD`): **108 red** — every language red on
+the poster rule at the 3× profiles.
+
+**Regressions after the change.** video-weight **129 / 0** (heaviest page hi 211 KB of the 230 budget),
+cwv **69 / 0**, visual-pass **0 problems** across nine, `build.py --check` **24 / 24**,
+`publish-tree.py --check` **495 links**, live-assets **90 assets, 0 problems** — after the Pages build
+caught up (the first run was 18 problems, all posters: that is the deploy being behind, not a defect),
+live density check **12 / 0**.
+
+**On the world, not only on the tree.** `evidence/block-20261026f/live-check.py` walks the live site
+(en, ru, hi; Chromium 390×3, 12 checks, **12 / 0**): the poster's live bytes are the local file's
+bytes, the file's size is the loop's frame, and the ratio the visitor's screen gets is 0.855. It also
+taught the one thing the tree could not: **`videoWidth` is 0 when the mp4 is cut off** — with no
+metadata the browser knows nothing about the frame, and the poster is the only thing it has. That is
+why the live check makes two passes, one with the film and one without, instead of one clever one.
+
+**What this does not prove.** That a human sees the difference on the phone: the metric moved 44 %, the
+eye at 1:1 did not. That 720 px is *enough* on a 3× phone: it is not — the screen asks for 842–907 and
+the film itself is 720, so the poster now sits at the film's ceiling (0.855 / 0.80) rather than at the
+screen's. Raising that ceiling means re-encoding nine loops at 1080 px — roughly double the bytes of a
+file that is already 62–73 % of the page — which is an owner decision, not a poster's. And the gain on
+2× screens was never the issue there: the poster went from 0.90 to 1.20, i.e. from nearly enough to
+spare.
+
+**Files.** nine `img/demo-poster[-<lang>].webp` at 720×1560; `demo/build-web-loop-langs.sh` (poster
+step), `demo/captions.py` (WebP container reader, ffprobe sizes, two ledger fields, one new check),
+`demo/captions.json` (restamped); `landing-pixel-density.py` (new), `landing-sweep.py` (two markers),
+`SKILL.md` and `references/landing-batteries.md`; evidence `block-20261026f/` — probe, battery,
+control, before/after hero frames, sharpness numbers, live check; this entry.

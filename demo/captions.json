@@ -13,8 +13,16 @@
         "shot3_sha256": "e3ac6e97409914fbc52adc3165b41c99c46dc3fc40961df9fc5b8ebd174a5784"
       },
       "poster": "demo-poster.webp",
-      "poster_sha256": "9b3cb42c7234cb6db7b8453020b4e31b25b338e9b7ec1b65ebb34ba878b1a6e5",
-      "poster_bytes": 32056,
+      "poster_sha256": "9f21fe00b81bea3821ef1c43de6b54a52e1dbd8d70e563fd15bc534046631603",
+      "poster_bytes": 44292,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "text or photo",
       "cap1": "2 · Send a task — text or photo",
@@ -35,8 +43,16 @@
         "shot3_sha256": "e14c03253ab83ccb586dda848be17f313bdf4da3a26227d5ff828ffbb17b472a"
       },
       "poster": "demo-poster-ru.webp",
-      "poster_sha256": "3eaff8f9301c7957413bc7fa5a1fd7f55917933cc8512d5c33eb32522d06cff5",
-      "poster_bytes": 33550,
+      "poster_sha256": "ecc71e0a11dff096fadce3996dd3873074c67b4bcf777504e18e13687346255a",
+      "poster_bytes": 47248,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "текстом или фото",
       "cap1": "2 · Отправь задачу — текстом или фото",
@@ -57,8 +73,16 @@
         "shot3_sha256": "705791b9544310f6428c28df6b48050625ff3e35f74831b9d99912a841863e99"
       },
       "poster": "demo-poster-es.webp",
-      "poster_sha256": "f0faba43ff5ade1a8600b90e3579072017a5859a0de4bcdfbbc2b5d77ce78367",
-      "poster_bytes": 33070,
+      "poster_sha256": "75b13f51e2cbecb94bd77fa5a0f694f05722af8cad98033a715facce34b9346c",
+      "poster_bytes": 46612,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "texto o foto",
       "cap1": "2 · Envía tu tarea — texto o foto",
@@ -79,8 +103,16 @@
         "shot3_sha256": "8fbec2f349a40e1dbf604a68bd6d837cb6c1389c87abf1def4f2e372462e700a"
       },
       "poster": "demo-poster-pt.webp",
-      "poster_sha256": "4ef8f97d78589410a155138b6f69f1e4d6ccaf9ae8cc3d70c6e38f754e995e7c",
-      "poster_bytes": 34638,
+      "poster_sha256": "68939435fc536b6b8c48aef07ad7f75674122f26aae94ac184143a86330d9b5f",
+      "poster_bytes": 48640,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "texto ou foto",
       "cap1": "2 · Envie uma tarefa — texto ou foto",
@@ -101,8 +133,16 @@
         "shot3_sha256": "55997729ee1d4b838e694936c0b9837d943cb9eb1db1f4e7918d96a12c1e5d20"
       },
       "poster": "demo-poster-hi.webp",
-      "poster_sha256": "823b9cc65e93f1ad64564087c4da1c5db1b2fdd483b57b11482c6ee5dc9e8f4d",
-      "poster_bytes": 25132,
+      "poster_sha256": "0671f672905ae0fb4e300a6f8dff6b1a6ce07a25308f934a0d35cd4844dc7fc8",
+      "poster_bytes": 35394,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": ". ",
       "tail": "टेक्स्ट या फोटो",
       "cap1": "2. सवाल भेजें — टेक्स्ट या फोटो",
@@ -123,8 +163,16 @@
         "shot3_sha256": "0bfa63676b2be9f0f8bd9010aa94b021e9cc8d7971ce11fbd93403a0c0d36508"
       },
       "poster": "demo-poster-id.webp",
-      "poster_sha256": "b573a3a683221c675fd378be4ce35aaab5924a786572d084c31f67973e834dcf",
-      "poster_bytes": 32768,
+      "poster_sha256": "4577b2e2b978a56cc8867cb009114a2b9e1a78ec4f7e29fd82588fa401032bfc",
+      "poster_bytes": 46056,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "teks atau foto",
       "cap1": "2 · Kirim soal — teks atau foto",
@@ -145,8 +193,16 @@
         "shot3_sha256": "8c3bad0d170dd0a0ef652fb728d909b6ae875b329af5226b6d907410fbd0c228"
       },
       "poster": "demo-poster-tr.webp",
-      "poster_sha256": "9d7fe658bfaff4dff56ad8946b21fee81dec895be9c1e823ad79084b942c423d",
-      "poster_bytes": 29912,
+      "poster_sha256": "b3aa87ec2c98e295c74519b40878e36ec1f1e45281cfb6afc2e35739e732e01e",
+      "poster_bytes": 41566,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "yazı ya da fotoğraf",
       "cap1": "2 · Ödevini gönder — yazı ya da fotoğraf",
@@ -167,8 +223,16 @@
         "shot3_sha256": "97b5cd23d24503f88de289c7a915003971bd925079d26db5e986e2e46a9a03e6"
       },
       "poster": "demo-poster-vi.webp",
-      "poster_sha256": "3ee2a536a0b803ef7112cefa3f873c25154705f27309efd93edd803c752d5abe",
-      "poster_bytes": 30698,
+      "poster_sha256": "ff502c8d8da491b9617d10030de1c869bb87a988979f45c6e3aec799f70cf3bf",
+      "poster_bytes": 42200,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "chữ hoặc ảnh",
       "cap1": "2 · Gửi bài tập — chữ hoặc ảnh",
@@ -189,8 +253,16 @@
         "shot3_sha256": "1c4620e64f71da65717383f65602c4ef5fba3ce78e46aa4b7bd0126b7b4a0f96"
       },
       "poster": "demo-poster-uk.webp",
-      "poster_sha256": "593edc8371960a515e2db0d899e69f29011b851be20345a45fe810d481bf6322",
-      "poster_bytes": 33560,
+      "poster_sha256": "11a78b1da9c8cd442b887d36c3e3b25f3adfc72347fee9252c5a70d82e7f606e",
+      "poster_bytes": 47056,
+      "poster_size": [
+        720,
+        1560
+      ],
+      "video_size": [
+        720,
+        1560
+      ],
       "joiner": " · ",
       "tail": "текстом або фото",
       "cap1": "2 · Надішли завдання — текстом або фото",

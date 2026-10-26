@@ -36,12 +36,51 @@ the two outro buttons are video-only wording, listed in `FULL_ONLY`.
 import hashlib
 import json
 import re
+import struct
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LOCALES = ROOT / 'src' / 'locales'
 LEDGER = ROOT / 'demo' / 'captions.json'
+
+
+def webp_size(path):
+    """Width and height straight from the WebP container header (stdlib only).
+
+    The poster's resolution is now part of the ledger (26.10.2026) because the
+    poster is the frame a phone shows BEFORE play: a file smaller than the loop it
+    stands in for is silently stretched. Reading the container keeps this honest
+    without Pillow, and the sweep compares the two numbers.
+    """
+    with Path(path).open('rb') as fh:
+        head = fh.read(30)
+    if head[:4] != b'RIFF' or head[8:12] != b'WEBP':
+        raise SystemExit(f'{path}: not a WebP file')
+    chunk = head[12:16]
+    if chunk == b'VP8X':           # extended: 3-byte canvas w/h, minus one
+        w = int.from_bytes(head[24:27], 'little') + 1
+        h = int.from_bytes(head[27:30], 'little') + 1
+        return w, h
+    if chunk == b'VP8 ':           # lossy: 14-bit dims after the 3-byte frame tag
+        w, h = struct.unpack('<HH', head[26:30])
+        return w & 0x3FFF, h & 0x3FFF
+    if chunk == b'VP8L':           # lossless: 28 bits w-1 | 28 bits h-1
+        b = int.from_bytes(head[21:25], 'little')
+        return (b & 0x3FFF) + 1, ((b >> 14) & 0x3FFF) + 1
+    raise SystemExit(f'{path}: unknown WebP chunk {chunk!r}')
+
+
+def video_size(path):
+    """Frame size of a loop, from ffprobe (the tool that made it)."""
+    out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0',
+                          '-show_entries', 'stream=width,height', '-of', 'csv=p=0',
+                          str(path)], capture_output=True, text=True)
+    if out.returncode != 0:
+        raise SystemExit(f'{path}: ffprobe failed: {out.stderr.strip()[:200]}')
+    w, h = out.stdout.strip().split(',')[:2]
+    return int(w), int(h)
 
 LANGS = ['en', 'ru', 'es', 'pt', 'hi', 'id', 'tr', 'vi', 'uk']
 
@@ -240,6 +279,11 @@ def build_ledger(langs=None, full=None):
             'poster': poster_name(lang),
             'poster_sha256': sha256(poster),
             'poster_bytes': poster.stat().st_size,
+            # 26.10.2026: постер обязан быть в резолюции петли. Числа берутся из
+            # САМИХ файлов (контейнер webp + ffprobe), поэтому перештамповка реестра
+            # не может «согласовать» уменьшенный постер с роликом.
+            'poster_size': list(webp_size(poster)),
+            'video_size': list(video_size(path)),
             'joiner': JOINER.get(lang, DEFAULT_JOINER),
             'tail': TAIL[lang],
             'cap1': caption(lang, 1),
@@ -305,9 +349,19 @@ def check():
         if not poster.exists():
             print(f'FAIL {lang}: {poster.name} is gone')
             bad += 1
-        elif sha256(poster) != row['poster_sha256']:
+        elif sha256(poster) != row.get('poster_sha256'):
             print(f'FAIL {lang}: {poster.name} was not made from this loop '
                   f'(poster sha256 differs) — rebuild the loop, it refreshes the poster')
+            bad += 1
+        # 26.10.2026: постер не может быть меньше кадра, который он заменяет.
+        # На экране 3x рамка ролика просит 843-900 px; файл 540 растягивался в 1,56 раза.
+        elif row.get('poster_size') != row.get('video_size'):
+            print(f'FAIL {lang}: poster is {row.get("poster_size")}, the loop is '
+                  f'{row.get("video_size")} — a phone stretches the still')
+            bad += 1
+        elif row.get('poster_size') != list(webp_size(poster)) or \
+                row.get('video_size') != list(video_size(ROOT / 'demo' / row['video'])):
+            print(f'FAIL {lang}: the ledger\'s poster/loop sizes are not the files\' sizes')
             bad += 1
         # 24.10.2026: the loop must be cut from the screenshot the page shows now.
         src = row.get('sources')
