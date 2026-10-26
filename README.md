@@ -6556,3 +6556,67 @@ measures nothing.
 **Files.** `landing-external-links.py` (browser verdict, `--browser-probe`, exit 2),
 `landing-regress-all.py` (new), `SKILL.md`; evidence `block-20261026j/` — the red run,
 both wrong repairs, the green run and both controls.
+
+## The set was green in pieces, and three of its batteries measured nothing at all (26.10.2026)
+
+**The premise this block paid off.** The previous entry ended with the honest sentence that
+the thirty-one batteries its clock did not reach were "one command away", and that their green
+came from earlier blocks — memory, not a run. This block ran that command: `landing-regress-all.py`
+started at `landing-landscape-page.py` and finished the set.
+
+**The first thirty-one, and three reds in one second.** Twenty-eight green: `landscape-page`
+956 checks, `langlist-fit` 3 591, `tablet-page` 1 804, `min-font` 1 554, `print-paper` 969,
+`return` 216, `video-hang` 144, `wcag22-targets` 43. Three red — and every one of them failed in
+**1.0 s**, which is not how a page fails.
+
+**A red that takes one second is the harness.** `landing-print-contrast.py`,
+`landing-render-check.py` and `landing-visual-pass.py` all died on
+`ERR_CONNECTION_REFUSED` to `127.0.0.1:8147` and `:8137`. Each of them says in its header
+"start `python3 -m http.server` first"; inside a block that was done by hand, so the battery
+looked alive. In the suite nobody raised the server, and three gates — 3 543 checks in
+`print-contrast` alone, the whole "white text prints as white on paper" sweep — had been
+measuring an empty port. The runner now owns that: `NEED_SERVER` names the port each battery
+declares in its header, the runner raises the server on the built tree, waits for the port to
+accept, runs the battery and stops the server. All three went green (3 543 / 0, 10 s, `PROBLEMS 0`),
+and the same three still go red when the page is broken — see the controls below.
+
+**Two "timeouts" were the clock, not the page.** `cross-engine` was red at 420 s; at 1 200 s it
+answers in **425.9 s** with `PROBLEMS 0`. `deeplink` was red at 420 s; it answers in **422.4 s**
+with **684 checks, 0 failed**. Two seconds over the line, reported for two days as a page defect —
+the same species as the five-minute timeout two entries up. `header-engines` had already finished
+at 419.5 s, half a second under it.
+
+**Two batteries wanted another interpreter.** `landing-page-lang.py` and `landing-stop-rule.py`
+import `bot.*` (aiogram, aiohttp). Under the hermes python they would have failed
+`No module named 'aiogram'` — a red of the runner. `NEED_BOT` runs them with
+`study-bot/venv/bin/python` in the bot's own directory; `page-lang` then answers in 4.6 s.
+
+**The suite does not fit one block, so it learned to resume.** `--from NAME --append --out FILE`:
+the journal continues from the letter a run stopped at and does not repeat batteries already
+recorded. The first attempt at this silently wrote to the module constant instead of the chosen
+path — caught by reading the file, not by trusting the flag; fixed before the run that counted.
+
+**The count, for the first time in one journal.** 48 batteries in the set (59 scripts; 11 are
+excluded by design — the live site, the live mailbox, the live bot, the real form send, the sweep,
+the runner itself). All 48 ran: **19 014 checks, 0 red**, plus the static sweep at
+**2 896 checks / 0 failed** against the same tree. `evidence/block-20261026k/coverage.py` prints
+this table from the journals and names any battery that never ran — the answer is none.
+
+**A green battery is not yet evidence, so three of them were made to fail on purpose.** Only seven
+of the 48 carried a negative control. `landing-render-check.py --mutate` now rewrites the section's
+`h2` in the DOM after load: four pages go red on `title`, exit 1. `landing-visual-pass.py --mutate`
+injects a 3 000 px block outside the slider: `PROBLEMS 36` (18 `H-OVERFLOW` + 18 `over <div>`),
+exit 1. `print-contrast --mutate` (which already existed and had never been run inside the suite)
+strips `@media print`: **CHECKS 3 408, FAILED 138**, white-on-white buttons and footer links. Without
+the mutation the same three answer 0 and exit 0 — one path, opposite verdicts.
+
+**What this does not prove.** That 45 of the 48 are worth their green: they still have no control,
+and a battery that measures nothing passes exactly like a battery that measures everything. That the
+page is good — a gate only says the tree agrees with the gate; the visual and the meaning passes were
+other blocks' work and are not re-proven by a green suite. And that the eleven excluded batteries are
+green: they need the live site, the mailbox and the bot, and were last measured on their own terms.
+
+**Files.** `landing-regress-all.py` (`--from` / `--append` / `--out`, `NEED_BOT`, `NEED_SERVER`,
+journal path bug), `landing-render-check.py` and `landing-visual-pass.py` (`--mutate`); evidence
+`block-20261026k/` — the 31-battery run, `coverage.py` and its table, both slow re-runs, three
+controls and three clean re-runs of the same three batteries.
