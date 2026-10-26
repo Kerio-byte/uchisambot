@@ -923,6 +923,12 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   var btn = document.getElementById('video-toggle');
   if (!btn) return;
   var userPaused = false, userStarted = false, onScreen = true;
+  // Отказ загрузки ролика (26.10.2026). Замер: обрыв запроса, 404 и недокачанный файл
+  // дают `error` на самом <video> (MEDIA_ERR_DECODE), кадр-постер остаётся — а кнопка
+  // висела на экране и после нажатия переключалась на «паузу», хотя ничего не играло.
+  // Мёртвый контрол запрещён: одна тихая повторная попытка (медленная сеть — не
+  // приговор, повтор часто и спасает), вторая ошибка — кнопка уходит с экрана.
+  var failed = false, retried = false;
   var labelPause = btn.getAttribute('aria-label') || '';
   var labelPlay = btn.getAttribute('data-play-label') || labelPause;
   // Видимое слово подписи (24.10.2026): значок без слова читался как кнопка самого
@@ -934,6 +940,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     return !userPaused && !document.hidden && onScreen && (userStarted || auto);
   }
   function sync(){
+    if (failed) { btn.hidden = true; return; }
     var paused = v.paused;
     btn.setAttribute('aria-label', paused ? labelPlay : labelPause);
     btn.setAttribute('data-state', paused ? 'play' : 'pause');
@@ -955,6 +962,43 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   });
   v.addEventListener('play', sync);
   v.addEventListener('pause', sync);
+  // Отказ ролика (26.10.2026). Об одном и том же приходят ДВА разных события:
+  //   * обрыв или 404 на выборе источника — `error` приходит на <source>, а у самого
+  //     <video> остаётся networkState=3 (NETWORK_NO_SOURCE) и error=null;
+  //   * файл выбран, но не декодируется (обрыв посреди файла) — `error` на самом <video>.
+  // Замер (evidence/block-20261026d/timeline.txt): первый случай — самый частый (нет
+  // сети, нет файла), и если слушать только <video>, не срабатывает НИЧЕГО: кнопка
+  // висит, а после нажатия честно пишет «Пауза», хотя кадр стоит.
+  // Правило: одна тихая повторная попытка (медленная сеть — не приговор), вторая
+  // ошибка — контрол уходит с экрана; `playing` возвращает и кнопку, и право на повтор.
+  var failed = false, retried = false;
+  function broke(){ return v.networkState === 3 || !!v.error; }
+  function giveUp(){
+    failed = true;
+    try { v.pause(); } catch(err){}
+    btn.hidden = true;
+    if (v.parentNode && v.parentNode.setAttribute) v.parentNode.setAttribute('data-video', 'failed');
+  }
+  function onFail(){
+    if (failed || !broke()) return;      // ошибку источника не считаем, пока есть следующий
+    if (retried) { giveUp(); return; }
+    retried = true;
+    try { v.load(); } catch(err){}
+    try { v.setAttribute('preload', 'auto'); } catch(err){}
+    if (canPlay()) play();
+  }
+  v.addEventListener('error', onFail);
+  var srcs = v.getElementsByTagName('source');
+  for (var si = 0; si < srcs.length; si++) {
+    // На следующем такте: браузер ещё не перешёл к следующему источнику, и в этот
+    // момент networkState ещё не говорит «источников не осталось».
+    srcs[si].addEventListener('error', function(){ setTimeout(onFail, 0); });
+  }
+  v.addEventListener('playing', function(){
+    failed = false;
+    retried = false;
+    sync();
+  });
   // Вне экрана луп не декодируем (батарея телефона), а когда ролик снова в кадре —
   // продолжаем, если человек не останавливал сам.
   if ('IntersectionObserver' in window) {
