@@ -318,12 +318,30 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
 .foot{text-align:center;color:var(--muted);font-size:14px}
 .foot .dim{color:#5C6E90;margin-top:8px;font-size:13px}
 /* 22.10.2026: восемь значков при ширине 1440 ложились 6+2 — вторая строка из двух
-   значков висела по центру и полоса выглядела недоделанной. Ограничение 780 px даёт
-   ровные 4+4 (сумма четырёх самых широких = 714, пятый значок уже не влезает). */
+   значков висела по центру и полоса выглядела недоделанной. Ограничение 780 px
+   заставило строку ломаться после четвёртого значка.
+   26.10.2026: значков стало семь (OpenHunts убран 25.10), и числа в прошлой записи
+   перестали быть верными — «ровные 4+4» при семи значках невозможны, а сумма четырёх
+   самых широких не 714, а 659 (602 у четырёх первых по порядку). Что верно сейчас,
+   перемерено на собранной странице (`landing-badge-rows.py`): при 780 px в строку
+   влезают четыре (602 + три зазора = 662 ≤ 780), пятый требует 821 — не влезает.
+   Полоса при этом ложится 4+3, и это замер, а не намерение. */
 .foot-badges{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 20px;margin:18px auto 0;max-width:780px}
 .foot-badges a{display:inline-flex;align-items:center;line-height:0}
 .foot-badges img{height:46px;width:auto;display:block}
-@media(max-width:700px){.foot-badges{gap:10px 14px}.foot-badges img{height:40px}}
+/* 26.10.2026: граница компактного размера стояла на 700 px, а значок вырастает
+   с 40 до 46 px на 701-м — то есть шире экран, а в первый ряд влезает на один значок
+   МЕНЬШЕ (замер по 1 px: 700 → 4+3, 701 → 3+4, 703 → снова 4+3; четвёрке при высоте
+   46 px нужно 662 px внутренней ширины, и она приходит только на 703-м). Граница
+   сдвинута на 702: рост значка происходит там, где он уже не стоит ряда. */
+@media(max-width:702px){.foot-badges{gap:10px 14px}.foot-badges img{height:40px}}
+/* 26.10.2026: на самых узких экранах (300-320 px — iPhone SE первого поколения,
+   Galaxy Fold в сложенном виде, дешёвые Android Go) при высоте 40 px полоса ложилась
+   2+1+2+2: один значок оказывался ОДИН в середине, между рядами по два. Это физика,
+   а не порядок: самый широкий значок (ShowMeBestAI, 160 px) не складывается в пару
+   с соседним (150 px) — 160+150+14 = 324 > 280 доступных. При 34 px и зазоре 8 px
+   пары складываются: 2+2+2+1, полоса ниже на 30-80 px. */
+@media(max-width:360px){.foot-badges{gap:8px}.foot-badges img{height:34px}}
 .contact{max-width:640px;margin:0 auto;text-align:left;background:#fff;border:1px solid #E3EAF7;border-radius:18px;padding:28px 26px}
 .contact h2{margin:0 0 8px}
 .contact-sub{margin:0 0 18px}
