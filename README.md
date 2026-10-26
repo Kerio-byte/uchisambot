@@ -6377,3 +6377,74 @@ with their markdown twins; `landing-badge-rows.py` (new), `landing-sweep.py` (tw
 2875); `SKILL.md` and `references/landing-batteries.md`; this entry; evidence `block-20261026g/` — six
 probes (rows, widths, the 1-px walk across the boundary, narrow screens, and the two that disagreed
 before the truth was 1 px wide), battery run and control, sweep before and after, live check.
+
+## The Hindi page downloaded 660 letters to draw 57 (26.10.2026)
+
+**What was found.** `/hi/` was the heaviest page on the site and the only one whose font was
+larger than the page's own HTML. Noto Sans Devanagari was served whole — 121 192 B, 769
+glyphs, weights 100–900 — while the built page uses **57 codepoints**. A cold load measured
+in Chromium at 390 px (4g profile, so the hero loop autoplays) came to 937.3 KiB in 16
+requests: video 344.8, HTML 120.0, **font 118.4**, three screenshots 163.4, poster 41.2,
+Latin Manrope 24.8. The font was the third item and the only one that could shrink without
+touching a single pixel of the design.
+
+**What the measurement found.** Subsetting the file to the 57 characters the site actually
+draws (57 of ~660) gives 69 960 B — 58 % of the original, 463 glyphs, all 12 GSUB features
+(`akhn half pres blwf abvs psts …`) and the variable `wght 100..900` axis kept. `/hi/` drops
+from 937.3 to 887.2 KiB (−50.1 KiB, −5.3 %) and the closed-page font budget from 142.6 to
+92.6 KiB. The first try was **28 bytes smaller and wrong**: built with `opts.hinting = False`
+the file weighed 69 932 B, the geometry was identical to the pixel (same document height,
+same h1 line count, same block heights), and the picture was not — screenshot comparison of
+one page against the same page with the full font served in place of the subset returned
+**12 631 differing pixels in the h1, 35 288 in the lead, 1 015 in the footer**. A canvas
+measurement had already hinted at it (the same Hindi strings measured 1.5–2.7 % wider), which
+is what sent the block to pixels instead of trusting geometry. With hinting kept the same
+pages return **0 differing pixels**; hinting is part of the drawing, not an optimisation.
+
+**The fix.** `tools/subset-deva.py` builds `fonts/noto-sans-devanagari-hi.woff2` from
+`tools/font-src/noto-sans-devanagari.woff2` (the full file moved out of the published `fonts/`
+directory — the sweep's "every published file has a reader" check caught it as a 118 KB asset
+no page names). The registry `tools/deva-subset.json` holds the exact codepoints, the source
+sha256, the output sha256 and the byte counts; `tools/build.py` reads it, declares the subset
+on `/hi/` and **fails** if any page uses a Devanagari codepoint that is not in the registry,
+printing the command that regenerates it. The codepoint set is collected from the sources —
+the Hindi dictionary, the template, the builder, the legal pages — and from the built pages as
+a cross-check: reading only built pages deadlocks the workflow, because editing the dictionary
+adds a letter the generator cannot see until the build that refuses to run succeeds.
+
+**In the sweep.** Three new markers and one rewritten (2875 → 2878 checks): the subset is
+≤80 KB and matches the registry in bytes and sha256; the registry was built from the source
+file that is actually in the tree; `/hi/` declares the subset with the same `unicode-range`
+and no page declares the full Noto; the registry covers every Devanagari codepoint of all nine
+pages; nobody preloads it. A new battery, `landing-font-identity.py`, opens `/hi/` twice —
+the font request is answered once with the subset, once with the full source — and compares
+h1, lead, a FAQ answer and the footer pixel by pixel, requiring 0 differing pixels per
+element *and* proof that the swap applied (otherwise the check is empty). Against the
+hinting-stripped subset the same battery returns 3 failures (12 631 / 35 288 / 1 015 px);
+against the shipped file 7/0. `landing-fonts.py` keeps a separate 80 KB ceiling and asserts
+the full Noto is never requested; `landing-glyph-fallback.py` on `/hi/` reports 141 text
+nodes, 4 545 glyphs, **0 substitutions** — every glyph still comes from our own face.
+
+**What this does not prove.** That a visitor notices 50 KiB: on 4g it is a few hundred
+milliseconds, and the visible gain is only that the Hindi text has less to wait for before it
+swaps from the system font. That 69 960 B is the floor: dropping hinting is smaller and
+changes the drawing, dropping the `dist`/`abvm` features would be smaller still and break
+matra placement. That Linux Chromium draws like Android Chrome or Safari: the identity test
+runs one engine on one platform, and FreeType's hinting is exactly the part that differs
+between them. That other scripts need nothing: Cyrillic and Vietnamese pages carry Manrope
+subsets of 14.5 and 8.5 KB, already smaller than any page subset would be. Also measured in
+this block and found clean: every media-query boundary in the stylesheet walked at ±1 px on
+en/ru/hi (90 page loads, no horizontal scroll, no element past the edge, no clipped text, no
+grid that loses a column as the screen grows) and the FAQ accordion opened and closed on 99
+questions in Chromium, WebKit and Firefox (the card collapses back to its summary, the answer
+stays inside its box, no JS errors).
+
+**Files.** `tools/subset-deva.py` (new), `tools/deva-subset.json` (new),
+`fonts/noto-sans-devanagari-hi.woff2` (new), `tools/font-src/noto-sans-devanagari.woff2`
+(moved), `tools/build.py`, `tools/make-lang-fonts.py`, `tools/lang-fonts.json`, `hi/index.html`
+with its twin and `tools/lastmod.json`, `submission-kit/manifest.json`; `landing-font-identity.py`
+(new), `landing-sweep.py`, `landing-fonts.py`, `SKILL.md`, `references/landing-batteries.md`,
+`references/landing-qa.md`; evidence `block-20261026h/` — the weight probe, the codepoint
+probe, four subset variants, the canvas width test, the geometry test, the pixel test with its
+zero-noise control, the battery and its control on the hinting-stripped file, the build guard
+and its two controls, the glyph and font batteries.
