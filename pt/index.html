@@ -518,7 +518,7 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
              скрипта, который САМ создаёт кнопку остановки. Без JS или при падении скрипта
              посетитель видит постер: ни ролика без механизма остановки (WCAG 2.2.2), ни
              мёртвой кнопки «пауза». Заодно prefers-reduced-motion честно работает и без JS. -->
-        <video id="hero-video" width="540" height="1170" muted loop playsinline preload="metadata" poster="../img/demo-poster-pt.webp" aria-label="Demonstração: o bot divide a tarefa em passos.">
+        <video id="hero-video" width="540" height="1170" muted loop playsinline preload="none" poster="../img/demo-poster-pt.webp" aria-label="Demonstração: o bot divide a tarefa em passos.">
           <source src="../demo/uchiambot-demo-web-pt.mp4" type="video/mp4">
         </video>
       </div>
@@ -896,13 +896,27 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 </script>
 <script>
 (function(){
-  // Hero-видео: тихий луп; уважаем reduced-motion и saveData — им показываем постер.
+  // Hero-видео: тихий луп. Автозапуск уважает ТРИ сигнала: reduced-motion, saveData и
+  // медленный канал (2G/3G) — в этих случаях человек видит постер и кнопку «играть».
+  // Зачем канал (26.10.2026): ролик весит 344-444 КБ на язык, это 62-73 % веса страницы,
+  // и он не сжимается (MP4 уже сжат). Замер холодной загрузки: en 553 КБ, из них 400 КБ
+  // ролик; на 3G ролик дороже всей остальной страницы вместе с постером. effectiveType
+  // считает сам браузер: на Android это настоящий тип сети, на десктопном Chrome он
+  // всегда "4g", поэтому там правило молчит и ничего не ломает.
   var v = document.getElementById('hero-video');
   if (!v) return;
-  var reduce = false, save = false;
+  var reduce = false, save = false, slow = false;
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
-  try { save = !!(navigator.connection && navigator.connection.saveData); } catch(e){}
-  if (reduce || save) { v.removeAttribute('loop'); try { v.pause(); } catch(e){} }
+  try {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (c) {
+      save = !!c.saveData;
+      slow = c.effectiveType === '3g' || /(^|-)2g$/.test(c.effectiveType || '');
+    }
+  } catch(e){}
+  var auto = !reduce && !save && !slow;
+  if (!auto) { v.removeAttribute('loop'); v.setAttribute('preload', 'none'); try { v.pause(); } catch(e){} }
+  else { v.setAttribute('preload', 'auto'); }
   // Кнопка остановки (WCAG 2.2.2). Появляется только здесь: без скрипта это был бы
   // мёртвый элемент управления. Обе подписи (пауза и играть) приходят из словаря
   // языка при сборке страницы: data-play-label — вторая сторона.
@@ -915,9 +929,9 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
   // телефона на кадре. Переключение слова делает CSS по [data-state], которое ставит
   // sync(); обе стороны лежат в одной ячейке grid, поэтому ширина кнопки не прыгает.
   function canPlay(){
-    // reduced-motion/saveData гасят автозапуск, но НЕ запрещают ручной запуск:
-    // если человек сам нажал «играть», его выбор сильнее настройки системы.
-    return !userPaused && !document.hidden && onScreen && (userStarted || (!reduce && !save));
+    // reduced-motion/saveData/медленный канал гасят АВТОзапуск, но НЕ запрещают ручной:
+    // если человек сам нажал «играть», его выбор сильнее и настройки системы, и оценки канала.
+    return !userPaused && !document.hidden && onScreen && (userStarted || auto);
   }
   function sync(){
     var paused = v.paused;
@@ -929,7 +943,13 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     try { var p = v.play(); if (p && p.catch) p.catch(function(){}); } catch(e){}
   }
   btn.addEventListener('click', function(){
-    if (v.paused) { userPaused = false; userStarted = true; play(); }
+    if (v.paused) {
+      userPaused = false; userStarted = true;
+      // На медленном канале разметка стоит с preload="none": человек сам попросил ролик —
+      // возвращаем загрузку, иначе браузер может тянуть файл только по частям.
+      if (v.getAttribute('preload') === 'none') v.setAttribute('preload', 'auto');
+      play();
+    }
     else { userPaused = true; try { v.pause(); } catch(e){} }
     sync();
   });
@@ -949,9 +969,9 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     else if (canPlay()) play();
   });
   // Автозапуска в разметке НЕТ: ролик стартует только здесь — после того как найден
-  // механизм остановки (btn выше) и с оглядкой на настройки человека. Так выключенный
-  // или упавший JS не оставляет ни движения без кнопки, ни мёртвой кнопки.
-  if (!reduce && !save) play();
+  // механизм остановки (btn выше) и с оглядкой на настройки человека и на канал.
+  // Так выключенный или упавший JS не оставляет ни движения без кнопки, ни мёртвой кнопки.
+  if (auto) play();
   sync();
 })();
 </script>
