@@ -7022,3 +7022,102 @@ per battery exercises every clause: `video-motion` also asserts labels from the 
 `landing-toggle-clear.py` (`--control overlap`, root as an argument), `landing-poster-frames.py`
 (`--root` and `LANDING_ROOT`, `--control swap`), `landing-regress-all.py` (`CONTROLS` 16 → 19).
 
+## Two loudest claims had never been red, and one of them had never seen the desktop (27.10.2026)
+
+**The queue was the ledger.** The previous block closed with `landing-controls-ledger.py` reading
+**32 of 48** batteries with a wired control, one pointer, **15 without anything**. Two of those 15
+carry the loudest claims on the site: `landing-axe-audit.py` has printed `TOTAL VIOLATIONS: 0`
+since 16.10, and `landing-glyph-fallback.py` has printed `0 подмен` since 22.10. A green run from
+either is worth exactly what its ability to go red is worth, and neither had ever gone red. This
+block took both — and the second one answered a question the first could not: it turned out to be
+blind to the desktop.
+
+**Nine skipped nodes, printed for three days and never explained.** Since 24.10 the glyph battery
+has printed `пропущено=9` on every language page and `=1` on the legal pages — 84 text nodes
+across the site whose glyphs were never counted. `probe-skipped.py` walked those nodes through
+CDP and asked each one for its computed display, its boxes and its text: the `<title>`, four
+header links, and four hidden form messages (`contact-ok`, two `contact-err`, `Sending…`). The
+title and the form messages have no boxes at any width — honest skips, they are never drawn. The
+four links are `display:inline` with **zero boxes at 420 px** because an ancestor hides them, and
+they have boxes at 1280: `How it works`, `Features`, `Pricing`, `FAQ`.
+
+**So the battery had been measuring the phone and calling it the site.** Every run since 22.10
+opened the pages at 420×900. The header menu exists in the DOM of all nine language pages, is
+rendered only above the breakpoint, and no other battery asks which font drew it — the sweep reads
+files, the header batteries read geometry. The page is fine: measured at 1280, all four links are
+drawn by Manrope. The proof was not.
+
+| page | phone 420 | desktop 1280 | desktop added |
+|---|---|---|---|
+| en | 4 894 | 4 934 | +40 |
+| ru | 4 790 | 4 840 | +50 |
+| es | 5 434 | 5 488 | +54 |
+| pt | 5 391 | 5 443 | +52 |
+| hi | 4 545 | 4 586 | +41 |
+| id | 5 286 | 5 318 | +32 |
+| tr | 4 975 | 5 024 | +49 |
+| vi | 5 287 | 5 340 | +53 |
+| uk | 4 981 | 5 029 | +48 |
+| privacy.html | 17 826 | 18 037 | +211 |
+| terms.html | 9 483 | 9 585 | +102 |
+| 404.html | 347 | 349 | +2 |
+
+147 212 glyphs in two windows, 73 239 and 73 973, and every one of them custom. The desktop window
+adds 734. Only 30 of the 40 on `en` are the four links; the other ten are spread over 31
+paragraphs that draw one or two **fewer** or **more** glyphs in a wider window (26 up, +64; 9
+down, −24). And on the legal pages there is no new node at all: `privacy.html` has 92 measured
+nodes at both widths and +211 glyphs, distributed over 64 paragraphs, each +1…+12. `glyphCount`
+from CDP is a shaped-glyph count, not a character count: the same sentence, broken into different
+lines at a different width, is a slightly different number of glyphs. The floor is therefore a
+bound, not an equality — which is what it always was, and now it is stated.
+
+**Both windows, and a floor for each.** Instead of picking one width, the battery measures each
+page at 420×900 and 1280×900 and reports both (`глифов=4894+4934`). `FLOOR` keeps its 24.10 phone
+numbers; `FLOOR_WIDE` was measured today and cut by 15 % (4 100 default, 15 300 privacy, 8 100
+terms, 290 on the 404). An undercount in **either** window is red, and the verdict names the
+window (`hi/desktop: 4 586 глифов < пола …`).
+
+**The control is one heading, not a whole page.** The cheap defect is a page-wide
+`body{font-family:Georgia}` — and it is the wrong one: a battery that asked only "did any custom
+font load at all" would still go red, and that clause is not the one this battery has.
+`--control` injects `#main h1{font-family:Georgia,"Times New Roman",serif!important}` into
+`ru/index.html` of a hard-linked copy and requires the battery to name that page in **both**
+windows: it does, **31 glyphs per window**, while `en` beside it stays at zero. The clean copy runs
+in full first — 12 pages × 2 windows, 0 substitutions, 0 undercounts — because a control must also
+prove that the copy itself does not break the pages.
+
+**axe: a defect the rule set actually has.** `--control` copies the tree, drops
+`<img src="/img/logo.svg" width="12" height="12">` — no `alt` — inside `<main>` of
+`ru/index.html`, and requires exactly one violation, `image-alt`, on that page and none on
+`index.html` beside it: clean copy 12 pages / 0 violations, defect copy
+`ru/index.html -> ['image-alt']`, `index.html -> ничего`. Twenty-one seconds for both runs
+together. The harness detail that makes two runs in one process possible: both reuse port 8242, so
+the server is closed with `server_close()` as well as `shutdown()` — a listening socket left open
+is an «Address already in use» on the second run.
+
+**Both batteries now speak the journal's sentence.** Neither printed `CHECKS: N, FAILED: M`, so
+`landing-regress-all.py` journalled them as `checks=None` — two batteries were invisible in the
+full run's check count. axe counts pages (12), the glyph battery counts a page in a window (24).
+
+**Clean runs after the edits.** `axe` 12 pages / 0 violations (16 s, `CHECKS: 12, FAILED: 0`);
+`glyph` 12 pages × 2 windows / 147 212 glyphs / 0 substitutions / 0 undercounts (33 s,
+`CHECKS: 24, FAILED: 0`); `sweep` 2 896 checks / 0; the runner on each file in turn:
+`checks=12 failed=0` and `checks=24 failed=0`. Controls: axe — 12 pages clean, then exactly one
+`image-alt` on the broken page and none on the neighbour; glyph — 24 measurements clean, then 31
+glyphs per window on `ru/` and zero on `en`. The ledger now reads **34 of 48** batteries with a
+wired control, one pointer, **13 without anything**.
+
+**What this does not prove.** That the 13 remaining batteries are worth their green. That one
+defect per battery exercises every clause: axe runs a hundred-odd rules and one `image-alt` proves
+the pipeline, not the rule set; the glyph control moves one element and says nothing about clipped
+text or about the drawing being right beyond `isCustomFont`. That the two windows cover the site:
+320 px, the tablet breakpoints and print are other batteries, measured on their own.
+
+**Files.** `landing-axe-audit.py` (`--control`, `--root`/`LANDING_ROOT`, the copy builder, the
+verdict, the `CHECKS` line), `landing-glyph-fallback.py` (`WINDOWS` 420+1280, `FLOOR_WIDE`,
+`--control`, `--root`/`LANDING_ROOT`, comma list in `--only`, the `CHECKS` line),
+`landing-regress-all.py` (`CONTROLS` 19 → 21). Evidence in `evidence/block-20261027a/`:
+`probe-skipped.py` (+ the `skipped-nodes-w420/w1280.json` it wrote), `probe-desktop-glyphs.py`,
+`probe-node-diff.py` (+ `node-diff.json`), `probe-glyph-widths.py`, `glyph-2windows.json`,
+`clean-axe.log`, `clean-glyph.log`, `ctl-axe.log`, `ctl-glyph.log`, `summarise*.py`.
+
