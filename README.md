@@ -5921,9 +5921,10 @@ desktop probe in all 144 runs, the bar 59 px in 146 measurements (0 in the two d
 require its absence).
 
 **Numbers.** tablet 1 804 / 0 in 447 s, one engine restart (English smoke 204 / 0 in 80 s; WebKit
-alone 902 / 0 in 293 s, one restart); control 404 checks / 52 red on two languages; rehearsal 204 / 0
-with one restart; compositing comparison 902 vs 902, 0 red both, 55 details apart, against 72 between
-two runs in one mode.
+alone 902 / 0 in 293 s, one restart); control 404 checks / 52 red on two languages, and **204 / 26
+red** on English alone, re-run on the final artifact so the documented figure stays the measured one;
+rehearsal 204 / 0 with one restart; compositing comparison 902 vs 902, 0 red both, 55 details apart,
+against 72 between two runs in one mode.
 
 **What this does not prove.** That llvmpipe will not crash again: it is the engine's software GL, and
 three runs died tonight; what changed is that a crash costs a retry instead of a red run or a silent
