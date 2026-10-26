@@ -6448,3 +6448,55 @@ with its twin and `tools/lastmod.json`, `submission-kit/manifest.json`; `landing
 probe, four subset variants, the canvas width test, the geometry test, the pixel test with its
 zero-noise control, the battery and its control on the hinting-stripped file, the build guard
 and its two controls, the glyph and font batteries.
+
+## The language menu followed the button to the edge of the screen (26.10.2026)
+
+Yesterday's block taught the header row to wrap: with the browser's minimum font size at 24 px
+(Chrome's slider top) the row no longer pushes the page sideways, it drops a line. The battery
+that proved it measures the *pill* — inside the right padding, tappable, neighbours on the same
+line not touching it. Nobody asked where the pill ends up, and nobody opened the panel.
+
+**What the measurement found.** At 761–900 px with the minimum at 24 px the pill sits at the
+LEFT edge of the screen (30…172 px: the row wraps, the pill is its last item, so it starts the
+second line). The panel of nine languages was positioned `right:0` against that pill and is
+243 px wide — its right edge went to 172 and its left edge to **−36 px (uk) … −120 px (hi)**.
+Nine navigation entries with the first characters cut off and the left part of every tap target
+outside the screen. At the normal setting the same panel sits at 541…741 and is fine, which is
+why the fifteen existing batteries never saw it.
+
+**The fix** is three CSS declarations and no new markup: the containing block of the panel is the
+header row, not the pill — `.top-in{position:relative}`, `.lang-dd` loses `position:relative`,
+`.lang-list{right:20px}` where 20 px is the page's own padding (`.wrap`). The panel's right edge
+now equals the page's content edge whatever the header's height. The normal case is unchanged:
+right edge 741 at 761 px and 1230 at 1440 px before and after, page heights identical
+(`landing-visual-pass.py`, PROBLEMS 0, all nine languages). The panel's top moves from 58 to
+70 px — below the whole header instead of overlapping its last 5 px; that 12 px shift is the only
+visual difference in the change.
+
+**In the gateway.** New battery `landing-langlist-fit.py`: three engines (Chromium with
+`--blink-settings=minimumFontSize=24`, Firefox with the real `font.minimum-size.*` pref, WebKit at
+the normal setting — headless has no minimum to set there, and the report says so), seven widths
+(320/420/761/768/900/1280/1440), nine languages, nine checks per run: the setting applied (pill
+height 38 → 54 px), the panel inside the screen on all four sides, its right edge on the page's
+content edge, it does not cover its own pill, nine entries present, every entry inside the screen
+horizontally, the visible ones hit-testable at their centre (entries below the panel's scroll window
+count as scrolling, not as failure — nine 44 px rows do not fit a phone and the list scrolls by
+design since 23.10), and no sideways document scroll. **3591 checks, 0 failed.** The negative
+control `--mutate` restores the old anchoring in the served HTML (rewriting the response, no file
+touched) and returns **846 checks, 74 failed** — every one at the minimum of 24 px, panel left edge
+−36…−120, the same numbers as the pre-fix probe, which is what makes the green mean something.
+
+**What this does not prove.** That a visitor with a 24 px minimum font is common: the slider is off
+by default and the pages were readable without this fix — what is proven is that the navigation is
+not clipped when he sets it. That Safari on a real tablet wraps the header the same way: WebKit
+runs here at the normal setting only, and the wrap itself is Chromium/Firefox territory. That the
+12 px the panel dropped cannot matter anywhere: no measurement moved, but a design review by eye is
+not a measurement.
+
+**Files.** `index-src.html` (three declarations + the comment that says why), all nine built pages
+with their twins, `tools/lastmod.json`, `sitemap.xml`; `landing-langlist-fit.py` (new) and two
+markers in `landing-sweep.py` (2896 checks); `SKILL.md`, `references/landing-qa.md`; evidence
+`block-20261026i/` — the pre-fix probe with 27 failures, the same probe after (0 of 126), the
+battery, its negative control, four regression batteries (`landing-min-font.py` 1554/0,
+`landing-a11y-extra.py` 267/0, `landing-tablet-menu.py` 162/0, `landing-visual-pass.py`
+PROBLEMS 0), the sweep and the live-byte comparison.
