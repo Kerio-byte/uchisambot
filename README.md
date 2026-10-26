@@ -6694,3 +6694,82 @@ will report "caught" the day its own regex rots.
 `block-20261026l/` — nine clean and mutated logs, the ledger, four runner journals, the broken
 tree that proves the verdict, and the sweep after the reworded entry.
 
+## The control that could not fail found a battery reading the wrong width (26.10.2026)
+
+**Three of the twenty-four.** The last entry left the gap as a number: 48 batteries, 23 with a
+control, 24 without. This block took three of the 24 — the ones that measure geometry the browser
+only knows after layout: `landing-wcag22-targets.py`, `landing-first-screen.py`,
+`landing-badge-rows.py`. Unlike the previous block, no copy of the tree was mutated: the defect is
+injected into the live page after load, so the page on disk stays the page under test. The ledger
+now reads **26 with a control, 1 pointer, 21 without**.
+
+**Each control has to prove it was applied before it may judge.** A style that matches no element
+changes nothing and reports green — the exact failure these controls exist to expose. So the
+control records its own substitution first: the smallest visible `.btn` is **16 px** tall (was 48),
+`scroll-padding-bottom` computes to **0 px** while the bottom bar is **123 px** tall (was 78 px of
+padding and a 53 px bar), `scroll-padding-top` computes to **0 px** (was 84 px), the first badge
+measures **168 px** wide and the strip **1 020 px** where the design's ceiling is 780 px. If a
+number does not move, the control says so and fails.
+
+**What the three controls returned.**
+
+- `landing-wcag22-targets.py --control targets|focus|anchor|all`: targets → **18 reds**, all of
+  them 2.5.8, every one naming the button and its 171×16 box; focus → **9 reds**, all of them
+  2.4.11's "focused element not obscured", none of the anchor checks; anchor → **4 reds**, all of
+  them the anchor landing on two pages × two devices. Run together, `--control all` gives
+  18 + 9 + 4 and **nothing else red** — three clauses, three separate evidences, one command.
+- `landing-first-screen.py --control fold`: the hero button's row pushed 560 px down →
+  **126 of 126** screen × language pairs red, all of them "кнопка до … > экрана", no horizontal
+  overflow claimed. The first attempt used 420 px and left the 390×844 phone green with 12 px to
+  spare — the control was measured, not assumed, and the number was raised until the defect
+  actually reached every screen.
+- `landing-badge-rows.py --control dense`: badges forced to 168 px and the strip widened to
+  1 200 px → **45 reds** of "no row but the last stands alone" (one badge per row on 300–390 px)
+  and **9 reds** of "1440 lays out 4+3" (which became 5+2), **zero foreign reds**. Widening the
+  badges alone was not enough: at 168 px on the design's 780 px strip the split stayed 4+3, so the
+  control also widens the strip — that is the mechanism that lets the fifth badge into the first
+  row, and without it the claim would have stayed unproven while the control looked green.
+
+**The wide control found a defect in the battery, not in the page.** `landing-first-screen.py`
+checked overflow with `scrollWidth > innerWidth`. On a mobile context Chrome **expands the layout
+viewport to fit the content**, so `innerWidth` grows with the defect: a body forced to
+`100vw + 120px` read 510 against 510, a 900 px hero read 900 against 900. The measured table
+(kept in the evidence folder) shows `clientWidth` staying at 390 through all of it. The check now
+compares `scrollWidth` with `clientWidth`, the clean page still answers **252 checks, 0 problems**,
+and `--control wide` turns **126 of 126** pairs red. Until this block that clause had never been
+red, and could not have been: it was reading the number the defect inflates.
+
+**The runner can now carry two defects for one battery.** `CONTROLS` was a dictionary keyed by
+script name, so a second control for the same battery was impossible. It is a list of
+`(battery, arguments)` pairs now. `--controls` runs **8 and catches 8**: the four old ones in
+1.4 s total, then `fold` 64 s, `wide` 64 s, `wcag all` 91 s, `dense` 126 s.
+
+**Regress after the edits.** Clean runs of the three touched batteries: `first-screen`
+**252 / 0**, `badge-rows` **1 017 / 0**, `wcag22` **43 / 0**. The three batteries that the earlier
+full-set journal recorded red at the harness — `landing-render-check.py`,
+`landing-visual-pass.py`, `landing-print-contrast.py` — were re-run under the current runner and
+came back green: 10.3 s, 130.8 s, 72.1 s, the last with **3 543 checks, 0 failed**. Their red was
+the runner's, as the harness entry said; this block turned that sentence into a run.
+
+**Open, and it is the same defect in other hands.** Six more batteries compare `scrollWidth` with
+`innerWidth` while opening mobile contexts: `landing-a11y-extra.py`, `landing-keyboard-form.py`,
+`landing-landscape-page.py`, `landing-render-check.py`, `landing-rotate.py`,
+`landing-tablet-page.py`. Whether each is blind depends on which clause uses the number and which
+context it runs in — it has to be measured with a control the way this one was, not fixed by
+grep. That is the next block's queue, and it is written here so it cannot be remembered as done.
+
+**What this does not prove.** That the remaining **21 batteries** are worth their green. That each
+control exercises every clause of its battery: `badge-rows` asserts six invariants and the control
+touches two, `wcag22` covers three of its own but not the JavaScript-error check. That an injected
+style is the same event as a source-level regression — a real edit also changes the built pages,
+and no tree was broken this time. And that the full 48-battery set was re-run in this block: it
+was not. Only the three touched batteries and the three harness victims were run, and the last
+complete journal still contains the two timeouts that the 900-second clock was meant to fix.
+
+**Files.** `landing-wcag22-targets.py` (`--control targets|focus|anchor|all`, `arm()`, verdict),
+`landing-first-screen.py` (`--control fold|wide`, `arm()`, verdict, `clientW` in the probe and in
+the overflow clause), `landing-badge-rows.py` (`--control dense`, `arm()`, verdict),
+`landing-regress-all.py` (`CONTROLS` as pairs, four new entries); evidence `block-20261026m/` —
+four control logs, three clean logs, the ledger, and the overflow probe with its measurement
+table.
+
