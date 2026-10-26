@@ -6141,7 +6141,7 @@ every case: a still frame of the demo is honest, a button that cannot act is not
 **Provision.** New battery `scripts/landing-video-failure.py`: **38 runs** — Chromium × five languages
 (en, ru, hi, vi, uk) and WebKit × three (en, hi, uk — WebKit is what Telegram on iOS runs) over six
 scenarios: recover-by-tap, permanent abort, permanent 404, truncated body, healthy tap, autoplay
-recovery. **228 checks.** After the fix: **228 / 0**, 3.5 minutes. Control on the previous commit
+recovery. **228 checks.** After the fix: **228 / 0** (38 runs, 109 s). Control on the previous commit
 (`--control`, `git archive HEAD` in a temp tree): **228 / 95** — every permanent scenario red with
 "hidden=False display=flex", "paused=False" and "hits=1" (no retry request at all). Two checks are
 there to catch a fix that over-reaches: the video must be requested **exactly twice** in a failure (a
@@ -6153,6 +6153,12 @@ count is **1** — the retry must not exist when nothing failed.
 now 2803 checks) so an edit cannot drop the handler silently; the whole family re-run after the JS
 change: video-motion **444 / 0**, video-weight **129 / 0**, browser-smoke **18 runs, 0 problems**,
 `build.py --check` **24 / 24**, `publish-tree.py --check` **495 links**.
+
+**On the world, not only on the tree.** After the gh-pages publication, `evidence/block-20261026d/
+live-check.py` walks the live site (root, ru, hi; Chromium phone): healthy — the control is visible,
+`display:flex`, `state=pause`, `readyState=4`, playing; with the mp4 aborted at the browser —
+`hidden=true`, `display:none`, `paused=true`, `data-video="failed"`, poster in place. Six runs, six
+answers, no exceptions.
 
 **What this does not prove.** A *hanging* connection: a server that accepts the request and never
 answers fires no error event at all, so the same dead control can still be offered, and no amount of
