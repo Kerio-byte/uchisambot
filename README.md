@@ -6976,3 +6976,49 @@ it could not parse), `landing-env-prefs.py`, `landing-header-engines.py`, `landi
 (13 windows × 3 numbers × before/after), `ctl-before-visual-pass.log` (the loud defect on the
 pre-fix battery), `ctl-wide-visual-pass.log`, `clean-*.log` for nine batteries, `run-battery.py`,
 `ledger.json`.
+
+## Three green batteries that had never once been red (27.10.2026)
+
+**A control remembered is a control not run.** The ledger counts 48 batteries and says which of them
+can be broken on purpose. Three of the hero-video batteries sat in the other column: `video-motion`
+(444 checks, 408 of them about the stop mechanism WCAG 2.2.2 requires), `toggle-clear` (56 checks
+that compare pixels of the frame with and without the button) and `poster-frames` (9 checks that the
+poster is the last frame of its own loop). All three printed "0 failed" — and not one of them had a
+control: nothing proved they would notice the absence of the thing they measure.
+
+**Each break is the defect the battery was written for.** Every control builds a hardlinked copy of
+the tree and unlinks the file it edits, so the working tree is never touched:
+
+- `--control nobutton` removes the `<button id="video-toggle">` element itself from all nine pages.
+  **183 red**, of which 18 say in plain words that the stop button is not in the built page; nothing
+  else went red.
+- `--control overlap` lifts the button's row 52 px up, onto the frame — the defect of 24.10. The
+  pixel clause fires in **7 cases out of 7**, the gap reads −52 px: 21 red, no foreign ones.
+- `--control swap` swaps the English and Russian posters. RMSE **0.14896 / 0.14891** against a
+  threshold of 0.02, while the other seven languages stay at 0.00676–0.00790 — the two classes apart
+  by a factor of nineteen, as calibrated on 26.10.
+
+**Three things this block learned the hard way.** In this build English has no `en/` directory — its
+page is the root one, and the first control run died on "no page …/en/index.html", a break in the
+harness rather than in the page. Removing the button does not redden only the button clauses: the
+same script that shows the button also starts the loop and stops it off screen (`if (!btn) return`
+sits above the visibility subscriptions), so `autoplay runs` and `reduce: not autoplaying` go red as
+a consequence — the verdict has to name the shapes it expects, or the control is red forever and
+worth nothing. And a mutation has to print what it applied: "caught" and "the break never landed"
+look identical from an exit code alone, so each control reports the number of pages or files it
+changed.
+
+**Clean runs after the edits.** `video-motion` 444 checks / 0 failed (104 s), `toggle-clear` 56 / 0,
+`poster-frames` 9 / 0; `sweep` before the edits 2 896 / 0. The runner then proved the controls itself,
+one command and no memory: `--controls` **19 of 19 caught**, the three new entries among them, and the
+whole list green in one pass. The ledger now reads **32 of 48** batteries with a wired control, one
+pointer, **15 without anything**.
+
+**What this does not prove.** That the remaining 15 batteries are worth their green. That one break
+per battery exercises every clause: `video-motion` also asserts labels from the dictionaries and the
+320 px layout, and the missing-button control touches only what depends on the button.
+
+**Files.** `landing-video-motion.py` (`--control nobutton`, the control tree builder, the verdict),
+`landing-toggle-clear.py` (`--control overlap`, root as an argument), `landing-poster-frames.py`
+(`--root` and `LANDING_ROOT`, `--control swap`), `landing-regress-all.py` (`CONTROLS` 16 → 19).
+
