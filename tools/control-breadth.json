@@ -132,9 +132,9 @@
    "walked": 1,
    "untouched": [],
    "code": 0,
-   "sec": 40.6,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "d4576830314d",
+   "sec": 40.9,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "483ccbd61dab",
    "instrument": "f37e2dacff66"
   },
   {
@@ -154,8 +154,8 @@
    ],
    "code": 0,
    "sec": 2.9,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "7a00b6d2fa2e",
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "f199d03529f1",
    "instrument": "f37e2dacff66"
   },
   {
@@ -338,9 +338,9 @@
     "vi"
    ],
    "code": 0,
-   "sec": 75.6,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "68b5699ca1fd",
+   "sec": 63.2,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "7a2e74d2d7cc",
    "instrument": "f37e2dacff66"
   },
   {
@@ -368,9 +368,9 @@
     "vi"
    ],
    "code": 0,
-   "sec": 65.1,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "0f4aedf8609e",
+   "sec": 64.7,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "71ab158eaec9",
    "instrument": "f37e2dacff66"
   },
   {
@@ -398,9 +398,9 @@
     "vi"
    ],
    "code": 0,
-   "sec": 65.0,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "0f4aedf8609e",
+   "sec": 65.1,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "71ab158eaec9",
    "instrument": "f37e2dacff66"
   },
   {
@@ -700,9 +700,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 4.0,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "79528760ee7c",
+   "sec": 3.9,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "9a431a14e743",
    "instrument": "f37e2dacff66"
   },
   {
@@ -740,8 +740,8 @@
    "untouched": [],
    "code": 0,
    "sec": 0.7,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "b055fddd257e",
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "bb24cfd86273",
    "instrument": "f37e2dacff66"
   },
   {
@@ -795,9 +795,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 5.8,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "417d3e23023f",
+   "sec": 5.6,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "8cad8b91f55c",
    "instrument": "f37e2dacff66"
   },
   {
@@ -818,8 +818,8 @@
    ],
    "code": 0,
    "sec": 0.9,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "72094c52e138",
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "5f1e3454be71",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1021,9 +1021,9 @@
     "vi"
    ],
    "code": 0,
-   "sec": 24.1,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "af19fb8fb4f0",
+   "sec": 24.3,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "25c5222b0db7",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1051,8 +1051,8 @@
    ],
    "code": 0,
    "sec": 10.8,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "975e32eac47f",
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "ee2a771ab6ef",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1183,9 +1183,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 5.2,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "c90d25b2f6ad",
+   "sec": 5.4,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "35c44c898f9a",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1203,9 +1203,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 5.5,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "c90d25b2f6ad",
+   "sec": 5.4,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "35c44c898f9a",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1223,9 +1223,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 5.4,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "c90d25b2f6ad",
+   "sec": 5.5,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "35c44c898f9a",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1530,9 +1530,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 31.3,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "b7b8dd1a8a58",
+   "sec": 31.1,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "aa293be28f8a",
    "instrument": "f37e2dacff66"
   },
   {
@@ -1549,9 +1549,9 @@
    "walked": 0,
    "untouched": [],
    "code": 0,
-   "sec": 30.7,
-   "recorded": "2026-10-27T19:04",
-   "battery_sha": "b7b8dd1a8a58",
+   "sec": 30.6,
+   "recorded": "2026-10-28T00:12:49",
+   "battery_sha": "aa293be28f8a",
    "instrument": "f37e2dacff66"
   },
   {
