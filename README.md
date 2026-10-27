@@ -7623,8 +7623,9 @@ checks, 90 red, exit 1), `ctrl-deeplink-subset.log`, `clean-deeplink-subset.log`
 **The debt was written down by the previous entry, not discovered here.** That block closed by naming nine
 batteries that still ended with `1 if problems else 0` — the code they use for a broken page. The runner reads
 `code == 0` as caught, so adding any of them to `CONTROLS` would have printed `НЕ ПОЙМАЛ` at the exact moment it
-caught its defect: the same repair two batteries had received hours earlier, unapplied in nine more places. Seven
-of the nine were an exit code. Two were not controls at all.
+caught its defect: the same repair two batteries had received hours earlier, unapplied in nine more places. Six of
+them ended with the wrong code; two carried a pointer where a mutation should be; the ninth had a self-test that
+never touches a page. And one of the six hid a second fault: a mutation that no longer touched anything.
 
 **`video-failure` and `video-hang` pointed at the tree they were written on.** Both carried `--control`, and it ran
 `git -C ROOT archive HEAD` — today's HEAD. On the commit where each battery was written that clone was the pre-fix
@@ -7678,10 +7679,10 @@ the two video controls sit inside those clauses, so the red belongs to the mutat
 **What this does not prove.** `nu-validate`'s control proves the classifier — a broken fixture becomes a finding, a
 clean one stays silent — and says nothing about the walk over eleven pages: a page that moved out of `PAGES` would
 be a battery checking ten pages and printing 0. The video controls run one scenario each (S2 for the failure
-battery, S1 for the hang), so S3–S6 and S2–S7 rest on the clean run alone. `print-main`'s mutation reddens only ru,
-because id and uk carry an accepted budget of eight sheets; the two clauses are proven able to fail, not proven to
-watch all nine languages. `print-paper`'s `colwidth` reddens item 7 (line length) only — items 1, 3, 4 and 5 have
-no control of their own. And the 53 entries have still never run in one command: every entry rests on a subset, and
+battery, S1 for the hang); every other scenario in both plans rests on the clean run alone. `print-main`'s mutation
+reddens only ru, because id and uk carry an accepted budget of eight sheets; the two clauses are proven able to
+fail, not proven to watch all nine languages. `print-paper`'s `colwidth` reddens item 7 (line length) only — items
+1, 3, 4 and 5 have no control of their own. And the 53 entries have still never run in one command: every entry rests on a subset, and
 a subset is not the whole. A caught control makes a clause able to fail; it does not make the clause worth having.
 
 **Files.** `landing-print.py`, `landing-print-main.py`, `landing-print-pages.py`, `landing-print-paper.py`,
