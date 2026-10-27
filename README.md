@@ -7762,3 +7762,54 @@ evidence name, `import time`), `landing-controls-coverage.py` (new: coverage fro
 against a block's logs, `--dir`, `--json`, exit 1 on a missing or blind entry),
 `landing-regress-all.py` (`SKIP` entry for the new tool, so the suite stays 48 batteries).
 Evidence in `evidence/block-20261027k/`: 16 `ctrl-*.log`, `coverage.json`.
+
+## The batteries read eleven pages and eight languages; both controls wrote to one (27.10.2026)
+
+**The queue was one sentence of the last entry.** *A control reddens its own subset, not nine
+languages.* Two batteries were the plainest case of it, because the number of pages is the whole
+claim: `landing-en-leftovers.py` reads the English page and all eight language pages, and
+`landing-links-audit.py` reads eleven — nine pages plus `privacy` and `terms`. Their first controls
+wrote to one page each: the leftover control put the untranslated sentence into EN and `ru` and
+asked only that *some* finding appear (`hits >= 2`), and all four link defects were planted in
+`index.html`. A page silently dropped from either walk stayed green, and nothing in the suite would
+have said so.
+
+**The second hole was measured before it was fixed.** Nine pages share one template, and each
+yields exactly **142 text nodes**. A page reduced to its header and footer — the shape of an
+unbuilt or half-built language page — yields **29**, and the old battery reported **0 problems** on
+it: "no English leftovers" is true of a page that has almost no text. So the walk needed a floor as
+much as it needed breadth. The floor is **85 % of the English page's nodes (120 of 142)** — measured
+on today's markup, not guessed, and low enough that a translation may legitimately differ.
+
+**What changed.** `landing-en-leftovers.py` now reports two clauses per language, `CHECKS: 16`:
+the page was read (node floor) and it carries no English leftover. `--mutate` (also `--mutate all`)
+writes the marker into all **nine** pages and requires a finding in **each of the eight languages**,
+exactly one per language, none on EN, and a clean copy at zero — it caught with
+`['es','hi','id','pt','ru','tr','uk','vi']` named one by one. `--mutate stub` cuts `<main>` out of
+`vi` and requires that language named as cut (29 nodes against the 120 floor) with the other eight
+green. `landing-links-audit.py` now opens with a clause the old one did not have: the page list is
+compared with **the disk** (`pages_on_disk()` — root, every two-letter language directory that has
+an `index.html`, `privacy`, `terms`), so a page that exists and is missing from `PAGES` is a finding
+with its own name instead of silence; `CHECKS: 12`. Its `--mutate` puts the four defects on **four
+different pages** — `index.html`, `ru/index.html`, `vi/index.html`, `privacy.html` — and each finding
+must carry the name of the page it was planted in; `--mutate orphan` creates `xx/index.html` and
+requires the battery to call it unaudited.
+
+**The runs.** Four controls through the runner, **4 of 55 entries, 4 caught, 1.6 s**:
+`--mutate` 0.2 s, `--mutate stub` 0.3 s, `--mutate` 0.7 s, `--mutate orphan` 0.4 s. Clean runs after
+the edits: `en-leftovers` **16 checks, 0 failed**, `links-audit` **12 checks, 0 failed** — both
+through the runner, not only by hand (`evidence/block-20261027l/`).
+
+**What this does not prove.** That the other 53 entries mutate as many pages as they read: this block
+measured two, and the rest need the same measurement, not a grep. That four of eleven pages is
+eleven — the spread proves the walk reaches a language page and a legal page, not that it reaches
+every one. That the 85 % floor is right for markup that does not yet exist; it is a ratio measured
+on nine pages that are identical by construction, and a future page with a different template would
+have to be measured again. And that a link or a language page is *correct*: the walk can now be
+shown to reach each page, and reaching is not judging.
+
+**Files.** `landing-en-leftovers.py` (two clauses per language, `MIN_NODES_RATIO`, `--mutate
+[all|stub]`), `landing-links-audit.py` (`pages_on_disk()`, the unaudited-page clause, four defects
+on four pages, `--mutate [defects|orphan]`), `landing-regress-all.py` (two new pairs, 53 → 55
+entries). Evidence in `evidence/block-20261027l/`: four clean logs (by hand and through the
+runner), four control logs, one runner pair log.
