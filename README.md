@@ -6670,7 +6670,8 @@ nothing**. Before this block it was 19 / 1 / 28. The earlier note "seven of fift
 not wrong so much as narrow: it counted `--mutate` alone, and the ten `--control` flags break a
 copy just as deliberately. `--control URL` in `landing-print-crossengine.py` is the one
 exception and is counted as a pointer: it points the battery at another build instead of
-breaking anything.
+breaking anything. > SUPERSEDED (27.10.2026, same day): that battery now has a real `--mutate` — see
+"Every battery in the set can finally be shown red"; no battery in the set is a pointer any more.
 
 **Controls are no longer remembered, they are run.** `landing-regress-all.py` gained a
 `CONTROLS` list and `--controls`: each entry names the arguments under which that battery is
@@ -7442,3 +7443,75 @@ comparison of old output and new.
 `landing-regress-all.py` (`CONTROLS` 30 → 32), `SKILL.md` (ledger count, the controls count, and the lesson that a
 historical defect can stop reproducing). Evidence in `evidence/block-20261027f/`: `clean-viewports.log`,
 `clean-smoke.log`, `runner-controls.log`, `vpx-control.log`, `smoke-control.log`.
+
+## Every battery in the set can finally be shown red, and the worst clause counted white as dark (27.10.2026)
+
+**The last two batteries in the set that had never been red.** The ledger read 45 of 48 with a control, one
+pointer, two with nothing: `landing-external-links.py` (the live network: 69 addresses, "ПРОБЛЕМНЫХ: 0") and
+`landing-stop-rule.py` (the page's promise that the bot stops one step short of the answer: 13 live tasks against
+the bot's prompt). The pointer was `landing-print-crossengine.py`, whose flag only handed the battery another
+build. All three now have a defect they are obliged to catch, and the ledger reads **48 of 48, 0 pointers,
+0 with nothing**.
+
+**The network battery could not even be handed a different tree.** The root was a literal, so there was nowhere
+to put a fault: the same lesson as the settings battery yesterday, one day later. It now takes `--root` (and the
+environment variable), and `--mutate` builds a copy of the tree on hard links — no build file is touched, because
+every edit goes through unlink-then-write — and repoints the first badge of two pages at a fake platform served
+from the machine itself, on a port the operating system picks. The two fake pages are the two historical defects
+of 25.10 reproduced literally rather than invented: one answers 200 with the title "Project Not Found" (a deleted
+product page that still returns 200), the other answers 200 with "Discover Awesome Startups" and never mentions
+the product (a badge pointing at the platform's front page). Numbers: the clean copy scans **69 addresses, 0
+problems, 0 unverified**; the copy with the fault produces **exactly two problems** — `title: Project Not Found
+[badge-page]` and `no [badge-page]` — and nothing else moved; the run prints both sets and exits 0 only when the
+counts match. 68 s.
+
+**The promise battery was cheap to break once the prompt was the parameter.** Three controls, none of which
+touches the GPU: `--control rule` cuts the "не называй…" line out of the prompt for types 2 and 3 and expects
+**18 of 18** clauses red (nine languages, two types) with the type-1 clauses untouched; `--control type1` slips
+the same prohibition into the "explain the topic" prompt and expects **9 of 9**; `--control judge` replaces the
+model with a canned body that names the answer and expects the battery to exit 1 — which proves the judging half,
+the half that belongs to us. The contract half runs in 4.6 s. The live half still runs its 13 tasks, and on the
+real tree it prints **0 named, 0 errors, 0 photos without the condition read**, 5.6–13.3 s per task.
+
+**The second control found a blindness instead of confirming a clause.** `--control type1` came back green on its
+first run. The clause searched for the lowercase «не называй», and a rule line written the way a person writes
+one — «Не называй ответ…», capital letter — went straight past it, so a leak of the prohibition into the topic
+explanation was invisible to the contract. Both clauses now compare without regard to case, and the same control
+reddens 9 of 9. The lesson is older than this file: a check that reads words must read meaning, not spelling.
+
+**The print battery's hardest clause counted white as dark.** "Текст тёмный" was one string comparison:
+`bodyColor.startswith(('rgb(17, 17, 17)', 'rgb(2', 'rgb(0, 0, 0)'))`. The prefix `rgb(2` is satisfied by
+`rgb(255, 255, 255)` exactly as well as by the site's `rgb(20, 32, 58)`, so white and near-white text were
+recorded as dark, and the clause could not go red on the defect the whole print block exists for — white text on
+a band whose dark background the browser does not print, i.e. white on white. The old behaviour is proved by a
+four-line script kept with the evidence rather than argued. It is replaced by a number: every sampled text element
+must reach WCAG contrast **4.5** against the **paper** — the body's background, because a browser prints no
+backgrounds — plus a new clause that the paper itself is light (luminance 0.80). The control then cuts the two
+`@media print` lines that give the dark bands a white background and dark text, and the copy reddens **exactly
+four clauses** — contrast, en and ru, Firefox and WebKit — while reveal, skip link and header stay green. Clean
+copy **20 checks / 0 failed**, live site **20 / 0**, control 29 s. The pointer is gone with it: this battery now
+breaks something, so the ledger counts it like the rest.
+
+**Numbers.** `landing-regress-all.py` `CONTROLS` 32 → 37;
+`--controls --only external-links,stop-rule,print-crossengine` gives **5 of 37, all caught**, 68.0 + 4.6 + 4.6 +
+4.6 + 28.9 s, and the scope is printed so a partial run cannot be read as the whole list. Full clean runs of the
+three batteries on the real tree: external links 69 / 0 / 0 unverified; stop rule 13 tasks / 0 named / 0 errors;
+print 20 / 0.
+
+**What this does not prove.** The network control scans the whole address list twice, so a third-party outage
+inside those two minutes can redden the clean copy for a reason that is not the mutation — the run prints the
+offending address so the difference stays readable. The fake pages prove the badge clause, not the soft-404 clause
+that guards product pages reached by a plain link. The judge control proves the judgement, not the model: a model
+can still name the answer on a wording nobody tried, in a language the six text cases do not speak. The print
+control cuts the band rules on all nine pages, but the battery reads only two of them, so the other seven rest on
+the clean run alone.
+
+**Files.** `landing-external-links.py` (`--root`, `scan()`, `control()`, the fake-platform handler, hard-link
+clone, badge repointing), `landing-stop-rule.py` (`--bot-root`, `contract()` returning its failures,
+case-insensitive rule test, `control_rule()`, `control_type1()`, the judge branch), `landing-print-crossengine.py`
+(rewritten: `measure()`, colour parsing, WCAG luminance and contrast, a sample table behind `--report`,
+`--base`/`--mutate`, `control()`), `landing-regress-all.py` (`CONTROLS` 32 → 37). The two previous versions of
+the rewritten batteries are kept in the skills repository's own history. Evidence in `evidence/block-20261027g/`:
+`clean-external-links.log`, `control-external-links.log`, `clean-stop-rule.log`, `control-stop-rule.log`,
+`control-stop-type1.log`, `control-stop-judge.log`, `control-print.log`, `runner-controls.log`, and
+`old-print-clause-blind.py` with its log.
