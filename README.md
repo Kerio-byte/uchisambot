@@ -7617,3 +7617,81 @@ column: `runner_module()`, `runner_entries()`, `--json` fields). Evidence in `ev
 checks, 90 red, exit 1), `ctrl-deeplink-subset.log`, `clean-deeplink-subset.log`, `ctrl-langlist.log` (3 591 checks,
 112 red, exit 1), `ctrl-langlist-subset.log`, `clean-langlist-subset.log`, `ledger.txt`, `ledger.json`,
 `runner-controls-six.log`.
+
+## Nine controls could not say "caught", and one mutation had stopped touching the page (27.10.2026)
+
+**The debt was written down by the previous entry, not discovered here.** That block closed by naming nine
+batteries that still ended with `1 if problems else 0` — the code they use for a broken page. The runner reads
+`code == 0` as caught, so adding any of them to `CONTROLS` would have printed `НЕ ПОЙМАЛ` at the exact moment it
+caught its defect: the same repair two batteries had received hours earlier, unapplied in nine more places. Seven
+of the nine were an exit code. Two were not controls at all.
+
+**`video-failure` and `video-hang` pointed at the tree they were written on.** Both carried `--control`, and it ran
+`git -C ROOT archive HEAD` — today's HEAD. On the commit where each battery was written that clone was the pre-fix
+tree and the defect was real; every commit since moved HEAD further from it, and today the control clones the fixed
+tree and is green by construction. The ledger counted both as wired, because it reads a flag in the source — the
+same distance the last block named between "wired" and "pulled". Both now build the defect itself on a hard-link
+copy of the working tree and print what landed: the source-event listener removed (**9 pages / 9 lines**), the
+watchdog threshold moved from 8 s to 600 s (**9 pages / 9 lines**). A mutation that lands on nothing exits 1 and
+says `КОНТРОЛЬ НЕ СОБРАЛСЯ`, instead of passing as a catch.
+
+**One mutation had quietly stopped touching the page.** `landing-print-paper.py --mutate railwidth` returned
+**969 checks, 0 failed** — the clean numbers to the check — and exited 1. The 25.10 fix that capped the printed
+column at 210 mm also, unnoticed, made that mutation harmless: the rail of screenshots never grew wider than the
+column containing it, so removing the rail's own cap changed nothing at all. The mutation reproduced a defect that
+could no longer exist, and nothing in the battery asked whether the break had landed. Repaired to reproduce the
+state before 25.10 (both caps off), it reddens **24 of 993**. Its sibling `--mutate colwidth` was still alive:
+**7 of 966**.
+
+**A docstring that quoted yesterday's budgets.** `print-main`'s control note promised reds on ru/uk/id. The 25.10
+decision gave id and uk an accepted budget of eight sheets, so only ru — budget seven — can redden; the mutation
+now adds a sheet to ru and the two clauses about the footer fail there: `ru: листов не больше бюджета (7) — 8
+листов` and `ru: подвал не напечатан отдельным листом — 196 знаков при подвале 180`. The note says so now instead
+of promising three.
+
+**Numbers.** Ten controls, each run through the runner:
+
+| battery | mutation | checks | red | wall |
+|---|---|---|---|---|
+| `landing-print.py` | `--mutate strip` | 147 | 111 | 23.7 s |
+| `landing-print-main.py` | `--mutate footerpad` | 216 | 2 | 25.5 s |
+| `landing-print-pages.py` | `--mutate` | 386 | 22 | 14.8 s |
+| `landing-print-paper.py` | `--mutate railwidth` (both caps) | 993 | 24 | 74.8 s |
+| `landing-print-paper.py` | `--mutate colwidth` | 966 | 7 | 73.3 s |
+| `landing-print-contrast.py` | `--mutate` | 3 408 | 138 | 72.1 s |
+| `landing-min-font.py` | `--control-anchor` | 9 | 6 | 10.3 s |
+| `landing-nu-validate.py` | `--selftest` | 2 fixtures | 1 broken / 0 clean | 3.5 s |
+| `landing-video-failure.py` | `--control` on S2 | 56 | 32 | 97.2 s |
+| `landing-video-hang.py` | `--control` on S1 | 56 | 21 | 87.4 s |
+
+`--controls --only <nine names>` gives **10 of 53 caught, 0 missed, 482.8 s**. `CONTROLS` 43 → 53 entries,
+39 → 48 batteries; the ledger now reads 48 batteries, 48 wired, **48 pulled by the runner in 53 entries, 0 outside
+the list** — the nine named as outside yesterday are inside today.
+
+**What the reds are measured against.** The clean run of each battery on the real tree, from the 27.10 full-run
+journal unless noted: `print` 0 problems; `print-main` 213 / 0 (`ru` prints seven sheets, the mutation adds an
+eighth with 196 characters against a 180-character footer);
+`print-pages` 391 / 0; `print-paper` 969 / 0; `print-contrast` 3 543 / 0; `min-font` 1 554 / 0 twice after the
+anchor race was fixed; `video-failure` 228 / 0 over 40 runs; `video-hang` 144 / 0 over 21. The subset runs used by
+the two video controls sit inside those clauses, so the red belongs to the mutation, not to the subset.
+
+**What this does not prove.** `nu-validate`'s control proves the classifier — a broken fixture becomes a finding, a
+clean one stays silent — and says nothing about the walk over eleven pages: a page that moved out of `PAGES` would
+be a battery checking ten pages and printing 0. The video controls run one scenario each (S2 for the failure
+battery, S1 for the hang), so S3–S6 and S2–S7 rest on the clean run alone. `print-main`'s mutation reddens only ru,
+because id and uk carry an accepted budget of eight sheets; the two clauses are proven able to fail, not proven to
+watch all nine languages. `print-paper`'s `colwidth` reddens item 7 (line length) only — items 1, 3, 4 and 5 have
+no control of their own. And the 53 entries have still never run in one command: every entry rests on a subset, and
+a subset is not the whole. A caught control makes a clause able to fail; it does not make the clause worth having.
+
+**Files.** `landing-print.py`, `landing-print-main.py`, `landing-print-pages.py`, `landing-print-paper.py`,
+`landing-print-contrast.py`, `landing-min-font.py` (control exit branch: 0 = caught, 1 = page stayed green),
+`landing-video-failure.py` (`_clone`, `_strip_source_listener`, `LANDING_ONLY`, mutation counter, control exit
+branch), `landing-video-hang.py` (`_clone`, `_silence_watchdog`, mutation counter, control exit branch),
+`landing-print-paper.py` (railwidth mutation rebuilt to the pre-25.10 state), `landing-print-main.py` (control note),
+`landing-nu-validate.py` (final `КОНТРОЛЬ:` line so the runner's summary shows a sentence, not `}`),
+`landing-regress-all.py` (`CONTROLS` 43 → 53, the two paper mutations as separate entries, the subset environment
+for both video batteries). Evidence in `evidence/block-20261027j/`: `ctrl-print.log`, `ctrl-print-main.log`,
+`ctrl-print-pages.log`, `ctrl-print-paper.log` (the blind 969 / 0, exit 1), `ctrl-print-paper-railwidth2.log`,
+`ctrl-print-paper-colwidth.log`, `ctrl-print-contrast.log`, `ctrl-min-font.log`, `ctrl-video-failure.log`,
+`ctrl-video-hang.log`, `ctrl-runner-nine.log`, `ledger.txt`.
