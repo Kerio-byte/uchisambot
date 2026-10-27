@@ -7547,7 +7547,9 @@ normal header (≤ 70 px) still clears the inline style, so the plain page stays
 1 554 checks / 0 twice in a row. The anchor control still reddens 6 of 9 with the script stripped — chromium 761
 −51.8, chromium 320 (id#faq) −12.2, chromium 320 (uk#pricing) −11.8, firefox 320 (both anchors) −11.8, firefox 761
 −52.2 — so the clause did not become the thing it was proving. `landing-deeplink.py` 684 / 0 (ordinary landing at
-84 px untouched). After publishing: sweep 2 896 / 0, first screen 252 / 0, Core Web Vitals 69 / 0.
+84 px untouched). After publishing: sweep 2 896 / 0, first screen 252 / 0, Core Web Vitals 69 / 0, and the live site
+itself exercised rather than only compared — nine languages rendered 121 / 0, no third-party request 108 / 0, all
+eleven addresses in the sitemap 200 (`evidence/block-20261027h/live.log`).
 
 **What this does not prove.** One run is a snapshot of one machine at one hour: the timing-sensitive batteries
 (CWV, video hang) may read differently on a loaded host, and the journal records that hour's paces, not a promise.
