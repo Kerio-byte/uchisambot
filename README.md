@@ -7515,3 +7515,46 @@ the rewritten batteries are kept in the skills repository's own history. Evidenc
 `clean-external-links.log`, `control-external-links.log`, `clean-stop-rule.log`, `control-stop-rule.log`,
 `control-stop-type1.log`, `control-stop-judge.log`, `control-print.log`, `runner-controls.log`, and
 `old-print-clause-blind.py` with its log.
+
+## The whole set ran at once for the first time, and it caught a race no single battery could see (27.10.2026)
+
+**Why a full run was the missing step.** The previous blocks proved, one battery at a time, that every one of the 48
+could be made red (`landing-controls-ledger.py`: 48 of 48, 0 pointers). What no block had done is run the 48
+together on the real tree. The last full journal was 26.10 and covered 31 batteries — three of its reds belonged to
+the runner (a local server that was never started) — and the set has grown by seventeen batteries since. "Everything
+is green" rested on the memory of separate runs, not on a run.
+
+**What the run found.** 48 batteries, 5 616 s (1 h 34 min), 19 095 named checks in the journal, one red:
+`landing-min-font.py`, `[firefox минимум 16 якорь 761 ru#pricing]` — «цель=84 низ шапки=78.6 зазор=5.4 высота
+шапки=78.6», against a clause that demands 10 px of air.
+
+**It was a race, not a number.** The same battery passed on 26.10 and passed a 55-check rerun immediately after the
+failure; the next identical rerun failed with the same 5.4. A four-run probe with samples at load and 100, 300 and
+700 ms after it showed the mechanism: at minimum font 16 on 761 px the Russian header wraps to two lines (78.6 px)
+only after Manrope swaps in. The page's anchor script re-scrolled once, at the end of the body, when the header was
+still single-line (63.6 px) — it placed the target at 63.6 + 20 ≈ 84, and the font swap then pushed the header's
+bottom to 78.6, leaving 5.4 px, the exact number the script was written on 25.10 to remove. `fonts.ready` afterwards
+corrected `scroll-padding-top` to 99 px but never moved the page: the probe caught `pad=99px` and `target=84` in the
+same sample — the padding was right and the page was in the wrong place.
+
+**The fix makes header height an event instead of an instant.** `ResizeObserver` on `.top`, plus `load` and
+`fonts.ready`, re-settle the landing while the visitor has not touched the page; only explicit gestures count
+(wheel, touchstart, keydown, mousedown), because the script's own `scrollTo` raises `scroll` and would otherwise
+cancel the correction on its first tick. A `lastH` guard keeps the same height from being re-scrolled twice, and a
+normal header (≤ 70 px) still clears the inline style, so the plain page stays CSS-only at 84 px.
+
+**Numbers.** Probe: 16 samples of 16 now read 20.4 px (before: 2 of 4 runs at 5.4). `landing-min-font.py` full
+1 554 checks / 0 twice in a row. The anchor control still reddens 6 of 9 with the script stripped — chromium 761
+−51.8, chromium 320 (id#faq) −12.2, chromium 320 (uk#pricing) −11.8, firefox 320 (both anchors) −11.8, firefox 761
+−52.2 — so the clause did not become the thing it was proving. `landing-deeplink.py` 684 / 0 (ordinary landing at
+84 px untouched). After publishing: sweep 2 896 / 0, first screen 252 / 0, Core Web Vitals 69 / 0.
+
+**What this does not prove.** One run is a snapshot of one machine at one hour: the timing-sensitive batteries
+(CWV, video hang) may read differently on a loaded host, and the journal records that hour's paces, not a promise.
+The anchor clause is measured at three width/language pairs; the other six languages rest on the script being
+byte-identical across the nine pages, which the build check enforces. A visitor who scrolls before the font arrives
+keeps the browser's landing by design — the correction never steals a scroll someone started.
+
+**Files.** `index-src.html` (the anchor block), nine rebuilt pages and `sitemap.xml`; `evidence/block-20261027h/`
+(`full-run.log`, `full-run.json`, `min-font-fix.log`, `post-fix.log`). Nothing in the battery changed: the page was
+wrong.

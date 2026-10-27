@@ -1273,24 +1273,38 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
 })();
 </script>
 <script>
-/* Отступ якоря по НАСТОЯЩЕЙ высоте шапки (25.10.2026). В CSS scroll-padding-top:84px —
-   это 63 px шапки плюс 21 px воздуха. Но с этого дня шапка переносится (настройка браузера
-   «минимальный размер шрифта» растит только текст), и при двух строках верх цели уходил ПОД
-   неё: замер при минимуме 24 px — 12 px под шапкой на 320 px и 52 px на 761 px. Правим
-   отступ только когда шапка выше обычной: при 63 px inline-стиль снимается и работает CSS,
-   поэтому обычная страница не тронута — посадку на 84 px держит landing-deeplink.py.
-   Высоту пересчитываем на resize и после загрузки шрифтов: шрифт меняет высоту подписи. */
+/* Отступ якоря по НАСТОЯЩЕЙ высоте шапки (25.10.2026; пересчёт после подмены шрифта — 27.10.2026).
+   В CSS scroll-padding-top:84px — это 63 px шапки плюс 21 px воздуха. Но с 25.10 шапка
+   переносится (настройка браузера «минимальный размер шрифта» растит только текст), и при
+   двух строках верх цели уходил ПОД неё: замер при минимуме 24 px — 12 px под шапкой на
+   320 px и 52 px на 761 px. Правим отступ только когда шапка выше обычной: при 63 px
+   inline-стиль снимается и работает CSS, поэтому обычная страница не тронута — посадку на
+   84 px держит landing-deeplink.py.
+   Гонка, найденная 27.10.2026 полным прогоном: однократный пересчёт в конце тела срабатывал,
+   когда шрифт ещё не подменился (шапка 63.6 px), и после подмены (78.6 px) зазор падал до
+   5.4 px — ровно исторический дефект 25.10. Прогон 761/ru при минимуме 16 давал то 20.4 px,
+   то 5.4 px: посадка зависела от того, успел ли шрифт. Теперь высота шапки — событие, а не
+   мгновение: ResizeObserver, load и fonts.ready пересчитывают посадку, пока человек не
+   тронул страницу. Жест считается только явный (колесо, касание, клавиша, кнопка мыши):
+   собственный scrollTo жест не поднимает, иначе правка отменяла бы сама себя. */
 (function(){
   var hd = document.querySelector('.top');
   if (!hd) return;
-  var fit = function(settle){
+  var touched = false, lastH = -1;
+  var mark = function(){ touched = true; };
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function(ev){
+    window.addEventListener(ev, mark, {passive: true, once: true});
+  });
+  var fit = function(){
     var h = hd.offsetHeight;
-    if (h <= 70) { document.documentElement.style.scrollPaddingTop = ''; return; }
+    if (h <= 70) { document.documentElement.style.scrollPaddingTop = ''; lastH = h; return; }
     document.documentElement.style.scrollPaddingTop = (h + 20) + 'px';
     // Якорь браузер поставил ДО этого скрипта по CSS-ным 84 px (Firefox — сразу при разборе
-    // цели), и при высокой шапке цель оказывалась под ней: замер 25.10 — зазор 5.4 px в
-    // Firefox при 78.6 px шапки. Ставим заново один раз, пока человек не трогал страницу.
-    if (!settle || location.hash.length < 2) return;
+    // цели), и при высокой шапке цель оказывалась под ней. Ставим заново на КАЖДОЙ новой
+    // высоте шапки, пока человек не трогал страницу; на той же высоте второй раз не дёргаем.
+    if (touched || h === lastH) return;
+    lastH = h;
+    if (location.hash.length < 2) return;
     var t = null;
     try { t = document.querySelector(location.hash); } catch(e){ return; }
     if (!t) return;
@@ -1299,10 +1313,12 @@ html.js .rv.rv-in{opacity:1;transition:opacity .5s ease}
     window.scrollTo(0, t.getBoundingClientRect().top + window.pageYOffset - h - 20);
     de.style.scrollBehavior = prev;
   };
-  fit(true);
-  window.addEventListener('resize', function(){ fit(false); });
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('load', fit);
+  if (window.ResizeObserver) { try { new ResizeObserver(fit).observe(hd); } catch(e){} }
   if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
-    document.fonts.ready.then(function(){ fit(false); });
+    document.fonts.ready.then(fit);
   }
 })();
 </script>
