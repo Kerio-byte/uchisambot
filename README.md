@@ -7813,3 +7813,61 @@ shown to reach each page, and reaching is not judging.
 on four pages, `--mutate [defects|orphan]`), `landing-regress-all.py` (two new pairs, 53 → 55
 entries). Evidence in `evidence/block-20261027l/`: four clean logs (by hand and through the
 runner), four control logs, one runner pair log.
+
+## Every control was counted; nobody had watched what it writes (27.10.2026)
+
+**The queue was one sentence again.** *The other 53 entries need the same measurement, not a grep.*
+Two blocks had repaired two controls that wrote to one page while their battery read nine or eleven,
+and both times the proof was a hand reading of `mutate()`. `shutil.copy2` looks identical in a control
+that breaks one page and one that breaks nine, so the code cannot answer the question. This block
+answers it by watching the file system while each control runs.
+
+**The instrument.** `landing-open-trace.py` runs a battery under an audit hook on `open`, wraps
+`Path.write_text`, `write_bytes` and `shutil.copyfile/copy2/copy` to hash the content *after* each
+write, and patches `SimpleHTTPRequestHandler.translate_path` to record every page the battery's own
+server hands to the browser. The hash is compared with the live page: a copy of the tree writes the
+same bytes and stays "copy", a defect writes other bytes and is named. `landing-control-breadth.py`
+runs the entries from `CONTROLS` one at a time — same entry, same arguments, same environment — and
+prints, for each: pages changed, pages read, pages walked but not touched.
+
+**The instrument lied four times, and each lie was caught by a known answer.** A `Path` passed to
+`io.open` arrives in the audit event as an object, and an `isinstance(path, str)` guard silently
+dropped *every* mutation write while reads (which are strings) passed: `en-leftovers --mutate` reported
+0 changed pages of 9. `shutil.rmtree` in Python 3.12 deletes through `dir_fd`, so the removal event
+carries a bare file name with no directory — the "hash it just before deletion" plan measured nothing.
+The early hasher fires *before* the write, so a half-copied page looked changed: `en-leftovers --mutate
+stub` reported **6** changed pages where the defect was **1**. And a child `python3 tools/build.py`
+writes pages in another process with no wrappers: `site-move-test --control` rebuilds twelve pages and
+read as **0**. All four are fixed; the last one is why the same battery now shows 12 of 12.
+
+**What the fifty-five entries say.** 12 controls change at least every page their battery reads;
+10 change fewer (clause proof on a subset); 23 change no page at all because the defect lives in the
+browser (`page.evaluate`, `add_style_tag`) or in the source (`site.json`, the bot's price); 9 show
+neither a served page nor a written file (bot batteries, `file://` walks, a self-test of a classifier);
+1 — `landing-pixel-density --control` — was not measured: its copy is deleted before the hash lands.
+
+**One hole was real.** `landing-page-lang.py` reads nine language pages and broke a single label on
+`ru`. A page dropped from its list of nine stayed green, and the control could not say so. It now breaks
+one label on **each** of the nine pages and requires a finding per language: `ПОЙМАЛ … по 1–1 находки
+на язык`, 0.1 s. The instrument confirms 9 changed of 9 walked, where an hour earlier it measured 1.
+
+**The other nine subsets are named.** `axe` breaks one image on one page, `glyphs` one heading,
+`fonts` and `video-weight` only `ru`, `cwv` only `ru` of nine, `external-links` two of eleven,
+`links-audit` four of twelve — every one of them is documented in the runner as "the control proves the
+clause, the clean run proves the coverage". The measurement turns that sentence into a number and, in
+one case, corrects it: `landing-return --control` is described as an en+ru subset, and the instrument
+shows it writes **nine** pages — the subset is what it *measures*, not what it breaks.
+
+**What this does not prove.** That a page missing from a battery's list is caught: the walk is only
+visible where the battery served or read a page, so a page it never asks for is invisible unless a
+control writes it. That "0 pages changed" means harmless: 23 entries break the page in the browser,
+which no file hash can see. That the nine unobserved entries are green for the right reason. And that
+the numbers are the same on a rerun: 8 of the 55 took longer than two minutes, the two video controls
+alone took 443 s, and the whole measurement of the set took 58.6 minutes of wall clock.
+
+**Files.** `landing-open-trace.py` (new: audit hook, write wrappers, child `sitecustomize`,
+`translate_path` patch), `landing-control-breadth.py` (new: entry runner, page mapping by path, copy
+vs defect by hash, verdicts), `landing-page-lang.py` (mutation on all nine pages, one finding per
+language), `landing-regress-all.py` (both tools in `SKIP`, the page-lang comment rewritten; still
+48 batteries / 55 entries). Evidence in `evidence/block-20261027m/`: `breadth.json`, `breadth.txt`,
+`breadth-final.txt` (grouped), `breadth.log`; the three re-measured entries in `block-20261027m2/`.
