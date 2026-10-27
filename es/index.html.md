@@ -53,8 +53,8 @@ Así se ve un desglose — el bot funciona en 9 idiomas.
 Pago con Telegram Stars, directamente en el chat.
 
 - **Los primeros 2 desgloses — Gratis**: Prueba el bot — no hace falta pagar.
-- **Paquete de 5 desgloses — 120 Stars**: Unos 24 Stars por desglose — ahorras un 20%.
-- **Paquete de 15 desgloses — 300 Stars**: Unos 20 Stars por desglose — ahorras un 33%.
+- **Paquete de 5 desgloses — 120 Stars**: 24 Stars por desglose — ahorras un 20%.
+- **Paquete de 15 desgloses — 300 Stars**: 20 Stars por desglose — ahorras un 33%.
 
 Un desglose suelto — 30 Stars.
 

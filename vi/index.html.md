@@ -53,8 +53,8 @@ Phần phân tích trông như thế này — bot hoạt động bằng 9 ngôn 
 Thanh toán bằng Telegram Stars, ngay trong cuộc trò chuyện.
 
 - **2 lần phân tích đầu tiên — Miễn phí**: Dùng thử bot — không cần thanh toán.
-- **Gói 5 lần phân tích — 120 Stars**: Khoảng 24 Stars mỗi lần phân tích — tiết kiệm 20%.
-- **Gói 15 lần phân tích — 300 Stars**: Khoảng 20 Stars mỗi lần phân tích — tiết kiệm 33%.
+- **Gói 5 lần phân tích — 120 Stars**: 24 Stars mỗi lần phân tích — tiết kiệm 20%.
+- **Gói 15 lần phân tích — 300 Stars**: 20 Stars mỗi lần phân tích — tiết kiệm 33%.
 
 Một lần phân tích — 30 Stars.
 
