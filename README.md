@@ -7188,3 +7188,77 @@ pair.
 `clean-video-refactor.log`, `ctl-video.log`, `runner-controls.log`, `control-fonts.json`,
 `control-video.json`, `fonts.json`, `video-weight.json`.
 
+## Three batteries read the real tree and had never been red, and the fourth element of the first was a blank rectangle (27.10.2026)
+
+**The ledger said eight.** After the font/video pair the count stood at **36 of 48** with a wired control,
+one pointer, **11 without anything**. Three of those eleven were not marginal: `landing-font-identity.py`
+(7 clauses — the 70 KB Devanagari subset draws what the 121 KB source draws), `landing-site-move-test.py`
+(17 clauses — a change of address propagates to 24 files) and `landing-header-engines.py` (973 clauses — the
+header row stays inside the margins in Chromium, Firefox and WebKit, under WCAG 1.4.12 spacing too). All three
+read the tree as built; none could be made red by anything. The ledger now reads **39 of 48**, one pointer,
+**8 without anything**.
+
+**The font battery was blind on one of its four elements.** `--control` needed a defect, and the honest defect
+was the October one replayed: a subset built from the same source with the same 57 codepoints and `hinting=False`
+— the file that was 28 B lighter on 26.10 and drew the page differently. The first run was red on three
+elements and **green on the FAQ answer**. Not a lucky pass: the screenshots were 696×178 at **one colour**,
+794 B, both runs. The answer lives inside `details.rv`, and `.rv` is revealed by an IntersectionObserver — at
+capture time the block was still `opacity:0`, so Playwright photographed an empty rectangle twice, and
+«0 расхождений» meant «nothing was drawn». It had been that way since the battery was written. The fix is a
+style tag before capture (`.rv{opacity:1!important;…}` — 306 colours after it, the same element now reads
+**15 851 px** against the no-hinting twin) plus a floor: a frame with fewer than **20 colours** fails the clause
+instead of passing it, and run 2 is checked for paint too. The battery went 7 clauses → **12**.
+
+**The control is the October file, byte for byte.** `landing-font-identity-twin.py` repeats `tools/subset-deva.py`
+with one line changed (`opts.hinting = True` → `False`) and runs under an interpreter that has fontTools+brotli —
+the system python does not, so the battery probes `LANDING_FONTTOOLS_PY` and then the known venvs and refuses to
+pretend. Output: **69 932 B** against the shipped **69 960 B**, i.e. the 26.10 defect reproduced to the byte.
+
+| element | clean pair | no-hinting twin |
+|---|---|---|
+| h1 (800, 350×72) | 0 px | **12 631 px** — the number from 26.10 |
+| lead (400, 350×115) | 0 px | **35 288 px** — the number from 26.10 |
+| FAQ answer with matras (348×88) | 0 px | **15 851 px** — a clause that could not have been red before |
+| footer (14 px, 350×21) | 0 px | **1 015 px** |
+| total | 0 px on 4 of 4 | **64 785 px on 4 of 4** |
+
+**The move test needed a defect the build could not repair.** The obvious control — write the old address into a
+hand-written file — is worthless here: `tools/build.py` normalises every address listed in `previous`, and its own
+`audit_site_address()` aborts the build on any foreign host, so the injected address either disappears or the copy
+never gets built. The defect has to survive a *green* build, and the clause that matters does: the form's return
+address carries the page's language (`?sent=1#contact-card`). One line removed from `build.py` in the copy and the
+return falls back to the root — 8 of the 9 languages named (en passes, because `url_for('en')` is the root), with
+canonical, sitemap, robots and the `{{BASE}}` clauses left green. Clean copy **17 / 17**, defective copy **17 with 1
+red**, and the red one lists `ru, es, pt, hi, id, tr, vi, uk`.
+
+**The header battery's own docstring was wrong.** It said: «часть 2 без правила 25.10 красная». Rolled the two
+declarations back in a copy (`gap:2px 22px`, `.lang-dd{margin-left:0}`) and measured: **109 checks, 0 red** in
+Chromium — because `flex-wrap:wrap` on `.top-in` remains, and the switcher simply drops to a second line, which is
+legal for every clause the battery has. So the battery proves «the row does not leave the margins» and says nothing
+about the 25.10 aesthetics (the switcher's position at the right edge is not measured at all). The docstring now says
+so. The control reproduces the failure the rule exists to prevent: at ≤760 px the row stops wrapping
+(`flex-wrap:nowrap`), and the battery reddens **33 of 325** — every red at 320 or 340 px, **0 at 420+**, named by
+«документ не шире экрана» (3) and «переключатель внутри правого поля» (30). Clean copy **325 / 0** in the same run.
+
+**Numbers.** Full runs on the real tree: font-identity **12 / 0** in 5 s, site-move **17 / 0** in 12 s (copy + build),
+header-engines **973 / 0** in 420 s. Controls: font-identity **4 of 4 red**, site-move **8 languages named**,
+header-engines **33 red of 325**, all three with the clean copy or clean pair green in the same invocation.
+`landing-regress-all.py`: `CONTROLS` **23 → 26**, and the twin helper was added to `SKIP` — it matches
+`landing-*.py` and would otherwise have entered the suite as a «battery without a control» and inflated the ledger.
+
+**What this does not prove.** That the other eight are worth their green — they are the same kind of claim. One
+defect per battery does not exercise every clause: the font control is Chromium at DSF 2 on one page, and it proves
+the hinting half only — a subset built from the wrong codepoint set (a dropped matra) has no control yet; the move
+test moves to `example.org` and proves nothing about a real host, redirects at the edge, DNS or TLS; the header
+control breaks one rule at one breakpoint, while 761 px, the menu clause and the right-edge position have no defect
+of their own. And the twin keeps following `tools/font-src` and the registry, so it proves the battery sees a
+drawing change, not that the shipped subset is the right subset.
+
+**Files.** `landing-font-identity.py` (`--control`, forced reveal, colour floor, `measure()` split, `server_close()`),
+`landing-font-identity-twin.py` (new; `--probe`, `--source/--registry/--out`), `landing-site-move-test.py`
+(`--control`, `--dst`, `run()`/`control()`, `drop_redirect_language()`), `landing-header-engines.py` (`--control`,
+`run(root, engines, langs)`, `BROKEN_HEADER_CSS`, corrected docstring), `landing-regress-all.py` (`CONTROLS`
+23 → 26, `SKIP` + twin). Evidence in `evidence/block-20261027c/`: `clean-font-identity.log`,
+`ctl-font-identity.log`, `clean-site-move.log`, `ctl-site-move.log`, `clean-header-engines.log`,
+`ctl-header-engines.log`, `ledger.log`.
+
