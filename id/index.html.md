@@ -53,8 +53,8 @@ Beginilah tampilan pembahasan — bot bekerja dalam 9 bahasa.
 Pembayaran lewat Telegram Stars, langsung di chat.
 
 - **2 pembahasan pertama — Gratis**: Coba botnya — tanpa perlu bayar.
-- **Paket 5 pembahasan — 120 Stars**: Sekitar 24 Stars per pembahasan — hemat 20%.
-- **Paket 15 pembahasan — 300 Stars**: Sekitar 20 Stars per pembahasan — hemat 33%.
+- **Paket 5 pembahasan — 120 Stars**: 24 Stars per pembahasan — hemat 20%.
+- **Paket 15 pembahasan — 300 Stars**: 20 Stars per pembahasan — hemat 33%.
 
 Satu pembahasan — 30 Stars.
 

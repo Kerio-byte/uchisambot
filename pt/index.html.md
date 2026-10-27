@@ -53,8 +53,8 @@ E qualquer outra dúvida escolar em que você ficar preso.
 Pagamento via Telegram Stars, direto no chat.
 
 - **Primeiras 2 explicações — Grátis**: Experimente o bot — não precisa pagar.
-- **Pacote com 5 explicações — 120 Stars**: Cerca de 24 Stars por explicação — economize 20%.
-- **Pacote com 15 explicações — 300 Stars**: Cerca de 20 Stars por explicação — economize 33%.
+- **Pacote com 5 explicações — 120 Stars**: 24 Stars por explicação — economize 20%.
+- **Pacote com 15 explicações — 300 Stars**: 20 Stars por explicação — economize 33%.
 
 Explicação avulsa — 30 Stars.
 
