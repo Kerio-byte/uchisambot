@@ -8010,9 +8010,9 @@ today had one battery in it, from 15:17. So the set ran whole: **49 batteries, 1
 red, 94.8 minutes** (`--per 900`), journal `evidence/block-20261027p/full.json`. The slowest were
 `landing-langlist-fit.py` (490 s, 3 591 checks), `landing-tablet-page.py` (429 s, 1 804),
 `landing-cross-engine.py` (427 s), `landing-header-engines.py` (424 s, 973) and
-`landing-print-contrast.py` (71 s, 3 543). The network batteries outside the set were run in the
-same hour: `landing-external-links.py` — every badge leads to a page that names the product,
-`landing-cwv.py` — 69 checks.
+`landing-print-contrast.py` (71 s, 3 543). Nine live batteries — the published site, the mailbox,
+the bot and the end-to-end letter — were not run: they are out of the set by design and each has
+its own conditions.
 
 **The count was not the whole answer.** A journal is a list of rows, and `--report` counted rows:
 `батарей: 46 | красных: 0`, exit 0. Measured, not supposed: the same code taken from
