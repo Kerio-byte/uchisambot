@@ -8191,8 +8191,9 @@ decision, never the reason for it.
 
 **Files.** Twelve batteries (`browser-smoke`, `cross-engine`, `external-links`, `first-screen`,
 `nu-validate`, `page-lang`, `poster-frames`, `price-parity`, `print`, `render-check`, `stop-rule`,
-`visual-pass`), `landing-regress-all.py` (regex, `mute_rows`, comma `--only`, ledger call, one
-`SKIP` line), `landing-count-ledger.py` (new), `landing-counts.json` (new, 48 records),
+`visual-pass`), `landing-regress-all.py` (regex, `mute_rows`, comma `--only`, ledger call, journal
+written even when the budget ends before the first battery, one `SKIP` line),
+`landing-count-ledger.py` (new), `landing-counts.json` (new, 48 records),
 `landing-sweep.py` (+1 check), `tools/control-breadth.json` (16 entries re-measured). Evidence:
 `evidence/block-20261027r/` — merged journal, ledger before and after, the caught 18 → 1, the four
 controls, sweep log; `evidence/breadth-r-20261027/`.
