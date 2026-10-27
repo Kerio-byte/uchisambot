@@ -7262,3 +7262,55 @@ drawing change, not that the shipped subset is the right subset.
 `ctl-font-identity.log`, `clean-site-move.log`, `ctl-site-move.log`, `clean-header-engines.log`,
 `ctl-header-engines.log`, `ledger.log`.
 
+## One of the two numbers could go blind without a sound, and the other could only be wrong about the file it was written for (27.10.2026)
+
+**The ledger said eight.** After the three-battery block the count stood at **39 of 48** with a wired control,
+one pointer, **8 without anything**. Two of those eight carried the numbers a visitor feels in the first second:
+`landing-cwv.py` (69 clauses — LCP ≤ 2500 ms, CLS ≤ 0.1, FAQ tap ≤ 200 ms, nine languages plus three desktops) and
+`landing-pixel-density.py` (558 clauses — how many pixels a file gives against what the screen asks, 9 languages ×
+5 profiles). Both read the tree as built. Neither had ever been red. The ledger now reads **41 of 48**
+(28 `--control`, 12 `--mutate`, 1 `--selftest`), one pointer, **6 without anything**.
+
+**One of the two clauses could go blind silently, and it was the quiet one.** The LCP clause cannot: it requires
+`lcp['t'] is not None`, so a dead `PerformanceObserver` reddens the clause instead of passing it. CLS is a sum —
+no entries means `0`, and `CLS <= 0.1` is then green forever. So the defect had to be a **shift**, not a slow
+paint: a 260 px band inserted above `<main>` **1.2 s after `DOMContentLoaded`** — a banner with no space reserved
+for it, which is the shape this defect takes in the wild. Numbers: `ru` mobile **CLS 0.2851**, `ru` desktop
+**0.1679**; exactly the two CLS clauses red, LCP green in the same run (the band appears at 1.2 s, the 2.5 s
+threshold is not touched), **67 of 69** green on the defective copy and **69 / 69** on the clean copy in the same
+invocation.
+
+**The pixel battery had a control of its probe and none of its thresholds.** Rule 5 («on 1x every file must be
+≥ 1.0») keeps the measurement alive, but rules 1–4 — the four numbers the battery exists for — had never been red
+on a real defect: «everything is in order» and «the threshold compares nothing» printed the same word. The honest
+defect was the historical file: `img/demo-poster-ru.webp` cut from 720×1560 to **540×1170** (**46.1 KB → 33.8 KB**),
+the poster the battery was written about. Red: rule 1 (poster ≠ frame) on **5 profiles**, rule 2 (poster softer
+than the loop) on **5**, rule 4 (the 3x ceiling) on the **two 3x** profiles — **12 of 124** (the control runs
+`en`+`ru`: it proves the clause, not the size of the set), no stray failure, clean copy **124 / 124**. The weight
+clause stayed green *because* the defect made the file smaller: a poster shrunk to fit the budget is exactly the
+defect the budget cannot see.
+
+**Numbers.** Full runs on the real tree, before and after the rewrite: cwv **69 / 0 — 77 s → 76 s**,
+pixel-density **558 / 0 — 174 s → 174 s**, so the split changed no clause. What the cwv run says today: LCP
+**992–1032 ms** on the phone (element `video.`, i.e. the hero poster), CLS **0–0.0016**, FAQ tap 6.8–17 ms, and
+the whole 69-clause set in 76 s. `landing-regress-all.py`: `CONTROLS` **26 → 28**, and `--controls --only
+cwv,pixel` gives **2 of 28, both caught** (153 s, 80 s) — the partial run prints its scope, so it cannot be read as
+the whole list.
+
+**What this does not prove.** One defect per battery. The band proves the shift observer, not the other eight
+languages (they were green in both runs) and not the shape of a shift caused by a late font swap or a lazy image;
+the LCP clause still has no defect of its own — a poster arriving after 2.5 s is `landing-video-weight.py`'s
+territory, and its control breaks a different line. In pixel-density the defect is a poster only: the chat frames
+(rule 3), the SVG exclusion and the 1x probe rule have no defect of their own. And the pair says nothing about the
+six still in the ledger: `landing-env-prefs.py` (45 clauses — reduced motion, saveData, forced colours),
+`landing-return.py` (216 — the visitor who came back with «back»), `landing-viewports-extra.py` (tablet, landscape,
+1920, Slow 3G), `landing-browser-smoke.py` (18 runs over nine languages), `landing-external-links.py` (network, not
+in the sweep) and `landing-stop-rule.py` (13 live tasks against the bot's prompt).
+
+**Files.** `landing-cwv.py` (`--root/--port/--evidence/--control`, `probe()`/`measure()` split, `server_close()`,
+`DEFECT_HTML`, control JSON), `landing-pixel-density.py` (the same split, `measure(root, port, langs)`,
+`inject_defect()` — PIL downscale behind a broken hard link), `landing-regress-all.py` (`CONTROLS` 26 → 28; the
+stale «13 of 48 without control» in the header replaced by a pointer at the ledger), `SKILL.md` (ledger count,
+`--root` instead of `LANDING_ROOT`, the new control). Evidence in `evidence/block-20261027d/`: `clean-cwv.log`,
+`clean-cwv-refactor.log`, `ctl-cwv.log`, `clean-pixel.log`, `clean-pixel-refactor.log`, `ctl-pixel.log`,
+`runner-controls.log`, `control-cwv.json`, `control-pixel.json`.
