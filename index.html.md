@@ -53,8 +53,8 @@ This is what a breakdown looks like — the bot works in 9 languages.
 Payment via Telegram Stars, right in the chat.
 
 - **First 2 breakdowns — Free**: Try the bot — no payment needed.
-- **Pack of 5 breakdowns — 120 Stars**: About 24 Stars per breakdown — save 20%.
-- **Pack of 15 breakdowns — 300 Stars**: About 20 Stars per breakdown — save 33%.
+- **Pack of 5 breakdowns — 120 Stars**: 24 Stars per breakdown — save 20%.
+- **Pack of 15 breakdowns — 300 Stars**: 20 Stars per breakdown — save 33%.
 
 Single breakdown — 30 Stars.
 

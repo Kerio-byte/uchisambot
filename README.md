@@ -7937,3 +7937,67 @@ timing batteries (cwv, video-weight, external-links, 75–181 s each) will vary.
 `landing-sweep.py` (five checks), `tools/control-breadth.json` (new: 55 records). Evidence in
 `evidence/breadth-remeasure-20261027/` (`breadth.json` journal, `chunk2.log`, `chunk3.log`) and
 `evidence/block-20261027n/` (sweep green, sweep red on the incomplete registry, final green).
+
+## The price was exact, and all nine languages called it «about» (27.10.2026)
+
+`120 Stars / 5 = 24`. `300 / 15 = 20`. Both numbers are exact, and the page hedged both:
+«Около 24 звёзд за разбор — выгода 20%», «About 24 Stars per breakdown — save 20%» — and the same
+hedge, translated, in the other seven dictionaries (`Unos`, `Cerca de`, `Sekitar`, `yaklaşık`,
+`Khoảng`, `Приблизно`, `लगभग`). It was the only place on the page where a fact the site *knows* was
+written as an estimate, and it sat on the money screen, where a hedge reads as «we are not sure what
+you get» next to a savings percentage the page states exactly.
+
+**Found by reading, not by a gate.** The sweep has always compared the *numbers* in those two lines
+with `tools/prices.json` (`_num_in` for the per-unit price and the discount), so 24 and 20 were
+correct — the doubt was in the words around them, which no check looked at.
+
+**Fixed in nine dictionaries and in the template's own English fallback** (`index-src.html` carries
+the English text inline; the build refuses a dictionary that disagrees with it). Then rebuilt, re-stamped
+the launch kit and published.
+
+**Both halves were shown red before green.** The first sweep after the dictionary edit was red for two
+reasons, and both were real: `шаблон: встроенный английский == en.json | p2d: шаблон 'About 24 …' !=
+словарь '24 …'`, and `kit: входы не новее манифеста | перерисовать: src/locales/en.json` — the kit's
+four cards are drawn from `en.json`, and their manifest records its sha, so a text edit that is not
+followed by a redraw is exactly the «текст поправили, картинку нет» the gate exists to catch. After the
+template fallback, the rebuild and `tools/submission-kit.py` (4 cards redrawn, 10 inputs matched) the
+same sweep is **2901 / 0**. The publication check was red until `tools/publish-branch.sh` ran, and green
+after it. The live pages now carry «24 Stars per breakdown», «24 звезды за разбор», «24 Stars por
+desglose» … and a search for every one of the nine hedge words returns nothing on any of the nine live
+addresses (`curl | grep -c`).
+
+**What it does not prove.** That 24 and 20 are the right prices — these come from `tools/prices.json`,
+and equality with the bot's own numbers is `landing-price-parity.py`'s job, which this change did not
+touch. That the discount sentences read well in languages nobody on this machine speaks: they were
+edited by removing one word, not re-translated, and a native reader is still the only judge of 「20%
+बचत」.
+
+**Files.** `src/locales/*.json` (9 files, two lines each), `index-src.html` (inline English fallback),
+the 9 rebuilt pages and their `.md` twins, `submission-kit/manifest.json` (re-stamp), `tools/lastmod.json`.
+Evidence in `evidence/block-20261027o/` (`sweep.log` red, `sweep2.log` green, `price-m-ru.png`,
+`price-m-tr.png`, `price-m-vi.png`, `price-d-*.png`).
+
+## Two questions about text size that ended in no change (27.10.2026)
+
+The reader's own text settings were never asked about: every battery measured the page at 16 px with
+a browser that renders what the CSS says. Two probes, both read-only, both thrown away after answering.
+
+**Does the page follow the reader's base font size?** Set `html{font-size}` to 150 % and 200 % at
+390 px and measured every page: no horizontal scroll, nothing clipped, all nine languages clean. Then
+measured whether that answer means anything — `h1` stayed at 30 px and body text at 16 px at 150 % and
+at 200 %, because the type scale is in px, not rem. So the clean result is honest but narrow: the page
+is *immune* to the root font size rather than *responsive* to it. Rewriting the scale in rem would move
+every geometry the batteries assert (44 px targets, the 59 px sticky bar, the hero order, section
+margins) for a reader who is already served by page zoom, which `landing-a11y-extra.py` measures at
+640×512 — the real 200 % case. Left alone, recorded here.
+
+**Does the page survive a forced minimum font size?** That is the setting that grows text *without*
+reflow, the one a px-locked page cannot absorb. Firefox was launched with `font.minimum-size.x-western
+= 20`: the smallest text on the page was still 13 px, i.e. the preference never reached the page in this
+harness. A probe that cannot move the thing it measures is blind, and adding it to the sweep would have
+added a green that can never be red — the exact failure the last twenty blocks were spent removing. Not
+added. The detector itself was proven on planted defects (a 90 px nowrap word, a 40 px three-line box, a
+600 px block), so the blindness is the harness's, not the checker's.
+
+**Files.** Nothing in the tree changed. The three probes and their controls were scratch files kept
+outside the repository (pruned after 24 h); the numbers above are from `evidence/block-20261027o/`.

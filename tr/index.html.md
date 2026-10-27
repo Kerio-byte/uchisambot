@@ -53,8 +53,8 @@ Ve takıldığın diğer tüm okul soruları.
 Ödeme, doğrudan sohbet içinde Telegram Stars ile yapılır.
 
 - **İlk 2 çözüm — Ücretsiz**: Botu dene — ödeme gerekmez.
-- **5 çözümlük paket — 120 Stars**: Çözüm başına yaklaşık 24 Stars — %20 tasarruf.
-- **15 çözümlük paket — 300 Stars**: Çözüm başına yaklaşık 20 Stars — %33 tasarruf.
+- **5 çözümlük paket — 120 Stars**: Çözüm başına 24 Stars — %20 tasarruf.
+- **15 çözümlük paket — 300 Stars**: Çözüm başına 20 Stars — %33 tasarruf.
 
 Tek çözüm — 30 Stars.
 
