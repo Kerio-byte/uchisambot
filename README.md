@@ -7376,3 +7376,69 @@ the header pointer left as it was), `SKILL.md` (ledger count and the two lessons
 `evidence/block-20261027e/`: `clean-env-prefs.log`, `ctl-env-prefs.log`, `clean-env-prefs-refactor.log`,
 `clean-return.log`, `clean-return-refactor.log`, `ctl-return.log`, `return-control-clean.json`,
 `return-control-defect.json`.
+
+## Two batteries that watched nine languages had never once been red (27.10.2026)
+
+**The ledger said four.** After the settings-and-return block it read **43 of 48** with a wired control, one
+pointer, **4 without anything**: `landing-viewports-extra.py`, `landing-browser-smoke.py`,
+`landing-external-links.py` (network, not in the sweep) and `landing-stop-rule.py` (13 live tasks against the
+bot's prompt). Two of the four are the batteries a visitor actually meets: the viewport battery measures the
+tablet, the landscape, the wide screen, Slow 3G and the 404 page (94 clauses), and the smoke battery loads all
+nine languages at desktop and at phone width (18 runs). Both had been green since they were written, and neither
+could be made red.
+
+**Neither could be broken, and that was the defect.** `landing-viewports-extra.py` held the tree in a literal
+path and a fixed port; `landing-browser-smoke.py` did the same and, worse, ran at import — the server started,
+the browser opened and the verdict printed while the file was being read, so there was no place to hand it a
+different tree. Ten days of green with no way to show a single clause failing. Both now take the tree and the
+port as arguments (`--root`, `LANDING_ROOT`, `LANDING_PORT`), and both are split into `run()` and `control()`:
+the sweep calls `run()`, the control calls the same page-checking code and reads its findings directly, so the
+control cannot drift away from the clauses it is proving.
+
+**The wide screen loses its ceiling.** Section C is the one that says text does not stretch across a 1920
+monitor, and its carrying line is `.wrap{max-width:1060px;margin:0 auto;padding:0 20px}`. The control copies the
+tree on hard links and cuts `max-width:1060px;` out of the rule in `index.html` and `ru/index.html` (the two
+pages that section measures), then loads both copies at 1920x1080. Numbers: clean copy measures **1060 px** and
+**0 red** in en and ru; the defective copy measures **1920 px** and reddens **exactly two clauses** — `C en: wrap
+<=1060 and centered` and `C ru: wrap <=1060 and centered`. The sticky band's `display:none`, the hero's two
+columns and the overflow clause stay green, which is the point: a battery that reddens everything proves a break,
+not a clause. The honest limitation is in the docstring: `centered` stays true (left 0 is the centre of a 1920
+box), so this defect proves the width half of the clause and not the centring half.
+
+**The smoke's own historical defect had stopped reproducing, and the first control came back green.** The battery
+was written on 23.10, when `.video-toggle{display:grid}` beat the browser's `[hidden]{display:none}` and the pause
+button hung on screen, dead, before its script ever ran. The obvious control — put that exact rule back into the
+copy — printed **clean copy 0 problems, defective copy 0 problems**. The reason is four days of progress: the
+button's `hidden` attribute is now cleared by the script itself once the clip plays (`btn.hidden = false`), and
+measured at 1280 and at 390 the attribute is simply gone by the time the battery looks (`hiddenAttr: False,
+display: flex`). The class of defect is alive; its carrier is not. The defect moved to a node that stays hidden
+until a human acts — the form's success message: `<style>.contact-ok{display:block}</style>` in the ru page.
+Numbers: clean copy **2 runs, 0 problems**; defective copy **2 runs, 2 problems**, and each is a single clause,
+`hidden attribute overridden by CSS: p#contact-ok.contact-ok`, on `ru/desktop` and `ru/mobile`; the other
+fourteen clauses of each run stay green.
+
+**Numbers.** Full runs on the real tree, before and after the rewrite: viewports-extra **94 / 0 in 96–98 s**
+(mobile-tablet block, landscape, wide, Slow 3G, 404), smoke **18 runs / 0 problems** with both badge-degradation
+scenarios (7 badges, all files cut: 7 hidden, 0 visible broken; one file cut: 1 hidden, 6 visible and loaded).
+`landing-regress-all.py`: `CONTROLS` **30 → 32**, and `--controls --only viewports-extra,browser-smoke` gives
+**2 of 32, both caught** (6.6 s and 39.8 s), with the scope printed so a partial run cannot be read as the whole
+list. The ledger now reads **45 of 48** (12 `--mutate`, 32 `--control`, 1 `--selftest`), one pointer, **2 without
+anything**.
+
+**What this does not prove.** One defect per battery, on a subset of pages: the wide control breaks en and ru
+only, so the other seven languages rest on the clean run alone, and the smoke control breaks one page in one
+width pair, so its remaining fourteen clauses — title, one h1, `main#main`, the skip link, the FAQ count, the
+form fields, the redirect field, the tagged link, the video poster, the alt texts, the text markers, the JS
+errors, the image loads — are proven green, not proven able to see a fault. The two remaining batteries still
+have no control: `landing-external-links.py` reads the live network outside this sweep, and
+`landing-stop-rule.py` drives 13 live tasks against the bot's prompt. And the rewrite itself is the risk this
+entry cannot rule out: the numbers above rest on the two clean runs recorded here, not on a clause-by-clause
+comparison of old output and new.
+
+**Files.** `landing-viewports-extra.py` (`--root`/`LANDING_PORT`, `run()`/`control()` split, `WRAP_JS`,
+`HERO_COLS_JS`, `wide_measurements()`, `wide_reds()`, `wide_verdict()`, `strip_wrap_max()`, `control_tree()`),
+`landing-browser-smoke.py` (rewritten from a top-level script into `sweep()`/`run()`/`control()` with `--root`,
+`PAGE_JS` and `issues_for()` shared by both paths, `faq_count()`, `scroll_through()`, `badge_degradation()`),
+`landing-regress-all.py` (`CONTROLS` 30 → 32), `SKILL.md` (ledger count, the controls count, and the lesson that a
+historical defect can stop reproducing). Evidence in `evidence/block-20261027f/`: `clean-viewports.log`,
+`clean-smoke.log`, `runner-controls.log`, `vpx-control.log`, `smoke-control.log`.
