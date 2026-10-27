@@ -8001,3 +8001,57 @@ added. The detector itself was proven on planted defects (a 90 px nowrap word, a
 
 **Files.** Nothing in the tree changed. The three probes and their controls were scratch files kept
 outside the repository (pruned after 24 h); the numbers above are from `evidence/block-20261027o/`.
+
+## The set ran whole for the first time in a day, and a run that lost three batteries read as complete (27.10.2026)
+
+The behaviour set had not been run end to end since 26.10: each block ran four to six batteries,
+and «everything is green» rested on the memory of the previous blocks. The last journal before
+today had one battery in it, from 15:17. So the set ran whole: **49 batteries, 19 104 checks, 0
+red, 94.8 minutes** (`--per 900`), journal `evidence/block-20261027p/full.json`. The slowest were
+`landing-langlist-fit.py` (490 s, 3 591 checks), `landing-tablet-page.py` (429 s, 1 804),
+`landing-cross-engine.py` (427 s), `landing-header-engines.py` (424 s, 973) and
+`landing-print-contrast.py` (71 s, 3 543). The network batteries outside the set were run in the
+same hour: `landing-external-links.py` — every badge leads to a page that names the product,
+`landing-cwv.py` — 69 checks.
+
+**The count was not the whole answer.** A journal is a list of rows, and `--report` counted rows:
+`батарей: 46 | красных: 0`, exit 0. Measured, not supposed: the same code taken from
+`git show HEAD` and pointed at a copy of today's journal with its first three batteries deleted
+printed exactly that line and exited 0 — an incomplete run was indistinguishable from a complete
+one, and the missing three were visible only to someone who remembered there should be 49.
+
+**Fix.** `report()` now computes the set the run itself uses (every `landing-*.py` minus `SKIP`)
+and reds on missing, extra and duplicate rows, naming them. The same doctored journal after the
+fix: exit 1, `НЕ ХВАТАЕТ (3): landing-a11y-extra.py, landing-axe-audit.py, landing-backtab.py`.
+The end-of-run summary counts the same way (`батарей: N из 49`), so a run cut short by its budget
+is red instead of quietly short.
+
+**New gate `landing-set-parity.py`.** Three static questions about the SKIP literal, read from
+the source and not from the set object (a set hides what a reader needs): every skipped name
+exists as a file; every skipped name carries a reason of at least four characters and not a dash;
+no name appears twice, because `{'a','a'}` collapses silently. `--journal` does not reimplement
+the completeness rule — it asks the runner and prints the runner's verdict, one rule in one place.
+Five negative controls — ghost, noreason, dupes, drop, extra — all five caught in 0.37 s; with no
+journal at hand the drop and extra controls synthesize one from the set, so a control never waits
+for evidence to exist.
+
+**The control that broke the instrument.** The first run of the five controls copied the scripts
+directory by symlink — the runner among them — and wrote the mutated copy through that link, so
+three junk entries landed in the real `SKIP`. Caught by running the thing (the next control died
+with `SameFileError`), the runner was restored from its source list, and the gate no longer links
+the runner: it writes a real copy and unlinks any link first. A control that can damage the tool
+is worse than no control, so the failure is written down rather than quietly fixed.
+
+**In the sweep.** Two checks (2 901 → 2 903): the composition, and «the gate catches five planted
+defects». Proven red by planting `landing-ghost-battery.py` into the real `SKIP`:
+`FAIL [global] набор: у каждой отложенной батареи есть файл, причина и нет повторов |
+skip-files: нет файла: landing-ghost-battery.py`; removed, green again.
+
+**What this does not prove.** That the batteries are the right ones: the gate proves every file
+is accounted for, not that the account is worth having. And that a battery's green means what its
+name says — that is the controls list, a separate question with its own counter.
+
+**Files.** `landing-regress-all.py` (set comparison in `report()` and in the run summary, one new
+`SKIP` line for the gate), `landing-set-parity.py` (new; 17 skipped names now), `landing-sweep.py`
+(+2 checks). Evidence: `evidence/block-20261027p/` — the journal, the «before» code taken from
+git, both reports, the gate and its five controls.
