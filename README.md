@@ -8113,3 +8113,87 @@ instrument-identity check, two new controls), `landing-controls-ledger.py` (`--s
 answered directory in `--json`), `landing-sweep.py` (+1 check, 5 → 7 catches). Evidence:
 `evidence/block-20261027q/` — the gate red on the live defect, the counter before the fix, the
 sweep after it.
+
+## Thirteen rows were green with no number, and the sum was a sum of the talkative (27.10.2026)
+
+The previous block ended with a measured sentence: **13 of 49 rows** in the full-run journal were
+green with `checks: null`, so the headline figure "19 104 checks" was a sum over the rows that
+happened to speak one format. This block closed that sentence, and it turned out to describe two
+different defects.
+
+**The first one was in the reader, not in the writers.** `landing-first-screen.py` printed
+`CHECKS: 252, PROBLEMS: 0` and `landing-print.py` printed `CHECKS: 147, PROBLEMS: …` — both had a
+real count. The runner's regex demanded `FAILED:` immediately after `CHECKS:`, so it discarded
+numbers it was looking straight at. A second vocabulary is not a synonym; it is a blind spot with
+good manners. Of the thirteen mute rows, one was not a battery at all but the control-breadth gate
+parked in the set (fixed in block q); the other twelve were batteries, and every one of them was
+measuring something.
+
+**The contract is now one line, and it is the same line everywhere** — `CHECKS: n, FAILED: m`.
+The twelve counts, each in that battery's own unit:
+
+```
+browser-smoke 18 | cross-engine 60 | external-links 69 | first-screen 252 | nu-validate 12
+page-lang 71 | poster-frames 9 | price-parity 9 | print 147 | render-check 37
+stop-rule 13 | visual-pass 306
+```
+
+The regex accepts `FAILED` or `PROBLEMS` (old wording still parses, so a battery nobody has
+touched yet is not silently mute), and the part that matters: **a green row without a count is
+red**. `--report` prints `без счёта: N`, names the batteries and exits 1 — thirteen rows that used
+to read as "0 problems" now read as what they were, an empty cell. The runner also takes `--only`
+as a comma list: one block edited twelve batteries, and twelve runner invocations is twelve manual
+commands.
+
+**The second defect is the one a format cannot fix.** A count can fall silently: a battery whose
+walk lost eight of nine languages prints an honest `CHECKS: 1, FAILED: 0` — small, tidy, green. The
+only way to tell that from "forty, all clean" is a memory of the last time. That memory is now a
+file. `landing-counts.json` holds 48 records of `{checks, taken}`, each on the battery's own scale,
+and `landing-count-ledger.py` judges four separate clauses: no count · not in the ledger · ledger
+entry with no row in the journal (a renamed battery leaves a ghost) · count fell. Controls `--mutate
+all`: 4 of 4, each red on its own clause and named. `--stamp` raises the record; lowering it needs
+`--lower`, because quiet narrowing is exactly what the file exists to forbid. The runner calls the
+gate at the end of **every full run** — one rule, one place, as with the composition gate —
+while `--only` runs are exempt: a partial journal must not be judged against a complete ledger.
+
+**After, measured.** A journal stitched from the 36 rows of the 22:06 full run and the 12 rows
+re-run after the fix (`evidence/block-20261027r/merged.json`; `merge.py` states the stitch, so
+nobody later mistakes it for one run): **48 of 48 rows, 20 107 checks, 0 red, 0 uncounted** — up
+from 19 104 over 36 rows, because twelve batteries had been measuring all along and their numbers
+were being dropped on the floor. Set composition, all five questions: `набор: 48 батарей |
+отложено: 19 | вопросов: 0`, with `журнал: батарей: 48 из 48 | проверок: 20 107 | красных: 0 | без
+счёта: 0`. Count ledger on the same journal: green. Control breadth: 55 of 55, same instrument
+`f37e2dacff66`. Sweep: **2 905 checks, 0 red** — one new check, that the ledger's four clauses can
+be broken at all.
+
+**A silent 18 → 1 was caught, not argued.** On a copy with one count lowered to 1:
+`FAIL счёт упал: landing-browser-smoke.py — было 18, стало 1`, gate exit 1; and `--stamp` on the
+same copy refuses — `ОТКАЗ … уменьшение только с --lower`.
+
+**The cost nobody budgets for.** Editing a battery invalidates its control-breadth record, because
+the record pins the battery's sha. The sweep reddened at once on 14 records of the ten batteries
+touched here: `breadth: замер снят тем же кодом батарей | landing-browser-smoke.py --control
+(d4576830314d ≠ 483ccbd61dab)`. Fixing it meant re-measuring exactly those 16 entries — ten minutes,
+not the 52 of the whole list — and merging them into `tools/control-breadth.json` without touching
+the other 39 (`merge-breadth.py`, which warns if a verdict or a walk changed; none did, verdicts
+identical, times within 0.3 s). Rule for the skill: change a battery's code, re-measure its breadth
+entry.
+
+**What this does not prove.** That the number means "how much of the site was checked". It does
+not: the units differ per battery — a run, a page, a poster, a task — and 20 107 is a sum of unlike
+things. The ledger guards each battery against its own past, not a common denominator, and
+comparing two batteries by count is meaningless.
+
+**Left open, named.** (1) A common denominator (pages × languages × clauses) would make the sum
+mean something; today it only guards against shrinkage. (2) The gate trusts `--stamp`: a battery
+that shrinks and is stamped with `--lower` on purpose is a decision, and the file records the
+decision, never the reason for it.
+
+**Files.** Twelve batteries (`browser-smoke`, `cross-engine`, `external-links`, `first-screen`,
+`nu-validate`, `page-lang`, `poster-frames`, `price-parity`, `print`, `render-check`, `stop-rule`,
+`visual-pass`), `landing-regress-all.py` (regex, `mute_rows`, comma `--only`, ledger call, one
+`SKIP` line), `landing-count-ledger.py` (new), `landing-counts.json` (new, 48 records),
+`landing-sweep.py` (+1 check), `tools/control-breadth.json` (16 entries re-measured). Evidence:
+`evidence/block-20261027r/` — merged journal, ledger before and after, the caught 18 → 1, the four
+controls, sweep log; `evidence/breadth-r-20261027/`.
+
