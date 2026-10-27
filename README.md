@@ -7560,3 +7560,60 @@ keeps the browser's landing by design — the correction never steals a scroll s
 **Files.** `index-src.html` (the anchor block), nine rebuilt pages and `sitemap.xml`; `evidence/block-20261027h/`
 (`full-run.log`, `full-run.json`, `min-font-fix.log`, `post-fix.log`). Nothing in the battery changed: the page was
 wrong.
+
+## Six controls existed in the code, and no run had ever pulled them (27.10.2026)
+
+**The ledger's number was true and its consequence was not.** `landing-controls-ledger.py` says 48 of 48 batteries
+have a control wired, and that is exactly what it measures: a flag a reader can find in the source. The runner's
+`CONTROLS` list is a different fact — 37 entries covering 33 distinct batteries — so fifteen batteries had a control
+that no runner path had ever executed. This is the same shape the earlier blocks kept finding, one level up: a green
+line that proves nothing about the battery, because nobody ever asked it to go red.
+
+**Six of the fifteen were the layout and clipping family, and they came in two languages.** Four already spoke the
+suite's convention (0 = caught): `a11y-extra --control` reddened 49 of 49 width measurements (74.8 s through the
+runner), `backtab --control` 48 of 120 reverse-Tab clauses (232 s), `text-clip --control` 108 (52 s, three injected
+defects), `tablet-menu --control` 27 of 162 (52 s, the list cut to 60 px). All four were clean in the 27.10 full run
+(267 / 120 / 148 / 162 checks, 0 failed), so the red belongs to the defect and not to the tree.
+
+**Two spoke the opposite code.** `deeplink --control` rewrote 108 pages and 324 lines and reddened 90 of 684 checks,
+then exited 1 — the same code it uses for a broken page. `langlist-fit --mutate` reddened 112 of 3 591 and also
+exited 1. The runner's rule is `code == 0` for "caught", so both would have printed `НЕ ПОЙМАЛ` at the exact moment
+they caught their defect. That is not cosmetic: a control that shouts "broken" when it succeeds teaches the reader
+to ignore it, and the next person to switch the flag on would have "fixed" the mutation. Both batteries now return 0
+when the control catches and 1 when the page stays green — the branch every other battery in the set already had.
+
+**A count, because a mutation that does not land is a green control.** `langlist-fit` applied three CSS replacements
+in the served HTML and never said whether they landed; the handler now counts pages and lines and prints them (10
+pages / 30 lines on the subset). `deeplink` already printed its rewrites (108 pages / 324 lines).
+
+**Both slow ones enter the runner on a subset.** `deeplink` gained `LANDING_LANGS` (default still nine) and is listed
+as `en,ru,hi`: 425 s on nine languages became 168 s through the runner, and the control still names the defect (252
+checks, 30 red). `langlist-fit` is listed with `--lang ru --quick`: 491 s became 23 s (114 checks, 12 red). Clean runs
+on the same subsets: 252 / 0 and 114 / 0 — the red is the mutation, not the subset.
+
+**The ledger now counts both facts.** Its second column asks whether the runner pulls the control at all, so the
+blind spot that produced this block cannot come back silently: 48 batteries, 48 wired, 39 pulled by the runner in 43
+entries, **9 outside the list** — and those nine are named in the output, not implied.
+
+**Numbers.** `CONTROLS` 37 → 43 entries (33 → 39 distinct batteries).
+`--controls --only a11y-extra,backtab,text-clip,tablet-menu,deeplink,langlist-fit` → **6 of 43 caught in 603 s**
+(75 / 233 / 52 / 52 / 168 / 23 s), every one by its own defect; the six clean runs behind them are the 27.10 full-run
+journal plus the two subset runs above.
+
+**What this does not prove.** That the other nine batteries' controls catch: the print family (`print`, `print-main`,
+`print-pages`, `print-paper`, `print-contrast`), `min-font`, `nu-validate`, `video-failure` and `video-hang` all still
+end with `1 if problems else 0`, so registering them today would print `НЕ ПОЙМАЛ` at the moment they succeed — the
+same defect fixed here twice, in nine more places. That all 43 controls pass in one command: the full control pass has
+never been run end to end; every entry rests on a subset run, and a subset is not the whole. That one mutation per
+battery exercises every clause: `a11y-extra`'s control touches the width clause only, and its 49 red of 49 are width
+measurements out of 267 checks. And that a caught control makes the clause worth having: it makes the clause able to
+fail, which is a smaller claim and the one the word "control" actually means.
+
+**Files.** `landing-regress-all.py` (`CONTROLS` 37 → 43, with the counts and the two exit-code repairs in comments),
+`landing-deeplink.py` (`import os`, `LANDING_LANGS`, control exit branch), `landing-langlist-fit.py` (`pages`/`hits`
+counters in the serve handler, the `КОНТРОЛЬ:` line, control exit branch), `landing-controls-ledger.py` (runner
+column: `runner_module()`, `runner_entries()`, `--json` fields). Evidence in `evidence/block-20261027i/`:
+`ctrl-textclip.log`, `ctrl-tabletmenu.log`, `ctrl-deeplink.log` (the full nine-language control before the fix: 684
+checks, 90 red, exit 1), `ctrl-deeplink-subset.log`, `clean-deeplink-subset.log`, `ctrl-langlist.log` (3 591 checks,
+112 red, exit 1), `ctrl-langlist-subset.log`, `clean-langlist-subset.log`, `ledger.txt`, `ledger.json`,
+`runner-controls-six.log`.
