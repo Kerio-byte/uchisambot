@@ -7121,3 +7121,70 @@ verdict, the `CHECKS` line), `landing-glyph-fallback.py` (`WINDOWS` 420+1280, `F
 `probe-node-diff.py` (+ `node-diff.json`), `probe-glyph-widths.py`, `glyph-2windows.json`,
 `clean-axe.log`, `clean-glyph.log`, `ctl-axe.log`, `ctl-glyph.log`, `summarise*.py`.
 
+## Two green batteries guarded the loudest numbers on the site, and the markup was not the mechanism (27.10.2026)
+
+**The ledger named eleven.** `landing-controls-ledger.py` read **34 of 48** batteries with a wired
+control, one pointer, **13 without anything**. Two of those thirteen carry numbers a visitor acts on:
+`landing-fonts.py` prints 41 green checks that a page downloads ≤160 KB of fonts, that opening the
+language menu adds ≤12 KB, and that the 404 carries its own Devanagari; `landing-video-weight.py`
+prints 129 green checks that the hero video is not fetched on 3G and that the first screen fits in
+600 KB. A green run from either was worth exactly what its ability to go red was worth, and neither
+had ever been asked to.
+
+**The font control is the October defect, replayed.** `--control` builds a hard-linked copy, runs the
+battery on that copy **untouched** first — 41 of 41, because a control must also show that the copy
+itself does not break the pages — and then writes one `<style>` before `</head>` of `ru/index.html`:
+an `@font-face` for a *foreign full subset* (`/fonts/noto-sans-devanagari-hi.woff2`, 68 KB) plus
+`details.lang-dd[open] .lang-list>*{font-family:"CtlForeign"!important}`. That is the 22.10 defect in
+its own words — a foreign script's full subset arriving when the switcher opens, not before. The
+battery names it twice and leaves the neighbour alone:
+
+| | closed | on open | red |
+|---|---|---|---|
+| `ru/` as built | 38.4 КБ | +6.1 КБ | 0 of 41 |
+| `ru/` with the defect | 38.4 КБ | **+68.3 КБ** | 2 of 41: «открытие ≤ 12 КБ», «чужие полные сабсеты» |
+| `en` beside it, same copy | 24.3 КБ | +9.0 КБ | 0 |
+
+**The video control was not where the defect lives.** The obvious break is the markup —
+`preload="none"` → `auto` on `#hero-video`. It is the wrong one: the inline script at the bottom of
+the page reads the channel and *rewrites* that attribute in its first frame, so `preload` in markup is
+a fallback for the no-script case only. A markup-only defect is then a race between the parser and the
+script — sometimes red, sometimes not — and a control whose redness depends on a race proves nothing.
+The load-bearing line is `var auto = !reduce && !save && !slow;`: drop `&& !slow` and 3G becomes 4G for
+that language. That one line, changed in `ru/index.html` of the copy, turns six clauses red — three
+expected («ролик не запрошен», «readyState 0», «preload none») and three honest consequences of the
+same defect (the video is playing, so «на паузе» is red; the button says «пауза»; the click then
+pauses it). **123 of 129**, every red one on `ru`, `en` untouched.
+
+**The runner could not run one control.** `--controls` ignored `--only`, so proving a new control meant
+23 controls in a row — half an hour — and in practice the proof was skipped rather than paid for. The
+controls loop now takes `--only` and prints its own scope (`контролей: 2 из 23`), so a partial run
+cannot be read as a full one. Through it: **2 of 23, both caught, 265 s** (`fonts` 84.5 s,
+`video-weight` 180.6 s).
+
+**Both files were rewritten, not patched.** Three changes to each (arguments, split into
+`measure()`, `--control`) plus the port pitfall — `shutdown()` alone leaves the listening socket, and
+the second run in the same process dies on «Address already in use», so both close with
+`server_close()` too. The rewrite is faithful, and the clean numbers say so: `fonts` 41/41 in 42.4 s
+before and after, `video-weight` 129/129 in 90.6 s and 90.2 s. The ledger now reads **36 of 48**
+batteries with a wired control (12 `--mutate`, 23 `--control`, 1 `--selftest`), one pointer,
+**11 without anything**.
+
+**What this does not prove.** That the eleven remaining batteries are worth their green. That one
+defect per battery exercises every clause: the font control hits the two «open» clauses and says
+nothing about the 160 KB cap on a closed page or about the 404 clause (each needs its own defect — a
+page-wide large `@font-face`, a 404 page that declares no Devanagari face); the video control hits the
+3G branch of one language, while `reduce`, `saveData`, 4G and «no Network Information API» are four
+more branches with no control of their own. That 3G is really 3G: `navigator.connection` is still
+substituted by an init script, and desktop Chrome reports `4g` under real throttling — the rule is
+blind there, and that stands. Chromium only: WebKit and Firefox font loading is not measured by this
+pair.
+
+**Files.** `landing-fonts.py` (`--root`/`LANDING_ROOT`, `--port`, `--evidence`, `--control`, the
+`measure()` split, `server_close()`), `landing-video-weight.py` (same, plus the JS-line defect
+`DEFECT_FROM`/`DEFECT_TO` that refuses to run if the line is gone), `landing-regress-all.py`
+(`CONTROLS` 21 → 23, `--only` for the controls loop). Evidence in `evidence/block-20261027b/`:
+`clean-fonts.log`, `clean-fonts-refactor.log`, `ctl-fonts.log`, `clean-video.log`,
+`clean-video-refactor.log`, `ctl-video.log`, `runner-controls.log`, `control-fonts.json`,
+`control-video.json`, `fonts.json`, `video-weight.json`.
+
