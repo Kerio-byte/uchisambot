@@ -7871,3 +7871,69 @@ vs defect by hash, verdicts), `landing-page-lang.py` (mutation on all nine pages
 language), `landing-regress-all.py` (both tools in `SKIP`, the page-lang comment rewritten; still
 48 batteries / 55 entries). Evidence in `evidence/block-20261027m/`: `breadth.json`, `breadth.txt`,
 `breadth-final.txt` (grouped), `breadth.log`; the three re-measured entries in `block-20261027m2/`.
+
+## The one unmeasured control was writing a file no hook was watching (27.10.2026)
+
+The first breadth measurement left exactly one entry without a verdict: `landing-pixel-density.py
+--control`, filed as "its copy is deleted before the hash lands". That diagnosis was wrong, and the
+wrongness was in the instrument, not the control: the control breaks the hero poster
+(`img/demo-poster-ru.webp`) — it writes a **picture** — and `landing-open-trace.py` accepted audit
+events for `.html` only. Nothing was deleted before anything; the hook was simply not looking.
+
+**Four things had to change in one instrument, and each was a defect on its own.**
+
+The trace now accepts the site's own files as well as pages (webp/png/jpg/svg/mp4/webm/woff2/css/js/
+xml/txt/json) and asks the tree which pages reference the changed file — by file name in the markup,
+and for fonts through the `<style>` block, because a font is pulled by CSS and appears in no page.
+The hash now waits for the write to finish: the audit event fires **before** the bytes land, so an
+instant hash hashes emptiness — that is why `PIL.Image.save` had been "always changed" even on a copy.
+Both hashes are now summed instead of the last one winning: `os.remove` hashes the **old** file before
+deleting it (`p.unlink()` in the control), and the write hashes the new one; keeping only "final"
+dropped precisely the hash that *is* the defect. And paths that `shutil.rmtree` reports as bare names
+(Python 3.12 deletes through `dir_fd`) are dropped instead of being glued onto the tracer's cwd —
+`…/scripts/llms.txt` has nothing to do with the site.
+
+**Measured.** `landing-pixel-density --control` is a **subset**: 1 changed page (`ru`) of 2 read,
+through the file `img/demo-poster-ru.webp` — named, not "unmeasured". A second entry moved without
+being touched: `landing-poster-frames --control swap` used to be filed as "not observed" (it writes no
+page) and is now "changed (reading not visible)": two files, `img/demo-poster.webp` and
+`img/demo-poster-ru.webp`, which is exactly what swapping frames means.
+
+**The other 54 verdicts were re-measured, not carried over.** They had been taken by an instrument
+that could not see a single file, and a set of numbers gathered by two different instruments is not a
+set of numbers. The full pass is 55 entries, **52.1 minutes** of wall clock, all exit code 0, one
+instrument (`f37e2dacff66`): **12 full, 11 subsets, 23 break the page in the browser, 8 not observed,
+1 changed out of view, and 0 without a verdict** (was 1). The hour is survivable by construction now:
+the journal (`breadth.json`) is written after **every** entry and `--resume` takes what is already
+there — learned the hard way when a 420-second tool cap killed the second chunk at entry 4, and the
+eight finished entries came back instead of being re-run.
+
+**The number stopped living in a paragraph.** It is `tools/control-breadth.json`: 55 records, each
+carrying the verdict, the changed pages, the file it went through, the `sha` of the battery it
+measured and the `sha` of the instrument that measured it; the header carries the `sha` of the whole
+`CONTROLS` list. `landing-control-breadth-ledger.py` is the gate over it and answers five questions
+separately — every entry of the list measured; measured by the same battery code; measured by the same
+instrument; no record left without a verdict; the list unchanged since — because "the list matched"
+and "the code is the same" are different facts and must not share one green. The sweep carries the
+five as five checks (**2901 checks** now, was 2896).
+
+**Both answers were shown.** The gate is green on the real registry; on four fakes it is red and names
+the entry: a record deleted (`нет замера: landing-en-leftovers.py --mutate`), a foreign code hash
+(`deadbeef0000 ≠ 9c8d870e65c8`), an old instrument, a record whose verdict is "not measured". The
+sweep itself was made red by swapping in the incomplete registry — `FAIL [global] breadth: у каждой
+записи списка контроля есть замер | нет замера: …`, exit 1 — and went green again after the file was
+restored byte for byte (`cmp` silent).
+
+**What this does not prove.** That a page a battery never asks for is caught: the reading side is
+visible only where the battery served or read a page, and 23 entries break the page in the browser
+where no file hash can reach. That the 8 "not observed" entries are green for the right reason. That
+the asset→page map is complete: it matches by file name in the markup, so a file referenced only from
+JavaScript would be reported as an orphan instead of a page. And that a rerun gives the same numbers —
+timing batteries (cwv, video-weight, external-links, 75–181 s each) will vary.
+
+**Files.** `landing-open-trace.py` (asset suffixes, `_sha_stable`, summed hashes, cwd-noise guard),
+`landing-control-breadth.py` (asset→page mapping, per-entry instrument, journal after every entry,
+`--resume`, `--write-registry`), `landing-control-breadth-ledger.py` (new: the five-question gate),
+`landing-sweep.py` (five checks), `tools/control-breadth.json` (new: 55 records). Evidence in
+`evidence/breadth-remeasure-20261027/` (`breadth.json` journal, `chunk2.log`, `chunk3.log`) and
+`evidence/block-20261027n/` (sweep green, sweep red on the incomplete registry, final green).
