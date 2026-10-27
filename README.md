@@ -7314,3 +7314,65 @@ stale «13 of 48 without control» in the header replaced by a pointer at the le
 `--root` instead of `LANDING_ROOT`, the new control). Evidence in `evidence/block-20261027d/`: `clean-cwv.log`,
 `clean-cwv-refactor.log`, `ctl-cwv.log`, `clean-pixel.log`, `clean-pixel-refactor.log`, `ctl-pixel.log`,
 `runner-controls.log`, `control-cwv.json`, `control-pixel.json`.
+
+## The settings battery had no way to be broken, and the return battery had only a pointer at an old commit (27.10.2026)
+
+**The ledger said six.** After the first-second block it read **41 of 48** with a wired control, one pointer,
+**6 without anything**: `landing-env-prefs.py` (45 clauses — reduced motion, saveData, forced colours, dark,
+WebKit), `landing-return.py` (216 — the visitor who came back), `landing-viewports-extra.py`,
+`landing-browser-smoke.py`, `landing-external-links.py`, `landing-stop-rule.py`. Two of them carry states a
+visitor actually meets in the first minute, and neither had ever been red.
+
+**The settings battery could not be broken at all, and that was the defect.** `landing-env-prefs.py` held its
+tree in a literal path and a fixed port: the only way to break something was to break the live tree. Ten days of
+green, and not one of the 45 clauses could have been shown to fail. The tree and the port are arguments now
+(`--root`, `LANDING_ROOT`, `LANDING_PORT`); the evidence folder follows the tree.
+
+**Its control is the defect the battery was written about.** The forced-colours rule exists because until 17.10
+the buttons were plain text in the Windows high-contrast theme — `border 0px none`, no outline, nothing that
+says "press me". The fix is one line: `@media(forced-colors:active){.btn,.contact button.btn,.lang-dd
+summary{border:1px solid}}`. The control copies the tree on hard links, cuts that block out of the built
+`index.html` (brace-matched, so a nested block cannot be left half-removed), and measures both copies. Numbers:
+the defective page reddens **exactly three** border clauses — `CTA .btn=0px/none`, `submit=0px/none`,
+`переключатель языка=0px/none` — while the five-node clause «color differs from background» and the overflow
+clause stay green, and the clean copy is **0 of 0** red in the same invocation. That "three red, the neighbours
+green" is the point: a battery that reddens everything proves a break, not a clause.
+
+**The return battery had a pointer, and a pointer is not a control.** Its header offered
+`LANDING_ROOT=<previous commit>`, which was honest on 26.10 and useless afterwards: it shows the battery
+separates an old commit from a new one, not that the clause sees a defect. The carrying decision is one
+expression in the reveal script — `var back = (!!nav && nav.type === 'back_forward') || (!!performance.navigation
+&& performance.navigation.type === 2);`. The control kills **both** signals in all nine built pages
+(`'back_forward'` → a type that does not exist, `=== 2` → `=== 99`); killing one would be a control that stays
+green wherever the engine falls back to the other. Numbers, en+ru × Chromium-phone + WebKit-phone (48 checks):
+clean copy **48 / 0**; defective copy **48 checks, 4 red** — and all four are the clause the battery exists for
+(«B после возврата показано всё»): Chromium `en` `hidden=8 revealed=0/37`, Chromium `ru` `hidden=9 revealed=0/37`,
+WebKit `en` `hidden=1 revealed=5/37`, WebKit `ru` `hidden=6 revealed=5/37`. The other **44 stay green** — the
+normal entrance still animates (A), scrolling still reveals (A), `#faq` still arrives shown (C), the scroll
+position still comes back, the sticky band, the paused video, the typed address and the zero JS errors are
+untouched. A break that reddens the return and leaves the arrival alone is what makes the red mean "came back",
+not "the reveal script is gone".
+
+**Numbers.** Full runs on the real tree, before and after the rewrite: env-prefs **45 / 0 — 22 s → 22 s**,
+return **216 / 0 — 149 s → 149 s**, so the split changed no clause. `landing-regress-all.py`: `CONTROLS`
+**28 → 30**, and `--controls --only env-prefs,return` gives **2 of 30, both caught** (4.8 s and 68.4 s), with the
+scope printed so a partial run cannot be read as the whole list. The ledger now reads **43 of 48** (12
+`--mutate`, 30 `--control`, 1 `--selftest`), one pointer, **4 without anything**.
+
+**What this does not prove.** One defect per battery. In env-prefs the control breaks forced colours only: the
+reduce branch, saveData, the dark-scheme delta and the WebKit half have no defect of their own (the reduce
+branch's carrying line — `var auto = !reduce && !save && !slow;` — is controlled in `landing-video-weight.py`,
+a different battery), and only the English page is broken, so the language half of the clause set is proven by
+the clean run alone. In return the control runs en+ru, so it proves the clause and not the other seven
+languages, and it breaks the reveal script, not the other things a returning visitor needs — bfcache still
+cannot be measured in this environment. And the pair says nothing about the four still in the ledger:
+`landing-viewports-extra.py`, `landing-browser-smoke.py`, `landing-external-links.py` (network, not in the
+sweep) and `landing-stop-rule.py` (13 live tasks against the bot's prompt).
+
+**Files.** `landing-env-prefs.py` (`--root`/`--control`, `run()`/`control()` split, `fc_verdict()`,
+`strip_fc_rule()`, hard-link copy with unlink+write), `landing-return.py` (`--root`/`--langs`/`--control`,
+`run()`/`control()` split, `RESULTS`, `control_tree()`), `landing-regress-all.py` (`CONTROLS` 28 → 30,
+the header pointer left as it was), `SKILL.md` (ledger count and the two lessons). Evidence in
+`evidence/block-20261027e/`: `clean-env-prefs.log`, `ctl-env-prefs.log`, `clean-env-prefs-refactor.log`,
+`clean-return.log`, `clean-return-refactor.log`, `ctl-return.log`, `return-control-clean.json`,
+`return-control-defect.json`.
