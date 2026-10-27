@@ -8055,3 +8055,61 @@ name says — that is the controls list, a separate question with its own counte
 `SKIP` line for the gate), `landing-set-parity.py` (new; 17 skipped names now), `landing-sweep.py`
 (+2 checks). Evidence: `evidence/block-20261027p/` — the journal, the «before» code taken from
 git, both reports, the gate and its five controls.
+
+## The gate never said it was a gate, and the set counted it as a battery (27.10.2026)
+
+The composition gate from the previous block asks three questions about the `SKIP` literal: every
+skipped name exists as a file, every one carries a reason, no name appears twice. All three were
+green, and all three looked in one direction only — at what had been *left out*. Nothing asked
+whether what had been left *in* was really a battery. So when the control-breadth gate
+(`landing-control-breadth-ledger.py`) landed in the same directory as the batteries and was never
+declared in `SKIP`, the set simply grew: **49 batteries**, and the full run of 27.10 executed the
+gate as the 49th, at 0.1 s with no `CHECKS` line in the journal. The counter was honest about the
+symptom and unreadable about the cause: `батарей в наборе: 49 | с контролем: 48 | без контроля: 1`
+— which reads like one page battery with no proof at all, not like an instrument parked in the
+wrong list.
+
+**Fix, two parts.** The gate is declared where gates belong, in `SKIP` with its reason — the set is
+48 again, and 18 names are skipped for stated reasons. And the composition gate now asks the
+question that was missing: *is everything left in the set actually a battery?* It does not
+re-implement the rule; `landing-controls-ledger.py` already knows what counts as a control (a flag
+wired in code, not a word in a docstring), so the gate asks it with `--json` and judges only the
+numbers: every battery in the set has a control, and every control is pulled by a run. On the live
+tree before the fix, the answer came back red and named the file:
+`FAIL control | в наборе без контроля (гейт? объяви в SKIP с причиной): landing-control-breadth-ledger.py`.
+
+**The instrument answered about the wrong directory.** Both new controls — `undeclared` (the
+gate's `SKIP` line removed in a copy) and `unpulled` (a `CONTROLS` entry renamed, so a battery keeps
+its control in code but no run pulls it) — reported `НЕ ПОЙМАЛ` on the first run. The reason was not
+the mutation: in a copy of the tree the counter is a symlink, `__file__.resolve()` follows it into
+the **real** directory, and the gate received a truthful answer about the live tree instead of the
+copy. The counter now takes `--scripts DIR` and echoes the directory it answered about; the gate
+compares that echo with the directory it asked about and fails loudly on a mismatch
+(`счётчик ответил про другой каталог`). This is the same class as the earlier control that wrote
+through a symlink: a copy is not a copy until the instrument agrees it is.
+
+**After.** `--mutate all`: 7 of 7 caught, each exactly on the `control` clause —
+`undeclared → в наборе без контроля … landing-control-breadth-ledger.py`,
+`unpulled → контроль не тянет ни один прогон: landing-a11y-extra.py`. The gate on the live tree:
+`набор: 48 батарей | отложено: 18 | вопросов: 0`. The counter: `48 | с контролем: 48 | без
+контроля: 0`, every control pulled. The breadth gate still reads 55 records with the same
+instrument. The sweep: **2 903 → 2 904 checks, 0 red** — one check for the new question, and the
+mutation check now demands seven catches instead of five (timeout raised to 240 s for the seven).
+
+**What this does not prove.** That 48 is the right number. A live battery parked in `SKIP` with a
+plausible reason still passes: the gate proves every file is either run or explained, not that the
+explanation is right. And it does not prove a battery measures what its name says — that is the
+control list, a separate question with its own counter.
+
+**Left open, measured.** In the same journal, **13 of 49 rows** are green with `checks: null`:
+twelve batteries print their own summary line (`ИТОГО: 9 проверок…`, `ALL PASS`) instead of
+`CHECKS: n, FAILED: m`, so the journal's 19 104 checks is a sum over the rows that happen to speak
+one format. A battery whose count silently dropped from 40 to 1 is indistinguishable from one whose
+count was never printed — the next block's question, named here with the number rather than
+remembered.
+
+**Files.** `landing-regress-all.py` (one `SKIP` line), `landing-set-parity.py` (fourth question,
+instrument-identity check, two new controls), `landing-controls-ledger.py` (`--scripts`, the
+answered directory in `--json`), `landing-sweep.py` (+1 check, 5 → 7 catches). Evidence:
+`evidence/block-20261027q/` — the gate red on the live defect, the counter before the fix, the
+sweep after it.
