@@ -27,6 +27,13 @@ Live: https://kerio-byte.github.io/uchisambot/
   pass, rewritten 24.10.2026 on `HTMLParser`: entities decoded, `hidden`/`.sr-only`/`.hp` subtrees
   skipped, a line ends where a block ends); read-only, not part of the build:
   `python3 tools/page-text.py ru/index.html`. Its output is what five sweep checks read.
+- `tools/page-canary.json` — the per-page measurement (28.10.2026): for each of the twelve pages,
+  which classes of breakage a named catcher caught, with the catcher's sha and the date. Written by
+  `landing-page-canary.py` (`stars-bots-ops`), which breaks one page at a time and requires the
+  catcher to name **that** page; judged by `landing-page-canary-ledger.py` in five clauses (pages on
+  disk, catcher's code, a catch per page, no missed cell, something breakable on every page), and the
+  sweep fails if the ledger is older than the catcher's code or a page on disk is missing from it.
+  Added because the sum of checks could not answer whether any page was unread, and two pages were.
 - `tools/publish-tree.py` — the one list of what counts as the site (109 files), and `--check`
   for it: every listed file exists, no page links into the workshop, every internal reference
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
@@ -8197,4 +8204,95 @@ written even when the budget ends before the first battery, one `SKIP` line),
 `landing-sweep.py` (+1 check), `tools/control-breadth.json` (16 entries re-measured). Evidence:
 `evidence/block-20261027r/` — merged journal, ledger before and after, the caught 18 → 1, the four
 controls, sweep log; `evidence/breadth-r-20261027/`.
+
+## The page every lost visitor saw was the one no walk was reading (28.10.2026)
+
+Block r ended with two named questions. This block took the first — *a common denominator would make
+the sum mean something* — and it turned out not to be a bookkeeping question at all.
+
+**Why a denominator is the wrong shape.** 20 107 checks cannot be divided into anything, because the
+units differ by construction: a run, a page, a poster, a task. Dividing a sum of unlike things by a
+number does not make it a measurement; it makes it a quotient with a decimal point. What the site
+actually has is a **surface**: twelve pages. The useful question is not "how many checks per page"
+but "is there a page that no instrument reads" — and that question has an answer that can be
+observed instead of argued: break the page and see whether anybody shouts.
+
+**The defect was in the list, twice.** `landing-links-audit.py` began its walk by comparing `PAGES`
+with `pages_on_disk()` — a good idea from the previous day, except that `pages_on_disk()` was a
+*second copy* of the same list (`index.html`, `privacy.html`, `terms.html`) with the language
+directories appended. The copy and the original agreed with each other and both forgot
+`404.html`: the page every lost visitor is shown, carrying fourteen absolute links, one image and a
+`?start=src_landing_404` deeplink. It was on disk, it was served, it was published — and no link walk
+ever opened it.
+
+**The same shape, one layer down.** All twelve pages carry absolute self-links (`<base>/es/`,
+`<base>/privacy.html`) — 137 of them — because they must work from any depth. Every offline battery
+treats `https://…` as external and skips it; the one battery that does check absolute addresses
+(`landing-external-links.py`) walks the eleven content pages and not the 404. So a renamed or
+deleted page would have left up to fourteen dead links on the busiest page of the site, and the set
+would have stayed green: nothing was wrong with the checks, nothing was reading.
+
+**The measurement, before and after.** `landing-page-canary.py` breaks each page four ways
+(relative dead target, missing same-page anchor, duplicate id, absolute self-link to a missing
+directory) — but only with the classes the page's own markup can carry, and it requires the catcher
+to name **that** page and **that** class. Run against the battery as it stood at `HEAD` (the file was
+taken out of git, not retyped), it measured **33 of 48 cells caught, 12 misses, and `404.html` with
+zero catches**: every one of the twelve self-link cells was blind. After the fix: **45 caught of 45
+applicable, 0 misses, 3 not applicable** — `404.html` has no relative href, no anchor and no id, and
+that is now printed with a reason instead of counting as a pass.
+
+**What changed in the instrument.** (1) `pages_on_disk()` enumerates the disk — every `*.html` in the
+root except the build template, named once in `NOT_A_PAGE`, plus every two-letter directory with its
+own page — so a new page appears in the parity check by itself instead of needing a second list to be
+remembered. (2) `404.html` is in `PAGES`, and the t.me deeplink `src_landing_404` now shows up in the
+audit output as evidence that it is really read. (3) A sixth clause: absolute self-links must resolve
+to a file or a directory-with-page **in the tree**; the base comes from `sitemap.xml` (the common
+prefix of `<loc>`) and not from `tools/site.json`, because the control's copy has no `tools/`. No
+sitemap — the line prints `САМОССЫЛКИ: НЕ ИЗМЕРЕНО` and the count drops by twelve, so blindness
+cannot look like a pass. (4) The control gained a fifth defect on a fifth page: an absolute self-link
+of `404.html` pointed at a missing directory, which must produce exactly one finding naming
+`404.html`. All five caught, on five different pages.
+
+**The gate, five clauses.** `landing-page-canary-ledger.py` compares `tools/page-canary.json` with
+the disk and with the catcher's sha: *pages* (a new page must be canaried), *code* (an edited catcher
+stales the measurement), *caught* (every page has a catch), *missed* (no applicable cell and no page
+"not in the list"), *empty* (every page has something to break). Control `--mutate`: 5 of 5, each
+defect reddens exactly its own clause and no other.
+
+**After, measured.** Sweep **2 910 checks, 0 red** — five of them new, one per gate clause. Page
+canary: 12 pages, 48 cells, 45 caught, 0 missed, 3 not applicable, `catcher_sha f3005edc8def`.
+Set composition: `набор: 48 батарей | отложено: 21 | вопросов: 0` — the two new files are gates and
+declare themselves in `SKIP` with a reason, which the composition check now accepts without a
+question. `landing-links-audit.py` alone in the runner: `checks=25 failed=0` (was 12: twelve pages,
+each counted twice, plus the disk parity), and its record in `landing-counts.json` stamped 12 → 25.
+Its two breadth entries re-measured and merged (`--mutate` now changes **5** pages instead of 4,
+reads 12), 53 records untouched.
+
+**The journal is stitched, and it says so.** The whole set was started and not finished in this block
+(an hour and a half of machine time, stopped at two rows when the block's window ran out). The file
+the count gate reads is therefore 47 rows of the 27.10 full run plus today's `links-audit` row, joined
+by `merge-journal.py` — **48 of 48 rows, 20 120 checks (was 20 107), 0 red, 0 without a number**. The
+same rule as block r: a stitch is allowed when it is stated, never when it is discovered later.
+
+**The price nobody budgets for, again.** Editing one battery staled both of its breadth records and
+the sweep reddened on them by sha — the same cost block r discovered for twelve batteries. Re-measuring
+two entries took three minutes; the rule stands: change a battery's code, re-measure its breadth entry.
+
+**What this does not prove.** That the site is covered, only that it is *reached*: one catcher, four
+markup classes. A page could still be invisible to a visual or accessibility class while being caught
+on links, and the matrix says nothing about the quality of what is asserted once the page is read.
+The 404's membership in the visible-instrument set is proved for links only. And forty-seven of the
+journal's forty-eight rows are a day old: only the battery that changed was re-run here.
+
+**Left open, named.** (1) The same canary with chromium catchers — overflow, contrast, first screen —
+so each page has to be caught by a visual class too, not only by a markup one. (2) Block r's second
+question is untouched: the count ledger still trusts `--stamp` and records the decision without the
+reason for it.
+
+**Files.** `landing-links-audit.py` (PAGES + `404.html`, disk enumeration, `NOT_A_PAGE`, the
+self-link clause, `САМОССЫЛКИ` line, five-defect control), `landing-page-canary.py` (new),
+`landing-page-canary-ledger.py` (new, five clauses, `--mutate` 5/5), `landing-sweep.py` (+5 checks),
+`landing-regress-all.py` (two gates in `SKIP` with reasons), `landing-counts.json` (links-audit 25),
+`tools/page-canary.json` (new ledger), `tools/control-breadth.json` (2 entries re-measured).
+
 
