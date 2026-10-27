@@ -1,0 +1,444 @@
+{
+ "measured": "2026-10-28",
+ "what": "на каждой странице сайта порча своего класса обязана быть поймана с её именем",
+ "catcher": "landing-links-audit.py",
+ "catcher_sha": "f3005edc8def",
+ "pages": [
+  "index.html",
+  "404.html",
+  "privacy.html",
+  "terms.html",
+  "es/index.html",
+  "hi/index.html",
+  "id/index.html",
+  "pt/index.html",
+  "ru/index.html",
+  "tr/index.html",
+  "uk/index.html",
+  "vi/index.html"
+ ],
+ "classes": [
+  "relative-dead",
+  "missing-anchor",
+  "duplicate-id",
+  "self-link-dead"
+ ],
+ "entries": [
+  {
+   "page": "index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: img/logo.svg"
+  },
+  {
+   "page": "index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/"
+  },
+  {
+   "page": "404.html",
+   "class": "relative-dead",
+   "verdict": "не применимо",
+   "finding": "",
+   "why": "на странице нет объекта этого класса"
+  },
+  {
+   "page": "404.html",
+   "class": "missing-anchor",
+   "verdict": "не применимо",
+   "finding": "",
+   "why": "на странице нет объекта этого класса"
+  },
+  {
+   "page": "404.html",
+   "class": "duplicate-id",
+   "verdict": "не применимо",
+   "finding": "",
+   "why": "на странице нет объекта этого класса"
+  },
+  {
+   "page": "404.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "404.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/img/logo.svg"
+  },
+  {
+   "page": "privacy.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "privacy.html: dead target: zz-canary-missing.html",
+   "why": "сломано: img/logo.svg"
+  },
+  {
+   "page": "privacy.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "privacy.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "privacy.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "privacy.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "privacy.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "privacy.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/privacy.html"
+  },
+  {
+   "page": "terms.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "terms.html: dead target: zz-canary-missing.html",
+   "why": "сломано: img/logo.svg"
+  },
+  {
+   "page": "terms.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "terms.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "terms.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "terms.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "terms.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "terms.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/terms.html"
+  },
+  {
+   "page": "es/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "es/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "es/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "es/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "es/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "es/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "es/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "es/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/es/"
+  },
+  {
+   "page": "hi/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "hi/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "hi/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "hi/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "hi/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "hi/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "hi/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "hi/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/hi/"
+  },
+  {
+   "page": "id/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "id/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "id/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "id/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "id/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "id/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "id/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "id/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/id/"
+  },
+  {
+   "page": "pt/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "pt/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "pt/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "pt/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "pt/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "pt/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "pt/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "pt/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/pt/"
+  },
+  {
+   "page": "ru/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "ru/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "ru/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "ru/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "ru/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "ru/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "ru/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "ru/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/ru/"
+  },
+  {
+   "page": "tr/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "tr/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "tr/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "tr/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "tr/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "tr/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "tr/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "tr/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/tr/"
+  },
+  {
+   "page": "uk/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "uk/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "uk/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "uk/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "uk/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "uk/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "uk/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "uk/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/uk/"
+  },
+  {
+   "page": "vi/index.html",
+   "class": "relative-dead",
+   "verdict": "поймал",
+   "finding": "vi/index.html: dead target: zz-canary-missing.html",
+   "why": "сломано: ../img/logo.svg"
+  },
+  {
+   "page": "vi/index.html",
+   "class": "missing-anchor",
+   "verdict": "поймал",
+   "finding": "vi/index.html: missing same-page anchor: #zz-canary-missing",
+   "why": "сломано: #main"
+  },
+  {
+   "page": "vi/index.html",
+   "class": "duplicate-id",
+   "verdict": "поймал",
+   "finding": "vi/index.html: duplicate ids: ['main']",
+   "why": "сломано: id=main"
+  },
+  {
+   "page": "vi/index.html",
+   "class": "self-link-dead",
+   "verdict": "поймал",
+   "finding": "vi/index.html: self-link to a missing page: https://kerio-byte.github.io/uchisambot/zz-canary-missing/",
+   "why": "сломано: https://kerio-byte.github.io/uchisambot/vi/"
+  }
+ ],
+ "totals": {
+  "cells": 48,
+  "caught": 45,
+  "missed": 0,
+  "not_in_list": 0,
+  "not_applicable": 3,
+  "pages": 12,
+  "pages_without_a_catch": []
+ },
+ "caught_by_page": {
+  "index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "404.html": [
+   "self-link-dead"
+  ],
+  "privacy.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "terms.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "es/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "hi/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "id/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "pt/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "ru/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "tr/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "uk/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ],
+  "vi/index.html": [
+   "duplicate-id",
+   "missing-anchor",
+   "relative-dead",
+   "self-link-dead"
+  ]
+ }
+}
