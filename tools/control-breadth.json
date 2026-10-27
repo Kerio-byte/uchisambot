@@ -32,7 +32,7 @@
    ],
    "code": 0,
    "sec": 75.9,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "d0987b687527",
    "instrument": "f37e2dacff66"
   },
@@ -67,7 +67,7 @@
    ],
    "code": 0,
    "sec": 21.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "60ff3851fa1f",
    "instrument": "f37e2dacff66"
   },
@@ -90,7 +90,7 @@
    ],
    "code": 0,
    "sec": 234.3,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "ed6ad286b92c",
    "instrument": "f37e2dacff66"
   },
@@ -110,7 +110,7 @@
    "untouched": [],
    "code": 0,
    "sec": 127.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "c74b69286a8b",
    "instrument": "f37e2dacff66"
   },
@@ -133,7 +133,7 @@
    "untouched": [],
    "code": 0,
    "sec": 40.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "d4576830314d",
    "instrument": "f37e2dacff66"
   },
@@ -154,7 +154,7 @@
    ],
    "code": 0,
    "sec": 2.9,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "7a00b6d2fa2e",
    "instrument": "f37e2dacff66"
   },
@@ -186,7 +186,7 @@
    ],
    "code": 0,
    "sec": 153.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "30cb8762811b",
    "instrument": "f37e2dacff66"
   },
@@ -209,7 +209,7 @@
    ],
    "code": 0,
    "sec": 169.2,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "5b8aca4a6360",
    "instrument": "f37e2dacff66"
   },
@@ -248,7 +248,7 @@
    "untouched": [],
    "code": 0,
    "sec": 0.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "9c8d870e65c8",
    "instrument": "f37e2dacff66"
   },
@@ -281,7 +281,7 @@
    ],
    "code": 0,
    "sec": 0.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "9c8d870e65c8",
    "instrument": "f37e2dacff66"
   },
@@ -304,7 +304,7 @@
    "untouched": [],
    "code": 0,
    "sec": 5.4,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "c76eb0e6304e",
    "instrument": "f37e2dacff66"
   },
@@ -339,7 +339,7 @@
    ],
    "code": 0,
    "sec": 75.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "68b5699ca1fd",
    "instrument": "f37e2dacff66"
   },
@@ -369,7 +369,7 @@
    ],
    "code": 0,
    "sec": 65.1,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "0f4aedf8609e",
    "instrument": "f37e2dacff66"
   },
@@ -399,7 +399,7 @@
    ],
    "code": 0,
    "sec": 65.0,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "0f4aedf8609e",
    "instrument": "f37e2dacff66"
   },
@@ -420,7 +420,7 @@
    ],
    "code": 0,
    "sec": 13.5,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "d81ab675530c",
    "instrument": "f37e2dacff66"
   },
@@ -453,7 +453,7 @@
    ],
    "code": 0,
    "sec": 85.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "0a34a6085f2f",
    "instrument": "f37e2dacff66"
   },
@@ -488,7 +488,7 @@
    ],
    "code": 0,
    "sec": 42.0,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "ee03bc57f60b",
    "instrument": "f37e2dacff66"
   },
@@ -515,7 +515,7 @@
    "untouched": [],
    "code": 0,
    "sec": 285.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "778b584ab6fd",
    "instrument": "f37e2dacff66"
   },
@@ -538,7 +538,7 @@
    ],
    "code": 0,
    "sec": 15.0,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "e8b8c237d543",
    "instrument": "f37e2dacff66"
   },
@@ -560,7 +560,7 @@
    ],
    "code": 0,
    "sec": 96.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "8f96a65d3828",
    "instrument": "f37e2dacff66"
   },
@@ -584,7 +584,7 @@
    ],
    "code": 0,
    "sec": 23.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "5c91873d29d5",
    "instrument": "f37e2dacff66"
   },
@@ -622,7 +622,7 @@
    ],
    "code": 0,
    "sec": 1.4,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "aaf535a18c43",
    "instrument": "f37e2dacff66"
   },
@@ -659,7 +659,7 @@
    ],
    "code": 0,
    "sec": 1.0,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "aaf535a18c43",
    "instrument": "f37e2dacff66"
   },
@@ -682,7 +682,7 @@
    ],
    "code": 0,
    "sec": 10.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "02fdfe4b766a",
    "instrument": "f37e2dacff66"
   },
@@ -701,7 +701,7 @@
    "untouched": [],
    "code": 0,
    "sec": 4.0,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "79528760ee7c",
    "instrument": "f37e2dacff66"
   },
@@ -740,7 +740,7 @@
    "untouched": [],
    "code": 0,
    "sec": 0.7,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "b055fddd257e",
    "instrument": "f37e2dacff66"
   },
@@ -767,7 +767,7 @@
    ],
    "code": 0,
    "sec": 80.2,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "60b2108f5d1b",
    "instrument": "f37e2dacff66"
   },
@@ -796,7 +796,7 @@
    "untouched": [],
    "code": 0,
    "sec": 5.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "417d3e23023f",
    "instrument": "f37e2dacff66"
   },
@@ -818,7 +818,7 @@
    ],
    "code": 0,
    "sec": 0.9,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "72094c52e138",
    "instrument": "f37e2dacff66"
   },
@@ -837,7 +837,7 @@
    "untouched": [],
    "code": 0,
    "sec": 71.5,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "4ebfa467252e",
    "instrument": "f37e2dacff66"
   },
@@ -876,7 +876,7 @@
    "untouched": [],
    "code": 0,
    "sec": 30.1,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "cdd2ca268ba1",
    "instrument": "f37e2dacff66"
   },
@@ -906,7 +906,7 @@
    ],
    "code": 0,
    "sec": 26.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "03b84e8a91a5",
    "instrument": "f37e2dacff66"
   },
@@ -929,7 +929,7 @@
    ],
    "code": 0,
    "sec": 15.5,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "592e84ca6d6d",
    "instrument": "f37e2dacff66"
   },
@@ -959,7 +959,7 @@
    ],
    "code": 0,
    "sec": 74.5,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "e1570cb8573c",
    "instrument": "f37e2dacff66"
   },
@@ -989,7 +989,7 @@
    ],
    "code": 0,
    "sec": 76.0,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "e1570cb8573c",
    "instrument": "f37e2dacff66"
   },
@@ -1022,7 +1022,7 @@
    ],
    "code": 0,
    "sec": 24.1,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "af19fb8fb4f0",
    "instrument": "f37e2dacff66"
   },
@@ -1051,7 +1051,7 @@
    ],
    "code": 0,
    "sec": 10.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "975e32eac47f",
    "instrument": "f37e2dacff66"
   },
@@ -1092,7 +1092,7 @@
    ],
    "code": 0,
    "sec": 69.1,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "eacc310750e5",
    "instrument": "f37e2dacff66"
   },
@@ -1113,7 +1113,7 @@
    ],
    "code": 0,
    "sec": 59.1,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "260b183ba6eb",
    "instrument": "f37e2dacff66"
   },
@@ -1164,7 +1164,7 @@
    "untouched": [],
    "code": 0,
    "sec": 1.6,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "d47e5eea9423",
    "instrument": "f37e2dacff66"
   },
@@ -1184,7 +1184,7 @@
    "untouched": [],
    "code": 0,
    "sec": 5.2,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "c90d25b2f6ad",
    "instrument": "f37e2dacff66"
   },
@@ -1204,7 +1204,7 @@
    "untouched": [],
    "code": 0,
    "sec": 5.5,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "c90d25b2f6ad",
    "instrument": "f37e2dacff66"
   },
@@ -1224,7 +1224,7 @@
    "untouched": [],
    "code": 0,
    "sec": 5.4,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "c90d25b2f6ad",
    "instrument": "f37e2dacff66"
   },
@@ -1247,7 +1247,7 @@
    ],
    "code": 0,
    "sec": 53.3,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "314c6a4bd90e",
    "instrument": "f37e2dacff66"
   },
@@ -1268,7 +1268,7 @@
    ],
    "code": 0,
    "sec": 20.7,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "2705f6d6f7fa",
    "instrument": "f37e2dacff66"
   },
@@ -1297,7 +1297,7 @@
    ],
    "code": 0,
    "sec": 53.3,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "e58771666ea2",
    "instrument": "f37e2dacff66"
   },
@@ -1337,7 +1337,7 @@
    "untouched": [],
    "code": 0,
    "sec": 28.5,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "221bbd77f6ba",
    "instrument": "f37e2dacff66"
   },
@@ -1376,7 +1376,7 @@
    "untouched": [],
    "code": 0,
    "sec": 97.9,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "dd08d04f94a4",
    "instrument": "f37e2dacff66"
   },
@@ -1415,7 +1415,7 @@
    "untouched": [],
    "code": 0,
    "sec": 88.2,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "abfc6d535cf4",
    "instrument": "f37e2dacff66"
   },
@@ -1455,7 +1455,7 @@
    "untouched": [],
    "code": 0,
    "sec": 261.8,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "8b0752fa05c7",
    "instrument": "f37e2dacff66"
   },
@@ -1487,7 +1487,7 @@
    ],
    "code": 0,
    "sec": 181.4,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "f999b7ab31b3",
    "instrument": "f37e2dacff66"
   },
@@ -1512,7 +1512,7 @@
    "untouched": [],
    "code": 0,
    "sec": 7.4,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "7e690e3c88a3",
    "instrument": "f37e2dacff66"
   },
@@ -1531,7 +1531,7 @@
    "untouched": [],
    "code": 0,
    "sec": 31.3,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "b7b8dd1a8a58",
    "instrument": "f37e2dacff66"
   },
@@ -1550,7 +1550,7 @@
    "untouched": [],
    "code": 0,
    "sec": 30.7,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "b7b8dd1a8a58",
    "instrument": "f37e2dacff66"
   },
@@ -1582,7 +1582,7 @@
    ],
    "code": 0,
    "sec": 92.9,
-   "measured": "2026-10-27T18:58",
+   "recorded": "2026-10-27T19:04",
    "battery_sha": "50b292a16cc9",
    "instrument": "f37e2dacff66"
   }
