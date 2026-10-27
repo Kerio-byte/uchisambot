@@ -1,0 +1,1590 @@
+{
+ "measured": "2026-10-27",
+ "what": "что ломает каждый контроль набора и на скольких страницах это видно",
+ "source": "landing-regress-all.py CONTROLS",
+ "controls_sha": "36f5d280bbc5",
+ "instrument": "f37e2dacff66",
+ "entries": [
+  {
+   "key": "landing-a11y-extra.py --control",
+   "battery": "landing-a11y-extra.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 11,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 75.9,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "d0987b687527",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-axe-audit.py --control",
+   "battery": "landing-axe-audit.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "ru"
+   ],
+   "pages": [
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 21.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "60ff3851fa1f",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-backtab.py --control",
+   "battery": "landing-backtab.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 3,
+   "untouched": [
+    "en",
+    "hi",
+    "ru"
+   ],
+   "code": 0,
+   "sec": 234.3,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "ed6ad286b92c",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-badge-rows.py --control dense",
+   "battery": "landing-badge-rows.py",
+   "args": [
+    "--control",
+    "dense"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 127.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "c74b69286a8b",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-browser-smoke.py --control",
+   "battery": "landing-browser-smoke.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "ru"
+   ],
+   "pages": [
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [],
+   "code": 0,
+   "sec": 40.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "d4576830314d",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-cross-engine.py --control",
+   "battery": "landing-cross-engine.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "en"
+   ],
+   "code": 0,
+   "sec": 2.9,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "7a00b6d2fa2e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-cwv.py --control",
+   "battery": "landing-cwv.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "ru"
+   ],
+   "pages": [
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 153.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "30cb8762811b",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-deeplink.py --control",
+   "battery": "landing-deeplink.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 3,
+   "untouched": [
+    "en",
+    "hi",
+    "ru"
+   ],
+   "code": 0,
+   "sec": 169.2,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "5b8aca4a6360",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-en-leftovers.py --mutate",
+   "battery": "landing-en-leftovers.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 0.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "9c8d870e65c8",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-en-leftovers.py --mutate stub",
+   "battery": "landing-en-leftovers.py",
+   "args": [
+    "--mutate",
+    "stub"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "vi"
+   ],
+   "pages": [
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk"
+   ],
+   "code": 0,
+   "sec": 0.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "9c8d870e65c8",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-env-prefs.py --control",
+   "battery": "landing-env-prefs.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en"
+   ],
+   "pages": [
+    "en"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [],
+   "code": 0,
+   "sec": 5.4,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "c76eb0e6304e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-external-links.py --mutate",
+   "battery": "landing-external-links.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "en",
+    "ru"
+   ],
+   "pages": [
+    "en",
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 11,
+   "untouched": [
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 75.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "68b5699ca1fd",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-first-screen.py --control fold",
+   "battery": "landing-first-screen.py",
+   "args": [
+    "--control",
+    "fold"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 65.1,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "0f4aedf8609e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-first-screen.py --control wide",
+   "battery": "landing-first-screen.py",
+   "args": [
+    "--control",
+    "wide"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 65.0,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "0f4aedf8609e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-font-identity.py --control",
+   "battery": "landing-font-identity.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "hi"
+   ],
+   "code": 0,
+   "sec": 13.5,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "d81ab675530c",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-fonts.py --control",
+   "battery": "landing-fonts.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "ru"
+   ],
+   "pages": [
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 10,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 85.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "0a34a6085f2f",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-glyph-fallback.py --control",
+   "battery": "landing-glyph-fallback.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "ru"
+   ],
+   "pages": [
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 42.0,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "ee03bc57f60b",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-header-engines.py --control",
+   "battery": "landing-header-engines.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "id",
+    "pt",
+    "uk"
+   ],
+   "pages": [
+    "id",
+    "pt",
+    "uk"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 3,
+   "untouched": [],
+   "code": 0,
+   "sec": 285.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "778b584ab6fd",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-keyboard-form.py --control --lang en",
+   "battery": "landing-keyboard-form.py",
+   "args": [
+    "--control",
+    "--lang",
+    "en"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "en"
+   ],
+   "code": 0,
+   "sec": 15.0,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "e8b8c237d543",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-landscape-page.py --control-wide",
+   "battery": "landing-landscape-page.py",
+   "args": [
+    "--control-wide"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 2,
+   "untouched": [
+    "en",
+    "ru"
+   ],
+   "code": 0,
+   "sec": 96.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "8f96a65d3828",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-langlist-fit.py --mutate --lang ru --quick",
+   "battery": "landing-langlist-fit.py",
+   "args": [
+    "--mutate",
+    "--lang",
+    "ru",
+    "--quick"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "ru"
+   ],
+   "code": 0,
+   "sec": 23.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "5c91873d29d5",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-links-audit.py --mutate",
+   "battery": "landing-links-audit.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "en",
+    "privacy",
+    "ru",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "privacy",
+    "ru",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "terms",
+    "tr",
+    "uk"
+   ],
+   "code": 0,
+   "sec": 1.4,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "aaf535a18c43",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-links-audit.py --mutate orphan",
+   "battery": "landing-links-audit.py",
+   "args": [
+    "--mutate",
+    "orphan"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "xx"
+   ],
+   "pages": [
+    "xx"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 1.0,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "aaf535a18c43",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-min-font.py --control-anchor",
+   "battery": "landing-min-font.py",
+   "args": [
+    "--control-anchor"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 3,
+   "untouched": [
+    "id",
+    "ru",
+    "uk"
+   ],
+   "code": 0,
+   "sec": 10.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "02fdfe4b766a",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-nu-validate.py --selftest",
+   "battery": "landing-nu-validate.py",
+   "args": [
+    "--selftest"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 4.0,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "79528760ee7c",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-page-lang.py --mutate",
+   "battery": "landing-page-lang.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 0.7,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "b055fddd257e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-pixel-density.py --control",
+   "battery": "landing-pixel-density.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "ru"
+   ],
+   "pages": [],
+   "via_asset": [
+    "ru"
+   ],
+   "assets": [
+    "img/demo-poster-ru.webp"
+   ],
+   "walked": 2,
+   "untouched": [
+    "en"
+   ],
+   "code": 0,
+   "sec": 80.2,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "60b2108f5d1b",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-poster-frames.py --control swap",
+   "battery": "landing-poster-frames.py",
+   "args": [
+    "--control",
+    "swap"
+   ],
+   "verdict": "изменено (чтение не видно)",
+   "changed": [
+    "en",
+    "ru"
+   ],
+   "pages": [],
+   "via_asset": [
+    "en",
+    "ru"
+   ],
+   "assets": [
+    "img/demo-poster.webp",
+    "img/demo-poster-ru.webp"
+   ],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 5.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "417d3e23023f",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-price-parity.py --mutate bot",
+   "battery": "landing-price-parity.py",
+   "args": [
+    "--mutate",
+    "bot"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "terms"
+   ],
+   "code": 0,
+   "sec": 0.9,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "72094c52e138",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print-contrast.py --mutate",
+   "battery": "landing-print-contrast.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 71.5,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "4ebfa467252e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print-crossengine.py --mutate",
+   "battery": "landing-print-crossengine.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 30.1,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "cdd2ca268ba1",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print-main.py --mutate footerpad",
+   "battery": "landing-print-main.py",
+   "args": [
+    "--mutate",
+    "footerpad"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 26.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "03b84e8a91a5",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print-pages.py --mutate",
+   "battery": "landing-print-pages.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 3,
+   "untouched": [
+    "404",
+    "privacy",
+    "terms"
+   ],
+   "code": 0,
+   "sec": 15.5,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "592e84ca6d6d",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print-paper.py --mutate colwidth",
+   "battery": "landing-print-paper.py",
+   "args": [
+    "--mutate",
+    "colwidth"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 74.5,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "e1570cb8573c",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print-paper.py --mutate railwidth",
+   "battery": "landing-print-paper.py",
+   "args": [
+    "--mutate",
+    "railwidth"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 76.0,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "e1570cb8573c",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-print.py --mutate strip",
+   "battery": "landing-print.py",
+   "args": [
+    "--mutate",
+    "strip"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 24.1,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "af19fb8fb4f0",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-render-check.py --control",
+   "battery": "landing-render-check.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 10.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "975e32eac47f",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-return.py --control",
+   "battery": "landing-return.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 10,
+   "untouched": [
+    "terms"
+   ],
+   "code": 0,
+   "sec": 69.1,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "eacc310750e5",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-rotate.py --control-wide",
+   "battery": "landing-rotate.py",
+   "args": [
+    "--control-wide"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "en"
+   ],
+   "code": 0,
+   "sec": 59.1,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "260b183ba6eb",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-site-move-test.py --control",
+   "battery": "landing-site-move-test.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [
+    "llms.txt",
+    "sitemap.xml",
+    "tools/lastmod.json",
+    "tools/site.json",
+    "robots.txt"
+   ],
+   "walked": 12,
+   "untouched": [],
+   "code": 0,
+   "sec": 1.6,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "d47e5eea9423",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-stop-rule.py --control judge",
+   "battery": "landing-stop-rule.py",
+   "args": [
+    "--control",
+    "judge"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 5.2,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "c90d25b2f6ad",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-stop-rule.py --control rule",
+   "battery": "landing-stop-rule.py",
+   "args": [
+    "--control",
+    "rule"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 5.5,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "c90d25b2f6ad",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-stop-rule.py --control type1",
+   "battery": "landing-stop-rule.py",
+   "args": [
+    "--control",
+    "type1"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 5.4,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "c90d25b2f6ad",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-tablet-menu.py --control",
+   "battery": "landing-tablet-menu.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 3,
+   "untouched": [
+    "en",
+    "hi",
+    "ru"
+   ],
+   "code": 0,
+   "sec": 53.3,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "314c6a4bd90e",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-tablet-page.py --control-wide",
+   "battery": "landing-tablet-page.py",
+   "args": [
+    "--control-wide"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 1,
+   "untouched": [
+    "en"
+   ],
+   "code": 0,
+   "sec": 20.7,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "2705f6d6f7fa",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-text-clip.py --control",
+   "battery": "landing-text-clip.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 53.3,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "e58771666ea2",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-toggle-clear.py --control overlap",
+   "battery": "landing-toggle-clear.py",
+   "args": [
+    "--control",
+    "overlap"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 28.5,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "221bbd77f6ba",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-video-failure.py --control",
+   "battery": "landing-video-failure.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 97.9,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "dd08d04f94a4",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-video-hang.py --control",
+   "battery": "landing-video-hang.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 88.2,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "abfc6d535cf4",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-video-motion.py --control nobutton",
+   "battery": "landing-video-motion.py",
+   "args": [
+    "--control",
+    "nobutton"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "pages": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "ru",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [],
+   "code": 0,
+   "sec": 261.8,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "8b0752fa05c7",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-video-weight.py --control",
+   "battery": "landing-video-weight.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "подмножество",
+   "changed": [
+    "ru"
+   ],
+   "pages": [
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 9,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "pt",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 181.4,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "f999b7ab31b3",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-viewports-extra.py --control",
+   "battery": "landing-viewports-extra.py",
+   "args": [
+    "--control"
+   ],
+   "verdict": "полный",
+   "changed": [
+    "en",
+    "ru"
+   ],
+   "pages": [
+    "en",
+    "ru"
+   ],
+   "via_asset": [],
+   "assets": [],
+   "walked": 2,
+   "untouched": [],
+   "code": 0,
+   "sec": 7.4,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "7e690e3c88a3",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-visual-pass.py --control-wide",
+   "battery": "landing-visual-pass.py",
+   "args": [
+    "--control-wide"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 31.3,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "b7b8dd1a8a58",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-visual-pass.py --mutate",
+   "battery": "landing-visual-pass.py",
+   "args": [
+    "--mutate"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 30.7,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "b7b8dd1a8a58",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-wcag22-targets.py --control all",
+   "battery": "landing-wcag22-targets.py",
+   "args": [
+    "--control",
+    "all"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 11,
+   "untouched": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 92.9,
+   "measured": "2026-10-27T18:58",
+   "battery_sha": "50b292a16cc9",
+   "instrument": "f37e2dacff66"
+  }
+ ]
+}
