@@ -7673,8 +7673,9 @@ the list** — the nine named as outside yesterday are inside today.
 journal unless noted: `print` 0 problems; `print-main` 213 / 0 (`ru` prints seven sheets, the mutation adds an
 eighth with 196 characters against a 180-character footer);
 `print-pages` 391 / 0; `print-paper` 969 / 0; `print-contrast` 3 543 / 0; `min-font` 1 554 / 0 twice after the
-anchor race was fixed; `video-failure` 228 / 0 over 40 runs; `video-hang` 144 / 0 over 21. The subset runs used by
-the two video controls sit inside those clauses, so the red belongs to the mutation, not to the subset.
+anchor race was fixed; `video-failure` 228 / 0 over 40 runs; `video-hang` 144 / 0 over 21. The two video subsets were
+also run clean today, in the same hour as their controls: **56 / 0 each**, against 56 / 32 and 56 / 21 with the
+mutation — same clauses, same subset, same machine, so the red is the break and not the narrowing.
 
 **What this does not prove.** `nu-validate`'s control proves the classifier — a broken fixture becomes a finding, a
 clean one stays silent — and says nothing about the walk over eleven pages: a page that moved out of `PAGES` would
