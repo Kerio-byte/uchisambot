@@ -7697,3 +7697,68 @@ for both video batteries). Evidence in `evidence/block-20261027j/`: `ctrl-print.
 `ctrl-print-pages.log`, `ctrl-print-paper.log` (the blind 969 / 0, exit 1), `ctrl-print-paper-railwidth2.log`,
 `ctrl-print-paper-colwidth.log`, `ctrl-print-contrast.log`, `ctrl-min-font.log`, `ctrl-video-failure.log`,
 `ctrl-video-hang.log`, `ctrl-runner-nine.log`, `ledger.txt`.
+
+## The whole list ran in one block, and the sentence about one command was retired (27.10.2026)
+
+**The debt was a sentence.** The entry above closed with: *the 53 entries have still never run in one
+command: every entry rests on a subset, and a subset is not the whole.* This block ran all 53, in
+13 commands of one to nine entries, and then counted the coverage instead of remembering it.
+
+**What ran.** 16 logs in `evidence/block-20261027k/`, **53 of 53 entries covered, 53 caught at least
+once, 0 blind, 3 785 s of runs**. An entry is the pair (battery, its arguments) — the runner counts
+53 because four batteries carry more than one mutation: `first-screen` (fold, wide), `visual-pass`
+(control-wide, mutate), `stop-rule` (rule, type1, judge) and `print-paper` (railwidth, colwidth).
+The heaviest: `header-engines` 278.3 s, `video-motion` 260.6 s, `backtab` 234.0 s,
+`video-weight` 180.2 s, `deeplink` 171.3 s, `cwv` 153.1 s, `badge-rows` 127.5 s; ten entries stand
+past 90 s and twenty-one past a minute; the lightest, `page-lang`, 0.1 s.
+
+**Why the one-command criterion was retired instead of scheduled.** Every entry already runs as its
+own subprocess with its own server on its own port, so a single process over all 53 would prove one
+thing the coverage tool does not: that the runner's loop resolves the names in `CONTROLS`. That is
+exactly what `landing-controls-coverage.py` checks, and it checks it against the source of truth —
+it imports `CONTROLS` from the runner rather than keeping a copy, and matches each pair against the
+`ПОЙМАЛ / НЕ ПОЙМАЛ` lines of the block's logs. The complaint inside that sentence was the other
+half — *every entry rests on a subset* — and no monolith touches it: a mutation targets the pages and
+languages it was written for. Scheduling an hour of machine time to close the cosmetic half while
+the substantive one stayed open would have been the same trade as a 70 MB shell around a native
+app. So the tool is the answer, and the limit is named below instead of chased.
+
+**The two kinds of evidence, side by side.** A control proves a clause can fail on its own subset.
+The clean run of the whole battery proves the clause passes on the whole. Neither substitutes for the
+other, and both are dated today: the set of 48 batteries ran 09:36, one red —
+`min-font` in Firefox at 761 px, the anchor landing 5.4 px below the sticky header's air; fixed 09:52,
+green at 09:56 twice, and re-run in this block: **1 554 checks, 0 failed**.
+
+**Two defects the pass found in the tools' own words.** Six batteries printed `CONTROL_FAILED: N` in
+the branch that means the control *caught* the defect — `backtab`, `landscape-page`, `rotate`,
+`tablet-menu`, `tablet-page`, `text-clip`. A log line that says "failed" at the moment of success is
+the same liar as a ledger column that says "wired" for a control nobody pulls; the runner reads the
+last line, so the verdict printed next to a catch read as its opposite. All six now print one
+sentence — `КОНТРОЛЬ: подмена встала — покраснело N, время T s` — and `tablet-menu`, which printed no
+evidence path at all in control mode, prints it. Second: `deeplink` wrote today's control into
+`deeplink-control-20261025.json`, because the date was typed into the file name instead of stamped;
+Monday's file and today's were the same name.
+
+**One red belonged to me, not to the page.** `cwv` ran twice at once — a batch in the background and
+a re-run in the foreground — and both bind one port: the batch died in 0.2 s with a red, the re-run
+alone took 153.1 s and caught (69/69 clean, 67/69 broken). Two runs of one battery on one port is not
+a page defect but it looks exactly like one in a log, which is why the coverage tool carries a third
+state, *disputed*, and refuses to call such an entry covered until the reason is named. Here it is.
+
+**Regression after the fixes.** All seven touched batteries re-run through the runner: `backtab`
+234.0 s, `deeplink` 171.3 s, `landscape-page` 95.4 s, `rotate` 59.4 s, `tablet-menu` 53.8 s,
+`tablet-page` 20.3 s, `text-clip` 52.7 s — 7 of 7 caught, with the new sentence and today's evidence
+names (`deeplink-control-20261027T143222.json`).
+
+**What this does not prove.** A control reddens its own subset, not nine languages. A caught control
+makes a clause able to fail; it does not make the clause worth having — `print-paper`'s railwidth
+lesson, unchanged. Coverage proves each entry ran once and caught once, not that the mutation
+reproduces the right defect. And the disputed `cwv` is one caught run, not two.
+
+**Files.** `landing-backtab.py`, `landing-landscape-page.py`, `landing-rotate.py`,
+`landing-tablet-menu.py`, `landing-tablet-page.py`, `landing-text-clip.py` (the `CONTROL_FAILED`
+line; tablet-menu also gains the evidence path in control mode), `landing-deeplink.py` (stamped
+evidence name, `import time`), `landing-controls-coverage.py` (new: coverage from source `CONTROLS`
+against a block's logs, `--dir`, `--json`, exit 1 on a missing or blind entry),
+`landing-regress-all.py` (`SKIP` entry for the new tool, so the suite stays 48 batteries).
+Evidence in `evidence/block-20261027k/`: 16 `ctrl-*.log`, `coverage.json`.
