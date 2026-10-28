@@ -30,10 +30,14 @@ Live: https://kerio-byte.github.io/uchisambot/
 - `tools/page-canary.json` — the per-page measurement (28.10.2026): for each of the twelve pages,
   which classes of breakage a named catcher caught, with the catcher's sha and the date. Written by
   `landing-page-canary.py` (`stars-bots-ops`), which breaks one page at a time and requires the
-  catcher to name **that** page; judged by `landing-page-canary-ledger.py` in five clauses (pages on
-  disk, catcher's code, a catch per page, no missed cell, something breakable on every page), and the
-  sweep fails if the ledger is older than the catcher's code or a page on disk is missing from it.
-  Added because the sum of checks could not answer whether any page was unread, and two pages were.
+  catcher to name **that** page; judged by `landing-page-canary-ledger.py` in six clauses (pages on
+  disk, the static catcher's code, **every** catcher's code from `catchers`, a catch per page, no
+  missed cell, something breakable on every page), and the sweep fails if the ledger is older than a
+  catcher's code or a page on disk is missing from it. Five classes since 28.10.2026: four of markup
+  (`relative-dead`, `missing-anchor`, `duplicate-id`, `self-link-dead`, catcher
+  `landing-links-audit.py`) and one of layout (`overflow`, catcher `landing-page-overflow.py` — a
+  `200vw` block in the body, which only a browser can see). Added because the sum of checks could not
+  answer whether any page was unread, and two pages were.
 - `tools/publish-tree.py` — the one list of what counts as the site (109 files), and `--check`
   for it: every listed file exists, no page links into the workshop, every internal reference
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
@@ -8294,5 +8298,59 @@ self-link clause, `САМОССЫЛКИ` line, five-defect control), `landing-pa
 `landing-page-canary-ledger.py` (new, five clauses, `--mutate` 5/5), `landing-sweep.py` (+5 checks),
 `landing-regress-all.py` (two gates in `SKIP` with reasons), `landing-counts.json` (links-audit 25),
 `tools/page-canary.json` (new ledger), `tools/control-breadth.json` (2 entries re-measured).
+
+## The measure could break markup, and layout had no witness of its own (28.10.2026)
+
+Block 28 closed with a named question — *the same canary with chromium catchers: overflow, contrast,
+first screen, so each page is caught by a visual class too*. This block took the first of the three.
+
+**What was actually missing, said precisely.** Not a name in a list: that was checked before anything
+was built and it was complete — 44 browser batteries open the site, `privacy.html` is named by 12 of
+them, `terms.html` by 11, `404.html` by 8, and no page is named by none
+(`evidence/block-20261028b/who-reads-which-page.txt`). Not a width either: `a11y-extra` reflows all
+eleven pages at 320 px, which is narrower than the phone the owner carries. What was missing was a
+measurement that can be *asked per page*: the canary could break markup on any page and demand a name
+for it, and could not break a layout at all.
+
+**The class and its catcher.** `landing-page-overflow.py` (new): pages taken from the disk by the same
+rule as the canary, so a new page measures itself; three widths — 360 (a cheap Android), 420 (the
+owner's phone), 1280 (a laptop); one clause per page, `documentElement.scrollWidth − clientWidth`,
+compared with `clientWidth` and **not** `innerWidth` (mobile emulation widens the layout viewport when
+the document overflows, and the old manner stays silent on a page twice the phone's width); the three
+worst offenders printed by tag, class and pixels. Clean tree: **36 checks, 0 red**. Control
+`--control wide` — 120 px added to the live document, applied to every page:
+**36 of 36 red, 12 of 12 pages named**, and the line says the substitution was proved, not assumed.
+
+**The canary learned a second kind of catcher.** `CLASSES` gained `overflow`; `CATCHER_BY_CLASS` maps a
+class to its catcher as a table rather than an `if`; a browser catcher gets `LANDING_ROOT` and a
+`--page` hint, so one experiment costs three page loads instead of thirty-six. The findings parser now
+strips indentation before the `- ` prefix — browser batteries print `  - page: …`, and without that
+every finding would have read as empty. Full measurement: **12 pages, 60 cells, 57 caught, 0 missed,
+3 not applicable** (the 404 has no relative href, no anchor and no id; it is caught on `self-link-dead`
+and on `overflow`).
+
+**What the run caught in itself.** (1) `--class overflow` wrote the registry — a partial run erasing
+the four markup classes from `tools/page-canary.json` while looking like a successful measurement. Now
+only a full run writes it, and the rule is written in the script where the next person will read it.
+(2) The gate had five clauses and would have stayed green after the new battery's code changed, because
+it compared one catcher's sha. A sixth clause `code_all` compares **every** catcher in the registry;
+control `--mutate` is **6 of 6**, each defect reddening exactly its own clause.
+
+**The price was the same price, and it was charged again.** Adding the new control to the runner's
+`CONTROLS` list staled the breadth registry twice at once: no measurement for the new row, and the
+list's sha no longer matched. The sweep said so honestly — **2911 checks, 2 red**. Re-measuring the
+row cost 18 s and its verdict is `вне страниц`, which is the truth: this control changes no file, it
+widens the document at runtime. The registry was then merged with its other 55 rows untouched and the
+header recomputed with the runner's own list (`landing-control-breadth.backup-20261028T015722.json`
+kept). Sweep after: **2911 checks, 0 red**.
+
+**What this does not prove.** That the assertion is good: the canary now knows the page's overflow is
+*named*, not that the widths, the threshold or the offender list are the right ones. And two classes
+still have no experience behind them — `contrast` and `first-screen`.
+
+**Files.** `landing-page-overflow.py` (new), `landing-page-canary.py` (class table, per-class catcher,
+partial runs do not write), `landing-page-canary-ledger.py` (sixth clause + control 6/6),
+`landing-sweep.py` (+1 check), `landing-regress-all.py` (control row), `tools/page-canary.json`
+(60 cells, `catchers`), `tools/control-breadth.json` (56 rows), `references/page-canary.md`.
 
 
