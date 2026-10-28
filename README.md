@@ -8512,5 +8512,77 @@ not a promise about the next edit.
 5,679.5 s), `scripts/landing-counts.json` (51 entries, three added by `--stamp`). No page was
 changed: this block measured the instrument, and the instrument is the only thing that moved.
 
+## Nine batteries watched the live side, and not one could say when it last looked (28.10.2026)
+
+The offline set answers questions about the tree: 51 batteries, 20,224 checks, every one of them
+shown red at least once. Nothing in it opens the published site as a visitor, reads the mailbox,
+or asks the bot what its screens say. That is nine batteries, and they sit outside the set by
+design — each has its own conditions (a real Chrome for the letter, a free or deliberately loaded
+GPU for the answer time, a token for the mailbox). The price of «by design» was that their history
+lived in the prose of this journal: no record of when each one last ran, no witness that a week had
+gone by without one, and nowhere for a red live run to stay red. The entry above named exactly
+this as the one thing the set does not touch.
+
+**First run through one runner.** One runner (`landing-live-run.py`) reads a register (`tools/live-runs.json`)
+and runs whatever the register leaves runnable: six batteries, 1 minute 41 seconds, all green —
+bytes 26 files / 0 bad (2.3 s), assets 90 / 0 (12.4 s), runtime 121 checks / 0 (26.5 s), third-party
+108 / 0 (51.8 s), inbox 11 / 0 (2.9 s), bot money 9 languages / 0 (4.7 s). Journal
+`evidence/live-20261028T071521/journal.json`, one log per battery beside it.
+
+Three did not run, and the register says so in words instead of silence: the answer time (last
+measured 23.10 — 6 tasks in a free queue, 4 under a load of two, p90 41.5 s against the ceiling of
+120), the live letter and its delivery confirmation (22.10 19:15:34 — 11 checks, stamp and address
+matched, the letter found in the mailbox). Those two entries were seeded from their own records,
+and each names the file it came from: a memory whose source is unnamed is a guess with a date.
+
+**The register** (`tools/live-runs.json`) records per battery what it needs, how often it must be
+measured, what unit it counts, the floor below which a count means narrowed coverage — and `last`.
+`last` is written by the runner alone, from a real run, and only for a green row that printed a
+number. A green row without a number is red (`НЕМОЙ`), the same rule the offline set learned when
+thirteen rows were green with `checks: null`.
+
+**The gate** (`landing-live-ledger.py`) asks nine questions and prints a table of what it knows:
+composition both ways against the runner's own `SKIP` (a name in the register with no file, a live
+battery in `SKIP` that nobody registered, a registered battery that is still inside the offline
+set), the required fields, a reason for a battery that is conditioned forever, «measured at least
+once», freshness against `every_days`, the outcome of the last run, and the count against its floor.
+Its first run was red for six batteries — «never measured» — and that red was the truth: a register
+is only as good as the runs behind it. After today's run it is 9 / 0, and the table prints each
+battery's age in days, its count, its floor and its norm.
+
+**Proven red.** Nine controls, each damaging a copy of the register and demanding that the rule
+responsible for it (and no other) goes red: `stale`, `red`, `uncover`, `ghost`, `outside`, `drop`,
+`nofield`, `silent`, `noreason` — 9 of 9 caught. And the idea was tested from outside the
+gate: the register was made to say that one battery was measured 57 days ago, the sweep went red
+naming it — `FAIL [global] живая сторона: реестр замеров вне набора полон, свеж и зелёный |
+свежесть: … landing-live-bytes.py: последний замер 57 дн. назад при норме 3` — and back green when
+the file was restored. A date that can be moved in a file is a date the gate actually reads.
+
+**In the sweep.** Two checks (2,912 → 2,914): the register's verdict, and «the judge catches nine
+planted defects». Sweep now 2,914 / 0.
+
+**A rule that reads prose caught itself.** The gate decides which batteries are live from the
+reason text in the runner's `SKIP` (the word «живой»). The end-to-end letter's reason read
+«--live отправляет настоящее письмо» — no «живой» — so the one battery that sends a real letter
+would have been invisible to the composition rule, and the rule would have reported «все живые в
+реестре» about eight of nine. The comment now reads «живой прогон формы: --live шлёт настоящее
+письмо». A detection rule that reads prose is only as good as the prose; that is now written down
+rather than assumed.
+
+**What this does not prove.** That green today means green tomorrow — the register stores an age,
+not a guarantee. That the intervals are measurements rather than choices: 3 days for the site
+batteries, 1 for the mailbox, 14 for the letter, 30 for the answer time are what a block can do,
+not what the promise needs. That the letter path works: it was not exercised today, and the
+register carries 22.10. That the answer-time ceiling holds under a loaded queue: last measured
+23.10. And nothing about the batteries' own meaning — that a battery named «third-party» really
+counts foreign hosts is its own controls' business, not the register's.
+
+**Files.** `tools/live-runs.json` (new; 9 entries, 6 stamped by today's run), `landing-live-run.py`
+(new; runner, in `SKIP` as an instrument), `landing-live-ledger.py` (new; gate, in `SKIP`),
+`landing-regress-all.py` (two `SKIP` lines, one reason word), `landing-sweep.py` (+2 checks).
+Evidence: `evidence/block-20261028e/` (gate, its nine controls, the red proof of the sweep, the
+set-parity answer) and `evidence/live-20261028T071521/` (the live journal).
+
+
 
 
