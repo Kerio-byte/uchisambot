@@ -9520,3 +9520,74 @@ marks, element span, tag boundary, mkdir, honest quote); `landing-sweep.py` and
 `evidence/eye-20261028N/`, `evidence/eye-20261028P/` (`evidence/` stays out of the repo); this entry.
 No page, no dictionary, no price file was touched.
 
+## The registry that could only be replaced, and two blocks the eye had never graded (29.10.2026, fourteenth block of the day)
+
+**What this block was for.** Three things the thirteenth entry named and left standing: the
+`--write-registry` path that replaced instead of merged (62 records became 2 on 28.10), `vi`
+`subjects` returning an empty anchor, and `head`, which has no `h2` and no paragraph and so rested on
+geometry alone in all nine languages.
+
+**The floor underneath.** `tools/build.py --check` — 24 files byte-identical to a clean build.
+`tools/publish-tree.py --check` — 107 files, 495 internal links, all inside the list. Sweep —
+2 948 checks, 0 failed, before any edit and again after.
+
+**One path, not two.** `landing-control-breadth.py --write-registry <registry>` wrote the file
+straight from the rows it had measured, so a one-battery run rewrote a 62-record gate input with the
+two records it happened to take. `landing-breadth-merge.py` already existed for exactly this job
+(created 28.10 after the same loss cost an hour of restoring by hand), and the thirteenth block used
+it by hand while the trap stayed open. The flag now merges: if the target exists it hands the journal
+to that one merge tool and inherits its header recomputation (`controls_sha`, `instrument`), and it
+refuses to write and returns 1 if the merge fails. A full measurement asks for the old behaviour
+explicitly with `--replace-registry`. **Proven on the failure itself** — one battery
+(`landing-page-lang.py --mutate`, 0.7 s) re-measured against the live registry: `добавлено: —`,
+`заменено: landing-page-lang.py --mutate`, **62 records before and after**, `controls_sha 196e29dc5405`
+and `instrument f37e2dacff66` unchanged, `measured` moved to 29.10. The scenario that lost 60 records
+now demonstrably cannot.
+
+**An anchor that gave up on the first miss.** `expected_anchor` took the first `h2`, else the first
+`<p>`, in the block. The first `<p>` in a section is the decorative number — `<p class="sec-num">03</p>`
+— which is two characters, fails the 12-character floor, and ended the search: the real paragraph
+three lines below was never looked at. Every Russian block got its anchor from a `h2` long enough to
+pass, so the defect only showed where the heading is short: Vietnamese `subjects`, «Các môn học»,
+11 characters. The block was silently skipped — not failed, skipped — and the thirteenth entry saw it
+as an empty anchor. The search now walks every match and returns the first line that *qualifies*: a
+heading of 8+ characters first, then a paragraph of 12+, then a paragraph of 8+, then a heading of 4+.
+A heading wins over a paragraph on purpose — it is the line a person sees — and that is what makes
+one ruler for nine languages instead of four languages measured by a sentence and five by a heading
+(it moved `parents` in en, ru, es, pt from the sentence to «For parents» / «Родителям» /
+«Para padres» / «Para pais», which the other five languages already used).
+
+**A header has no headline, but it does have a name.** `head` carries neither `h2` nor `p`, so its
+anchor stayed empty in all nine languages and the block was graded on the language word alone. Its
+only text, the same in every language, is the wordmark in the logo: `<a class="brand">…<span>UchiSamBot
+</span>`. That is a real anchor — a header swapped for another page, or for another language's header,
+cannot show it.
+
+**Measured before the model was asked.** A probe over all 90 section-language pairs (10 marks × 9
+languages) compared the old rule with the new one against the built pages: **0 pairs without an
+anchor** (was 10: nine `head` plus `vi` `subjects`), **14 anchors changed** — the ten that were empty
+filled with real text, and the four `parents` headings above — and 76 unchanged, so no block that had
+a strong anchor lost it.
+
+**Then the eye.** `landing-eye.py --sections head,subjects --langs vi,ru,en` against the full frame
+set: `PASS` for all three, 0 defects, 0 ungrounded, 0 model-unavailable, two questions per language
+and each block graded against its own answer. The raw reply shows the Vietnamese run transcribing the
+new anchor verbatim — `HEADLINE: Các môn học` — which is the proof the block is now graded on a line,
+not on geometry. The header's own `HEADLINE:` line is `->` (there is no heading to transcribe) and its
+`LINE:` is `UchiSamBot`; the verdict quotes the field that has words in it, as the thirteenth entry
+required.
+
+**What this does not prove.** That all nine languages pass on these two blocks — three were run
+(vi, ru, en), the other six were only proved at the anchor level, and the eye costs a model call per
+block per language. That a two-word heading («For parents») is as strong a ground as a full sentence —
+it is the same anchor every language now uses, but it is a shorter claim. And that `--resume` with
+`--write-registry` is safe in every order: the merge path was proved with a journal of one record, not
+with a resumed 55-record journal.
+
+**Files.** `stars-bots-ops/scripts/landing-control-breadth.py` (merge by default, `--replace-registry`);
+`stars-bots-ops/scripts/landing-eye.py` (qualifying-line search, two floors, heading first, brand
+anchor for `head`); `tools/control-breadth.json` (one record re-measured through the merge path —
+the file is now dated 29.10 by its own gate); `evidence/eye-20261029A/`, `evidence/breadth-20261029T012330/`,
+`evidence/control-breadth.backup-20261029T012331.json` (`evidence/` stays out of the repo); this entry.
+No page, no dictionary, no price file was touched.
+
