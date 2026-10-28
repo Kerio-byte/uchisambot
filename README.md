@@ -9219,3 +9219,51 @@ the frames: this block had no vision tool, so the 306 measured frames of
 
 **Files.** This entry only — no site file was touched, so nothing moves in
 `gh-pages`; the push is a main-branch journal push to both mirrors.
+
+## The partner who dies on a Tuesday now has an alarm (28.10.2026, пятый блок дня)
+
+**What the day left open.** The fourth block closed with a named gap: the external-link
+battery is network-bound, so it is deliberately kept out of the sweep — which means
+nothing watches it. On 25.10 a footer partner was dead for three days and a person found
+it, not a check. A gate that only runs when someone remembers to run it is a habit, not a
+gate.
+
+**What was built.** The battery now writes a dated ledger, `tools/links-last-seen.json`:
+68 addresses, the 11 hosts they live on, a verdict per address, `checked_at` in UTC. The
+sweep — offline, no network — asks three separate questions about that ledger: it exists,
+it is not older than thirty days, and **every host the pages link to has a verdict in it**.
+The third question is the one that matters for the future: a partner added to the footer
+without a battery run is now red, not "not yet".
+
+**Proved both ways, not assumed.**
+- Before the ledger existed the sweep went to `CHECKS: 2948, FAILED: 3` and named exactly
+  the three new questions — the alarm fires on the state it is meant to catch.
+- With the ledger written by a fresh run (`68 addresses, 0 failed, 0 unverified`) the same
+  sweep returned `CHECKS: 2948, FAILED: 0, ALL PASS`.
+- The four extra checks are the four new ones: 2944 → 2948.
+
+**The pretending alarm was caught too.** Editing the battery changed its code, and the
+breadth ledger refused to accept an old measurement taken by new code
+(`7a2e74d2d7cc ≠ fdb2067890cc`). The row was re-measured (`--mutate`, 78.9 s, breaks `en`
+and `ru`, reads 11 pages) and merged into the 62-row registry — the other 61 rows untouched.
+That refusal is the reason the registry is worth anything: it will not report a measurement
+the current code never made.
+
+**Today's numbers, run fresh in this block.** `build.py --check` 24/24 byte-identical;
+`publish-tree.py --check` 107 files, 495 internal references inside the list;
+`landing-external-links.py` 68/0/0; `landing-live-bytes.py` 26/26 with the 404 probe
+serving its own page; nine language pages 113–125 KB each, 11 hreflang rows apiece;
+`landing-visual-pass.py` **306 checks, 0 problems** across nine languages at 420 px and
+1440 px — headline 30 px/2 lines on the phone, 56 px/2–3 lines on the desktop, badges
+7/7 loaded on every page, zero horizontal overflow outside the slider.
+
+**What this still does not prove.** That the ledger is written on a schedule: it is written
+by the battery, and the battery is still run by a block, not by cron. The sweep now
+notices when that stops happening (30 days), which turns silence into a red check — it does
+not turn silence into a run. And that a person looked at the frames: this block had no
+vision tool either, so the 306 frames in `evidence/visual-20261028e` (scratch) stand on
+measurement, not on an eye.
+
+**Files.** `tools/links-last-seen.json` (new), `tools/control-breadth.json` (one row
+re-measured), this entry; and in `stars-bots-ops`: `landing-external-links.py` (writes the
+ledger), `landing-sweep.py` (the three offline questions).

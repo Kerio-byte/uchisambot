@@ -385,7 +385,19 @@
    ],
    "via_asset": [],
    "assets": [],
-   "walked": 11,
+   "walked": [
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
    "untouched": [
     "es",
     "hi",
@@ -398,10 +410,25 @@
     "vi"
    ],
    "code": 0,
-   "sec": 63.2,
+   "sec": 78.9,
    "recorded": "2026-10-28T00:12:49",
-   "battery_sha": "7a2e74d2d7cc",
-   "instrument": "f37e2dacff66"
+   "battery_sha": "fdb2067890cc",
+   "instrument": "f37e2dacff66",
+   "mutated": [
+    "en",
+    "ru"
+   ],
+   "mutated_pages": [
+    "en",
+    "ru"
+   ],
+   "mutated_assets": [],
+   "assets_orphan": [],
+   "assets_read": 0,
+   "unsure": [],
+   "copied": [],
+   "tail": "ПОЙМАЛ",
+   "measured": "2026-10-28"
   },
   {
    "key": "landing-first-screen.py --control fold",
