@@ -8905,6 +8905,12 @@ it without the landing skill).
 `--mutate all` is measured by the breadth instrument like the other 59 records (60 of 60, same
 `instrument`, same `controls_sha`).
 
+**A leftover of the same era, named and not touched.** `welcome_en` is defined in all nine
+dictionaries and called by nothing — a shadow copy of the first screen from the two-language
+design, already drifted (the Russian one holds the English welcome, the other seven hold their own
+language). Nothing shows it to a person today; it is the next block's first item, because a key
+that nobody reads is a key that will be "fixed" in one place and shown from the other.
+
 **What this does not prove.** That a person sees it: `study-bot.service` has been running since
 27 Oct 14:57 and still holds the old code in memory — the fix reaches a real reader only after a
 restart, and a restart is the owner's one command, not a cron job's. That the wording is the best
