@@ -8466,4 +8466,51 @@ and its gate will ask for the stamp by name.
 `landing-regress-all.py` (two control rows), `tools/page-canary.json` (84 cells, 7 catchers),
 `tools/control-breadth.json` (59 rows), `references/page-canary.md`.
 
+## The set held fifty-one batteries, and the last whole run held forty-eight (28.10.2026)
+
+**The gap.** Three blocks in a row added batteries — `landing-page-overflow.py`,
+`landing-page-contrast.py`, `landing-page-fold.py` — and each was proven the same way: its own
+control turned it red, and the page canary asked it to name every page. What none of the three had
+done was run *inside the set*. The last whole run (03:29 the same night) finished with 48 rows and
+said so: `батарей: 48 из 51 | НЕ ХВАТАЕТ (3)`, and `--report` returned 1. The gap was nameable only
+because the report counts composition since 27.10; before that rule, the same journal would have
+printed «48 batteries, 0 red» and read as a whole run. Three green batteries measured on their own
+are three facts about three files; a set that has never carried them is a set whose composition is
+a memory.
+
+**The run.** One command, no subsets: **51 batteries, 20,224 checks, 0 red, 0 mute, 5,679.5 s
+(94.7 min)**, budget 7,200 s not reached, no `SKIPPED-BUDGET` row. The three new batteries carried
+their own numbers into it — `overflow` 36, `contrast` 24, `fold` 44 — and the total rose from
+20,120 (48 batteries, 03:29) to 20,224, which is exactly those 104 checks and nothing else. Every
+row printed the one line the journal reads, so no green cell is a green cell without a number.
+
+**The registry refused the run, and that was the point.** The runner calls
+`landing-count-ledger.py` at the end of every whole run. It answered: *«FAIL нет в реестре:
+landing-page-contrast.py (проверял 24) — внеси через --stamp»* and the same for `fold` (44) and
+`overflow` (36), `CHECKS: 51, FAILED: 3`, exit code 1 — with all fifty-one rows green. A run is not
+allowed to widen the registry by itself: the registry is the record of what was *watched* falling,
+not of what happened to print a number once. `--stamp` named the three entries (`taken 2026-10-28`),
+the registry went 48 → **51 entries**, the sum stayed 20,224, and the gate went green:
+`страниц в журнале: 51 | со счётом: 51 | проверок: 20224`, `CHECKS: 51, FAILED: 0`.
+
+**What a whole run proves that separate runs cannot.** Joints. On 27.10 the first whole run in a
+day found a race that no single battery could see: two batteries in the same process, one port.
+Today's run found none — and «none» is a measurement of a *set*, not a compliment to a page. It
+also fixes the arithmetic the earlier journal could only promise: the same battery measured in
+isolation and inside the set gives the same number (36 / 24 / 44), so the set does not bend what it
+measures.
+
+**What it does not prove.** Nothing about the live site: the live batteries (bytes, assets, runtime,
+third-party, form delivery, the bot) are `SKIP` by design and were not run. Nothing about the sum
+either: 20,224 adds runs, pages, posters and clauses on nine different scales, and the registry
+guards each battery's own count falling — comparing batteries by their numbers is comparing
+kilometres to litres. And one clean run is one sample: the 27.10 race was invisible in four separate
+green batteries and visible in one run of the set, so «0 red today» is a fact about today's tree,
+not a promise about the next edit.
+
+**Files.** `evidence/block-20261028d/full-run.log` and `full-run.json` (51 rows, 20,224 checks,
+5,679.5 s), `scripts/landing-counts.json` (51 entries, three added by `--stamp`). No page was
+changed: this block measured the instrument, and the instrument is the only thing that moved.
+
+
 
