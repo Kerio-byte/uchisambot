@@ -8740,3 +8740,86 @@ something other than memory.
 short texts), `tools/live-runs.json` (tenth entry, stamped from a real run). Evidence:
 `evidence/block-20261028g/` (first red run, controls, register-before/after, sweep red on the
 broken registry and green after restore) and `evidence/live-20261028T085940/`.
+
+## The name above the button was Russian for everyone who pressed it (28.10.2026)
+
+Nine pages end on one gesture, and the page it opens has three fields: a name, a long
+description, a short one. The previous block translated the two descriptions into nine
+languages and left the name alone — it was called a brand decision, measured and reported, not
+touched. Measured again with the Bot API, the same measurement is worse than it looked: the
+bot holds **nine empty language slots**. `getMyName(language_code=…)` returned `''` for all
+nine, and the single slot without a code — the one every unnamed language falls back to — held
+«Учебный помощник». So the first thing a visitor from Istanbul, São Paulo or Jakarta read about
+the product after pressing the site's main button was a script their phone cannot read. The
+site was green, and the defect sat one click past the last gate.
+
+**What the name is now.** Nine names, each the brand plus *the page's own headline* for that
+language: `UchiSamBot — Tareas paso a paso en Telegram`, `… — PR langkah demi langkah di
+Telegram`, `… — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में`. They are not new copy: every name
+is the `meta.title` of that language's own page, already written and proofread, so the
+register cannot drift from the page without the sweep saying so. The Russian name is the one
+exception and it is declared: «Учебный помощник» is kept verbatim as `handwritten`, because it is
+what the Russian audience already knows, and a brand decision is not a translation. The slot
+without a language code takes the English name — the site's default language, the same rule the
+descriptions already follow.
+
+**The trap that only a live run could show.** The first version of the writer put the English
+name into the *default* slot and stopped. Read-back said "9 of 9 OK" and the battery said
+otherwise: `getMyName(language_code="en")` was still empty. The default slot and the `en` slot
+are two different fields in Telegram, and a register that names nine languages was describing
+eight plus a fallback. That is the same class of lie the previous block found between the long
+and the short description — this time one level up. The writer now sets **ten** slots per field
+(the default plus all nine), and re-running it for `long` and `short` gave the two descriptions
+their missing `en` slots as well: 30 writes, 30 read-backs, 0 mismatches.
+
+**The register.** `tools/bot-profile.json` grew a `name` block in the shape it already had:
+`limit` 64, `texts` for nine languages, and a `handwritten` map that says out loud which slot is
+not derived. `tools/apply-bot-profile.py` (previously a one-off in a scratch directory, now in
+the repository) is the only device that writes the profile: it reads the register, sets the
+default slot and the nine, reads everything back, prints no token, and exits 2 — «не проверено» —
+when the token or the network is missing instead of going green. `--check` verifies without
+writing.
+
+**The battery.** `landing-bot-profile.py` went from 13 checks to **29**: the Bot API has to
+answer; the default slot has to equal the register; each of the nine slots has to equal its
+register text; no slot may be empty (the original defect, as one clause); every non-handwritten
+name must carry the brand; the Russian slot must stay Cyrillic (the owner's name was not
+rewritten); every name must fit 64; and — the clause that ties storage to what a person sees —
+**the live page's title must equal the default slot**. Controls went from 7 to 11: `ntitle`
+(broken page title), `nslot` (empty slot), `nbrand` (name without the brand), `nru` (Latin in the
+Russian slot). All eleven caught their own clause; the side effects are named, not counted.
+
+**Before and after, on the real bot.** First run, before the fix: **29 checks, 14 failed** —
+the default slot, nine slots, the empty-slot clause, the brand clause, the Cyrillic clause and
+the page title. After the register was applied: **29 / 0**, and the title of `t.me/UchiSamBot`
+is now the English name, which is the proof that the default slot is what a visitor actually
+gets. Eight of the eleven controls break the page-side clauses; three break the name-side ones.
+
+**Proving the gate can redden, from outside.** Two slots were broken on disk the way a person
+would break them — `tr` replaced with an English name, `hi` emptied. The sweep went 2 923 / 2
+and named them: *«нет: ['hi']»* and *«расходятся с заголовком страницы: ['hi', 'tr']»*, then back
+to 2 923 / 0 when the file was restored byte for byte. The sweep also feeds a deliberately
+broken copy of the register to the same three clauses and requires all three to redden — a
+fourth check, so the gate is shown to be a gate. Sweep: 2 919 → **2 923**.
+
+**The live side stays ten.** `tools/live-runs.json` records the new floor (29, up from 13) and
+carries a stamp from a real run: 29 checks, 0 failed, 6.2 s. The ledger judge: 10 rules, 0
+failed, all ten entries fresh, green and above their floor.
+
+**What this does not prove.** That a Telegram client *displays* the localized name: read-back
+proves storage, and only a phone with its app in Turkish would prove display. That
+«UchiSamBot — the page's headline» is a good name for a chat list: it is the page's own title,
+chosen for consistency, not tested on a reader — a shorter brand-first name may read better.
+That the Russian name should keep its current form: «Учебный помощник» carries no brand, and
+putting the brand in front of it is the owner's call, not a translation decision. And nothing
+here says the site sells: it says the third field of the second page of the sale is now watched
+by something other than memory.
+
+**Files.** `tools/bot-profile.json` (new `name` block: 9 names, limit 64, `handwritten` ru),
+`tools/apply-bot-profile.py` (new in the repository: the only writer; 3 fields × 10 slots;
+`--check`; exit 2 when unmeasured), `landing-bot-profile.py` (29 checks, 11 controls),
+`landing-sweep.py` (3 name clauses + their control, 2 919 → 2 923),
+`tools/live-runs.json` (floor 13 → 29, stamped from a real run). Evidence:
+`evidence/block-20261028h/` (battery red-before 29/14 and green-after 29/0, the first failed
+apply and the ten-slot fix, 11 controls, sweep red on broken names and green after restore) and
+`evidence/live-20261028T095001/`.

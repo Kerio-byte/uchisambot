@@ -34,5 +34,23 @@
    "uk": "Домашка крок за кроком у Telegram: розбір, пояснення простими словами, перевірка і картки. Перші 2 безкоштовно."
   }
  },
+ "name": {
+  "limit": 64,
+  "source": "meta.title из src/locales/<lang>.json — бренд плюс заголовок страницы этого языка; ru — рукописный, объявлен в handwritten",
+  "handwritten": {
+   "ru": "имя, которое стоит у бота сейчас; сохранено дословно, чтобы русский посетитель не увидел смену имени"
+  },
+  "texts": {
+   "en": "UchiSamBot — Step-by-Step Homework Help in Telegram",
+   "ru": "Учебный помощник",
+   "es": "UchiSamBot — Tareas paso a paso en Telegram",
+   "pt": "UchiSamBot — Tarefas passo a passo no Telegram",
+   "hi": "UchiSamBot — होमवर्क का स्टेप-बाय-स्टेप हल, Telegram में",
+   "id": "UchiSamBot — PR langkah demi langkah di Telegram",
+   "tr": "UchiSamBot — adım adım ödev çözümü, Telegram'da",
+   "vi": "UchiSamBot — Bài tập về nhà từng bước trên Telegram",
+   "uk": "UchiSamBot — домашні завдання покроково в Telegram"
+  }
+ },
  "set": "2026-10-28"
 }
