@@ -9311,3 +9311,40 @@ stamp, which is a block of its own, not the tail of this one.
 
 **Files.** This entry only — no page, no dictionary, no battery was touched; the push is a
 main-branch journal push to both mirrors.
+
+## The seventh block gave the site an eye, and the eye read all nine headlines (28.10.2026, седьмой блок дня)
+
+**What this block was for.** The six entries above end with the same admission: *this block had
+no vision tool, so the frames stand on geometry, not on an eye.* The local [model] on `[локальный порт]`
+reports `capabilities: ["completion", "multimodal"]` — the eye was there all day and nobody had
+pointed it at a single frame. This block pointed it, and turned it into a battery instead of a
+one-off look: `landing-eye.py`.
+
+**How the eye is stopped from lying.** A vision model asked «any defects?» says «looks good»,
+which is worth nothing. So the battery carries a grounding guard: the model must read the page
+`<h1>` first, the battery extracts the expected headline from the built HTML itself and compares
+word by word, and anything under 60 % overlap is reported as `eye-not-grounded` — a red check,
+not a pass. An empty answer is `eye-silent`, also red. The worst outcome this battery can produce
+is a failed run; it cannot produce a green one it did not earn.
+
+**Measured.** Nine languages × the first screen and the contact block × two viewports = 36 frames
+from `evidence/visual-20261028`. Every language passed, and the model read each headline verbatim
+across three scripts — Latin («Homework that finally makes sense»), Cyrillic («Домашка, которая
+наконец понятна», «Домашка, яка нарешті стає зрозумілою») and Devanagari («होमवर्क, जो अब आखिरकार
+समझ में आता है»). Zero visible defects: no clipped text, no overlap, no button off-screen, no
+narrow desktop column.
+
+**A limit measured the expensive way.** Six frames in one question returned an empty `content`
+for seven languages — the whole token budget went into reasoning and nothing came out. Four
+frames per question answer in about 22 s. The battery now chunks the frames by four and labels
+silence `eye-silent`, so a run cannot again spend twelve minutes on answers that never arrive.
+
+**What this does not prove.** That the eye agrees with a person: it reads text and reports breaks
+it can see; it does not judge taste, and it was not asked to. And that the whole page has been
+looked at — `head`, `subjects`, `shots`, `band` and `footer` have not been through the eye yet;
+those sections still rest on geometry alone. That is the next block's work, at two sections per
+question.
+
+**Files.** `stars-bots-ops/scripts/landing-eye.py` (new); `evidence/eye-20261028/eye.json`
+(the 36-frame pass — `evidence/` is gitignored and stays out of the repo); this entry. No page,
+no dictionary, no existing battery was modified.
