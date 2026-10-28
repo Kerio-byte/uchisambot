@@ -1,6 +1,6 @@
 # Privacy Policy
 
-UchiSamBot (Study Helper) · Last updated: 25 October 2026
+UchiSamBot (Study Helper) · Last updated: 28 October 2026
 
 **Language:** this document is published in English (this section) and Russian (the section below). There are no other language versions; on the other language pages the link here is marked “(EN/RU)”.
 
@@ -77,7 +77,7 @@ Use the contact form on our website — we reply by email.
 
 ## Политика конфиденциальности
 
-UchiSamBot (Учебный помощник) · Обновлено: 25 октября 2026
+UchiSamBot (Учебный помощник) · Обновлено: 28 октября 2026
 
 UchiSamBot (Учебный помощник) — телеграм-бот, который помогает школьникам разбираться с домашними заданиями: разбирает задачи по шагам, объясняет темы простыми словами, проверяет решения и делает конспекты для повторения. Здесь описано, какие данные обрабатывает бот и как. Политика относится к боту (t.me/UchiSamBot) и его сайту (kerio-byte.github.io/uchisambot). В этой политике «мы» — команда, которая ведёт UchiSamBot.
 
