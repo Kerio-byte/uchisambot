@@ -2,7 +2,7 @@
  "measured": "2026-10-28",
  "what": "что ломает каждый контроль набора и на скольких страницах это видно",
  "source": "landing-regress-all.py CONTROLS",
- "controls_sha": "2bc7277bf3e3",
+ "controls_sha": "196e29dc5405",
  "instrument": "f37e2dacff66",
  "entries": [
   {
@@ -115,6 +115,26 @@
    "instrument": "f37e2dacff66"
   },
   {
+   "key": "landing-bot-keys.py --mutate all",
+   "battery": "landing-bot-keys.py",
+   "args": [
+    "--mutate",
+    "all"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 0.8,
+   "recorded": "2026-10-28T11:45",
+   "battery_sha": "3df0711ed197",
+   "instrument": "f37e2dacff66"
+  },
+  {
    "key": "landing-bot-lang.py --mutate all",
    "battery": "landing-bot-lang.py",
    "args": [
@@ -132,6 +152,26 @@
    "sec": 5.4,
    "recorded": "2026-10-28T10:36",
    "battery_sha": "c04173649faa",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-bot-vars.py --mutate all",
+   "battery": "landing-bot-vars.py",
+   "args": [
+    "--mutate",
+    "all"
+   ],
+   "verdict": "не наблюдается",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 0,
+   "untouched": [],
+   "code": 0,
+   "sec": 1.0,
+   "recorded": "2026-10-28T13:17",
+   "battery_sha": "65582e355a0d",
    "instrument": "f37e2dacff66"
   },
   {
