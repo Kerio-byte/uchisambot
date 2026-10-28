@@ -8662,3 +8662,81 @@ before/after, sweep red and green proofs, `merge-3-rows.py`) and `evidence/live-
 
 
 
+
+## The button every visitor presses led to a page nobody had opened (28.10.2026)
+
+Nine pages in nine languages make one promise and one gesture: a student reads the page and
+presses the button that opens `https://t.me/UchiSamBot`. The link had been checked as a *string*
+many times — the sweep compares the `href` on every page, `landing-links-audit.py` proves it is
+not broken, `landing-third-party.py` counts foreign hosts. No battery had ever opened what the
+link opens. So the second page of the sale — the one every visitor sees **before** the first
+message — had never been read by anything in this repository.
+
+**What was there.** A Russian title (`Учебный помощник`), a Russian description, a real avatar,
+a working `START BOT` button. And inside that description: *«математика, русский, физика»*.
+The subject registry (`tools/subjects.json`) sells **English**, not Russian — the same class of
+defect that once shipped to nine pages when translators put the page's own language into the
+subject chips. This time it sat one step closer to the buyer, and the site was green.
+
+**Two descriptions, one page.** The first fix looked done and was not. `setMyDescription` is the
+long field (≤512), shown in an empty chat before the first message; the page at `t.me` shows the
+**short** field (`setMyShortDescription`, ≤120). Nine long texts went in, read-back returned all
+nine — and the page did not move: the register said 144 characters, the page showed 102. The
+battery caught exactly that, because it compares the *live page* with the register and not the
+register with itself. Both fields were then set per language: eight languages take the site's own
+`meta.desc` (already written, translated and proofread for the page), the hand-written Russian
+long text is preserved verbatim as the `ru` slot, the slot without a language code — the one a
+visitor from an unnamed language gets — is English, which is the site's default language. 18
+texts, 18 read-backs, 0 mismatches. A third text that had been living in BotFather
+(*«Пришлите задачу или вопрос по школьной программе…»*) is gone: three surfaces, one wording now.
+
+**The register, not the BotFather field.** `tools/bot-profile.json` is the single source, in the
+same shape as `site.json`, `prices.json` and `subjects.json`: `long` and `short`, nine languages
+each, `default`, and a `handwritten` map that says out loud which slot is not derived. The sweep
+asks three questions of it (2 915 → 2 919 with the control): the eight long texts must equal the
+dictionaries' `meta.desc` word for word; the nine short texts must fit 120 and the default slot
+must be Latin; every short text must carry both a word about free and the number from
+`prices.json` (2) — otherwise the profile promises "free" in general, which the product does not.
+
+**The battery.** `landing-bot-profile.py` (13 checks, live, Playwright) opens the page the site
+points at and reads it as a visitor: 200 and a bot page (a `START` button, not a contact);
+`@username` equals the tail of the site's own link, and all twelve pages point at **one** profile;
+name non-empty and inside 64; short description inside 120; the short description equals the
+register; no Cyrillic in the default slot; no subject outside the canon; a free promise carries
+its limit; a real avatar (≥100 px); the button resolves to that same bot; no "not found" text.
+Seven controls, each breaking the fetched copy once: `cyrillic`, `empty`, `subject`, `unlimited`,
+`photo`, `dead`, `nobot`. First run, before the fix: **two red** — the Cyrillic clause (81 letters)
+and the subject clause (`русский`). After the fix: 13 / 0. Controls: 7 / 7 caught, and the
+side-effects are named rather than hidden — a broken description also reddens the
+register-equality clause, which is honest (the text really did leave the register) but is not
+counted as proof.
+
+**Proving the gate can redden, from outside.** The three sweep clauses were broken on disk the
+way a person would break them: the default short text replaced with a Russian sentence, the
+Turkish short text stripped of its number. The sweep went 2 919 / 2, naming exactly *«кириллица в
+слоте по умолчанию: True»* and *«без лимита «2»: ['tr']»*, and back to 2 919 / 0 when the file was
+restored. Inside the sweep the same three clauses are also fed a deliberately broken copy of the
+register and must all three redden — a fourth check, so the gate is shown to be a gate.
+
+**The live side is ten now.** The new battery is registered in `tools/live-runs.json` (ten entries,
+`every_days: 3`, `floor: 13`) and stamped from a real run through `landing-live-run.py --stamp`
+(13 checks, 4.0 s). The judge: 10 rules, 0 failed, ten of ten entries fresh, green and above their
+floor. Set composition unchanged at 51 batteries in the offline set; the new file is in `SKIP`
+with the word «живой» in its reason, which is what makes it visible to the composition rule.
+
+**What this does not prove.** That the title reads for a non-Russian visitor: the display name is
+still `Учебный помощник`, and a name is a brand decision, not a translation — measured, reported,
+not touched. That Telegram actually *shows* each localized description to a user whose app is in
+that language: read-back proves storage, not display, and only a phone in Istanbul would prove
+display. That the nine short texts are good copy: they are compressed from approved page text by
+this block, not tested on a reader. That the avatar is on brand — only that it exists, loads and
+is 320 px wide. And nothing here says the site sells: it says one more surface is now watched by
+something other than memory.
+
+**Files.** `landing-bot-profile.py` (new battery, 13 checks, 7 controls), `landing-sweep.py`
+(three register clauses + their control, 2 915 → 2 919, live section «девять» → «десять»),
+`landing-regress-all.py` (SKIP line with the reason), `landing-live-ledger.py` /
+`landing-live-run.py` (docstrings say ten), `tools/bot-profile.json` (new registry: 9 long + 9
+short texts), `tools/live-runs.json` (tenth entry, stamped from a real run). Evidence:
+`evidence/block-20261028g/` (first red run, controls, register-before/after, sweep red on the
+broken registry and green after restore) and `evidence/live-20261028T085940/`.
