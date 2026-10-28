@@ -8583,6 +8583,82 @@ counts foreign hosts is its own controls' business, not the register's.
 Evidence: `evidence/block-20261028e/` (gate, its nine controls, the red proof of the sweep, the
 set-parity answer) and `evidence/live-20261028T071521/` (the live journal).
 
+## The two live batteries that answer a real person could only be run by hand (28.10.2026)
+
+Block e gave the live side a register and a judge, and left three entries with `run: false`:
+the real letter, the proof of its delivery, and the generations on the GPU. That was honest —
+each needs a condition a background run cannot promise — but it had a price nobody had priced:
+the register could say *why* a battery stood still, and could not say *with what* it would move.
+
+**The word that was never supplied.** `landing-contact-delivery.py` takes `--stamp "…"`, and
+that timestamp is born in the neighbouring run: `landing-contact-e2e.py --live` prints it after
+it has sent the letter. In the register the argument was written as `{{STAMP}}`, and the runner
+had no flag to fill it — so the argv would have carried the literal braces into the process, and
+the battery would have gone red for a reason that belonged to the caller. Two real batteries,
+the only ones that touch a living person's path, were runnable in exactly one way: by a human
+copying a line out of a terminal. That is the same defect the live group was built to end, one
+layer down.
+
+**What the runner learned.** `--cond` includes the conditioned entries; `--set КЛЮЧ=ЗНАЧЕНИЕ`
+supplies what only the neighbouring step knows; a placeholder that survives substitution is
+printed in words (`нечем заполнить {{STAMP}} — нужен --set STAMP=…`) and goes into `skipped`,
+never into the green rows. A new `capture_re` in the register lets the runner *keep* what a
+battery printed for the next one — the e2e's stamp is captured, printed on the row, and written
+into the journal (`captures`), so the chain "letter → proof of delivery" is two commands instead
+of a copy-paste. And the note a stamped record carries now names the journal it came from: with
+`--out` the old note pointed at a directory that did not exist, which is a date without a source.
+
+**The path, exercised today, through the runner.** `--cond --only contact-e2e --stamp`:
+13 checks, 0 failed, stamp `2026-10-28 08:07:45`, register row written from a real run. Then
+`--cond --only delivery --set STAMP="2026-10-28 08:07:45" --stamp`: the letter was found in the
+mailbox 1 minute old, the stamp in its body and the test address in its `email` field — 1 letter,
+0 failed. An earlier pass of the same chain (stamp `08:02:19`, evidence `block-20261028f/chain-*`)
+confirmed the same thing before the code knew how to record it. Nothing here is a simulation:
+the letter went through Web3Forms from the published page in a real Chrome on `:9223`.
+
+**The gate's tenth question.** A conditioned entry may not be a battery nobody can start. Rule
+`runnable`: every placeholder left in the argv of a `run: false` entry must be declared in the
+entry's `placeholders` with a word saying where the value comes from — and a declared placeholder
+that the argv does not use is a promise with nothing behind it, also a failure. Control `nofill`
+removes the declaration from the delivery record and demands that exactly this rule reddens:
+10 controls, 10 caught, one guilt each.
+
+**The red nobody was asking about.** While checking the new rule, the count gate was run plainly
+— and it was red: 51 batteries in `landing-counts.json`, 48 rows in the journal, and three
+batteries (`page-contrast`, `page-fold`, `page-overflow`) unconfirmed by any run. Not a battery
+failure: today's measurement printed exactly the recorded numbers (24 / 44 / 36). The journal was
+older than the last register entry, because a full set takes an hour and a half and these three
+were edited and measured one at a time afterwards. The sweep had stayed green throughout, and
+that is the finding: it proved the gate's four controls could redden, and never asked the gate
+about today. A gate nobody asks about the present is a report about the past.
+
+**Both closed.** The three rows were measured (`--only … --append`, 20 s / 20 s / 14 s, 104
+checks, 0 red) and stitched into the journal, which is stated rather than discovered: 48 → 51
+rows, 20 120 → 20 224 checks, 0 red, 0 mute, copy in `evidence/block-20261028f/`. The count gate
+is 51 / 0. Then a check was added to the sweep — *the ledger is green on today's journal*
+(2 914 → 2 915) — and proven red from outside: one row removed from a copy of the journal, the
+sweep went 2 915 / 1 naming exactly `landing-badge-rows.py`, and back green when the file was
+restored. Live side: 10 rules, 0 failed, 10 of 10 controls; set composition 51 batteries, 24
+deferred, 0 questions; control breadth 59 records on one instrument; page canary 12 pages, 81
+cells, 0 missed.
+
+**What this does not prove.** That the answer time still holds: it was not re-measured today
+(23.10, norm 30 days), and a green register entry five days old is a memory, not a measurement.
+That the chain survives a cold machine: it needed a real Chrome on `:9223`, and the first launch
+on the old `chromium-upwork` profile produced no DevTools port at all — the run that succeeded
+used a fresh profile, which is a condition, not a guarantee. That the three stitched rows were
+green today for the same reason they were green before: their code was already the current one,
+and the numbers matched, but they were not measured as part of a whole set. And that anything
+above says the site sells: it says the instruments now ask the questions they were built for.
+
+**Files.** `landing-live-run.py` (`--cond`, `--set`, `capture_re`, unfilled placeholders as
+skips, notes naming their journal), `landing-live-ledger.py` (rule `runnable`, control `nofill`),
+`landing-sweep.py` (dynamic control count 9 → «все свои», the new "green on today's journal"
+check, 2 915), `tools/live-runs.json` (`placeholders` for the delivery record, `capture_re` for
+the letter, both conditioned rows stamped from today's runs). Evidence:
+`evidence/block-20261028f/` (nofill skip, chain journals, journal before/after, count-ledger
+before/after, sweep red and green proofs, `merge-3-rows.py`) and `evidence/live-20261028T0807*/`.
+
 
 
 
