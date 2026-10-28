@@ -8823,3 +8823,102 @@ by something other than memory.
 `evidence/block-20261028h/` (battery red-before 29/14 and green-after 29/0, the first failed
 apply and the ten-slot fix, 11 controls, sweep red on broken names and green after restore) and
 `evidence/live-20261028T095001/`.
+
+## The bot answered "Російська" to five languages that had just chosen their own (28.10.2026)
+
+The site's last gesture is the same on all nine pages: press the main button, land in the bot,
+press `/lang`, pick your language. The previous two blocks measured what is *above* that button
+(the page the button opens, and the name on it). This block measured the screen *inside* it, and
+found the one bot screen where six languages out of nine were wrong: the confirmation that
+follows the choice.
+
+**What it said.** In Spanish «✅ Idioma: Ruso», in Hindi «✅ भाषा: रूसी», in Turkish «✅ Dil:
+Rusça», in Vietnamese «✅ Ngôn ngữ: Tiếng Nga», in Ukrainian «✅ Мова: Російська» — each rendered
+in the language the person had just picked, and each naming Russian. For a Ukrainian reader that
+is not a typo, it is the wrong answer to a question about identity, delivered in their own
+language.
+
+**Why it was wrong by construction, not by translation.** The screen was built for two languages:
+a key `lang_set` holding «Язык: Русский», a second key `lang_set_en` holding the English line, and
+the choice between them made by the calling code —
+
+```python
+t(lang, "lang_set_en") if lang == LANG_EN else t(lang, "lang_set")
+```
+
+With two languages this is correct. With nine, `else` means "everyone who is not English gets the
+Russian sentence", and the seven translators who filled `lang_set` filled it with the meaning the
+Russian slot had: *the language is Russian*. Two of them (Portuguese, Indonesian) wrote their own
+language into it by accident and were right; the other five were not. The English slot had the same
+disease, hidden one level deeper: `lang_set` in the English dictionary also said "Language:
+Russian", and only the branch kept it invisible. It became visible the moment the branch was
+replaced by a single function — which is the point of the fix.
+
+**The fix is the removal of a branch, not nine strings.** `handlers.lang_set_text(lang)` renders
+`t(lang, "lang_set")`, and `cb_lang` calls it. Each dictionary now names itself: «✅ Язык:
+Русский», «✅ Language: English», «✅ Idioma: Español», «✅ Idioma: Português», «✅ भाषा: हिन्दी»,
+«✅ Bahasa: Indonesia», «✅ Dil: Türkçe», «✅ Ngôn ngữ: Tiếng Việt», «✅ Мова: Українська». The key
+`lang_set_en` is deleted from all nine dictionaries and from the code, so "English is the special
+one" has nowhere to live. Nine strings, one function, no branch.
+
+**The battery.** `landing-bot-lang.py` (73 checks, offline, renders through the bot's own code —
+`lang_set_text`, `menu_kb`, `t`). Per language: the confirmation is not empty in the register;
+it names *its own* language, using the last word of the button the person pressed (`Español`,
+`हिन्दी`, `Türkçe`, and `Indonesia` for «Bahasa Indonesia»); it names no other language; it has no
+raw placeholders; it has no Cyrillic outside ru/uk; the menu rebuilt after the switch carries seven
+labels in the new language; the first screen (`welcome`) names the same language. Global: nine
+dictionaries, nine titles, the nine confirmations are pairwise different, `lang_set_en` is gone,
+and two AST clauses require that `cb_lang` renders through `lang_set_text` and contains no
+`LANG_EN` branch.
+
+**Before and after, on the real dictionaries.** First run, before the texts were touched:
+**73 checks, 7 failed** — `свой язык` for en, es, hi, tr, vi, uk, plus `ключ: lang_set_en больше
+не нужен`. After: **73 / 0**. Six controls, six caught their own clause: `wrong` (es → «Idioma:
+Ruso»), `empty` (tr → empty slot), `raw` (vi → `{lang}`), `cyr` (id → «Bahasa: Русский»), `en`
+(uk → «Language: English»), `dupe` (all nine → the Russian line). Side effects are printed and not
+counted.
+
+**A control that taught the battery a fact.** The `empty` control first *did not* redden `пусто:`
+— because `t()` falls back to English for an empty slot, so a Turkish user never sees an empty
+message, they see "✅ Language: English". The clause was measuring the wrong thing: the hole is in
+the register, the symptom is English. It now reads the dictionary (`TEXTS[lang]["lang_set"]`) and
+the fallback is caught once more by `свой язык: tr`. Both facts are named in the docstring.
+
+**Proving the red from outside.** A copy of the bot tree was made (`BOT_ROOT`), the two-language
+path was put back into it — `lang_set_en` in `uk` and the old ternary in `cb_lang` — and the
+battery went red on exactly four clauses: the key, the string in the code, the branch, and the
+missing call. The untouched copy was green, and the restored copy was green again. The battery
+cannot be satisfied by a copy it does not read.
+
+**The always-run gate.** The sweep grew twelve checks (2 923 → **2 935**) reading the same
+dictionaries with the same AST parse it already uses for the mockups: nine per-language "names its
+own language", plus `lang_set_en` is gone, the nine are different, and no Cyrillic outside ru/uk.
+Shown to be a gate: the Spanish slot set back to «✅ Idioma: Ruso» → **2 935 / 1**, naming
+`[es] … нет слова «Español»`; `lang_set_en` put back into the Russian dictionary → **2 935 / 1**,
+naming `lang_set_en вернулся: ['ru']`; file restored byte for byte (sha256
+`5ee92412…b503` before and after) → **2 935 / 0**. Bot tests: 97 → **125 passed, 2 skipped**
+(`tests/test_lang_screens.py` is the same rule at the bot's own layer, where a bot developer sees
+it without the landing skill).
+
+**The set and the register.** The battery is the **52nd** of the offline set (runner row: 73 checks,
+4.8 s, code 0), `landing-counts.json` is stamped (52 of 52 rows, 20 297 checks), and the control
+`--mutate all` is measured by the breadth instrument like the other 59 records (60 of 60, same
+`instrument`, same `controls_sha`).
+
+**What this does not prove.** That a person sees it: `study-bot.service` has been running since
+27 Oct 14:57 and still holds the old code in memory — the fix reaches a real reader only after a
+restart, and a restart is the owner's one command, not a cron job's. That the wording is the best
+available: «✅ Idioma: Español» is the plainest sentence that cannot be wrong, not a tested one.
+That a leading tick is wanted on this screen at all. And nothing here says the site sells: it says
+the last screen a visitor meets inside the product now names the language they chose, and something
+other than memory watches it.
+
+**Files.** `bot/handlers.py` (`lang_set_text`, `cb_lang` calls it), `bot/i18n.py` and
+`bot/i18n_extra.py` (nine self-naming slots, `lang_set_en` deleted),
+`tests/test_lang_screens.py` (new, 7 test functions, 2 skipped for ru/uk), `landing-bot-lang.py`
+(new battery: 73 checks, 6 controls, `BOT_ROOT`), `landing-regress-all.py` (`NEED_BOT` + one
+`CONTROLS` entry), `landing-sweep.py` (12 checks), `landing-counts.json` (52 entries),
+`tools/control-breadth.json` (60 records). Evidence: `evidence/block-20261028i/` (red-before
+73/7, green-after 73/0, six controls, the external proof on a copy, sweep red on a broken slot and
+on a returned key, green after restore with the file's sha) and
+`evidence/breadth-20261028T103629/`.
