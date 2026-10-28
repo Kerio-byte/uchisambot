@@ -42,7 +42,8 @@ Live: https://kerio-byte.github.io/uchisambot/
   is now 84 cells (7 × 12 pages): 81 caught, 3 not applicable (`404.html` has no relative links,
   anchors or ids). Added because the sum of checks could not answer whether any page was unread,
   and two pages were.
-- `tools/publish-tree.py` — the one list of what counts as the site (109 files), and `--check`
+- `tools/publish-tree.py` — the one list of what counts as the site (107 files; this line said 109
+  until 28.10.2026 — two badge files left together with their platforms, 109 → 108 → 107), and `--check`
   for it: every listed file exists, no page links into the workshop, every internal reference
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
   154 files — `/README.md` included. `--verify-served DIR` serves a staged tree and asks for every
@@ -9141,3 +9142,44 @@ gate would name them if they claimed to be.
 **Files.** `tools/locale-key-parity.py`, `tools/placeholder-parity.py` (new, read-only). Registry:
 `landing-counts.json` (54 entries, stamped against today's journal). Committed with them: the previous
 block's own entry and its `tools/control-breadth.json`.
+
+## The footer sent every visitor to a dead partner, and the policy counted three text links (28.10.2026, третий блок дня)
+
+**What was found.** `aitooltrek.com` answered 404 — the root, the `www` host and with a
+browser user-agent alike. Old evidence still shows 200 on 25.10, so it died between the
+twenty-fifth and the twenty-eighth. The link stood in the footer of all nine pages and was
+named twice in the privacy policy (the English and the Russian section) as one of the
+"three text links".
+
+**What was done.** Removed from the template; the footer now carries Realistic AI and
+Based Tools AI. The policy says "Two plain text links" in both languages. The
+"last updated" date was raised to 28.10 — the date guard rightly refuses a changed text
+under yesterday's date — and the rebuild carried the new date into `lastmod`.
+
+**How it was checked, outside the block.** `build.py --check` — 24 of 24 files identical to
+a fresh build. The footer was read page by page: exactly two partner links on all eight
+language pages (the launch badges are a separate strip). `landing-external-links.py` —
+68 external addresses, **0 failed, 0 unverified**. The live policy is byte-identical to the
+repository (37 731 bytes), already says "Two plain text links", and `aitooltrek` appears in
+neither the built tree nor the live pages.
+
+**The class, named.** A partner check already exists — `landing-external-links.py` counts
+anything under 400 as alive — but it is deliberately kept out of the sweep (the network
+gives floating results), so a partner that dies on the twenty-sixth is invisible until a
+technical pass runs it by hand. A dying partner has no automatic alarm: that is the gap this
+block lived through, not one it introduced.
+
+**The count that disagreed with itself.** The publish list measured **107 files**, while the
+top of this README still said 109. Recounted: 107 is the truth — two files left together with
+their platforms (109 → 108 → 107) — and the top line now says so. 495 internal references,
+not the 513 written beside the old number.
+
+**What this does not prove.** That the two remaining partners stay alive: nothing watches
+them between passes. That a person looked: this block had no vision tool, and the frames in
+`evidence/visual-20261028/` were left unread — a later live session read four of them
+(English phone, English desktop, Turkish phone, Russian contact) and found no defect; two
+suspected clipped chips turned out to be 10–16 px of padding inside the phone mockup.
+
+**Files.** `index-src.html`, the nine built pages, `privacy.html` + its markdown twin,
+`sitemap.xml`, `tools/lastmod.json`; this entry and the corrected file count in the
+`publish-tree.py` bullet above.
