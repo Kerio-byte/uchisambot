@@ -9183,3 +9183,39 @@ suspected clipped chips turned out to be 10–16 px of padding inside the phone 
 **Files.** `index-src.html`, the nine built pages, `privacy.html` + its markdown twin,
 `sitemap.xml`, `tools/lastmod.json`; this entry and the corrected file count in the
 `publish-tree.py` bullet above.
+
+## The gates the morning fixed were asked again, and every one answered (28.10.2026, четвёртый блок дня)
+
+**What this block is.** Not a hunt — a verification pass. The three blocks of the day
+fixed the register, the dead partner and the file count; this block asked every gate
+again, end to end, so those fixes stand proved rather than assumed.
+
+**What was run, and what it said.**
+- `tools/build.py --check` — 24 of 24 files byte-identical to a fresh build: the tree
+  on disk is exactly what the current sources produce (reproducibility).
+- `tools/publish-tree.py --check` — the list is complete (107 files), nothing extra,
+  all 495 internal references stay inside the list.
+- `landing-external-links.py` — 68 external addresses, **0 failed, 0 unverified**
+  (the two footer partners included).
+- `tools/publish-branch.sh --dry-run` — the staged tree served **81 of 81 addresses**
+  with zero errors: a switch of the publish source would not break anything.
+- `landing-sweep.py` — **CHECKS: 2944, FAILED: 0, ALL PASS.** The morning's whole
+  run counted 2914; the thirty extra checks are the batteries the earlier blocks of
+  today added to the set, now in the count.
+
+**The policy read as an article, not as markup.** `tools/page-text.py privacy.html`:
+the English half says "Two plain text links in our footer — Realistic AI
+(realisticai.io) and Based Tools AI (basedtools.ai)"; the Russian half says "Две
+обычные текстовые ссылки в подвале" with the same two names; "Last updated:
+28 October 2026". Neither half carries "three text links", "aitooltrek" or a partner
+that is no longer in the footer — text and markup agree after the third block's edit.
+
+**What this does not prove.** That the two remaining partners stay alive between
+passes: the external-links battery is deliberately kept out of the sweep (the network
+gives floating results), so a partner that dies tomorrow has no automatic alarm —
+the gap the third block named, not one this block closed. And that a person looked at
+the frames: this block had no vision tool, so the 306 measured frames of
+`evidence/visual-20261028/` stand on measurement alone.
+
+**Files.** This entry only — no site file was touched, so nothing moves in
+`gh-pages`; the push is a main-branch journal push to both mirrors.
