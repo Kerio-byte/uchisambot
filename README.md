@@ -9312,6 +9312,49 @@ stamp, which is a block of its own, not the tail of this one.
 **Files.** This entry only — no page, no dictionary, no battery was touched; the push is a
 main-branch journal push to both mirrors.
 
+## The eighth block asked the eye to read a line it could not know in advance (28.10.2026, восьмой блок дня)
+
+**What this block was for.** The seventh entry ended with an admission: `head`, `subjects`, `shots`,
+`band` and `footer` had never been through the eye, and for those frames the grounding guard had
+nothing to hold on to — no `H1` in a subject grid, a chat mockup or a footer. The battery's own
+code answered that hole with `ok_head = bool(got["lang"])`: **one word of language was enough to
+call a frame passed.** A model could read nothing at all in the block and still go green.
+
+**The fix, before any measuring.** `expected_anchor(root, lang, section)` (28.10.2026) takes the
+first real line of the block out of the built page itself — `h2`, else the first paragraph — and the
+prompt now asks for it verbatim: `LINE: <дословно одна строка текста, которую видно в блоке>`.
+For frames without a first screen the verdict is now the word overlap between that line and the
+HTML's own anchor; the language answer is no longer accepted as proof. If the block has an anchor
+but the model read no line, the row is `eye-not-grounded` (red), not a pass. The prompt still forbids
+taste judgements and still names only visible breakage as a defect.
+
+**Second fix: silence is transport, not a verdict.** `en` returned an empty `content` twice for
+`subjects,shots` — the whole budget went into reasoning. The battery now retries a silent chunk
+frame by frame before it writes `eye-silent`, so a page is not failed for a model that stopped
+talking.
+
+**Measured (`evidence/eye-20261028`, frames from `evidence/visual-20261028`, nine languages × two
+viewports per section).**
+- `head,hero` — **9/9 pass**, every language grounded on its own `H1` read verbatim across Latin,
+  Cyrillic and Devanagari; zero visible defects.
+- `subjects,shots` — 9 pairs: **0 defects, 1 ungrounded (`vi`), 2 silent (`en`, `es`)**. Grounding
+  itself worked: `ru` answered «Школьные предметы», matched its anchor 2/2 words (100 %). The red
+  rows are the model's, not the page's — `vi` never produced a line, `en`/`es` stayed silent even
+  frame by frame. That is a hole in *proof*, and it is reported as a hole.
+- `band,footer` — started, **not finished inside this block**: the first language (`en`) came back
+  ungrounded at 2/10 words on the `band` anchor. Two readings are possible — the model paraphrased
+  the band sentence, or the band sentence is genuinely cut in the frame — and this block did not
+  spend the frames to tell them apart. It is the first item of the next block.
+
+**What this does not prove.** That a green row is taste-approved: the eye reports breakage it can
+see, and four of the nine languages' lower sections have not been looked at yet. And that the model
+is stable: it goes silent on some frames regardless of content, so a silent row must be re-asked,
+never read as clean.
+
+**Files.** `stars-bots-ops/scripts/landing-eye.py` (anchor grounding, per-frame retry); this entry.
+`evidence/` is gitignored and stays out of the repo. No page, no dictionary, no other battery was
+touched.
+
 ## The seventh block gave the site an eye, and the eye read all nine headlines (28.10.2026, седьмой блок дня)
 
 **What this block was for.** The six entries above end with the same admission: *this block had
