@@ -1,0 +1,194 @@
+{
+  "_note": "РЕЕСТР ЖИВОЙ СТОРОНЫ (28.10.2026). Девять батарей, которые меряют не дерево, а опубликованный сайт, ящик, бота и настоящее письмо. Они не входят в офлайн-набор (SKIP раннера), поэтому у них не было ни расписания, ни памяти: «живое зелёное» держалось на памяти о прошлых блоках, а неделя без замеров выглядела как здоровье. Здесь записано, когда каждая мерилась в последний раз, чем это кончилось и каким числом меряется. Пишет `last` только раннер живой группы (landing-live-run.py --stamp) из настоящего прогона; вручную правится только спецификация (needs/every_days/unit/floor/argv/…). Судит реестр landing-live-ledger.py, он read-only и в реестр не пишет.",
+  "site": "https://kerio-byte.github.io/uchisambot/",
+  "batteries": {
+    "landing-live-bytes.py": {
+      "needs": "сеть: живой сайт GitHub Pages",
+      "every_days": 3,
+      "unit": "файлов (26 сверок sha256 + проба 404, её отказ попадает в BAD)",
+      "floor": 26,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}"
+      ],
+      "count_re": "TOTAL (\\d+)  *\\|",
+      "failed_re": "BAD (\\d+)",
+      "last": {
+        "at": "2026-10-28T07:15",
+        "code": 0,
+        "count": 26,
+        "failed": 0,
+        "note": "прогон живой группы 20261028T071521"
+      }
+    },
+    "landing-live-assets.py": {
+      "needs": "сеть: живой сайт и его ассеты",
+      "every_days": 3,
+      "unit": "ассетов",
+      "floor": 90,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}"
+      ],
+      "count_re": "АССЕТОВ на живом проверено: (\\d+)",
+      "failed_re": "ПРОБЛЕМ: (\\d+)",
+      "last": {
+        "at": "2026-10-28T07:15",
+        "code": 0,
+        "count": 90,
+        "failed": 0,
+        "note": "прогон живой группы 20261028T071521"
+      }
+    },
+    "landing-live-runtime.py": {
+      "needs": "сеть + браузер Playwright",
+      "every_days": 3,
+      "unit": "проверок (9 языков × 13 + 4 общих)",
+      "floor": 121,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}"
+      ],
+      "count_re": "CHECKS: (\\d+)",
+      "failed_re": "FAILED: (\\d+)",
+      "last": {
+        "at": "2026-10-28T07:16",
+        "code": 0,
+        "count": 121,
+        "failed": 0,
+        "note": "прогон живой группы 20261028T071521"
+      }
+    },
+    "landing-third-party.py": {
+      "needs": "сеть + браузер Playwright",
+      "every_days": 3,
+      "unit": "проверок (12 страниц × 9)",
+      "floor": 108,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}"
+      ],
+      "count_re": "CHECKS: (\\d+)",
+      "failed_re": "FAILED: (\\d+)",
+      "last": {
+        "at": "2026-10-28T07:16",
+        "code": 0,
+        "count": 108,
+        "failed": 0,
+        "note": "прогон живой группы 20261028T071521"
+      }
+    },
+    "landing-inbox-canary.py": {
+      "needs": "токен Google kerio + живой ящик с подачами формы",
+      "every_days": 1,
+      "unit": "проверок (подачи формы + два итога)",
+      "floor": 2,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}"
+      ],
+      "count_re": "CHECKS: (\\d+)",
+      "failed_re": "FAILED: (\\d+)",
+      "last": {
+        "at": "2026-10-28T07:16",
+        "code": 0,
+        "count": 11,
+        "failed": 0,
+        "note": "прогон живой группы 20261028T071521"
+      }
+    },
+    "landing-bot-money.py": {
+      "needs": "venv бота (aiogram) — живого бота не требует, считает по коду",
+      "every_days": 7,
+      "unit": "языков (экраны тарифов, приглашение, названия)",
+      "floor": 9,
+      "argv": [
+        "{{BOT_PY}}",
+        "{{SCRIPT}}"
+      ],
+      "cwd": "{{BOT_DIR}}",
+      "count_re": "(\\d+) языков",
+      "failed_re": null,
+      "last": {
+        "at": "2026-10-28T07:17",
+        "code": 0,
+        "count": 9,
+        "failed": 0,
+        "note": "прогон живой группы 20261028T071521"
+      }
+    },
+    "landing-answer-time.py": {
+      "needs": "venv бота + свободная или занятая по заказу GPU-очередь; пишет сессию в tools/answer-time.json",
+      "every_days": 30,
+      "unit": "задач (живые генерации разбора)",
+      "floor": 3,
+      "argv": [
+        "{{BOT_PY}}",
+        "{{SCRIPT}}",
+        "--n-text",
+        "3",
+        "--n-photo",
+        "3",
+        "--write"
+      ],
+      "cwd": "{{BOT_DIR}}",
+      "count_re": "ИТОГ: текст n=(\\d+)",
+      "failed_re": null,
+      "run": false,
+      "why_not_run": "живые генерации на GPU: запускается отдельной батареей с --write и своим окном, в живой прогон по умолчанию не входит",
+      "last": {
+        "at": "2026-10-23T16:25",
+        "code": 0,
+        "count": 4,
+        "failed": 0,
+        "note": "вторая сессия 23.10 под нагрузкой (contend 2): 4 задачи, p90 текста 41,5 с, потолок 120 не пробит; первая сессия — 6 задач, p90 23,8 с. Источник: tools/answer-time.json"
+      }
+    },
+    "landing-contact-e2e.py": {
+      "needs": "настоящий Chrome через CDP + отправка ОДНОГО письма в наш ящик (headless Cloudflare отбивает)",
+      "every_days": 14,
+      "unit": "проверок формы",
+      "floor": 11,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}",
+        "--live"
+      ],
+      "count_re": "CHECKS: (\\d+)",
+      "failed_re": "FAILED: (\\d+)",
+      "run": false,
+      "why_not_run": "отправляет настоящее письмо: запускается осознанно, вместе с подтверждением доставки по ящику",
+      "last": {
+        "at": "2026-10-22T19:15",
+        "code": 0,
+        "count": 11,
+        "failed": 0,
+        "note": "метка 2026-10-22 19:15:34, ALL PASS; источник: evidence/block-20261022-contact-delivery.txt"
+      }
+    },
+    "landing-contact-delivery.py": {
+      "needs": "метка --stamp от живого прогона формы + ящик kerio",
+      "every_days": 14,
+      "unit": "писем (метка этого прогона в теле, адрес в поле email)",
+      "floor": 1,
+      "count_fixed": 1,
+      "argv": [
+        "python3",
+        "{{SCRIPT}}",
+        "--stamp",
+        "{{STAMP}}"
+      ],
+      "count_re": null,
+      "failed_re": null,
+      "run": false,
+      "why_not_run": "без свежей метки от e2e доказывать нечего: чужое письмо инструмент не засчитывает",
+      "last": {
+        "at": "2026-10-22T19:15",
+        "code": 0,
+        "count": 1,
+        "failed": 0,
+        "note": "письмо 1a1646580a66c97e: метка и адрес совпали; негативный контроль (чужая метка) вернул 1. Источник: evidence/block-20261022-contact-delivery.txt"
+      }
+    }
+  }
+}
