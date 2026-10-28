@@ -23,6 +23,10 @@
   "overflow": {
    "name": "landing-page-overflow.py",
    "sha": "de51a835c22c"
+  },
+  "contrast": {
+   "name": "landing-page-contrast.py",
+   "sha": "9198f462bd8a"
   }
  },
  "pages": [
@@ -44,7 +48,8 @@
   "missing-anchor",
   "duplicate-id",
   "self-link-dead",
-  "overflow"
+  "overflow",
+  "contrast"
  ],
  "entries": [
   {
@@ -83,6 +88,13 @@
    "why": "сломано: вписан блок шириной 200vw в начало body"
   },
   {
+   "page": "index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
    "page": "404.html",
    "class": "relative-dead",
    "verdict": "не применимо",
@@ -116,6 +128,13 @@
    "verdict": "поймал",
    "finding": "404.html: horizontal overflow 385px at 360x640 (виновники: div.—+384, main.card+334, div.brand+301)",
    "why": "сломано: вписан блок шириной 200vw в начало body"
+  },
+  {
+   "page": "404.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "404.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
    "page": "privacy.html",
@@ -153,6 +172,13 @@
    "why": "сломано: вписан блок шириной 200vw в начало body"
   },
   {
+   "page": "privacy.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "privacy.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
    "page": "terms.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -186,6 +212,13 @@
    "verdict": "поймал",
    "finding": "terms.html: horizontal overflow 360px at 360x640 (виновники: div.—+360)",
    "why": "сломано: вписан блок шириной 200vw в начало body"
+  },
+  {
+   "page": "terms.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "terms.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
    "page": "es/index.html",
@@ -223,6 +256,13 @@
    "why": "сломано: вписан блок шириной 200vw в начало body"
   },
   {
+   "page": "es/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "es/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
    "page": "hi/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -256,6 +296,13 @@
    "verdict": "поймал",
    "finding": "hi/index.html: horizontal overflow 360px at 360x640 (виновники: figure.shot rv+503, img.—+503, figcaption.—+503)",
    "why": "сломано: вписан блок шириной 200vw в начало body"
+  },
+  {
+   "page": "hi/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "hi/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
    "page": "id/index.html",
@@ -293,6 +340,13 @@
    "why": "сломано: вписан блок шириной 200vw в начало body"
   },
   {
+   "page": "id/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "id/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
    "page": "pt/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -326,6 +380,13 @@
    "verdict": "поймал",
    "finding": "pt/index.html: horizontal overflow 360px at 360x640 (виновники: figure.shot rv+503, img.—+503, figcaption.—+503)",
    "why": "сломано: вписан блок шириной 200vw в начало body"
+  },
+  {
+   "page": "pt/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "pt/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
    "page": "ru/index.html",
@@ -363,6 +424,13 @@
    "why": "сломано: вписан блок шириной 200vw в начало body"
   },
   {
+   "page": "ru/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "ru/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
    "page": "tr/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -396,6 +464,13 @@
    "verdict": "поймал",
    "finding": "tr/index.html: horizontal overflow 360px at 360x640 (виновники: figure.shot rv+503, img.—+503, figcaption.—+503)",
    "why": "сломано: вписан блок шириной 200vw в начало body"
+  },
+  {
+   "page": "tr/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "tr/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
    "page": "uk/index.html",
@@ -433,6 +508,13 @@
    "why": "сломано: вписан блок шириной 200vw в начало body"
   },
   {
+   "page": "uk/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "uk/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
    "page": "vi/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -466,11 +548,18 @@
    "verdict": "поймал",
    "finding": "vi/index.html: horizontal overflow 360px at 360x640 (виновники: figure.shot rv+503, img.—+503, figcaption.—+503)",
    "why": "сломано: вписан блок шириной 200vw в начало body"
+  },
+  {
+   "page": "vi/index.html",
+   "class": "contrast",
+   "verdict": "поймал",
+   "finding": "vi/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
+   "why": "сломано: цвет текста почти равен фону (1.04:1)"
   }
  ],
  "totals": {
-  "cells": 60,
-  "caught": 57,
+  "cells": 72,
+  "caught": 69,
   "missed": 0,
   "not_in_list": 0,
   "not_applicable": 3,
@@ -479,6 +568,7 @@
  },
  "caught_by_page": {
   "index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -486,10 +576,12 @@
    "self-link-dead"
   ],
   "404.html": [
+   "contrast",
    "overflow",
    "self-link-dead"
   ],
   "privacy.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -497,6 +589,7 @@
    "self-link-dead"
   ],
   "terms.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -504,6 +597,7 @@
    "self-link-dead"
   ],
   "es/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -511,6 +605,7 @@
    "self-link-dead"
   ],
   "hi/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -518,6 +613,7 @@
    "self-link-dead"
   ],
   "id/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -525,6 +621,7 @@
    "self-link-dead"
   ],
   "pt/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -532,6 +629,7 @@
    "self-link-dead"
   ],
   "ru/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -539,6 +637,7 @@
    "self-link-dead"
   ],
   "tr/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -546,6 +645,7 @@
    "self-link-dead"
   ],
   "uk/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",
@@ -553,6 +653,7 @@
    "self-link-dead"
   ],
   "vi/index.html": [
+   "contrast",
    "duplicate-id",
    "missing-anchor",
    "overflow",

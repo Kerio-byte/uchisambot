@@ -8353,4 +8353,58 @@ partial runs do not write), `landing-page-canary-ledger.py` (sixth clause + cont
 `landing-sweep.py` (+1 check), `landing-regress-all.py` (control row), `tools/page-canary.json`
 (60 cells, `catchers`), `tools/control-breadth.json` (56 rows), `references/page-canary.md`.
 
+## The audit said zero about the two thirds of the page it had never read (28.10.2026)
+
+**The number behind the zero.** `landing-axe-audit.py` has printed «0 violations» since 16.10, and on
+28.10 the page was asked how much text that number covered. At 420 px axe read **36 of the 125
+elements that carry their own text**; at 1280 it read 40 of 129. The reveal blocks
+(`html.js .rv{opacity:0}`) keep everything below the first screen invisible until the observer runs,
+and axe does not measure the contrast of what it cannot see. A grey paragraph on a grey band below
+the fold would have been green for as long as it existed.
+
+**The battery.** `landing-page-contrast.py`: 12 pages × 2 viewports (phone 420, desk 1280) = 24
+checks. It reveals the blocks for the measurement only (no file is written), then runs axe's
+`color-contrast`. Checked elements: **103 on the index at 420, 107 at 1280** (was 36 and 40), 90 on
+privacy, 76 on terms, 18 on 404 — **0 violations**.
+
+**What axe refuses, and what was done instead of «I don't know».** 18 cells per viewport come back
+`incomplete`: 11 say the background is a gradient (the tariff card, the parents band, the referral
+band), 3 that the element is overlapped (captions under the screenshots, the message field), 4 that
+the text is shorter than two characters (step numbers). The battery computes the first two itself
+and conservatively: the background is taken from the gradient's own colour stops (the worse end
+wins), overlap is ignored as decorative, and the nearest opaque colour is used under the text. Text
+shorter than two characters and text filled by a gradient (`background-clip:text`) stay «not
+measured» **with a named reason**; any other refusal is a finding, not silence.
+
+**The control.** `--control dim` repaints the text light grey (about 1.5:1) in the live page and must
+redden all twelve pages: **12 of 12 caught, 1894 findings**. It also proves the battery's own
+arithmetic — the gradient cells are reported at 1.41:1 `[gradient]`, a number axe never produced.
+
+**The class.** The page canary gained a sixth class, `contrast`: a paragraph with `color:#f8f9fb` on
+white (1.04:1) is written before `</body>`, and the catcher must name **that** page. Full measure:
+**12 pages, 72 cells, 69 caught, 0 missed, 3 not applicable** (the 404 has no relative href, no
+anchor and no `id`; it is caught on `self-link-dead`, `overflow` and `contrast`). `--stub` still
+turns every applicable cell red, and the gate's `code_all` now compares **six** catchers; its
+control is still 6 of 6.
+
+**The floor.** Every page has a floor of checked elements (index 100, privacy 85, terms 70, 404 16);
+below it the battery reddens, because «0 violations» over ten elements is the appearance of a
+measurement. The sweep gained one check: every page on disk either has its own floor or matches the
+language-page rule, so a new root page cannot pass with ten checked elements (2911 → **2912 checks,
+0 red**).
+
+**The price.** The new battery joins the run (49 → 50 batteries) and gets a `CONTROLS` row, so the
+breadth registry needed a re-measure: 22 s, verdict `вне страниц` — the control changes no file, it
+repaints text in the browser. The registry was merged with its other 56 rows untouched; backup
+`evidence/control-breadth.backup-20261028T030556.json`.
+
+**What this does not prove.** That the floors are the right numbers, or that the conservative
+gradient arithmetic is exact: it can find a defect on a gradient, not clear one. And one class still
+has no experience behind it — `first-screen`.
+
+**Files.** `landing-page-contrast.py` (new), `landing-page-canary.py` (sixth class, per-class
+catcher), `landing-sweep.py` (+1 check), `landing-regress-all.py` (control row),
+`tools/page-canary.json` (72 cells, 6 catchers), `tools/control-breadth.json` (57 rows),
+`references/page-canary.md`.
+
 
