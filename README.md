@@ -9391,3 +9391,67 @@ question.
 **Files.** `stars-bots-ops/scripts/landing-eye.py` (new); `evidence/eye-20261028/eye.json`
 (the 36-frame pass — `evidence/` is gitignored and stays out of the repo); this entry. No page,
 no dictionary, no existing battery was modified.
+
+## The eye read one band and was graded against another (28.10.2026, девятый блок дня)
+
+**What this block was for.** The seventh entry named its own gap: `head`, `subjects`, `shots`,
+`band` and `footer` had never been through the eye. This block took `band` and `footer` — nine
+languages, two viewports, 36 frames already sitting in `evidence/visual-20261028`.
+
+**The floor underneath.** A fresh sweep before any looking: 2 948 checks, 0 failed. Rebuild
+reproducibility `tools/build.py --check` — 24 files byte-identical to a clean build. Publish tree
+`tools/publish-tree.py --check` — 107 files, 10.0 MB, 495 internal links, every one inside the
+list, nothing named that has no reader. Whatever the eye found later, the page underneath it
+was intact.
+
+**The first pass was red in all nine languages, and all nine were false.** `landing-eye.py
+--sections band,footer` answered `UNGROUNDED` for en, ru, es, pt, hi, id, tr, vi, uk — 0 % to 20 %
+word overlap with the expected anchor, in all nine at once. Nine independent reading failures
+in nine scripts is not a model problem; it is one mistake made once. The answers themselves said
+where: the model had read «Отправь её боту — первые 2 разбора бесплатно» verbatim, which is not a
+mislabelled band, that is the call-to-action strip.
+
+**Two strips carried one name.** `landing-visual-pass.py` screenshots the block with selector
+`.band` — the strip that asks «Stuck on a problem right now?». `landing-eye.py` looked for its
+anchor with `class="[^"]*\bband\b`, and the first class in the page carrying that word is
+`principle-band` — the strip that says «Not just answers». The frame and the anchor came from
+different elements, and the battery compared them honestly and failed every time. Both files were
+right about their own band; the harness had no single meaning for the name.
+
+**And one question still carried two blocks.** Even with the name fixed, the battery asked about
+four frames at once — mobile and desktop of `band`, then of `footer` — and required one
+`HEADLINE` and one `LINE` in return. One line cannot ground two blocks; whichever block the model
+chose, the other was unproven. That is the six-frames-in-one-question mistake of the seventh
+entry, one step smaller.
+
+**Fixed, in the battery and not in the pages.** The `band` mark now matches the same element the
+screenshots take (`class="band[\s"]`), so the harness has one meaning for one name. The question
+is asked once per block — mobile and desktop of that block, two frames — and every block is graded
+against its own anchor; the row records all anchors, not the closest one. Re-run in Russian first
+(`PASS`, read «Застырял на задаче прямо сейчас?» — the model's own one-letter slip, not the
+page's), then all nine: `PASS` for en, ru, es, pt, hi, id, tr, vi, uk. Nine pair-of-frames rows,
+0 defects, 0 ungrounded, 0 model-unavailable. The eye read the call-to-action headline verbatim in
+Latin, Cyrillic and Devanagari, and found nothing clipped, overlapped or off-screen in the strip
+or the footer.
+
+**The promise was read as a promise, not as words.** The strip says, in nine languages, that the
+first two breakdowns are free. The number and the offer are identical everywhere — «первые 2
+разбора», «the first 2 breakdowns», «los primeros 2 desgloses», «as primeiras 2 explicações»,
+«पहले 2 हल», «2 pembahasan pertama», «ilk 2 çözüm», «2 lần phân tích đầu tiên», «перші 2
+розбори» — and they match `tools/prices.json` `free_breakdowns: 2`, the hero chip and the payment
+answer in every dictionary. The footer names its privacy pages as EN/RU in the seven languages
+that do not have their own, which is labelling, not a promise it cannot keep.
+
+**What this does not prove.** That the strip reads well to a person — the eye reports breakage it
+can see and is not asked about taste. That the model reads letters perfectly: it wrote «Застырял»
+for «Застрял» and still grounded, because the guard counts words, not glyphs, and a one-letter
+slip inside a sentence is not a page defect. And that the page has been looked at whole:
+`principle-band`, `ref-band` and `parents-band` — three more strips that carry the same word in
+their class — have still never been through the eye, and they now have the same name problem this
+block fixed for one of them.
+
+**Files.** `stars-bots-ops/scripts/landing-eye.py` (band mark, per-block question, per-block
+grading); `evidence/eye-20261028L/eye.json` and `evidence/block-20261028l-*.txt` (`evidence/` is
+gitignored and stays out of the repo); this entry. No page, no dictionary, no price file was
+touched.
+
