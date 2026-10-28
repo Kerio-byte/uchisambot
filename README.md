@@ -8928,3 +8928,216 @@ other than memory watches it.
 73/7, green-after 73/0, six controls, the external proof on a copy, sweep red on a broken slot and
 on a returned key, green after restore with the file's sha) and
 `evidence/breadth-20261028T103629/`.
+
+## Two promises sat in all nine dictionaries and no branch ever said them (28.10.2026)
+
+The previous block closed the language screen by deleting a branch and ended by naming what it had
+not touched: `welcome_en`, a key defined in all nine dictionaries and read by nothing. This block
+opened it, and the first thing the opening found was that it was not alone.
+
+**What was in the register.** Two keys, present in all nine languages, read by no code path at all:
+
+  • `welcome_en` — a shadow of `welcome` from the two-language design, and already drifted: the
+    Russian slot held the English greeting, the English slot held a copy of its own. Nothing showed
+    either of them, which is exactly why the drift survived — a future "fix the greeting" would have
+    landed in one copy and been judged by the other.
+  • `choose_type_invalid` — «Напиши 1, 2 или 3. Или отправь задачу заново.» A sentence written for
+    the moment a person types a digit that is not a choice. No branch ever said it, so the moment it
+    describes had no answer: typing «4» while a task waited for its type silently created a new task
+    out of one character, and the person got «task received» instead of "1, 2 or 3".
+
+**Two keys, opposite diseases, and one sentence does not cover both.** A shadow is deleted. A
+promise with no place to be spoken is not deleted — that string is the only thing that names the
+hole, and removing it would have taken the hole out of the register while leaving it in the product.
+So `welcome_en` is gone from all nine dictionaries (21 lines), and `choose_type_invalid` got its
+branch: one ASCII digit 0 or 4–9, with a task waiting, answers with that slot in the person's own
+language and returns the type keyboard, so the choice is a press rather than a guess. A typed 1–3
+still applies the type, and a digit with no waiting task still becomes a task — the branch is
+narrower than "any short text".
+
+**Proven on the handler, not on the string.** `tests/test_dead_keys.py` builds the real router
+through `build_router` — the call `main.py` makes — and drives `on_text` with a fake message. Nine
+languages: the answer equals `TEXTS[lang]["choose_type_invalid"]`, a keyboard comes back, and the
+pending task's id is unchanged, so no task was created. Two languages re-check the working path:
+«2» still sets the type. The suite went 125 → **140 passed, 2 skipped**. The battery below cannot
+prove this: a literal in the source is not a screen.
+
+**The instrument asks in both directions.** `landing-bot-keys.py` (55 checks, offline, AST only —
+no bot import, no Telegram) asks: does every key appear as a literal anywhere in the working code
+(a key that appears nowhere cannot be read by any variable either — the field is all literals,
+because keys also arrive through `TASK_TYPES[num]`, `hint`, `kind`); does every literal passed to
+`t()` exist in the register (otherwise `t()` returns the key and a person reads `task_type_7`); is
+any key a shadow of another in a second language (`<key>_<code>`); is any key glued from pieces
+(`f"step_{n}"`, `"wel" + "come"` — a static walk cannot see a glued key, so it is forbidden rather
+than tolerated); is the register the same in all nine languages and free of empty slots (an empty
+slot makes `t()` answer in English).
+
+**Red before, green after, on the same files.** A copy of the bot tree at the previous commit (git
+archive, working tree untouched) gives **56 checks, 3 failed**: `читается: welcome_en`,
+`читается: choose_type_invalid`, `код: нет тени второго языка`. After the fix: **55 / 0** — 48 keys,
+each with a reader, no shadows, no glue. Five controls, each breaking one thing in a copy of the
+tree and required to redden its own clause: a key added to all nine (`dead`), a key removed from
+seven languages (`missing`), a literal the register does not hold (`orphan`), a glued key (`glued`),
+a returned shadow (`shadow`) — **5 / 5**, side reds printed and not counted.
+
+**The gate runs on every commit.** `landing-sweep.py` grew five clauses (2 935 → **2 940**) reading
+the same dictionaries and the same literals: every key has a reader, no shadow, no invented literal,
+no glue, register not empty. Shown to be a gate: the same sweep against the pre-fix copy reddens
+**7**, two of them the new ones, naming both keys — `без читателя: ['choose_type_invalid',
+'welcome_en']`; the other five belong to the copy, which has no `.env` and no journal. On the live
+tree: 2 940 / 0.
+
+**The set and the register.** The battery is the **53rd** of the offline set (row: 55 checks, 0.1 s,
+code 0), `landing-counts.json` stamped, and the control `--mutate all` is measured by the breadth
+instrument like the other 60 records (61 of 61, same instrument, same `controls_sha`). The set gate
+caught the new battery before anything else did: it was in the set and in no `CONTROLS` row, and the
+sweep said so by name — which is the reason that gate exists.
+
+**The next block's first item, named by this one.** The register now guarantees that every key has a
+reader, but nothing checks what is *inside* the reader's slot: twelve keys carry substitutions
+(`invite_text` carries `{link}`, `{count}`, `{free}`; `task_type` carries `{t_}`; `plan_info` carries
+eight), and no battery asks whether a translator dropped one. Measured for the record, so the next
+block does not have to guess: **12 keys with substitutions, 0 of 48 mismatched today** — a latent
+class, not a live defect. It is next because a dropped `{n}` reads as a sentence missing its number,
+and a missing `{link}` reads as an invitation with nothing to press.
+
+**What this does not prove.** That a person sees any of it: `study-bot.service` has been running
+since 27 Oct and holds the old code in memory — the branch reaches a real reader only after a
+restart, and a restart is the owner's one command, not a block's. That Telegram delivers what the
+test captured. That the wording of the apology is the best available: it is the sentence the register
+already held in nine languages, now spoken, and nothing tested its tone. And nothing here says the
+site sells: it says two promises that sat unspoken for weeks are now either deleted or have a place
+to be said, and something other than memory checks the register.
+
+**Files.** `bot/i18n.py`, `bot/i18n_extra.py` (`welcome_en` deleted, 21 lines), `bot/handlers.py`
+(the digit branch, 11 lines), `tests/test_dead_keys.py` (new, 15 tests), `landing-bot-keys.py` (new
+battery: 55 checks, 5 controls, `BOT_ROOT`), `landing-regress-all.py` (one `CONTROLS` entry),
+`landing-sweep.py` (5 checks), `landing-counts.json` (53 entries), `tools/control-breadth.json`
+(61 records). Bot commit `1823dde`. Evidence: `evidence/block-20261028j/` (red-before 56/3,
+green-after 55/0, five controls, sweep red on the pre-fix copy naming both keys, the bot suite) and
+`evidence/breadth-20261028T114511/`.
+
+## The price screen showed `{single}` once, and nothing asked again (28.10.2026)
+
+The previous block closed the register question in one direction: every key has a reader. It ended by
+naming what it had not touched — nothing asked what sits *inside* the reader's slot. Twelve keys
+carry substitutions, 26 slots in each of nine languages and 234 in all: `plan_info` carries eight
+(`{single}`, `{single_tasks}`, `{pack5}`, `{pack5_tasks}`, `{pack15}`, `{pack15_tasks}`, `{disc5}`,
+`{disc15}`), `invite_text` three (`{link}`, `{count}`, `{free}`), `admin_stats` five,
+`free_trials_left` two, and seven keys carry one each.
+
+**Two ways a template breaks, and one of them shipped.** A translator who drops `{count}` leaves a
+sentence that reads «Friends joined: .» — and if the lost slot was `{link}`, the invitation has
+nothing to press. A caller who forgets an argument is not hypothetical: on 23.10.2026 one of the two
+branches of the price screen called `t(lang, "plan_info")` with no arguments, and every buyer of
+every language read «Разбор задачи — {single} ⭐️ ({single_tasks} задача)». `t()` does not crash on
+that: it catches the `KeyError`, writes a line to the log, and returns the template as it stands.
+The defect is invisible to every check and visible to every person — which is the whole reason the
+block exists.
+
+**The instrument asks both sides.** `landing-bot-vars.py` — 42 checks, offline, AST only, the bot is
+not imported. Register side: the placeholder set of a key is the same in all nine languages,
+compared field by field *including* the format spec (because `{n}` and `{n:,}` are two different
+promises); no lone `{` or `}` anywhere; every string of every language really formats with its own
+set and comes out with no braces left; every field is a plain name, because `t()` passes keyword
+arguments only and `{0}`, `{a.b}`, `{a!r}` are a guaranteed failure on a live person. Code side:
+every literal call supplies all placeholders of its key and nothing beyond them (an extra argument
+means the register drifted away from the code); no template key is called with no arguments at all
+(the exact 23.10 defect); and the one key chosen by a variable (`key = "contact_hello" if email else
+…`) must be supplied through a variable-key call — the instrument names the file and line that prove
+it rather than accepting silence.
+
+**Red on real history, not on a story.** A copy of the bot tree at the parent of the fix commit
+`186a418` (git archive, working tree untouched) gives **42 checks, 2 failed** —
+`вызов: plan_info отдаёт все подстановки` and `вызов: шаблон не зовут пустым`, both naming
+`handlers.py:461`, the line that shipped the defect. On the live tree: **42 / 0** — twelve
+templates, one set in nine languages, every call exact.
+
+**Eight controls, each breaking one thing in a copy of the tree**, each required to redden its own
+clause: `drop` (Spanish `invite_text` loses `{count}`), `rename` (Turkish `{link}` → `{lnk}`),
+`brace` (Russian `buy_for_task` loses a closing brace), `spec` (`{n}` → `{n:zz}`), `bare` (a call
+with no arguments), `miss` (the `count=invited` argument removed from the caller), `extra` (a `zz=1`
+invented in the price call), `varcall` (`email=email` removed from the variable-key call) —
+**8 / 8**, side reds printed and not counted.
+
+**The gate and the set.** `landing-sweep.py` grew four clauses (2 940 → **2 944**) reading the same
+dictionaries: placeholders match in nine languages, braces close, templates format, fields are plain
+names. The battery is the **54th** of the offline set (row: 42 checks, 0.1 s, code 0), stamped in
+`landing-counts.json`, and its control `--mutate all` is measured by the breadth instrument like the
+other records (`62 of 62`, one instrument, one `controls_sha`).
+
+**The next block's first item, named by this one.** The register now guarantees the shape of a
+template; nothing asks about the numbers *written by hand* beside it. Measured for the record, so
+the next block does not have to guess: **8 keys carry digits outside any placeholder, in all nine
+languages** — `processing` promises a wait in seconds, `referral_credited` and `invite_text` promise
+«+1» free analysis, `plan_info` numbers its three plans, `choose_type_invalid` names 1, 2, 3. The
+23.10.2026 defect was exactly this class: `invite_text` promised a friend five free analyses while
+`FREE_TRIALS` was two. None of them is wrong today — the free-analysis count has been substituted
+since that fix — but the class is unguarded, and a hand-written «5» cannot notice that the registry
+changed to 2.
+
+**What this does not prove.** That a person sees the right *number* in the slot: that is
+`landing-bot-money.py` and the bot tests on the real router. That any translation reads well. That
+the branch reaches a live reader: `study-bot.service` has held its code in memory since 27 Oct, and
+a restart is the owner's one command, not a block's. And nothing here says the site sells.
+
+**Files.** `landing-bot-vars.py` (new battery: 42 checks, 8 controls, `BOT_ROOT`),
+`landing-regress-all.py` (one `CONTROLS` entry), `landing-sweep.py` (4 checks),
+`landing-counts.json` (54 entries), `tools/control-breadth.json` (62 records). **No bot file
+changed:** today's register is consistent in every language, so the block added a gate, not a fix —
+the red it proves is the one that shipped on 23.10. Evidence: `evidence/breadth-20261028T131659/`,
+`evidence/botvars-breadth-20261028.log`, `evidence/botvars-regress-20261028.log`.
+## The diary counted fifty-four rows, and the file held fifty-three (28.10.2026, второй блок дня)
+
+The block before this one ended with a sentence that has a number in it: `landing-counts.json`
+(54 entries). The sweep was run first in this block, as it is run first every time, and the count
+ledger refused the journal by name: `нет в реестре: landing-bot-vars.py (проверял 42)`. The battery
+that block had written, documented and proved had no row in the registry the ledger reads. Fifty-three
+rows, not fifty-four. Nothing in that block contradicted itself on purpose — it stamped the journal
+into the registry in a run where the new battery was already present, and the registry it stamped was
+a different copy from the one the ledger opens; the number in the diary came from the intent, not from
+the file. The gap was closed by `--stamp` against the same journal: **54 entries, 0 refusals**, and the
+ledger that had gone red now says `CHECKS: 54, FAILED: 0`.
+
+**What that says about the diary, not about the site.** Every claim in this notebook that carries a
+number is a claim about a file, and a file can be counted. This one was counted, by a gate, within
+the hour — which is the whole difference between a diary that records and a diary that asserts. The
+other claim in the same paragraph, `control-breadth.json` (62 records), was checked the same way before
+this block committed that file: 62 records, ledger green.
+
+**Two dictionaries, counted for the first time without believing the markup.** The dead-key pass of
+the previous block covered the bot's register. The landing has its own: 124 keys in nine dictionaries,
+read by `index-src.html` and by `build.py`. A first pass by `data-i18n` attributes alone reported
+fifteen dead keys per language and two missing ones — every one of them false: the screenshots' alt
+texts are read through `d[f"shot{n}.alt"]` and the language button through a composed `aria-label`,
+so a checker that trusts attributes sees a key nobody names and calls it dead. The pass that survives
+the test — a key is alive if its name appears anywhere in the template or the generator — reports
+**124 keys, 0 read by nothing, 0 uneven across nine languages**. The same instrument, on the bot side,
+found a real shadow key this morning; on the landing side it finds the register closed.
+
+**And what is inside the slots.** One key carries a substitution (`badge.alt` → `{name}`), the other
+123 carry none. Measured across all nine: **0 mismatches against English, 0 placeholders left visible
+in the built pages**. That is the class the bot block named as its next item, measured on the landing
+and found empty — a latent class here, not a live defect, and worth the eleven lines it cost.
+
+**The visual layer, honestly.** The full sweep ran 54 batteries and 953 checks and then ran out of its
+780-second budget, leaving 26 named `SKIPPED-BUDGET`, most of them the layout batteries. Six of those
+were run by hand: `landing-text-clip` 148/0 (36 pages, 298–299 elements each), `landing-first-screen`
+252/0 (the fold at 915×412 and up, all nine languages), `landing-page-overflow` 36/0 (0 px on every
+page), `landing-viewports-extra` 94/0 (no JS errors under throttle), `landing-render-check` 37/0 and
+`landing-visual-pass` 306/0 (font, h1 size and line count, badges, rows, per language at mobile and
+desktop; frames in `evidence/visual-20261028/`). The last two need a live `http.server` on :8137 —
+launched by hand for this run, because the runner starts it itself only inside the sweep.
+
+**What this does not prove.** That a person looked at those frames: this run had no vision tool, so
+every one of the 306 lines is a measurement, and the judgement of a picture is still owed — the
+screenshots exist and nothing in this block read them. That the sweep was whole: 26 batteries were
+skipped, named, not silently absent. That the registry fix has a history: `landing-counts.json` lives
+in the skills tree, not in this repository, so its one-line repair has no commit behind it. And that
+the two probes added here are checks: `tools/locale-key-parity.py` and `tools/placeholder-parity.py`
+are read-only measurements, not batteries — neither has a control, neither is in the set, and the set
+gate would name them if they claimed to be.
+
+**Files.** `tools/locale-key-parity.py`, `tools/placeholder-parity.py` (new, read-only). Registry:
+`landing-counts.json` (54 entries, stamped against today's journal). Committed with them: the previous
+block's own entry and its `tools/control-breadth.json`.
