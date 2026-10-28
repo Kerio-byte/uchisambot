@@ -9455,3 +9455,68 @@ grading); `evidence/eye-20261028L/eye.json` and `evidence/block-20261028l-*.txt`
 gitignored and stays out of the repo); this entry. No page, no dictionary, no price file was
 touched.
 
+## Three strips the eye had never seen, and an anchor that belonged to the FAQ (28.10.2026, thirteenth block of the day)
+
+**What this block was for.** The twelfth entry named its own gap: `principle-band`, `ref-band` and
+`parents-band` carry the same word in their class, had never been through the eye, and shared the
+name problem it had fixed for one strip.
+
+**The floor underneath.** `tools/build.py --check` — 24 files byte-identical to a clean build.
+`tools/publish-tree.py --check` — 107 files, 495 internal links, all inside the list. Sweep —
+2 948 checks, 0 failed. Visual pass after the three parts were added to its frame list — 306 checks,
+`PROBLEMS 0`, and 54 new frames (nine languages, two viewports, three strips).
+
+**One name, one element — in both files.** `landing-visual-pass.py` now shoots `.principle-band`,
+`.ref-band`, `.parents-band`; `landing-eye.py` anchors each block on the same element. The frame and
+the line it is graded against come from one place, which is what the twelfth entry had to learn the
+hard way.
+
+**The anchor was reading a different block.** First real run: `principle` and `parents` passed in all
+nine languages, `ref` came back `UNGROUNDED` in es, pt, tr, vi — anchored on «Preguntas frecuentes»,
+«Perguntas frequentes», «Sıkça sorulan sorular», «Câu hỏi thường gặp». The strip sits right before
+the FAQ, and the text window was cut at the next known section mark, so the FAQ heading landed in the
+window and the strip was graded against it. Four languages failed on a line no visitor could ever
+read inside that frame. The window is now the element's own span, closed by its own tag (balanced
+count), so a neighbouring block cannot be borrowed as an anchor.
+
+**And one anchor was three elements glued together.** `<p[^>]*>` also matches `<path …>` inside an
+SVG. In EN the `parents` strip opens with an icon, so the «first paragraph» started at the icon's
+`<path>` and ran to the first `</p>` — icon, `</svg></div>`, the `h2` and the paragraph, 67 characters
+in one string, while Hindi got a clean 16-character `h2`. The same block was measured by a different
+ruler in different languages. `<p\b` cannot match `<path`; the same pattern was made safe in
+`landing-live-assets.py` and `landing-sweep.py` (their FAQ blocks carry no SVG today, so nothing was
+broken there — it is closed as a class, not as a symptom).
+
+**Two smaller things the day's runs paid for.** `--out` wrote its JSON without creating the folder: a
+full nine-language pass printed every verdict and then died on the write, losing the evidence —
+`mkdir(parents=True)` now runs first. And a strip has no headline, so the model honestly answered
+`HEADLINE: ->` while transcribing the sentence into `LINE`; the verdict then read «PASS, глаз прочитал
+«->»», a green that looks like garbage. The report quotes the field that has words in it.
+
+**And the ledger that trusted itself too much.** Editing `landing-visual-pass.py` changed its sha, so
+the pre-commit sweep refused the commit until the control was re-measured — correct, it is the gate
+working. Re-measuring it with `--only landing-visual-pass.py --write-registry` then rewrote the whole
+registry with the two filtered records: 62 entries became 2, silently. The registry was restored from
+git and the two fresh measurements merged in by key instead; the sweep is green again (2 948 checks,
+0 failed) and the ledger still holds 62 records. The write-registry path needs to merge, not replace —
+filed here so the next block fixes it, because the next person to run it that way loses the file.
+
+**Result.** `principle` 9/9 `PASS` (en «Not just answers. Learn how to solve the next one.», hi
+«सिर्फ़ जवाब नहीं। अगला सवाल खुद हल करना सीखें।», uk «Не лише відповіді…»). `parents` 9/9 `PASS`.
+`ref` 5/9 before the anchor fix, 9/9 `PASS` after it — and the raw answer of the EN run shows the
+model transcribed the sentence verbatim («Invite a friend – when they solve their first task…»), so
+the green rests on the text, not on the word «arrow». 0 defects, 0 ungrounded, 0 model-unavailable
+across the three strips, 27 frame-pairs.
+
+**What this does not prove.** That the strips read well to a person — the eye reports breakage it can
+see and is not asked about taste. That every block has an anchor: `vi` `subjects` returns an empty
+anchor and would be graded on nothing, and `head` has no `h2`/`p` at all — both still rest on geometry
+alone, and that is the next block's work. And that the sections the strips live in (`how`, `features`,
+`pricing`, `faq`) have been seen: the strips have, their sections have not.
+
+**Files.** `stars-bots-ops/scripts/landing-visual-pass.py` (three parts); `landing-eye.py` (three
+marks, element span, tag boundary, mkdir, honest quote); `landing-sweep.py` and
+`landing-live-assets.py` (tag boundary); `evidence/visual-20261028/`, `evidence/eye-20261028M/`,
+`evidence/eye-20261028N/`, `evidence/eye-20261028P/` (`evidence/` stays out of the repo); this entry.
+No page, no dictionary, no price file was touched.
+
