@@ -27,6 +27,10 @@
   "contrast": {
    "name": "landing-page-contrast.py",
    "sha": "9198f462bd8a"
+  },
+  "first-screen": {
+   "name": "landing-page-fold.py",
+   "sha": "36cfe25681de"
   }
  },
  "pages": [
@@ -49,7 +53,8 @@
   "duplicate-id",
   "self-link-dead",
   "overflow",
-  "contrast"
+  "contrast",
+  "first-screen"
  ],
  "entries": [
   {
@@ -95,6 +100,13 @@
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
+   "page": "index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
+  },
+  {
    "page": "404.html",
    "class": "relative-dead",
    "verdict": "не применимо",
@@ -135,6 +147,13 @@
    "verdict": "поймал",
    "finding": "404.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
+   "page": "404.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "404.html: title below the first screen (phone-420: bottom 1055 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
   },
   {
    "page": "privacy.html",
@@ -179,6 +198,13 @@
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
+   "page": "privacy.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "privacy.html: title below the first screen (phone-420: bottom 943 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
+  },
+  {
    "page": "terms.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -219,6 +245,13 @@
    "verdict": "поймал",
    "finding": "terms.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
+   "page": "terms.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "terms.html: title below the first screen (phone-420: bottom 943 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
   },
   {
    "page": "es/index.html",
@@ -263,6 +296,13 @@
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
+   "page": "es/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "es/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
+  },
+  {
    "page": "hi/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -303,6 +343,13 @@
    "verdict": "поймал",
    "finding": "hi/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
+   "page": "hi/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "hi/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
   },
   {
    "page": "id/index.html",
@@ -347,6 +394,13 @@
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
+   "page": "id/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "id/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
+  },
+  {
    "page": "pt/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -387,6 +441,13 @@
    "verdict": "поймал",
    "finding": "pt/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
+   "page": "pt/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "pt/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
   },
   {
    "page": "ru/index.html",
@@ -431,6 +492,13 @@
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
+   "page": "ru/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "ru/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
+  },
+  {
    "page": "tr/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -471,6 +539,13 @@
    "verdict": "поймал",
    "finding": "tr/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
+   "page": "tr/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "tr/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
   },
   {
    "page": "uk/index.html",
@@ -515,6 +590,13 @@
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
   },
   {
+   "page": "uk/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "uk/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
+  },
+  {
    "page": "vi/index.html",
    "class": "relative-dead",
    "verdict": "поймал",
@@ -555,11 +637,18 @@
    "verdict": "поймал",
    "finding": "vi/index.html: low contrast 1.05:1 (нужно 4.5:1) «zz-canary low contrast text» — body > p [axe]",
    "why": "сломано: цвет текста почти равен фону (1.04:1)"
+  },
+  {
+   "page": "vi/index.html",
+   "class": "first-screen",
+   "verdict": "поймал",
+   "finding": "vi/index.html: title below the first screen (phone-420: bottom 1013 > 844)",
+   "why": "сломано: блок во всю высоту экрана вписан перед содержимым body"
   }
  ],
  "totals": {
-  "cells": 72,
-  "caught": 69,
+  "cells": 84,
+  "caught": 81,
   "missed": 0,
   "not_in_list": 0,
   "not_applicable": 3,
@@ -570,6 +659,7 @@
   "index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -577,12 +667,14 @@
   ],
   "404.html": [
    "contrast",
+   "first-screen",
    "overflow",
    "self-link-dead"
   ],
   "privacy.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -591,6 +683,7 @@
   "terms.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -599,6 +692,7 @@
   "es/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -607,6 +701,7 @@
   "hi/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -615,6 +710,7 @@
   "id/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -623,6 +719,7 @@
   "pt/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -631,6 +728,7 @@
   "ru/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -639,6 +737,7 @@
   "tr/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -647,6 +746,7 @@
   "uk/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
@@ -655,6 +755,7 @@
   "vi/index.html": [
    "contrast",
    "duplicate-id",
+   "first-screen",
    "missing-anchor",
    "overflow",
    "relative-dead",
