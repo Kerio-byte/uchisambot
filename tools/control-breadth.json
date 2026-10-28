@@ -2,7 +2,7 @@
  "measured": "2026-10-28",
  "what": "что ломает каждый контроль набора и на скольких страницах это видно",
  "source": "landing-regress-all.py CONTROLS",
- "controls_sha": "eefc0a1546f6",
+ "controls_sha": "d9337a15b03e",
  "instrument": "f37e2dacff66",
  "entries": [
   {
@@ -737,6 +737,72 @@
    "sec": 21.9,
    "recorded": "2026-10-28T03:05",
    "battery_sha": "9198f462bd8a",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-page-fold.py --control blank",
+   "battery": "landing-page-fold.py",
+   "args": [
+    "--control",
+    "blank"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 23.3,
+   "recorded": "2026-10-28T04:17",
+   "battery_sha": "36cfe25681de",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-page-fold.py --control fold",
+   "battery": "landing-page-fold.py",
+   "args": [
+    "--control",
+    "fold"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 23.0,
+   "recorded": "2026-10-28T04:17",
+   "battery_sha": "36cfe25681de",
    "instrument": "f37e2dacff66"
   },
   {
