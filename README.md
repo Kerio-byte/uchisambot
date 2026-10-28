@@ -33,11 +33,15 @@ Live: https://kerio-byte.github.io/uchisambot/
   catcher to name **that** page; judged by `landing-page-canary-ledger.py` in six clauses (pages on
   disk, the static catcher's code, **every** catcher's code from `catchers`, a catch per page, no
   missed cell, something breakable on every page), and the sweep fails if the ledger is older than a
-  catcher's code or a page on disk is missing from it. Five classes since 28.10.2026: four of markup
-  (`relative-dead`, `missing-anchor`, `duplicate-id`, `self-link-dead`, catcher
-  `landing-links-audit.py`) and one of layout (`overflow`, catcher `landing-page-overflow.py` — a
-  `200vw` block in the body, which only a browser can see). Added because the sum of checks could not
-  answer whether any page was unread, and two pages were.
+  catcher's code or a page on disk is missing from it. **Seven** classes since 28.10.2026: four of
+  markup (`relative-dead`, `missing-anchor`, `duplicate-id`, `self-link-dead`, catcher
+  `landing-links-audit.py`), three of layout (`overflow`, catcher `landing-page-overflow.py` — a
+  `200vw` block in the body; `contrast`, catcher `landing-page-contrast.py` — a paragraph at 1.04:1;
+  `first-screen`, catcher `landing-page-fold.py` — a `100vh` block in the body, which pushes the
+  title and the primary button past the fold), all three visible only to a browser. The measurement
+  is now 84 cells (7 × 12 pages): 81 caught, 3 not applicable (`404.html` has no relative links,
+  anchors or ids). Added because the sum of checks could not answer whether any page was unread,
+  and two pages were.
 - `tools/publish-tree.py` — the one list of what counts as the site (109 files), and `--check`
   for it: every listed file exists, no page links into the workshop, every internal reference
   points at a listed file. Added 23.10.2026 after the measurement that GitHub Pages was serving
@@ -8406,5 +8410,60 @@ has no experience behind it — `first-screen`.
 catcher), `landing-sweep.py` (+1 check), `landing-regress-all.py` (control row),
 `tools/page-canary.json` (72 cells, 6 catchers), `tools/control-breadth.json` (57 rows),
 `references/page-canary.md`.
+
+## The one class without a witness was the one a visitor sees first (28.10.2026)
+
+**The gap.** The page canary asked each class of breakage to be named by *that* page, and six classes
+answered. The seventh, `first-screen`, had no catcher at all. Three batteries did touch the first
+screen — `landing-first-screen.py` (fourteen phone screens in nine languages),
+`landing-browser-smoke.py` (the first frame), `landing-viewports-extra.py` (a tablet title, a
+landscape pair, a wide-screen layout) — but every one of them prints a finding named by the screen
+and the language, `land-844x390/ru`, and the measurement is built on the page's name. A finding that
+does not name the page is not a catch, so the class sat there with nothing behind it.
+
+**The catcher.** `landing-page-fold.py` takes the page list from the disk with the same rule the
+measurement uses (root plus two-letter directories), so the legal pages and `404.html` — which no
+language-driven battery opens — are in it, and it measures two windows per page: a phone at 420×844
+and a laptop at 1280×800. The laptop window is new, and so is the pair it asks about: the wide
+screens that existed (768×1024, 844×390, 1920×1080, in `landing-viewports-extra.py`) checked a title,
+a hero pair for three languages, or a wide-layout rule — never the title-and-button pair on all
+twelve pages. Two clauses per window: the `h1` exists, is *visible* (opacity multiplied down the
+ancestor chain ≥ 0.9, not `display:none`, not `visibility:hidden`) and lies wholly within the first
+screen; and the primary action — the first `a.btn` — is in the same place, visibly. `privacy.html`
+and `terms.html` have no button: they are measured on one clause, and the table prints «—» where the
+button would be, so the absence is neither a check nor a failure. 44 clauses, 12 pages.
+
+**Two controls, one per clause.** `--control fold` writes `html{padding-top:100vh}`: the content moves
+down exactly one screen, and the finding must be about the fold. `--control blank` writes
+`main, main *{opacity:0}`: the content stays where it is and becomes invisible, and the finding must
+be about visibility. Both named **12 of 12** pages, and each control fails if the other clause's red
+appears — a mutation that broke both would prove neither. The height is `vh` and not a pixel count,
+because the canary's break has to be the same experience on a 844-px phone and an 800-px laptop.
+
+**The class.** A `100vh` block is written at the start of `body` — a banner or an overlay eating the
+first screen, which is what a real ad slot does — and the catcher must name that page. Full measure:
+**12 pages, 84 cells, 81 caught, 0 missed, 3 not applicable** (the 404 is caught on `self-link-dead`,
+`overflow`, `contrast` and `first-screen`). `--stub` still turns every applicable cell red; the gate
+compares **seven** catchers' shas; its own control still catches 6 of 6 parts, one at a time.
+
+**What this does not prove.** That the first screen is *filled*: two clauses are two clauses. Whether
+a sticky panel covers the title is `landing-backtab.py`, how much the hero weighs is
+`landing-video-weight.py`, whether the text is readable is `contrast`. And the clauses read what the
+markup offers first — the first `h1` and the first `a.btn`: put a button in the header above the hero
+and the green would be an answer about the header.
+
+**No new sweep check, and one number left for the next full run.** The sweep stays at **2912 checks,
+0 red**: a page on disk that the measure forgets already reddens the `pages` clause, and a second
+list of pages would be the second copy this project has paid for twice. The set grew 50 → **51
+batteries**, the control list 57 → **59** rows, and the two new rows were re-measured on the breadth
+instrument (23 s each, verdict `вне страниц` — the controls change no file, they repaint the page),
+then merged with the other 57 untouched (backup
+`evidence/control-breadth.backup-20261028T041717.json`). The battery's own 44 checks enter
+`landing-counts.json` with the next whole run, by design: the registry records runs, not batteries,
+and its gate will ask for the stamp by name.
+
+**Files.** `landing-page-fold.py` (new), `landing-page-canary.py` (seventh class, per-class catcher),
+`landing-regress-all.py` (two control rows), `tools/page-canary.json` (84 cells, 7 catchers),
+`tools/control-breadth.json` (59 rows), `references/page-canary.md`.
 
 
