@@ -9267,3 +9267,47 @@ measurement, not on an eye.
 **Files.** `tools/links-last-seen.json` (new), `tools/control-breadth.json` (one row
 re-measured), this entry; and in `stars-bots-ops`: `landing-external-links.py` (writes the
 ledger), `landing-sweep.py` (the three offline questions).
+
+## The sixth block looked in the three places the day had not, and found nothing to fix (28.10.2026, шестой блок дня)
+
+**What this block was for.** The day's five blocks closed the gaps they named; this one went
+after the three surfaces none of them had touched: the addresses a visitor can *type*, the
+icon the browser puts on the tab, and the legal text read against the database it describes.
+It also re-ran the whole stack end to end, because a gate is only worth its last green run.
+
+**Measured fresh in this block.** `landing-sweep.py` **2948 checks, 0 failed** (the build
+check inside it: 24 files byte-identical, so the source and the pages on disk still agree);
+`landing-price-parity.py` 9 checks, 0 diffs against `bot/payments.py`; `landing-bot-lang.py`
+**73 checks, 0 failed** under the bot's own interpreter (aiogram 3.31.0) — the screen that
+once said «Idioma: Ruso» to a Spaniard; `landing-bot-money.py` all OK (30/120/300 Stars,
+20 %/33 %, two free breakdowns). Live, by hand: `/` 200 (113 647 B), `/ru/` 200 (120 020 B),
+`/ru` 301 → `/ru/`, `/index.html` 200 with the same bytes as `/`, an unknown path 404 serving
+the site's own 6 442 B page, `http://` 301 → `https://`. Transfer weight the phone actually
+downloads: **35.6 / 36.4 / 37.5 KB gzip** for en / ru / hi. `landing-visual-pass.py`
+**306 checks, 0 problems** across nine languages at 420 px and 1440 px (headline 30 px/2 lines
+on the phone, 56 px/2–3 lines on the desktop, 7/7 badges per page, no overflow outside the
+slider).
+
+**The three candidates, and why each was not a defect.**
+- *The tab icon.* The page declares three: `img/logo.svg`, `img/icon-64.png`,
+  `img/icon-180.png`; all three answer 200 from the root, and the language pages declare
+  them as `../img/…`, which resolves to the same files. `/favicon.ico` alone is a 404 — but
+  that path is only what a browser asks for when **no** icon is declared, and here they are.
+- *The 404 page at depth.* GitHub Pages serves one `/404.html` for the whole tree, so a
+  relative asset on it would break two directories down. It has none: every link and the
+  logo on it are absolute (checked by fetching `/ru/deep/nope` and reading its `href`/`src`).
+- *The privacy policy against the database.* `profiles` stores `common_chats`, and the
+  policy does say «how many group chats you share with the Telegram account we use to read
+  the profile» — the phrase the sweep's map expects. This block's first grep said the word
+  was missing; the grep was wrong, the sentence is split by inline markup. Worth writing
+  down: a negative grep is evidence only after the pattern has been read.
+
+**What this does not prove.** That a person looked at the 306 frames: this block had no
+vision tool either, so the frames in `evidence/visual-20261028` stand on geometry, not on an
+eye. And that the redirect/weight matrix is watched by anything: GitHub Pages owns those
+statuses and that gzip, both were measured by hand here, and no battery repeats them — a gate
+for them would change a battery's code and therefore cost a breadth measurement and a count
+stamp, which is a block of its own, not the tail of this one.
+
+**Files.** This entry only — no page, no dictionary, no battery was touched; the push is a
+main-branch journal push to both mirrors.
