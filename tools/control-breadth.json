@@ -2,7 +2,7 @@
  "measured": "2026-10-28",
  "what": "что ломает каждый контроль набора и на скольких страницах это видно",
  "source": "landing-regress-all.py CONTROLS",
- "controls_sha": "36f5d280bbc5",
+ "controls_sha": "a5dfe52d0a68",
  "instrument": "f37e2dacff66",
  "entries": [
   {
@@ -743,6 +743,39 @@
    "sec": 0.7,
    "recorded": "2026-10-28T00:12:49",
    "battery_sha": "bb24cfd86273",
+   "instrument": "f37e2dacff66"
+  },
+  {
+   "key": "landing-page-overflow.py --control wide",
+   "battery": "landing-page-overflow.py",
+   "args": [
+    "--control",
+    "wide"
+   ],
+   "verdict": "вне страниц",
+   "changed": [],
+   "pages": [],
+   "via_asset": [],
+   "assets": [],
+   "walked": 12,
+   "untouched": [
+    "404",
+    "en",
+    "es",
+    "hi",
+    "id",
+    "privacy",
+    "pt",
+    "ru",
+    "terms",
+    "tr",
+    "uk",
+    "vi"
+   ],
+   "code": 0,
+   "sec": 17.8,
+   "recorded": "2026-10-28T01:57",
+   "battery_sha": "de51a835c22c",
    "instrument": "f37e2dacff66"
   },
   {
