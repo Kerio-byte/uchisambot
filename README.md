@@ -9591,3 +9591,36 @@ the file is now dated 29.10 by its own gate); `evidence/eye-20261029A/`, `eviden
 `evidence/control-breadth.backup-20261029T012331.json` (`evidence/` stays out of the repo); this entry.
 No page, no dictionary, no price file was touched.
 
+## The eye finished the nine: six languages, the same two lines, nothing to fix (29.10.2026, fifteenth block of the day)
+
+**What this block was for.** The one thing the fourteenth entry left standing, named in its own "what
+this does not prove": it graded `head` and `subjects` on three languages (vi, ru, en) and left the
+other six "only proved at the anchor level, and the eye costs a model call per block per language".
+This block pays that cost for the six — hi, id, es, pt, tr, uk — so the two blocks are now eye-graded
+in all nine languages.
+
+**The floor underneath.** No page, no dictionary, no tool was edited; this block only looks. The
+frames the eye reads are a fresh screenshot of the built pages: `landing-visual-pass.py` over
+hi, id, es, pt, tr, uk — **204 checks, 0 failed, 0 problems**, mobile 420 px and desktop 1440 px —
+and all twelve loads reported the same structure (7/7 badges, the subject rows, the slider only where
+the viewport has one), so the eye is reading the site, not a broken capture.
+
+**Then the eye.** `landing-eye.py --sections head,subjects --langs hi,id,es,pt,tr,uk` against those
+frames: **PASS for all six, 0 defects, 0 ungrounded, 0 model-unavailable**. Each verdict transcribes
+the line the block actually shows in that language — Hindi «UchiSamBot | और कोई भी स्कूली
+सवाल, जहाँ आप अटक जाएँ।», Indonesian «Mata pelajaran sekolah», Spanish «Asignaturas escolares»,
+Portuguese «E qualquer outra dúvida escolar em que você fic…», Turkish «Ve takıldığın diğer tüm okul
+soruları.», Ukrainian «І будь-яке інше шкільне питання, у якому ти зас…» — which is the proof the grade
+rests on a read line, not on geometry. With the three the fourteenth block ran, `head` and `subjects`
+now pass the eye in all nine languages.
+
+**What this does not prove.** That the eye replaces a person: it reads the line it is shown and checks
+it against the dictionary, so a line that is wrong but self-consistent would still pass. And that the
+other sections (hero, band, principle, ref, parents, shots) keep their nine-language coverage on this
+exact frame set — they were graded in earlier blocks against earlier frames, and this block re-grades
+only the two blocks the fourteenth entry opened.
+
+**Files.** `evidence/visual-20261029/` (six new frame sets: hi, id, es, pt, tr, uk × m/d × the ten
+sections); `evidence/eye-20261029B/eye.json` and `log.txt` (the six verdicts and the total line).
+`evidence/` stays out of the repo. No page, no dictionary, no tool, no price file was touched. This entry.
+
