@@ -9948,3 +9948,56 @@ Two honest limits. The eye read the **top** of each document: the policy is 7 62
 
 **Product Hunt is real and stale.** Its page carries *"first 5 breakdowns are free"* and *"Russian and English"* twelve times each — the same wrong promise as the five listings found earlier, on the largest platform of the set. That makes **six** reachable listings telling the visitor five and two while the site says two and nine. The replacement text stays in one file, now with Product Hunt in it.
 
+
+## The tails of the two legal documents were read, and the reader's order had to become the anchor (29.10.2026, 26-й блок)
+
+The block above said what it had not done: the eye read the **top** of each document. This run
+cropped the last 1 200 px of the two desktop frames (`privacy-d.png` is 1 440 × 7 620,
+`terms-d.png` is 1 440 × 5 553) with `ffmpeg -vf crop`, wrote them to
+`evidence/legal-tail-20261029/`, and asked the eye for the heading that stands **lowest** on the
+frame and for the bottom band of links.
+
+**What it read.** `privacy` — `9. Контакты`, and the footer `Home · Privacy Policy · Terms of
+Service` (2/2 words and 6/6). `terms` — `13. Контакты`, the same footer (2/2 and 6/6). Neither
+document loses its foot at 1 440 px, and the page that renders its opening also renders its end.
+
+**The anchor had to be taken from the reader's order, not the file's.** The first version read the
+last numbered `<h2>` of the file and got **`9. Contact`** — the English section. The Russian half of
+the policy is marked up with `<h3>`, so the last `h2` in the file is not the last heading on the
+page; the file order and the reading order disagree. The anchor now comes from
+`tools/page-text.py` — the same flattener five sweep checks read — as its last numbered line. This
+is the second time this repository has paid for that confusion (the `.principle-band` / `.band`
+miss in the 12th block), and it is now written down where the next device will look.
+
+**A device's own false red, recorded.** The same first version printed `UNGROUNDED` on both
+documents with `0/2 слов` while the raw answers contained the exact right headings: the prompt
+asked for `LAST:`, the shared parser only knows `HEADLINE:`. The verdict was honest about the
+device (it could not prove what it had read), and wrong about the site. Fixed by asking for the
+label the parser reads; the run was repeated from scratch — no verdict was carried over.
+
+**The control still refuses.** Feeding the terms frames and asking for the privacy headline
+`Privacy Policy` answers **0/2 words (0%)** and stays red. A device that memorised a string and
+repeated it on any page would go green here; the block would then be worth nothing.
+
+**Technical floor, re-measured, not assumed.** `tools/build.py --check`: **24 files match a fresh
+build** (exit 0). `landing-sweep.py`: **CHECKS: 2981, FAILED: 0 — ALL PASS**. No site byte changed:
+this block added one tool and this entry.
+
+**Limits, honestly.** The mobile frame is a 900 px viewport, not a full-page capture, so the
+**mobile** tail of either document has never been photographed — the next block that touches these
+pages should capture them full-page at 420 px and crop the same bottom. The eye read one frame per
+document, not every screen of a 7 620-pixel page: geometry still carries the middle. And the six
+external listings (Product Hunt included) still promise five free breakdowns and two languages —
+their forms are outside this repository, and `submission-kit/` has to be re-uploaded by a person.
+
+**Files.** `tools/legal-tail-read.py` (new; reuses `landing-eye.py`'s `ask` / `parse` /
+`headline_agrees` through importlib instead of patching it a fifth time — the patch debt recorded
+above stays open and is now somebody's first edit, not a bigger one), `evidence/legal-tail-20261029/`
+(ignored, as all evidence is), this entry.
+
+The new tool cost two of its own corrections before it could be trusted, and one the sweep caught
+that the block had not: it first carried the eye's absolute server path and our software's name, and
+the pre-commit sweep refused the commit (`[opsec] что отдаёт сайт`) — a public repository must not
+name the machine it was built on. The path is gone; the eye is found by `--eye`, then by
+`LANDING_EYE`, then inside the home skill tree. It is also written once, cleanly: nine patches into a
+250-line device is the debt this notebook already warns about.
