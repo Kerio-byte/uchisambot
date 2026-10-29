@@ -9761,3 +9761,17 @@ written by the same hand that wrote the previous nine, and the eye has not grade
 That 20 is reachable in practice: the ceiling is the bot's, the page now repeats it, and nobody has
 counted whether twenty credited friends ever happened. That other prose on the page names numbers
 the batteries do not key on - this block pinned one sentence, not the dictionary.
+
+## The hero was read nine times, and the battery compared it with a dash (29.10.2026, приёмка двадцать первого блока)
+
+The previous run committed nothing but a message: it measured, and left every page byte-identical. Its one open item said the eye had refused the hero headline in all nine languages - "the frame pair, not the page" - with an order to re-shoot the hero full width.
+
+The frames were not the problem, and neither was the page. In every one of the nine raw answers the model had already read the hero headline correctly: `Homework that finally makes sense`, `Домашка, яка нарешті стає зрозумілою`, and the other seven. What the battery compared it with was a dash.
+
+The run asked two sections in one pass, `ref` first. The referral band carries no headline, and the model honestly answered `HEADLINE: ->` for it. `parse()` kept `->` as a headline, the bundle's "first non-empty headline" became that dash, and the hero H1 was graded against it - nine ungrounded verdicts sitting on a live, readable headline in the same file.
+
+Fixed in `landing-eye.py`: placeholder values (`->`, `—`, `none`, `нет`) are neither headlines nor lines. Re-grading the same saved answers, without a single model call, gives **H1 read 9 of 9, 100%** in every language. The hero paragraph - the anchor - reads in **6 of 9**; `ru`, `hi` and `uk` returned the H1 twice instead of the paragraph, the pair-of-frames flakiness already recorded today for `vi`/`uk`, not a page defect: the paragraph is in the HTML and legible in both frames, read by eye.
+
+**What this does not prove.** That the three paragraph misses are gone - they belong to the model, not the page, and the single-frame retry did not catch them this time. That the next bundled run keeps the fix - the placeholder list is a list, and the next dash the model invents is a new case.
+
+**A process note.** This run committed an empty commit with the report in its message, so the diary had no entry for it and the "last entry" a reader finds was the twentieth block's. A message is not a changelog entry; every run owes the diary a dated one.
