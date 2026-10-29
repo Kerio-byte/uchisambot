@@ -58,7 +58,7 @@ Payment via Telegram Stars, right in the chat.
 
 Single breakdown — 30 Stars.
 
-Invite a friend — when they solve their first task, you get one more free breakdown.
+Invite a friend — when they solve their first task, you get one more free breakdown. Up to 20 bonus breakdowns in total.
 
 ## For parents
 
