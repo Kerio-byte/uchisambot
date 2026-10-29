@@ -10036,4 +10036,22 @@ Changing a catcher is a cascade, and every gate behaved. The breadth registry re
 
 **What this does not prove.** That the fold holds at other heights — 1280x800 and 1440x900 are two windows, not every office. That the next catcher edit will remember this cascade — it is written here because it cost four runs.
 
+## Four blocks the eye had never seen once (29.10.2026, 28-й блок)
+
+**What this block was for.** Every eye entry this week listed its sections and every list was the same ten names (`head`, `hero`, `subjects`, `shots`, `band`, `principle`, `ref`, `parents`, `contact`, `footer`). The page carries nine section ids and only five of them were among those ten. Between them sat four blocks that had **no frame, no anchor and no verdict in any language**: `how`, `features`, `pricing`, `faq` — and `pricing` is the block that carries the money. It was not a judgement that they were fine; nobody had ever looked.
+
+**Why it stayed invisible.** `landing-visual-pass.py` shot ten selectors and `landing-eye.py` anchored ten names. A section the battery did not know returned an empty anchor, and an empty anchor falls back to «подтверждён только язык» — a green-shaped sentence the eye can produce without reading a single line. The hole and the proof of the hole were the same code path.
+
+**Fixed in two places, both narrow.** Any section whose name is an id on the page now gets its anchor from that id (`SECTION_MARK.get(section) or f'id="{section}"'`), so the next block added to the page is measurable without editing a dictionary. And the frame list carries the four selectors: the pass went from ten parts to fourteen, **306 checks, 0 failed, 0 problems**, 72 new frames (four sections × nine languages × two viewports) in `evidence/visual-20261029`.
+
+**Then the eye, and it caught the instrument first.** `pricing,faq` × nine languages — `pricing` **9 of 9 PASS** (`evidence/eye-20261029G`). `faq` came back **5 PASS, 4 ungrounded** — en `0/23`, ru `0/18`, id `0/20`, uk `0/18` words, and all four were the instrument's fault, not the page's. The anchor for `faq` had been taken as the block's first `<p>`, and that paragraph is the **answer inside a collapsed `<details>`** — text that exists in the HTML and is nowhere on the screen. The eye was asked to read a line that had been cut out of its own frame; a device that reported PASS there would have been lying.
+
+**The rule, scoped rather than broadened.** For a section found by id, its own heading is a legal anchor from four characters («Вопросы», «FAQ» is three and still too short), and if the heading is shorter than that, the first visible line — the accordion's `<summary>` — becomes the anchor. The rule runs **only** for id-sections: the strips (`band`, `ref`, `principle`, `parents`) keep the phrase anchors their nine-language runs were graded against, so nothing already proven was re-cut. Re-run: `faq` **9 of 9 PASS, 0 defects, 0 ungrounded** (`evidence/eye-20261029H`) — en «FAQ», ru «Вопросы», uk «Питання», tr «Sıkça sorulan sorular» read verbatim.
+
+**The cascade, which cost more than the fix.** Editing `landing-visual-pass.py` changed its sha, and the breadth registry refused a control measured with other code — correctly. The first repair used `--replace-registry`, which does what it says: it wiped the other sixty-one records, and the sweep went red on the opposite clause («нет замера: a11y-extra, axe-audit, backtab»). Restored from git, re-measured, merged: **63 records**, two visual-pass rows replaced. Written down because the flag is dangerous by design and reads like a convenience.
+
+**The floor.** `build.py --check` — **24 of 24** identical to a fresh build. `landing-sweep.py` — **2981 checks, 0 failed, ALL PASS**. No site byte changed: this block touched two battery files, one registry and this entry.
+
+**What this does not prove.** That `how` and `features` look right — they are shot now (nine languages, two viewports) and **not read**: eighteen questions remain for the next block. That the breadth record for visual-pass is strong — its verdict field says «не наблюдается» while the run printed «КОНТРОЛЬ ПОЙМАЛ: ширина (+120 px) — переполнение названо в 4 окнах из 4», so the collector's vocabulary does not match the battery's; the record is weaker than the run. And that this block stayed inside its step budget — it did not: the anchor cascade and the registry wipe pushed it past forty steps, and the overspend is the reason both are written down here.
+
 
