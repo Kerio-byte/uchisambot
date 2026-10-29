@@ -10001,3 +10001,14 @@ the pre-commit sweep refused the commit (`[opsec] что отдаёт сайт`)
 name the machine it was built on. The path is gone; the eye is found by `--eye`, then by
 `LANDING_EYE`, then inside the home skill tree. It is also written once, cleanly: nine patches into a
 250-line device is the debt this notebook already warns about.
+
+## The mobile bottom, which had never been photographed (29.10.2026, приёмка блока о хвостах)
+
+The entry above read the tails of the two legal documents — on the desktop frames. Its own honest note said the mobile frame is only the visible 900-pixel window, so the mobile bottom had never been photographed at all: the geometry measured the whole document, and the eye had never seen it.
+
+Two changes make it readable. `landing-legal-pages.py` now shoots the full page at **both** widths — the mobile privacy frame is `420 x 13 284` instead of a 900-pixel window. `legal-tail-read.py` takes `--viewport m`, so the reader is no longer nailed to the desktop frame.
+
+The mobile tails come back clean: privacy `9. Контакты` with the footer, terms `13. Контакты` with the footer, 2/2 and 6/6 words in each language, and the control still refuses the foreign headline (`0/2`). Evidence: `evidence/legal-tail-mobile/tail.json`. The battery's control was re-measured with the new code and the registry kept its 63 records; the sweep holds at **2981 / 0**.
+
+**What this does not prove.** That the mobile column *looks* right — this reads the last 1200 pixels, not the whole column. That a future edit keeps the mobile frame full-page: that flag lives in one line of the battery.
+
