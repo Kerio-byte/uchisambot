@@ -9634,3 +9634,15 @@ Then the eye. Here the estimate was wrong, and the ledger records it: `CHUNK=4` 
 
 **What this does not prove.** That the six sections keep their coverage — that is exactly what the in-flight grading decides, and no block before it may claim it. That a fifty-four-question batch fits a single block — it does not; the budget is per-question, and this entry is the measurement.
 
+## Nine out of nine, and not one line under the green (29.10.2026, sixteenth block, приёмка)
+
+The file the previous entry pointed at was there: `evidence/eye-20261029C/eye.json`, nine rows, `failed 0, ungrounded 0, unavailable 0`, `sections: hero, band, principle, ref, parents, shots`. Every verdict read PASS — and the field beside it, `anchor`, was empty: «опорной строки в HTML нет; подтверждён только язык». The green proved the model could name the language of its own answer. It did not prove the answer had read a single line of the page.
+
+The cause sat in the battery, not the page. `landing-eye.py` computed per-section anchors only when `hero` was absent from the section list. This block bundled all six sections, hero among them, so the anchor branch was skipped for every section at once and each fell into the language-only fallback: a regression that turns "we checked the text" into "we checked the language" without changing the word PASS.
+
+Re-grading the saved answers — no model calls, just the six HEADLINE/LINE pairs each response already carried, against the anchors the pages actually hold — gave **52 of 54**. Both misses were the hero block, `vi` and `uk`, each returning the H1 twice instead of the paragraph. The frames were not the cause: the paragraph is visible and legible on both mobile and desktop hero frames (read by eye, verbatim), single-frame reads returned **26/26 words** on the uk pair, and `vi` passed on an ordinary retry. A pair of frames reads worse than one — consistently for uk, intermittently for vi. A false red, not a page defect, and just as costly as a false green.
+
+Both are fixed and verified in the battery: anchors are now computed for every section including hero (the H1 check stays as an extra condition), and a pair that fails its anchor is re-read one frame at a time, desktop first. The runs: `en/hero` PASS by anchor, 27/27 words; `vi/hero` PASS on retry, 40/40; `uk/hero` PASS on the desktop frame, 26/26; `en` on `band,ref` PASS — the non-hero path unchanged.
+
+**What this does not prove.** That the green on the other five sections rested on text before this entry — it did not, and the re-grade above is the evidence, reproducible without the model. The repaired battery was shown on one language per case; the full nine-language run in its new form has not been repeated.
+
