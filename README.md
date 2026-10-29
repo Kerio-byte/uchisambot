@@ -10012,3 +10012,15 @@ The mobile tails come back clean: privacy `9. Контакты` with the footer,
 
 **What this does not prove.** That the mobile column *looks* right — this reads the last 1200 pixels, not the whole column. That a future edit keeps the mobile frame full-page: that flag lives in one line of the battery.
 
+## The laptop fold, and the numbers a buyer can re-derive himself (29.10.2026, 27-й блок)
+
+**Technique, measured before anything else.** `landing-sweep.py` — **CHECKS: 2981, FAILED: 0, ALL PASS**. `build.py --check` — **24 of 24** files identical to a fresh build. `publish-tree.py --check` — the list is complete, **495** internal references all inside it. The live site and the tree, byte by byte, twelve addresses (nine index pages, `privacy.html`, `terms.html`, `404.html`): **12 of 12 identical**, 113 683 B to 125 472 B of HTML each.
+
+**Visual, with fresh frames.** `landing-visual-pass.py` on a local server — **CHECKS: 306, FAILED: 0, PROBLEMS: 0** across all nine languages at 420 px and 1440 px, frames in `evidence/visual-20261029`. The H1 is 30 px in two lines on the phone and 56 px in two or three lines on the desktop (three lines in pt, hi, vi, uk — longer words, not a defect); the badge strip loads **7 of 7** in every language and every width, two per row on the phone, four and three on the desktop; nothing overflows outside the slider.
+
+**The question the frames do not answer, answered separately.** The two fold batteries measure the *phone* screens (14 real ones, nine languages) and the twelve pages' first screen. Nobody had measured a **laptop**: 1440 x 900, the commonest office window. Measured now — the H1 ends and the primary `a.btn` ends above 900 px in all nine: en/ru/es 567, id 582, tr 592, pt/vi 601, uk 615, hi 625. The worst case (Hindi, the longest headline) leaves **275 px** between the button and the fold. A visitor on a laptop never scrolls to find the button.
+
+**Meaning: the money numbers, re-derived rather than trusted.** The page says "24 stars per breakdown — 20% off" (`24 звезды за разбор — выгода 20%`). From `tools/prices.json` and nothing else: a pack of five is 120 stars, so 120 / 5 = **24**; a single breakdown is **30**; 24 against 30 is **exactly 20%**. The free tier the page promises is **2**, and `free_breakdowns` is **2**. The referral ceiling the page states ("no more than 20 bonus breakdowns") is the number the bot enforces. Three claims, all four numbers, all re-derivable by a buyer with a calculator.
+
+**What this does not prove.** That the desktop fold holds at other heights — this measured 900 only, one window. That the middle of the mobile column has been *read* by the eye: the geometry measures it, the eye has still only seen the bands it was given frames of.
+
