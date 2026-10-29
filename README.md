@@ -9688,3 +9688,36 @@ Block eighteen left one sentence standing as unproven: that the contact form del
 **Frames and the eye.** `landing-visual-pass.py` shot fresh frames for all nine languages at 420 px and 1440 px - **306 checks, 0 problems** (no horizontal overflow outside the slider, no clipped text, 7/7 badges loaded on every page, badge rows 4+3). `landing-eye.py` then graded the contact section on three languages against those frames - `ru`, `en`, `hi`, **3 pairs, 0 defects, 0 ungrounded** - and each PASS names the headline it actually read: "Есть вопрос или отзыв?", "Questions or feedback?", "कोई सवाल या सुझाव है?". Evidence: `evidence/visual-20261029-nineteen/`, `evidence/block-20261029-nineteen/eye-contact.json`.
 
 **What this does not prove.** That a stranger's browser will deliver: the run used our machine, our address and our IP, so it proves the path, not the deliverability across providers. That Gmail's classification is stable - one letter, one day, after a week of the same letters being filed as spam on 24.10. That the double-send guard holds when a visitor's extension blocks `fetch` - unchanged from 24.10, where a blocked request leaves the text in the box and the honest "not sent" line. That the operator named in `privacy.html` exists - still the one sentence this policy does not carry, and still the owner's decision. Nothing in the tree was edited by this block: it measured, and every number above came back the number it already was.
+
+## The referral sentence promises without the ceiling the bot enforces (29.10.2026)
+
+The floor first, unchanged in the same run: `build.py --check` - 24 files byte-identical to a
+fresh build; `publish-tree.py --check` - the file list complete in both directions, 495 internal
+links; `landing-sweep.py` - **2948 checks, 0 failed**; `landing-bot-profile.py` - **29 checks, 0
+failed** against the live Bot API; `landing-price-parity.py` - **9 checks, 0 discrepancies** with
+`bot/payments.py`.
+
+**The candidate that was not a defect.** `tools/bot-profile.json` says the Russian profile names
+`русский` among its subjects while `tools/subjects.json` names `Английский язык`, and the registry's
+own note calls `русский` the exact word that made the 24.10 pass red in eight languages. Read on:
+the sentence closes the same way in all nine dictionaries (`subj.note`, nine of nine files) - "And
+any other school question you are stuck on" / "И любой другой школьный вопрос, где ты застрял". The
+24.10 defect was a translator putting the *page's own language* where the canon names a *school
+subject*; a hand-written Russian sentence naming a Russian school subject is an example of that
+clause, not a mistranslation of the canon. Left alone, and written down here so a later pass does
+not "fix" the owner's word into a translation.
+
+**The one that is.** `ref.text` in all nine languages promises the visitor "you get one more free
+breakdown" per friend, with no ceiling in any of the nine. The bot has one: `REFERRAL_MAX_CREDITS`
+= 20 (`bot/payments.py:43`), enforced at `bot/storage.py:298` - from the twenty-first credited friend
+the referrer gets nothing while the page still says they will. Same class as the "five" the
+dictionary promised on 23.10 while the bot gave two, only the other way round: the page is kinder
+than the product. **Not fixed in this block**: the fix is nine sentences plus the referral answer in
+the FAQ, and nine translations written in a hurry are the exact defect three days of this
+repository were spent removing. The order for the next block: state the ceiling in `ref.text` of
+all nine from the bot's own constant, then add two parity checks - `ref.text` carries no numeral
+other than the one, and wherever the ceiling is claimed the number equals `REFERRAL_MAX_CREDITS`.
+
+**What this does not prove.** That twenty friends is the right ceiling - that is a product
+decision, not a measurement. That no language casually promises something else in prose the
+batteries do not key on: this block read one promise in nine languages, not all of them.
