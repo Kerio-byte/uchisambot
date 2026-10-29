@@ -9775,3 +9775,21 @@ Fixed in `landing-eye.py`: placeholder values (`->`, `—`, `none`, `нет`) ar
 **What this does not prove.** That the three paragraph misses are gone - they belong to the model, not the page, and the single-frame retry did not catch them this time. That the next bundled run keeps the fix - the placeholder list is a list, and the next dash the model invents is a new case.
 
 **A process note.** This run committed an empty commit with the report in its message, so the diary had no entry for it and the "last entry" a reader finds was the twentieth block's. A message is not a changelog entry; every run owes the diary a dated one.
+
+## The contact band answered in nine, and the listing outside still promises five (29.10.2026, приёмка двадцать второго блока)
+
+**What was asked.** One block, in order: technique, then the eye, then what the words promise.
+
+**Technique.** `landing-sweep.py` — **CHECKS: 2948, FAILED: 0, ALL PASS**: the nine pages byte-stable against a fresh build, per-language weight budgets, the external-address ledger, the 84-cell page canary, the publish list, and live parity with the tree. Nothing in the technical set moved, and nothing needed to.
+
+**The eye, on the two bands it had read least.** `head` and `contact` stood at four and two readings. The frames of the twenty-first block (`evidence/visual-20261029-twentyone`, 180 frames at 420 and 1440 px) still hold both sections in all nine languages, and they are current: no page byte has moved since 09:04, the frames were shot at 10:11. `landing-eye.py` read them: **9 of 9 grounded, 0 defects, 0 unavailable**. The contact headline came back as written in each language — `Questions or feedback?`, `Есть вопрос или отзыв?`, `¿Preguntas o comentarios?`, `कोई सवाल या सुझाव है?`, `Ada pertanyaan atau masukan?`, `Sorunun ya da geri bildirimin var mı?`, `Có câu hỏi hoặc góp ý?`, `Є питання чи відгук?` — and the anchor line matched on all nine. Since the twenty-first block's parser fix, a dash can no longer stand in for a headline.
+
+**What the contact band promises, read in nine dictionaries.** Every language says the same three things: the message reaches the team, the answer goes to the visitor's email, the email is used only for that answer, no mailing lists; and both refusal lines promise the text stays in the box. That promise is now a battery rather than a reading: `landing-contact-e2e.py --failures` — **CHECKS: 442, FAILED: 0 (88 s)** — four refusal modes per language (connection aborted, 500, 429, and HTTP 200 carrying `success:false`, the dangerous one) each show the refusal line in the page's own language, keep the textarea's text, re-enable the button with its own label, put focus on the alert and send exactly one POST.
+
+**The badge row, read from outside.** Five of the six badge addresses answer 200 and name UchiSamBot on the page they land on (fazier, startupbase, showmebest, lift-off, auraplusplus). `startupfa.me/s/-51` answered **429** — its edge rate-limits a series of requests from one address, the same behaviour recorded on 17.10; not proof the listing is gone, and not proof it is alive either.
+
+**One thing this block found outside the page.** The LiftOff listing, read as an article, still tells the visitor *"Your first 5 breakdowns are free"*, *"Interface languages: Russian and English"* and five subjects. The page and the bot say **two** free breakdowns and nine languages. The page is right — its `q4a` and `cta.sub` are tied to `tools/claims.json` and to the bot's own constant — while the listing was written earlier and cannot be corrected from this repository: it needs an edit on the platform, under the owner's account. Named here so the next reader does not learn it from a visitor.
+
+**What this does not prove.** That a person looked at the frames — the eye is the local model reading saved frames. That the 429 is a rate limit rather than a delisting. That the other five listings say what the page says: only LiftOff was read as an article, the other four were counted for the name and nothing more.
+
+**Files.** This entry only; no site file was touched, so nothing moves in `gh-pages`. The push is a main-branch journal push to both mirrors.
