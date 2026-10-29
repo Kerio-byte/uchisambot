@@ -9721,3 +9721,43 @@ other than the one, and wherever the ceiling is claimed the number equals `REFER
 **What this does not prove.** That twenty friends is the right ceiling - that is a product
 decision, not a measurement. That no language casually promises something else in prose the
 batteries do not key on: this block read one promise in nine languages, not all of them.
+
+## The promise got the ceiling the product already had, and the number now comes from the constant (29.10.2026, twentieth block)
+
+**What was wrong.** The order the previous entry left was executed as written: `ref.text` in all
+nine dictionaries names the ceiling, and the number is not typed nine times - `landing-price-parity.py`
+reads `REFERRAL_MAX_CREDITS` out of `bot/payments.py` and demands the same number in all nine
+sentences. The unit is the one the Terms already use: **bonus** breakdowns, not "free breakdowns in
+total", because the bonus sits on top of the two free trials and "20 free in total" would have
+shrunk the page's own offer to 18 bonus ones. EN: *"Invite a friend — when they solve their first
+task, you get one more free breakdown. Up to 20 bonus breakdowns in total."* The other eight say
+the same sentence in their own words; every one carries exactly one number, 20.
+
+The FAQ has no referral answer to correct - a grep of all nine dictionaries for friend / referr /
+invite returns one line, `ref.text` itself - so the second half of the previous block's guess was a
+claim about a text that does not exist. Nothing was added to the FAQ: a new question is content,
+not a fix for a promise.
+
+**Two checks, one control.** `landing-price-parity.py` grew from 9 to 11: *«реферал ref.text x9:
+чужих чисел нет»* (no numeral in the sentence other than the bonus and the ceiling - a translator
+writing "3 friends" or "50 breakdowns" turns it red) and *«реферал ref.text x9: потолок ==
+REFERRAL_MAX_CREDITS»* (each of the nine names the ceiling **and** the word that makes it a ceiling
+- Up to / не больше / Hasta / Até / कुल मिलाकर / Maksimal / en fazla / tối đa / не більше). The
+first version of the first check also required *some* number to be present, and the negative
+control caught it: deleting the ceiling made two rows red instead of one, and the control refuses a
+measurement that cannot name the single defect. Presence belongs to the ceiling check; the other
+check owns foreign numerals only. `--mutate reftext` copies the landing's dictionaries, deletes the
+ceiling from `en.json` and requires exactly one red, naming 20: **подмен 1, провалов 1, поймано
+ровно одно утверждение**.
+
+**The floor.** `build.py --check` - 24 files byte-identical to a fresh build; `publish-tree.py
+--check` - 107 files, 495 internal links, the list complete both ways; `landing-sweep.py` - **2948
+checks, 0 failures** after the live site was republished from `gh-pages` to both mirrors;
+`landing-price-parity.py` - **11 checks, 0 discrepancies**. The submission kit was regenerated
+because its manifest hashes `en.json`: 4 cards 1920x1080, 10 inputs matched.
+
+**What this does not prove.** That the nine sentences read naturally to a native speaker - they were
+written by the same hand that wrote the previous nine, and the eye has not graded this band yet.
+That 20 is reachable in practice: the ceiling is the bot's, the page now repeats it, and nobody has
+counted whether twenty credited friends ever happened. That other prose on the page names numbers
+the batteries do not key on - this block pinned one sentence, not the dictionary.
