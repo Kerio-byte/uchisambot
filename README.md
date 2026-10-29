@@ -9624,3 +9624,13 @@ only the two blocks the fourteenth entry opened.
 sections); `evidence/eye-20261029B/eye.json` and `log.txt` (the six verdicts and the total line).
 `evidence/` stays out of the repo. No page, no dictionary, no tool, no price file was touched. This entry.
 
+## The floor is green, the last frame is shot, and the eye is still grading (29.10.2026, sixteenth block)
+
+The gap the previous entry named — six sections without nine-language coverage on today's frames — is this block's work. It started with the floor: `build.py --check` — 24 files byte-identical to a fresh build; `publish-tree.py --check` — 107 files, 495 internal links, all inside the list; the full sweep — **2948 checks, 0 failures**. Then the frame set was completed: the fifteenth block had shot six languages, and the Vietnamese frames were missing from `evidence/visual-20261029` entirely — a fresh `LANDING_LANGS=vi` visual pass added the twenty missing frames (**34 checks, 0 failures, PROBLEMS 0, 7/7 badges loaded on both viewports**). Nine languages, twenty frames each, one directory.
+
+Then the eye. Here the estimate was wrong, and the ledger records it: `CHUNK=4` frames per question, `max_tokens=3000`, the local [model] on the graphics card — fifty-four questions (6 sections × 9 languages) is an hour of model time, not the fifteen minutes a six-question batch suggested. The run went over the step budget and was left running in the background (session `proc_e61f38b3b2d9`), writing its verdicts to `evidence/eye-20261029C/eye.json`.
+
+**The next block does this first:** check whether `evidence/eye-20261029C/eye.json` exists. If it does — read the verdicts, fix whatever the eye found, and close the six-section gap on today's frames. If it does not (the background process died with the session) — re-run the eye in three batches of two sections × nine languages (18 questions, about twenty-five to thirty minutes each), one batch per block, never fifty-four at once. The local HTTP server on 8137 was left running for the frame work; a fresh one serves identical files.
+
+**What this does not prove.** That the six sections keep their coverage — that is exactly what the in-flight grading decides, and no block before it may claim it. That a fifty-four-question batch fits a single block — it does not; the budget is per-question, and this entry is the measurement.
+
