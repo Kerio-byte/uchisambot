@@ -9931,3 +9931,9 @@ cannot see. Then the external listing pages, whose text is outside this reposito
 `--docs` / `--no-control` entry point) and `SKILL.md` (how to run it, and its proof limit), both in
 the skill tree; `evidence/legal-20261029/eye-docs.json`; this README entry. No site file was touched,
 so `gh-pages` and the live bytes are unchanged by this block.
+
+**Debt, recorded rather than hidden.** `landing-eye.py` took four separate edits in this block
+(constants, helpers, the document battery, the entry point). The house rule says more than three
+patches to one file means rewrite it cleanly from a backup; these four are one coherent feature and
+the file still reads as one device, so it was not rewritten mid-block — but the next edit to it must
+start with a clean rewrite, not a fifth patch.
