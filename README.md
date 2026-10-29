@@ -10024,3 +10024,16 @@ The mobile tails come back clean: privacy `9. Контакты` with the footer,
 
 **What this does not prove.** That the desktop fold holds at other heights — this measured 900 only, one window. That the middle of the mobile column has been *read* by the eye: the geometry measures it, the eye has still only seen the bands it was given frames of.
 
+## The laptop fold was a sentence; now it is a battery line (29.10.2026, приёмка)
+
+The entry above measured the laptop — 1440 x 900, the primary button ending between 567 and 625 px, Hindi the worst case with 275 px to spare. Re-measured from outside, those numbers come back identical to the pixel.
+
+Its framing does not survive the same check: *"Nobody had measured a laptop."* One battery had. `landing-page-fold.py` has carried a `desk-1280` viewport and asks, on every page, exactly the two questions this measurement asks — is the title visible without scrolling, is the primary action. The class existed; only the window was new, and the new measurement lived in a sentence that the next redesign would silently outdate.
+
+So the window moved into the battery: `laptop-1440: (1440, 900)`. It now measures **12 pages x 3 viewports x 2 clauses = 66 checks, 0 failed**, and its laptop rows agree with the independent run (uk 615, vi 601, tr 592).
+
+Changing a catcher is a cascade, and every gate behaved. The breadth registry refused a stale control; the page-canary ledger refused a catcher whose sha changed after its last full run — correctly, because an edited catcher has not proved it still catches anything. The canary was re-run whole: **12 pages, 84 cells, 81 caught, 0 missed, 3 not applicable**. The sweep came back to **2981 / 0**.
+
+**What this does not prove.** That the fold holds at other heights — 1280x800 and 1440x900 are two windows, not every office. That the next catcher edit will remember this cascade — it is written here because it cost four runs.
+
+
