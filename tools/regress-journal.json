@@ -1,0 +1,552 @@
+[
+ {
+  "script": "landing-a11y-extra.py",
+  "code": 0,
+  "sec": 69.9,
+  "checks": 267,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] menu no-js en: CSS ceiling applied (258 px at this height)\n  [ok  ] menu no-js en: open list is cut by the ceiling, not taller than the screen\n  [ok  ] menu no-js en: all nine entries still reachable by scrolling\n  [ok  ] menu no-js en: list stops scroll chaining without the script\nCHECKS: 267, FAILED: 0  (69 s)\nJSON: landing-a11y-extra-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-axe-audit.py",
+  "code": 0,
+  "sec": 17.2,
+  "checks": 12,
+  "failed": 0,
+  "problems": null,
+  "tail": "PAGES: 12 | TOTAL VIOLATIONS: 0\nCHECKS: 12, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-backtab.py",
+  "code": 0,
+  "sec": 225.1,
+  "checks": 120,
+  "failed": 0,
+  "problems": null,
+  "tail": "самые тесные остановки: chromium/phone-390x844/en frac=1 A. «» h=40; chromium/phone-390x844/ru frac=1 A. «» h=40; chromium/phone-390x844/hi frac=1 A. «» h=40; chromium/tablet-768x1024/en frac=1 A. «» h=46\nCHECKS: 120, FAILED: 0  (225 s)\nevidence: <repo>/evidence/backtab-20261029T195532.json",
+  "err": ""
+ },
+ {
+  "script": "landing-badge-rows.py",
+  "code": 0,
+  "sec": 120.8,
+  "checks": 1017,
+  "failed": 0,
+  "problems": null,
+  "tail": "   768  [4, 3]                    106 px   46 px\n   900  [4, 3]                    106 px   46 px\n  1024  [4, 3]                    106 px   46 px\n  1280  [4, 3]                    106 px   46 px\n  1440  [4, 3]                    106 px   46 px\nCHECKS: 1017, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-bot-keys.py",
+  "code": 0,
+  "sec": 0.1,
+  "checks": 55,
+  "failed": 0,
+  "problems": null,
+  "tail": "PASS код: литерал — ключ\nPASS код: ключ не склеен\nPASS код: нет тени второго языка\nCHECKS: 55, FAILED: 0\nсловарь: 48 ключей, у каждого есть читатель; теней и склеек нет\nBOT-KEYS: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-bot-lang.py",
+  "code": 0,
+  "sec": 4.7,
+  "checks": 73,
+  "failed": 0,
+  "problems": null,
+  "tail": "PASS меню: uk\nPASS первый экран: uk\nPASS различны: подтверждения\nCHECKS: 73, FAILED: 0\nдевять языков: подтверждение смены, первый экран и меню называют свой язык\nBOT-LANG: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-bot-vars.py",
+  "code": 0,
+  "sec": 0.1,
+  "checks": 42,
+  "failed": 0,
+  "problems": null,
+  "tail": "PASS вызов: thanks_paid_no_task отдаёт все подстановки\nPASS вызов: thanks_paid_no_task без лишних\nPASS вызов: шаблон не зовут пустым\nCHECKS: 42, FAILED: 0\nшаблоны: 12 ключей с подстановками, набор один во всех девяти языках; каждый вызов отдаёт ровно свои и никто не зовёт шаблон пустым\nBOT-VARS: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-browser-smoke.py",
+  "code": 0,
+  "sec": 180.0,
+  "checks": 18,
+  "failed": 0,
+  "problems": null,
+  "tail": "ДЕГРАДАЦИЯ ЗНАЧКОВ, оборван один файл: запросов 1, скрыто 1, видимых целых 6, видимых битых 0\nПРОГОНОВ: 18\nС ПРОБЛЕМАМИ: 0\nCHECKS: 18, FAILED: 0\nok без замечаний: ['en/desktop', 'ru/desktop', 'es/desktop', 'pt/desktop', 'hi/desktop', 'id/desktop', 'tr/desktop', 'vi/desktop', 'uk/desktop', 'en/mobile', 'ru/mobile', 'es/mobile', 'pt/mobile', 'hi/mobile', 'id/mobile', 'tr/mobile', 'vi/mobile', 'uk/mobile']\nJSON: landing-browser-smoke-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-cross-engine.py",
+  "code": 0,
+  "sec": 422.4,
+  "checks": 60,
+  "failed": 0,
+  "problems": 0,
+  "tail": "[firefox/landscape-568x320/hi] ok 2.5s\nИТОГ: прогонов 60 / с проблемами 0 / время 422.2s\nCHECKS: 60, FAILED: 0\nJSON: <repo>/evidence/xengine-20261029-2007.json\nСкриншоты: evidence/xengine-view/webkit-en-mobile-top.png, evidence/xengine-view/webkit-ru-mobile-top.png, evidence/xengine-view/webkit-hi-mobile-top.png, evidence/xengine-view/webkit-hi-mobile-rail.png, evidence/xengine-view/webkit-en-desktop-top.png, evidence/xengine-view/firefox-en-mobile-top.png, evidence/xengine-view/firefox-ru-mobile-top.png, evidence/xengine-view/firefox-hi-mobile-top.png, evidence/xengine-view/firefox-hi-mobile-rail.png, evidence/xengine-view/firefox-en-desktop-top.png\nPROBLEMS: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-cwv.py",
+  "code": 0,
+  "sec": 76.6,
+  "checks": 69,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] hi desktop: CLS <= 0.1\n  [ok  ] hi desktop: постер ровно одна загрузка\n  [ok  ] hi desktop: тап FAQ -> кадр <= 200 ms\n  [ok  ] hi desktop: no JS errors\nCHECKS: 69, FAILED: 0  (76 s)\nJSON: landing-cwv-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-deeplink.py",
+  "code": 0,
+  "sec": 420.1,
+  "checks": 684,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 684, FAILED: 0\nALL PASS\nevidence: <repo>/evidence/deeplink-run-20261029T201557.json",
+  "err": ""
+ },
+ {
+  "script": "landing-en-leftovers.py",
+  "code": 0,
+  "sec": 0.2,
+  "checks": 16,
+  "failed": 0,
+  "problems": null,
+  "tail": "{\n \"count\": 0,\n \"problems\": []\n}\nCHECKS: 16, FAILED: 0\nEN-LEFTOVERS: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-env-prefs.py",
+  "code": 0,
+  "sec": 22.6,
+  "checks": 45,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] wk rm en: видео не играет ни в одной пробе\n  [ok  ] wk rm en: loop снят, автозапуска нет\n  [ok  ] wk rm en: reveal отключён, все .rv видны\n  [ok  ] wk rm en: без JS-ошибок\nCHECKS: 45, FAILED: 0  (22 s)\nJSON: landing-env-prefs-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-external-links.py",
+  "code": 0,
+  "sec": 215.1,
+  "checks": 68,
+  "failed": 0,
+  "problems": null,
+  "tail": "             ^ продукт на странице есть\n         200 [a] https://www.basedtools.ai/\nПРОБЛЕМНЫХ: 0\nCHECKS: 68, FAILED: 0\nНЕ ПРОВЕРЕНО (заслонка не пройдена — это не pass и не дефект): 0\nРЕЕСТР: <repo>/tools/links-last-seen.json",
+  "err": ""
+ },
+ {
+  "script": "landing-first-screen.py",
+  "code": 0,
+  "sec": 61.3,
+  "checks": 252,
+  "failed": 0,
+  "problems": null,
+  "tail": "land-874x402     ru                 61  ОК\nland-896x414     ru                 73  ОК\nland-915x412     ru                 71  ОК\nland-926x428     ru                 87  ОК\nland-932x430     es                 89  ОК\nCHECKS: 252, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-font-identity.py",
+  "code": 0,
+  "sec": 5.2,
+  "checks": 12,
+  "failed": 0,
+  "problems": null,
+  "tail": "OK   marks: кадр нарисован (цветов ≥ 20) | цветов 306\nOK   marks: 0 расхождений с полным шрифтом | 0 px\nOK   footer: кадр нарисован (цветов ≥ 20) | цветов 238\nOK   footer: 0 расхождений с полным шрифтом | 0 px\nOK   прогон 2 (полный шрифт) тоже снял нарисованные кадры | пустые: \nCHECKS: 12, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-fonts.py",
+  "code": 0,
+  "sec": 43.3,
+  "checks": 41,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] uk: no console errors\n404: 33.2 КБ ['langs-cyrillic.woff2', 'langs-devanagari.woff2', 'langs-vietnamese.woff2', 'manrope-latin.woff2']\n  [ok  ] 404: шрифты ≤ 40 КБ\n  [ok  ] 404: «हिन्दी» со своим мини-сабсетом\n  [ok  ] 404: полного Noto нет\nCHECKS: 41, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-glyph-fallback.py",
+  "code": 0,
+  "sec": 36.1,
+  "checks": 24,
+  "failed": 0,
+  "problems": null,
+  "tail": "uk/            узлов=140 глифов=  4973+5023 наши= 9996 подмена=0/0 пропущено=9/6\nprivacy.html   узлов= 94 глифов=17764+17973 наши=35737 подмена=0/0 пропущено=1/1\nterms.html     узлов= 80 глифов=  9483+9585 наши=19068 подмена=0/0 пропущено=1/1\n404.html       узлов= 19 глифов=    347+349 наши=  696 подмена=0/0 пропущено=1/1\nCHECKS: 24, FAILED: 0\nСТРАНИЦ: 12 | ОКОН: 2 | С ПОДМЕНОЙ: 0 | НЕДОМЕРЕНО: 0",
+  "err": "tml HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:22:14] \"GET /img/logo.svg HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:22:14] \"GET /fonts/manrope-latin.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:22:14] \"GET /fonts/manrope-cyrillic.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:22:15] \"GET /404.html HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:22:18] \"GET /404.html HTTP/1.1\" 200 -"
+ },
+ {
+  "script": "landing-header-engines.py",
+  "code": 0,
+  "sec": 417.3,
+  "checks": 973,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 973, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-keyboard-form.py",
+  "code": 0,
+  "sec": 113.1,
+  "checks": 244,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 244, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-landscape-page.py",
+  "code": 0,
+  "sec": 351.8,
+  "checks": 956,
+  "failed": 0,
+  "problems": null,
+  "tail": "chromium  проверок  478  красных   0\nwebkit    проверок  478  красных   0\nCHECKS: 956, FAILED: 0  (352 s)\nevidence: <repo>/evidence/landscape-page-20261029T203703.json",
+  "err": ""
+ },
+ {
+  "script": "landing-langlist-fit.py",
+  "code": 0,
+  "sec": 481.7,
+  "checks": 3591,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 3591, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-legal-pages.py",
+  "code": 0,
+  "sec": 12.2,
+  "checks": 42,
+  "failed": 0,
+  "problems": 0,
+  "tail": "[ok]   privacy.html-d\n[ok]   terms.html-m\n[ok]   terms.html-d\n[ok]   404.html-m\n[ok]   404.html-d\nCHECKS: 42, PROBLEMS: 0, frames: 6 → <repo>/evidence/legal-20261029",
+  "err": "tml HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:45:10] \"GET /img/logo.svg HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:45:10] \"GET /fonts/manrope-latin.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:45:10] \"GET /fonts/manrope-cyrillic.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:45:11] \"GET /404.html HTTP/1.1\" 200 -\n127.0.0.1 - - [29/Oct/2026 20:45:14] \"GET /404.html HTTP/1.1\" 200 -"
+ },
+ {
+  "script": "landing-links-audit.py",
+  "code": 0,
+  "sec": 0.3,
+  "checks": 25,
+  "failed": 0,
+  "problems": null,
+  "tail": "  https://t.me/UchiSamBot?start=src_landing_vi_shots\n  https://t.me/UchiSamBot?start=src_landing_vi_sticky\nСТРАНИЦ: 12\nСАМОССЫЛКИ: проверены в дереве, база https://kerio-byte.github.io/uchisambot/\nПРОБЛЕМ: 0\nCHECKS: 25, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-min-font.py",
+  "code": 0,
+  "sec": 119.7,
+  "checks": 1554,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 1554, FAILED: 0\nALL PASS",
+  "err": " \"tools/python-3.14.7+20260901-linux-x64/lib/python3.14/shutil.py\", line 257, in copyfileobj\n    fdst_write(buf)\n    ~~~~~~~~~~^^^^^\n  File \"tools/python-3.14.7+20260901-linux-x64/lib/python3.14/socketserver.py\", line 845, in write\n    self._sock.sendall(b)\n    ~~~~~~~~~~~~~~~~~~^^^\nBrokenPipeError: [Errno 32] Broken pipe\n----------------------------------------"
+ },
+ {
+  "script": "landing-nu-validate.py",
+  "code": 0,
+  "sec": 32.2,
+  "checks": 12,
+  "failed": 0,
+  "problems": null,
+  "tail": "ИТОГО сообщений: 126; из них известных ложных: 126, информационных: 0\nинформационные (не дефекты): «Trailing slash on void elements» — валидный HTML5, атрибуты в кавычках\n=== РЕАЛЬНЫЕ НАХОДКИ (error/warning) ===\nнет\nCHECKS: 12, FAILED: 0\nJSON: landing-nu-validate-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-page-contrast.py",
+  "code": 0,
+  "sec": 23.5,
+  "checks": 24,
+  "failed": 0,
+  "problems": null,
+  "tail": "ru/index.html     102 /  0 bad    106 /  0 bad  \ntr/index.html     102 /  0 bad    106 /  0 bad  \nuk/index.html     102 /  0 bad    106 /  0 bad  \nvi/index.html     102 /  0 bad    106 /  0 bad  \nне измерено с причиной: текст короче двух символов — 98\nCHECKS: 24, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-page-fold.py",
+  "code": 0,
+  "sec": 32.2,
+  "checks": 66,
+  "failed": 0,
+  "problems": null,
+  "tail": "ru/index.html   laptop-1440              247..382    1          512..567    1  ОК\ntr/index.html   laptop-1440              272..406    1          536..592    1  ОК\nuk/index.html   laptop-1440              199..401    1          560..615    1  ОК\nvi/index.html   laptop-1440              214..415    1          546..601    1  ОК\nстраниц 12, окон 3, клауз 66\nCHECKS: 66, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-page-lang.py",
+  "code": 0,
+  "sec": 4.5,
+  "checks": 71,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 71, FAILED: 0\nстраниц 9, меток 36 (4 на страницу), кодов 9 — совпадают; старая метка → None\nPAGE-LANG: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-page-overflow.py",
+  "code": 0,
+  "sec": 18.8,
+  "checks": 36,
+  "failed": 0,
+  "problems": null,
+  "tail": "pt/index.html             0px            0px            0px  \nru/index.html             0px            0px            0px  \ntr/index.html             0px            0px            0px  \nuk/index.html             0px            0px            0px  \nvi/index.html             0px            0px            0px  \nCHECKS: 36, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-pixel-density.py",
+  "code": 0,
+  "sec": 174.1,
+  "checks": 558,
+  "failed": 0,
+  "problems": null,
+  "tail": "ok   phone-390@1x uk: showmebest.webp 2400px >= 160px (1.0)\nok   phone-390@1x uk: liftoff-launched.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: liftoff-day.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: постер <= 52 КБ\nCHECKS: 558, FAILED: 0  (174 s)\nJSON: landing-pixel-density.json",
+  "err": ""
+ },
+ {
+  "script": "landing-poster-frames.py",
+  "code": 0,
+  "sec": 5.0,
+  "checks": 9,
+  "failed": 0,
+  "problems": null,
+  "tail": "OK   hi: RMSE 0.00676\nOK   id: RMSE 0.00790\nOK   tr: RMSE 0.00736\nOK   vi: RMSE 0.00746\nOK   uk: RMSE 0.00770\nCHECKS: 9, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-price-parity.py",
+  "code": 0,
+  "sec": 0.1,
+  "checks": 11,
+  "failed": 0,
+  "problems": null,
+  "tail": "OK   реферал EN == бот\nOK   реферал RU == бот\nOK   реферал ref.text x9: чужих чисел нет\nOK   реферал ref.text x9: потолок == REFERRAL_MAX_CREDITS\nИТОГО: 11 проверок, расхождений 0\nCHECKS: 11, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-print-contrast.py",
+  "code": 0,
+  "sec": 75.8,
+  "checks": 3489,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 3489, FAILED: 0 (на листе 0, на плашке 0)",
+  "err": ""
+ },
+ {
+  "script": "landing-print-crossengine.py",
+  "code": 0,
+  "sec": 22.8,
+  "checks": 20,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 20, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-print-main.py",
+  "code": 0,
+  "sec": 24.3,
+  "checks": 213,
+  "failed": 0,
+  "problems": null,
+  "tail": "hi: 7 листов, знаков по листам [616, 587, 257, 660, 1139, 1169, 325], последний лист: 9 строк, из них вне подвала 6\nid: 8 листов, знаков по листам [624, 430, 441, 424, 743, 1339, 895, 320], последний лист: 8 строк, из них вне подвала 4\ntr: 7 листов, знаков по листам [598, 650, 251, 729, 1146, 1047, 490], последний лист: 12 строк, из них вне подвала 8\nvi: 7 листов, знаков по листам [641, 618, 308, 607, 1290, 1165, 599], последний лист: 15 строк, из них вне подвала 11\nuk: 8 листов, знаков по листам [612, 384, 398, 411, 915, 1181, 704, 294], последний лист: 7 строк, из них вне подвала 3\nCHECKS: 213, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-print-pages.py",
+  "code": 0,
+  "sec": 21.8,
+  "checks": 391,
+  "failed": 0,
+  "problems": null,
+  "tail": "A4-landscape/404       1 листов  краска min 1.69 %  строка max 144.1 мм  просветы {'top': 41.7, 'left': 75.5, 'right': 77.8, 'bottom': 41.4}  подвал ×5.13  заголовки []\nA5/privacy            15 листов  краска min 4.42 %  строка max 125.8 мм  просветы {'top': 4.8, 'left': 11.4, 'right': 11.0, 'bottom': 5.6}  подвал ×21.89  заголовки []\nA5/terms               9 листов  краска min 4.55 %  строка max 125.8 мм  просветы {'top': 4.8, 'left': 11.4, 'right': 11.0, 'bottom': 8.5}  подвал ×21.25  заголовки []\nA5/404                 1 листов  краска min 3.18 %  строка max 102.4 мм  просветы {'top': 27.9, 'left': 21.2, 'right': 24.6, 'bottom': 27.6}  подвал ×5.13  заголовки []\nCHECKS: 391, FAILED: 0\nevidence: <repo>/evidence/print-pages-papers-20261029-205432.json",
+  "err": ""
+ },
+ {
+  "script": "landing-print-paper.py",
+  "code": 0,
+  "sec": 71.8,
+  "checks": 969,
+  "failed": 0,
+  "problems": null,
+  "tail": "A5/id: 14 листов, знаки [396, 227, 233, 377, 217, 59, 281, 456, 412, 626, 713, 651, 280, 283], краска min 1.47 %, строка max 111.2 мм, подвал ×1.61\nA5/tr: 14 листов, знаки [388, 209, 209, 346, 166, 59, 271, 402, 403, 760, 729, 392, 273, 296], краска min 1.2 %, строка max 116.3 мм, подвал ×1.64\nA5/vi: 14 листов, знаки [421, 219, 215, 304, 201, 125, 257, 428, 475, 814, 746, 418, 329, 269], краска min 1.38 %, строка max 115.6 мм, подвал ×1.6\nA5/uk: 14 листов, знаки [313, 215, 226, 239, 353, 64, 260, 383, 368, 729, 746, 407, 273, 317], краска min 1.61 %, строка max 112.7 мм, подвал ×1.79\nCHECKS: 969, FAILED: 0\nevidence: <repo>/evidence/print-paper-20261029-2055.json",
+  "err": ""
+ },
+ {
+  "script": "landing-print.py",
+  "code": 0,
+  "sec": 37.4,
+  "checks": 147,
+  "failed": 0,
+  "problems": null,
+  "tail": "uk  листов  8 | прозрачных  0 | fixed 0 | светлый текст  0 | лента 678/678 | колонки 3 | FAQ да | пустых 0\nprivacy.html листов  8 | fixed 0 | светлый текст  0 | знаков 18146 | пустых 0\nterms.html   листов  5 | fixed 0 | светлый текст  0 | знаков  9714 | пустых 0\n404.html     листов  1 | fixed 0 | светлый текст  0 | знаков   354 | пустых 0\nCHECKS: 147, FAILED: 0\nJSON: landing-print.json  TMP: landing-print-kztjhuj9",
+  "err": ""
+ },
+ {
+  "script": "landing-render-check.py",
+  "code": 0,
+  "sec": 10.1,
+  "checks": 37,
+  "failed": 0,
+  "problems": null,
+  "tail": "/vi/ | Dành cho phụ huynh | bullets: 4 | rv-in: True | overflow: 0 (sw/dw/iw 1280/1280/1280) | OK\nmobile /ru/: cols= 304px | single: True | overflow: 0 (sw/dw/iw 390/390/390)\nno-js /ru/: visible: True\nJS ERRORS: none\nCHECKS: 37, FAILED: 0\nRESULT: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-return.py",
+  "code": 0,
+  "sec": 148.1,
+  "checks": 216,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 216, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-rotate.py",
+  "code": 0,
+  "sec": 172.5,
+  "checks": 288,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 288, FAILED: 0  (172 s)\nevidence: <repo>/evidence/rotate-20261029T210152.json",
+  "err": " \"tools/python-3.14.7+20260901-linux-x64/lib/python3.14/shutil.py\", line 257, in copyfileobj\n    fdst_write(buf)\n    ~~~~~~~~~~^^^^^\n  File \"tools/python-3.14.7+20260901-linux-x64/lib/python3.14/socketserver.py\", line 845, in write\n    self._sock.sendall(b)\n    ~~~~~~~~~~~~~~~~~~^^^\nBrokenPipeError: [Errno 32] Broken pipe\n----------------------------------------"
+ },
+ {
+  "script": "landing-site-move-test.py",
+  "code": 0,
+  "sec": 0.5,
+  "checks": 17,
+  "failed": 0,
+  "problems": null,
+  "tail": "[ok  ] sitemap: все 11 loc переехали\n[ok  ] 404: ссылки на новом адресе\n[ok  ] llms.txt: ссылки на новом адресе\n[ok  ] токен {{BASE}} не протёк в собранные файлы\n[ok  ] utm_source бейджа не искалечен переездом\nCHECKS: 17, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-stop-rule.py",
+  "code": 0,
+  "sec": 124.9,
+  "checks": 13,
+  "failed": 0,
+  "problems": null,
+  "tail": "p2  photo  10.6s остановился условие прочитал \np3  photo   9.1s остановился условие прочитал \np4  photo  12.4s остановился условие прочитал \np5  photo  14.2s остановился условие прочитал \nИТОГ: задач 13 | назвали ответ 0 | ошибок 0 | фото без условия 0\nCHECKS: 13, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-tablet-menu.py",
+  "code": 0,
+  "sec": 51.5,
+  "checks": 162,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 162, FAILED: 0  (51 s)\nevidence: <repo>/evidence/tablet-menu-20261029T210449.json",
+  "err": ""
+ },
+ {
+  "script": "landing-tablet-page.py",
+  "code": 0,
+  "sec": 423.3,
+  "checks": 1804,
+  "failed": 0,
+  "problems": null,
+  "tail": "  webkit tab-1366x1024: 9 языков за 35 с, проверок накоплено 1803\nwebkit: готово за 278 с\nchromium  проверок  902  красных   0\nwebkit    проверок  902  красных   0\nCHECKS: 1804, FAILED: 0  (423 s)\nevidence: <repo>/evidence/tablet-page-20261029T211152.json",
+  "err": ""
+ },
+ {
+  "script": "landing-text-clip.py",
+  "code": 0,
+  "sec": 49.0,
+  "checks": 148,
+  "failed": 0,
+  "problems": null,
+  "tail": "осмотрено элементов на страницу: от 297 до 298, страниц 36\nCHECKS: 148, FAILED: 0  (49 s)\nevidence: <repo>/evidence/text-clip-20261029T211241.json",
+  "err": ""
+ },
+ {
+  "script": "landing-toggle-clear.py",
+  "code": 0,
+  "sec": 27.6,
+  "checks": 56,
+  "failed": 0,
+  "problems": null,
+  "tail": "  es@420: gap=10.0px, btn=122.3x44, right 360 vs 360, diff=empty\n  hi@1440: gap=10.0px, btn=83.4x44, right 1165.3 vs 1165.3, diff=empty\n  vi@420: gap=10.0px, btn=115x44, right 360 vs 360, diff=empty\n  en@1440: gap=10.0px, btn=91.7x44, right 1165.3 vs 1165.3, diff=empty\n  uk@360: gap=10.0px, btn=126.3x44, right 309.6 vs 309.6, diff=empty\nCHECKS: 56, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-video-failure.py",
+  "code": 0,
+  "sec": 109.7,
+  "checks": 228,
+  "failed": 0,
+  "problems": null,
+  "tail": "[34/38] S6-autoplay-recover/uk/chromium: 1.5 c ready=4 paused=False hidden=False hits=2 failed_so_far=0\n[35/38] S1-recover-tap/uk/webkit: 5.1 c ready=4 paused=False hidden=False hits=2 failed_so_far=0\n[36/38] S2-permanent-abort/uk/webkit: 4.8 c ready=0 paused=True hidden=True hits=2 failed_so_far=0\n[37/38] S3-permanent-404/uk/webkit: 4.8 c ready=0 paused=True hidden=True hits=2 failed_so_far=0\n[38/38] S5-healthy-tap/uk/webkit: 5.2 c ready=4 paused=False hidden=False hits=1 failed_so_far=0\nCHECKS: 228, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-video-hang.py",
+  "code": 0,
+  "sec": 265.3,
+  "checks": 144,
+  "failed": 0,
+  "problems": null,
+  "tail": "[17/21] S5-autoplay-hang/en/webkit: 14.5 c rs=0 paused=False btn=play marker='stalled' hits=1 stalled=7/20 failed_so_far=0\n[18/21] S7-hang-midfile/en/chromium: 13.6 c rs=4 paused=False btn=pause marker=None hits=2 stalled=1/4 failed_so_far=0\n[19/21] S7-hang-midfile/ru/chromium: 15.1 c rs=4 paused=False btn=pause marker=None hits=2 stalled=1/4 failed_so_far=0\n[20/21] S7-hang-midfile/en/webkit: 27.5 c rs=4 paused=False btn=pause marker=None hits=2 stalled=1/4 failed_so_far=0\n[21/21] S6-paused-before-hang/en/chromium: 12.2 c rs=0 paused=True btn=play marker=None hits=1 stalled=0/20 failed_so_far=0\nCHECKS: 144, FAILED: 0",
+  "err": "ine 442, in handle\n    return await self._handle_internal(route)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"installs/420e881a3bf98b3b/environments/b071e77fe1ee43279febbc3c98989cda/venv/lib/python3.14/site-packages/playwright/_impl/_helper.py\", line 484, in _handle_internal\n    return await handled_future\n           ^^^^^^^^^^^^^^^^^^^^\nasyncio.exceptions.CancelledError"
+ },
+ {
+  "script": "landing-video-motion.py",
+  "code": 0,
+  "sec": 104.2,
+  "checks": 444,
+  "failed": 0,
+  "problems": null,
+  "tail": "— id\n— tr\n— vi\n— uk\nCHECKS: 444, FAILED: 0  (104 s)\nСКРИНШОТЫ: <repo>/evidence/video-motion-20261029",
+  "err": "skills/earn-hunt/stars-bots-ops/scripts/landing-video-motion.py:323: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.\n  changed = 0 if box is None else sum(1 for px in d.crop(box).getdata() if px != (0, 0, 0))"
+ },
+ {
+  "script": "landing-video-weight.py",
+  "code": 0,
+  "sec": 90.0,
+  "checks": 129,
+  "failed": 0,
+  "problems": null,
+  "tail": "fourG en: paused=False mp4=1\nfourG ru: paused=False mp4=1\nnoapi en: paused=False mp4=1\nnoapi hi: paused=False mp4=1\nCHECKS: 129, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-viewports-extra.py",
+  "code": 0,
+  "sec": 100.1,
+  "checks": 94,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] D ru: hero CTA clickable at load time\n  [ok  ] D ru: video no error, buffers/plays (either probe >=2 or playing)\n  [ok  ] D ru: poster image loads (still shown until video plays)\n  [ok  ] D ru: no JS errors under throttle\nCHECKS: 94, FAILED: 0  (100 s)\nJSON: landing-viewports-extra-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-visual-pass.py",
+  "code": 0,
+  "sec": 153.0,
+  "checks": 306,
+  "failed": 0,
+  "problems": 0,
+  "tail": "[vi-d] h=6061 h1=56px/3L slider=0 badges=7/7 rows=2 rowcounts=[4, 3] hr=[46] font='\"UchiSam Langs\", Manrope, \"Noto Sans D'\n[uk-m] h=8749 h1=30px/2L slider=1 badges=7/7 rows=4 rowcounts=[2, 2, 2, 1] hr=[40] font='\"UchiSam Langs\", Manrope, \"Noto Sans D'\n[uk-d] h=6091 h1=56px/3L slider=0 badges=7/7 rows=2 rowcounts=[4, 3] hr=[46] font='\"UchiSam Langs\", Manrope, \"Noto Sans D'\nCHECKS: 306, FAILED: 0\nPROBLEMS: 0\nСкриншоты: <repo>/evidence/visual-20261029",
+  "err": ""
+ },
+ {
+  "script": "landing-wcag22-targets.py",
+  "code": 0,
+  "sec": 87.3,
+  "checks": 43,
+  "failed": 0,
+  "problems": null,
+  "tail": "C) ANCHOR LANDING — desktop\n  [ok  ] 2.4.11 anchor desktop/en: якоря садятся ниже липкой шапки (якорей 5)\n  [ok  ] 2.4.11 anchor desktop/ru: якоря садятся ниже липкой шапки (якорей 5)\n  [ok  ] 2.4.11: без JS-ошибок за весь блок\nCHECKS: 43, FAILED: 0  (87 s)\nJSON: landing-wcag22-results.json",
+  "err": ""
+ }
+]
