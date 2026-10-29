@@ -1,5 +1,5 @@
 {
- "measured": "2026-10-28",
+ "measured": "2026-10-29",
  "what": "на каждой странице сайта порча своего класса обязана быть поймана с её именем",
  "catcher": "landing-links-audit.py",
  "catcher_sha": "f3005edc8def",
@@ -30,7 +30,7 @@
   },
   "first-screen": {
    "name": "landing-page-fold.py",
-   "sha": "36cfe25681de"
+   "sha": "6caff48830fe"
   }
  },
  "pages": [
