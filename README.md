@@ -9806,3 +9806,19 @@ Nothing in the tree changed: listings are edited by hand under the owner's accou
 
 **What this does not prove.** That Startup Fame's listing is stale — 429 is not a text. That any platform accepts the replacement — none of the five was edited, and each may cap length or refuse links.
 
+## The range promised a letter, the file had no glyph for it (29.10.2026, приёмка двадцать третьего блока)
+
+**What was asked.** One block, in order: technique, the eye, the words. This run took technique first.
+
+**Technique, re-measured rather than assumed.** `landing-sweep.py` — **CHECKS: 2948, FAILED: 0, ALL PASS** before any edit: nine pages byte-stable against a fresh build, weight budgets, the external-address ledger, the 84-cell canary, the publish list, live parity. Redirects, read from outside for the first time as a matrix: `http://` → **301** to `https://`, `/uchisambot` → **301** to `/uchisambot/`, `/ru` → **301** to `/ru/`, `/uchisambot/` → **200**, `/uchisambot/nonexistent-x9` → **404** (a real one, not a soft 200). `/uchisambot/index.html` answers **200** — a second address for the same page, which GitHub Pages will not redirect; the canonical is self-referential and points at the slash form, so the duplicate is named, not a defect.
+
+**A structural reading that had no gate.** On all eleven shipped pages, ids are unique, every `href="#…"` lands on an existing id, and every `aria-labelledby`/`aria-describedby`/`aria-controls` target exists: **0 duplicates, 0 dangling anchors, 0 dangling aria targets**. This was read once, by hand, and left behind nothing — noted as a gap, not celebrated.
+
+**The gate this block added.** The sweep already asked whether every character of the page text falls inside a declared `unicode-range`. It never asked whether the file behind that range has the glyph. Those are different questions, and only one of them is true by construction: a face that *claims* `U+0451` wins the character, and if the subset was cut too deep the browser takes `.notdef` from that file and never falls back to a system font. Range green, square on the screen, nobody the wiser — the same shape as the caption defect of 23.10, which is why the caption gate exists at all; the page had no equivalent.
+
+Asked of the files themselves with `fc-scan` (FreeType reads woff2; the sweep still needs no fontTools and no brotli), the answer across the nine pages is every declared character has a real glyph: **en 28, ru 75, es 35, hi 79, id 28, pt 38, tr 38, uk 74, vi 85 non-ASCII characters, 0 without a glyph** in the face that claims them. The gate carries a self-test on the two-glyph `langs-vietnamese.woff2` — `U+1EBF` present, `U+0061` absent — so a reader that cannot say "no" fails loudly instead of passing by emptiness. Sweep is now **CHECKS: 2959, FAILED: 0** (+9 languages, +404, +self-test).
+
+**What this does not prove.** That ASCII is covered — the gate reads only non-ASCII on purpose, because the Latin base cut is the one every screenshot in this repository has already exercised. That a glyph is *drawn well*: `fc-scan` reports presence, not shape, and the eye's green covers legibility only for the sections it has read. That the four pages we cannot reach (Startup Fame's 429) say what the page says.
+
+**Files.** `landing-sweep.py` only; no site file was touched, so nothing moves in `gh-pages` and the live bytes are unchanged by this block.
+
