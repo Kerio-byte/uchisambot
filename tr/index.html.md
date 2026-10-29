@@ -58,7 +58,7 @@ Ve takıldığın diğer tüm okul soruları.
 
 Tek çözüm — 30 Stars.
 
-Bir arkadaşını davet et — o ilk ödevini çözünce sen bir ücretsiz çözüm daha kazanırsın.
+Bir arkadaşını davet et — o ilk ödevini çözünce sen bir ücretsiz çözüm daha kazanırsın. Toplamda en fazla 20 bonus çözüm.
 
 ## Ebeveynler için
 
