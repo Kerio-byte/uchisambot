@@ -9793,3 +9793,16 @@ Fixed in `landing-eye.py`: placeholder values (`->`, `—`, `none`, `нет`) ar
 **What this does not prove.** That a person looked at the frames — the eye is the local model reading saved frames. That the 429 is a rate limit rather than a delisting. That the other five listings say what the page says: only LiftOff was read as an article, the other four were counted for the name and nothing more.
 
 **Files.** This entry only; no site file was touched, so nothing moves in `gh-pages`. The push is a main-branch journal push to both mirrors.
+
+## Five listings promise five, and the page promises two (29.10.2026, приёмка: проверка снаружи)
+
+The entry above read one listing and left five unread: *"That the other five listings say what the page says — only the bot's name was checked, not the text."* Read from outside, with a browser user agent, the answer is worse than the open question.
+
+All five reachable pages carry the same stale text. LiftOff, StartupBase, Fazier, ShowMeBestAI and Aura++ each promise **five** free breakdowns (the page and the bot credit **two**), each name **Russian and English** as the interface languages (the site ships **nine**), and the subject list still leads with *Russian language* where the canon leads with English. The sixth, Startup Fame, answers **429** — a rate limit at its edge, so its text can be neither confirmed nor denied today.
+
+That is not a typo on one page; it is every door telling the visitor a different product from the room behind it. The site is the only surface that is right, and it is the one surface the owner controls directly.
+
+Nothing in the tree changed: listings are edited by hand under the owner's accounts. What this check left behind is one paste per platform — a long description, a short one and a one-line variant, all built from the shipped facts (two free, 30/120/300 Stars at 20% and 33%, nine languages, the step-before-the-answer rule) and keeping each platform's own UTM tag.
+
+**What this does not prove.** That Startup Fame's listing is stale — 429 is not a text. That any platform accepts the replacement — none of the five was edited, and each may cap length or refuse links.
+
