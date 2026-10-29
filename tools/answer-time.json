@@ -22,7 +22,7 @@
   "sessions": [
     {
       "date": "2026-10-23 16:23 +0300",
-      "model": "[model]",
+      "model": "local",
       "busy": false,
       "contend": 0,
       "queue_before": "0, 20284 MiB, 0 % | 1, 2516 MiB, 0 %",
@@ -91,7 +91,7 @@
     },
     {
       "date": "2026-10-23 16:25 +0300",
-      "model": "[model]",
+      "model": "local",
       "busy": true,
       "contend": 2,
       "queue_before": "0, 20284 MiB, 0 % | 1, 2516 MiB, 0 %",
