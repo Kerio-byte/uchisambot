@@ -9937,3 +9937,14 @@ so `gh-pages` and the live bytes are unchanged by this block.
 patches to one file means rewrite it cleanly from a backup; these four are one coherent feature and
 the file still reads as one device, so it was not rewritten mid-block — but the next edit to it must
 start with a clean rewrite, not a fifth patch.
+
+## The three documents were read, and the machine refused a headline that was not theirs (29.10.2026, приёмка блока о документах)
+
+The legal pages had been measured by geometry and never read. This run gave them their own question, their own frames and an anchor taken from the file itself: `privacy` — **Privacy Policy** with `Last updated: 28 October 2026`, `terms` — **Terms of Service** with `22 October 2026`, `404` — **This page doesn't exist**. Three of three grounded, 0 defects, 73 seconds.
+
+The part worth more than the green is the refusal. The control feeds the terms frames and asks for the privacy headline: the battery answered **0 of 2 words** and stayed red. A device that memorised one headline and repeated it everywhere would have gone green here, and the block's whole verdict would have been worthless. Re-run from the outside, without the block's session: same three PASS and the same `CONTROL: чужой заголовок «Privacy Policy» отвергнут на кадрах terms (совпало 0/2 слов (0%))`.
+
+Two honest limits. The eye read the **top** of each document: the policy is 7 620 px tall, and its tail has never been read — the next block crops the bottom and reads the last heading. And three of the four platform names in the report could not be confirmed from outside: `peerpush.net/p/uchisambot`, `openhunts.com/p/uchisambot` and `launchigniter.com/product/uchisambot` answer **404**, so either the slug differs or the listings do not exist.
+
+**Product Hunt is real and stale.** Its page carries *"first 5 breakdowns are free"* and *"Russian and English"* twelve times each — the same wrong promise as the five listings found earlier, on the largest platform of the set. That makes **six** reachable listings telling the visitor five and two while the site says two and nine. The replacement text stays in one file, now with Product Hunt in it.
+
