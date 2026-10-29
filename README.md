@@ -9844,3 +9844,90 @@ Asked of the files themselves with `fc-scan` (FreeType reads woff2; the sweep st
 
 **Files.** `landing-sweep.py` (+2 gates, +1 control) and the new `landing-legal-pages.py`, both in the skill tree; this README entry. No site file was touched, so nothing moves in `gh-pages` and the live bytes are unchanged by this block.
 
+
+## The eye learned to read a policy, and the numbers a buyer checks first were already true (29.10.2026, приёмка двадцать пятого блока)
+
+**What was asked.** One block, in order: technique, the eye, the words. The block above left one
+sentence: *"Give `landing-eye.py` a mark for the legal documents (the `h1` of each, which is stable
+and unambiguous) so the eye can read `privacy`, `terms` and `404` the way it reads the ten index
+sections."* This run took that sentence.
+
+**Why the mark is the `h1`.** The eye had exactly one kind of grounding: for a named section it read
+`SECTION_MARK[section]` out of the HTML and required the model to reproduce that line. A legal page
+has no hero and no band, so there was nothing to name — which is why three documents sat measured by
+geometry since 12:32 and never read. The `h1` is the only string on those pages that is both unique
+(the legal battery already requires exactly one non-empty `h1`) and impossible to guess without
+looking: `Privacy Policy`, `Terms of Service`, `This page doesn't exist`.
+
+**A second question, not the same one.** The landing `PROMPT` calls *"вёрстка в одну узкую колонку
+на компьютере"* a defect. On a policy that is the correct layout, so the same question would either
+redden a sound document or teach the model to ignore the rule on the landing. `DOC_PROMPT` says the
+opposite in as many words: a single column is normal, and a defect is only what is visibly broken
+(text cut at the edge, text over text, unreadable contrast, a heading on top of neighbouring text,
+a broken image, empty space where the document should start).
+
+**Three fuses, because a green here is a claim about a page nobody photographs.** (1) The anchor is
+read from the file; a document with no `h1` returns `ungrounded`, never `pass`. (2) A frames folder
+whose name contains `control` is refused outright — those are the deliberately broken frames from
+`landing-legal-pages.py`, and a green on them would be a green on a page that is not shipped.
+(3) A missed pair is re-read one frame at a time, **mobile first**: the desktop frame of
+`privacy.html` is 1440×7620, and a model that shrinks it can lose the `h1` that the 420×900 frame
+still carries at full size.
+
+**The control, and it is the interesting part.** Grading is only worth what its refusal is worth.
+`doc_control` feeds the **terms** frames the **privacy** headline. The model must read `Terms of
+Service` and the comparison must come back 0/2 words — a refusal. A device that learned one headline
+and repeats it on any page passes that check, and passing it is a red for the whole block.
+
+**The numbers.** `landing-eye.py --docs privacy,terms,404` against `evidence/legal-20261029`:
+**3 pairs, 0 defects, 0 ungrounded, 0 unavailable** in 73.5 s for four questions. `privacy` →
+`Privacy Policy`, 2/2 words, and the line under it `UchiSamBot (Study Helper) · Last updated: 28
+October 2026`; `terms` → `Terms of Service`, 3/3, line `… Last updated: 22 October 2026`; `404` →
+headline `404` and line `This page doesn't exist`, 4/4 — the 404 sets a display number above the
+`h1`, and the anchor was matched through the line under it. Control:
+`CONTROL: чужой заголовок «Privacy Policy» отвергнут на кадрах terms (совпало 0/2 слов)`. The rows, including what the model
+actually typed, are in `evidence/legal-20261029/eye-docs.json` — local only: `evidence/` is
+git-ignored, so the numbers above are the proof that travels and the JSON is the working copy.
+
+**The refactor did not cost the old path.** `expected_headline()` now delegates to a file-agnostic
+`headline_of()`. Re-run of the untouched mode — `--langs en --sections hero` — `PASS en: глаз
+прочитал «Homework that finally makes sense»`, 18.6 s. A shared helper that quietly changes the old
+question is how a battery loses a language without anyone noticing.
+
+**The floors underneath, re-measured.** `tools/build.py --check`: 24 files byte-identical to a clean
+build. `tools/publish-tree.py --check`: list complete, nothing extra, 495 internal links inside the
+list. `landing-price-parity.py`: 11 checks, 0 divergences. `landing-count-ledger.py`: 54 pages,
+22 with a count, 8,639 checks, 0 failed. `landing-sweep.py`: **CHECKS: 2981, FAILED: 0** — the same
+2,981 as the block above, because the eye is in the sweep's SKIP list by design (GPU).
+
+**The words, and what they turned out to be.** The money sentence a buyer reads before paying is
+`terms.html` §4: *"The first 2 breakdowns are free … 1 breakdown — 30 Stars; a pack of 5 — 120
+Stars; a pack of 15 — 300 Stars. There are no subscriptions and no auto-renewals."* `tools/prices.json`
+carries the same four numbers (`free_breakdowns: 2`, 30 / 120 / 300, XTR), the English text says
+"First 2" in four places and the Russian "первые 2" in four, and the referral ceiling is 20 in the terms, 20 on
+the page ("Up to 20 bonus breakdowns in total") and `REFERRAL_MAX_CREDITS` in the bot — that last
+equality is one of the eleven parity checks. The boldest claim on the page — *"the bot works in 9
+languages"*, with `/lang` named in the FAQ — was checked against the bot itself: `bot/i18n.py`
+`LANG_TITLES` and `ANSWER_LANG` hold exactly those nine (ru, en, es, pt, hi, id, tr, vi, uk). The
+claim a stranger can falsify fastest in Telegram is true.
+
+**What this does not prove.** That a person read the documents — the eye read their **opening**: the
+mobile frame is the top 900 px, and the desktop frame is the whole page at 1440×7620, which any model
+shrinks before looking. The body and the tail of a 7,600-pixel policy are still measured only by
+geometry. That the legal texts are legally sound — nobody here is a lawyer. That the printed quote is
+always the `h1`: the evidence line prints the first field with words in it, so for `404` it prints
+`404` although the anchor matched through the line below. And that the external forms were touched:
+the five reachable listings that the block above found still promising five free breakdowns and two
+languages in their **forms** on PeerPush, OpenHunts, LaunchIgniter and Product Hunt cannot be edited
+from this repository — the corrected cards (`submission-kit/`, gated by the sweep since 24.10) have to
+be re-uploaded, and that is an outside write nobody has done.
+
+**Left for the next block.** Read the **tail** of each document, not just its opening: crop the last
+900 px of `privacy-d.png` / `terms-d.png` with `ffmpeg -vf crop` and anchor the model on the last `h2`
+of the file — a page that renders its opening and loses its foot is exactly the failure the top frame
+cannot see. Then the external listing pages, whose text is outside this repository.
+
+**Files.** `landing-eye.py` (`DOCS`, `DOC_PROMPT`, `headline_of`, `grade_docs`, `doc_control`, the
+`--docs` / `--no-control` entry point) and `SKILL.md` (how to run it, and its proof limit), both in
+the skill tree; `evidence/legal-20261029/eye-docs.json`; this README entry. No site file was touched,
+so `gh-pages` and the live bytes are unchanged by this block.
