@@ -9646,3 +9646,18 @@ Both are fixed and verified in the battery: anchors are now computed for every s
 
 **What this does not prove.** That the green on the other five sections rested on text before this entry — it did not, and the re-grade above is the evidence, reproducible without the model. The repaired battery was shown on one language per case; the full nine-language run in its new form has not been repeated.
 
+
+## Six sections, nine languages, and every green now stands on a line of the page (29.10.2026, seventeenth block, приёмка)
+
+The previous entry named the work: the repaired battery had to be shown on all nine languages and six sections in its new form. That is what this block did - fifty-four questions, two frames each, three batches - and the field the last run left empty is full in every row: `anchor` names two real strings per language (`hero`+`band`, `principle`+`ref`, `parents`+`shots`), and the band anchor is the calling band, not `.principle-band`.
+
+- `evidence/eye-20261029D/eye{A,B}.json` - hero, band: 9 rows, `checked 9, failed 0, ungrounded 0, unavailable 0`, anchors 205-238 characters.
+- `evidence/eye-20261029E/eye{A,B}.json` - principle, ref: 9 rows, same totals.
+- `evidence/eye-20261029F/eye{A,B}.json` - parents, shots: 9 rows, same totals.
+- Anchors audited apart from the PASS line (18 rows, 36 anchors, 0 weak) - a green that does not name its section is the defect this week already produced once.
+
+The technical floor held unchanged in the same run: `landing-sweep.py` **2948 checks / 0 failed**, and `landing-external-links.py` **68 checks / 0 failed / 0 unverified** - the network half the sweep deliberately excludes.
+
+**A measurement that cost one run.** The eye was launched with `nohup ... &` from the cron turn; the child was reaped when the turn closed, and only `en` survived - one PASS line and no output file. Background children do not outlive the turn that started them. The eye now runs in the foreground in batches of five and four languages (ten and eight calls), which fits the six-hundred-second ceiling with room to spare: a batch of ten is two to three minutes, not the twenty-five the earlier estimate guessed.
+
+**What this does not prove.** That the six sections stay covered tomorrow - the frames are today's, and an edit invalidates them without a word. That the eye is a typographic proof - it reads the headline and the line, not the whole paragraph; the paragraph belongs to the dictionary, and the sweep owns it. That hero `vi`/`uk` have healed beyond the retry recorded last entry - they passed here on the ordinary two-frame read, which is the evidence, not a theory.
