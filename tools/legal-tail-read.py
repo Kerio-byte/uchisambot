@@ -107,12 +107,12 @@ def parse_footer(answer: str) -> str:
     return "" if val in {"->", "—", "-", "none", "нет"} else val
 
 
-def read_tail(eye_mod, frames: Path, doc: str) -> dict:
+def read_tail(eye_mod, frames: Path, doc: str, vp: str = "d") -> dict:
     path = frames.parent.parent / DOCS[doc]
     lines = page_text(path)
     expected = last_section_heading(lines)
     exp_footer = last_footer_line(lines)
-    frame = frames / f"{doc}-d.png"
+    frame = frames / f"{doc}-{vp}.png"
     row = {"doc": doc, "frame": frame.name, "expected_heading": expected, "seen_heading": "",
            "seen_line": "", "expected_footer": exp_footer, "seen_footer": "", "footer_ok": False,
            "footer_grounding": "", "lang": "", "defects": [], "grounded": False, "grounding": "",
@@ -161,11 +161,11 @@ def read_tail(eye_mod, frames: Path, doc: str) -> dict:
     return row
 
 
-def control(eye_mod, frames: Path, docs: list[str]) -> bool | None:
+def control(eye_mod, frames: Path, docs: list[str], vp: str = "d") -> bool | None:
     """Чужой заголовок на этих кадрах обязан покраснеть."""
     a, b = docs[0], docs[1]
     expected = eye_mod.headline_of(frames.parent.parent / DOCS[a])
-    frame = frames / f"{b}-d.png"
+    frame = frames / f"{b}-{vp}.png"
     if not expected or not frame.is_file():
         print("CONTROL: пропущен (нет заголовка или кадра)")
         return None
@@ -190,6 +190,8 @@ def main() -> int:
     ap.add_argument("--docs", default="privacy,terms")
     ap.add_argument("--out", default="")
     ap.add_argument("--eye", default="")
+    ap.add_argument("--viewport", choices=["d", "m"], default="d",
+                    help="какой кадр читать: d — компьютер, m — телефон (29.10.2026)")
     ap.add_argument("--no-control", action="store_true")
     args = ap.parse_args()
 
@@ -209,7 +211,7 @@ def main() -> int:
         return 1
 
     eye_mod = load_eye(eye_path)
-    rows = [read_tail(eye_mod, frames, d) for d in docs]
+    rows = [read_tail(eye_mod, frames, d, args.viewport) for d in docs]
     for r in rows:
         if r["verdict"] == "PASS":
             print(f"PASS {r['doc']}: хвост прочитан, «{r['seen_heading'][:40]}» — {r['grounding']}; "
@@ -221,7 +223,7 @@ def main() -> int:
         else:
             print(f"{r['verdict']} {r['doc']}: {r['grounding']}")
 
-    ctl = None if args.no_control or len(docs) < 2 else control(eye_mod, frames, docs)
+    ctl = None if args.no_control or len(docs) < 2 else control(eye_mod, frames, docs, args.viewport)
     bad = sum(1 for r in rows if r["verdict"] != "PASS")
     summary = {"frames_dir": str(frames), "docs": docs, "checked": len(rows), "bad": bad,
                "control": ctl, "rows": rows}
