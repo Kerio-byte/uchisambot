@@ -131,6 +131,12 @@ def main() -> int:
     from playwright.sync_api import sync_playwright
 
     control = "--control" in sys.argv
+    # 30.10.2026 (проверка блока 53). Докстринг обещал отдельный файл для контроля, а код писал
+    # оба прогона в один path: контрольный прогон затирал ЧИСТОЕ доказательство (narrow-<дата>.json
+    # после --control содержал vw=600 и H-OVERFLOW). Ровно та же ошибка, что у юридической батареи.
+    global OUT
+    if control and not os.environ.get("LANDING_OUT"):
+        OUT = OUT.with_name("narrow-control-" + OUT.name.split("narrow-", 1)[-1])
     langs = LANGS
     for a in sys.argv:
         if a.startswith("--langs="):
