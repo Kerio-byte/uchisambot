@@ -17,6 +17,15 @@
 
 Контроль: `--control` вставляет блок 600 px шириной и ОБЯЗАН получить красное по
 первой клаузе; иначе прибор не меряет и говорить «чисто» права не имеет.
+Прогон контроля 30.10.2026: поймал 9 из 9 языков (doc=600 против 320), запись —
+`evidence/narrow-control-20261030.json`. То есть право сказать «на 320 чисто» прибор
+заработал, а не получил по умолчанию.
+
+Карусель не считается вылезанием. Блок кадров на телефоне — горизонтальная лента
+(`overflow-x: auto` + scroll-snap), её вторая и третья карточки стоят за краем
+экрана законно, пока человек не свайпнул. Такие элементы идут отдельным счётчиком
+`carouselCount` и в вердикт не входят; в `offCount` остаётся только то, что вылезло
+из блока БЕЗ прокрутки, — то есть настоящая поломка.
 
 Запуск: python3 tools/probe-narrow.py [--control] [--langs en,ru,...]
 Пишет evidence/narrow-<дата>.json и печатает итог. Код 0 = чисто, 1 = находки.
@@ -46,7 +55,7 @@ PROBE = r"""
   const want = expect;
   const docW = document.documentElement.scrollWidth;
   const bodyW = document.body.scrollWidth;
-  const off = [], clip = [], small = [];
+  const off = [], carousel = [], clip = [], small = [];
   const name = (el) => {
     let s = el.tagName.toLowerCase();
     if (el.id) s += '#' + el.id;
@@ -61,8 +70,25 @@ PROBE = r"""
     const r = el.getBoundingClientRect();
     if (r.width < 1 || r.height < 1) continue;
     if (r.right > want + 1.5 || r.left < -1.5) {
-      off.push({ el: name(el), left: Math.round(r.left), right: Math.round(r.right),
-                 text: (el.textContent || '').trim().slice(0, 40) });
+      // Карусель — не дефект. На телефоне блок кадров становится горизонтальной
+      // лентой (overflow-x: auto + scroll-snap), и её вторая-третья карточки ЗАКОННО
+      // стоят за краем экрана, пока человек не свайпнул. Прежняя версия прибора
+      // считала их «вылезшими» и на каждом чистом прогоне давала пять ложных строк —
+      // сигнал тонул в шуме. Теперь такие элементы идут отдельным счётчиком.
+      let sc = el.parentElement, inScroller = false;
+      while (sc && sc !== document.body && sc !== document.documentElement) {
+        const so = getComputedStyle(sc).overflowX;
+        if (so === 'auto' || so === 'scroll') {
+          const sr = sc.getBoundingClientRect();
+          // Лента должна быть уже содержимого, иначе это не лента, а сломанный блок.
+          if (sc.scrollWidth > sc.clientWidth + 2 && sr.right <= want + 1.5) { inScroller = true; }
+          break;
+        }
+        sc = sc.parentElement;
+      }
+      const rec = { el: name(el), left: Math.round(r.left), right: Math.round(r.right),
+                    text: (el.textContent || '').trim().slice(0, 40) };
+      (inScroller ? carousel : off).push(rec);
     }
     const ox = cs.overflowX;
     // .sr-only и подобные — намеренно обрезанная до 1 px подпись для скринридера,
@@ -86,7 +112,7 @@ PROBE = r"""
     }
   }
   return { vw, want, docW, bodyW, offCount: off.length, off: off.slice(0, 6),
-           clipCount: clip.length, clip: clip.slice(0, 6),
+           carouselCount: carousel.length, clipCount: clip.length, clip: clip.slice(0, 6),
            smallCount: small.length, small: small.slice(0, 6) };
 }
 """
@@ -148,6 +174,7 @@ def main() -> int:
                 fails += 1
             rows.append(pr)
             print(f"{'FAIL' if bad else 'OK  '} {lang}: doc={pr['docW']} vw={pr['vw']} "
+                  f"off={pr['offCount']} carousel={pr['carouselCount']} "
                   f"clip={pr['clipCount']} tapSmall={pr['smallCount']} "
                   f"{','.join(bad)}")
             if bad:
