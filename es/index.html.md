@@ -38,7 +38,7 @@ Las explicaciones paso a paso muestran por qué funciona cada paso, para que pue
 
 Y cualquier otra pregunta escolar con la que te quedes atascado.
 
-## Chats reales con el bot
+## Así se ve el chat con el bot
 
 Así se ve un desglose — el bot funciona en 9 idiomas.
 

@@ -38,7 +38,7 @@ Step-by-step explanations show why each move works, so you can tackle a similar 
 
 And any other school question you are stuck on.
 
-## Real chats with the bot
+## What the chat looks like
 
 This is what a breakdown looks like — the bot works in 9 languages.
 

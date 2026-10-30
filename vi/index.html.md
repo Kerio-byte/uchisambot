@@ -38,7 +38,7 @@ Phân tích từng bước giúp bạn hiểu vì sao mỗi bước đúng, đ�
 
 Và bất kỳ câu hỏi nào ở trường khiến bạn bí.
 
-## Những cuộc trò chuyện thật với bot
+## Chat với bot trông thế nào
 
 Phần phân tích trông như thế này — bot hoạt động bằng 9 ngôn ngữ.
 

@@ -38,7 +38,7 @@ Adım adım açıklamalar her işlemin neden işe yaradığını gösterir; böy
 
 Ve takıldığın diğer tüm okul soruları.
 
-## Botla gerçek sohbetler
+## Botla sohbet nasıl görünüyor
 
 Çözüm böyle görünüyor — bot 9 dilde çalışıyor.
 
