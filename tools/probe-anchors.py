@@ -29,7 +29,19 @@ ap.add_argument("--langs", default="", help="comma list of languages; empty = al
 args = ap.parse_args()
 
 if not args.eye or not Path(args.eye).is_file():
-    raise SystemExit("probe-anchors: --eye PATH is required (the eye script is not part of this tree)")
+    # 30.10.2026: прибор жил только по явному пути, которого никто не знал, — из дерева он
+    # всегда выходил кодом 1. Ищем так же, как tools/legal-tail-read.py: --eye, затем
+    # LANDING_EYE, затем домашнее дерево скиллов. Путь по-прежнему не прописан в файле.
+    given = args.eye or os.environ.get("LANDING_EYE", "")
+    if given.strip():
+        cand = Path(given).expanduser()
+        args.eye = str(cand) if cand.is_file() else ""
+    if not args.eye:
+        hits = sorted(Path.home().glob("*/skills/**/landing-eye.py"))
+        if hits:
+            args.eye = str(hits[0])
+if not args.eye or not Path(args.eye).is_file():
+    raise SystemExit("probe-anchors: прибор не найден (--eye PATH или LANDING_EYE)")
 
 spec = importlib.util.spec_from_file_location("landing_eye", args.eye)
 eye = importlib.util.module_from_spec(spec)
