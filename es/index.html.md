@@ -58,7 +58,7 @@ Pago con Telegram Stars, directamente en el chat.
 
 Un desglose suelto — 30 Stars.
 
-Invita a un amigo — cuando resuelva su primera tarea, te llevas otro desglose gratis. Hasta 20 desgloses extra en total.
+Invita a un amigo — cuando reciba su primer desglose, te llevas otro desglose gratis. Hasta 20 desgloses extra en total.
 
 ## Para padres
 

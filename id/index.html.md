@@ -58,7 +58,7 @@ Pembayaran lewat Telegram Stars, langsung di chat.
 
 Satu pembahasan — 30 Stars.
 
-Ajak temanmu — saat dia menyelesaikan tugas pertamanya, kamu dapat satu pembahasan gratis lagi. Maksimal 20 pembahasan bonus.
+Ajak temanmu — saat dia mendapat pembahasan pertamanya, kamu dapat satu pembahasan gratis lagi. Maksimal 20 pembahasan bonus.
 
 ## Untuk orang tua
 

@@ -58,7 +58,7 @@ Thanh toán bằng Telegram Stars, ngay trong cuộc trò chuyện.
 
 Một lần phân tích — 30 Stars.
 
-Mời một người bạn — khi bạn ấy giải xong bài đầu tiên, bạn sẽ nhận thêm một lần phân tích miễn phí. Tổng cộng tối đa 20 lượt phân tích thưởng.
+Mời một người bạn — khi bạn ấy nhận được phân tích đầu tiên, bạn sẽ nhận thêm một lần phân tích miễn phí. Tổng cộng tối đa 20 lượt phân tích thưởng.
 
 ## Dành cho phụ huynh
 
