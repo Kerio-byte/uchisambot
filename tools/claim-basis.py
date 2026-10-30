@@ -23,7 +23,11 @@
     (.gguf), а не именами чужих моделей — так видно, что считает свой сервер;
   - код бота: ни одного адреса сторонних ИИ-сервисов;
   - служба: study-bot.service у менеджера пользователя — active, enabled,
-    Linger=yes (иначе после перезагрузки без входа в систему бот не поднимется).
+    Linger=yes (иначе после перезагрузки без входа в систему бот не поднимется);
+  - bot/i18n.py: кортеж SUPPORTED — третье обещание «девять языков» тоже живёт
+    не в вёрстке: страница обещает столько языков, на скольких реально говорит
+    бот, и каждая языковая страница обязана звать бота СВОИМ кодом
+    (src_landing_hi с /hi/), иначе человек читал хинди и слышит чужой язык.
 
 --offline пропускает сетевой запрос к LLM (остальное проверяется).
 
@@ -45,6 +49,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BOT = ROOT.parents[1] / "study-bot"
 LOOPBACK = {"127.0.0.1", "localhost", "::1", "[::1]"}
+
+# Девять языков страницы. Список живёт здесь, чтобы прибор замечал не только
+# «бот разучился», но и «страница завела десятый язык, а бот его не знает».
+EXPECTED_LANGS = ("en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk")
 
 # Адреса сторонних ИИ-сервисов. Ищем в коде бота: обещание «не передаём»
 # ломается не текстом, а одной строкой import/URL.
@@ -114,6 +122,47 @@ def linger() -> str:
         return ""
 
 
+def page_codes(root: Path) -> list[str]:
+    """Языки, которые страница обещает: hreflang в шапке главной."""
+    html = (root / "index.html").read_text(encoding="utf-8", errors="replace")
+    codes = re.findall(r'hreflang="([a-z]{2})"', html)
+    seen: list[str] = []
+    for c in codes:
+        if c not in seen:
+            seen.append(c)
+    return seen
+
+
+def bot_languages(bot: Path) -> list[str]:
+    """Языки, на которых бот реально говорит: кортеж SUPPORTED из bot/i18n.py.
+
+    Читаем файл, а не импортируем модуль: прибор не должен тянуть зависимости
+    бота (telegram, httpx) и не должен ничего запускать в его процессе.
+    """
+    src = bot / "bot" / "i18n.py"
+    text = src.read_text(encoding="utf-8", errors="replace")
+    consts = dict(re.findall(r'^(LANG_[A-Z]+)\s*=\s*"([a-z]{2})"', text, re.M))
+    m = re.search(r"^SUPPORTED[^=\n]*=\s*\(([^)]*)\)", text, re.M | re.S)
+    if not m:
+        return []
+    names = re.findall(r"LANG_[A-Z]+", m.group(1))
+    return [consts[n] for n in names if n in consts]
+
+
+def own_cta_missing(root: Path, codes: list[str]) -> list[str]:
+    """Страница языка обязана звать бота СВОИМ кодом, иначе человек с /hi/
+    попадает в приветствие на другом языке."""
+    missing = []
+    for code in codes:
+        page = root / "index.html" if code == "en" else root / code / "index.html"
+        if not page.is_file():
+            missing.append(f"{code}: нет страницы")
+            continue
+        if f"src_landing_{code}" not in page.read_text(encoding="utf-8", errors="replace"):
+            missing.append(f"{code}: нет src_landing_{code}")
+    return missing
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--bot-dir", default=str(DEFAULT_BOT))
@@ -160,6 +209,21 @@ def main() -> int:
     check("uptime.active", state == "active", f"study-bot.service: {state or 'нет ответа'}, NRestarts={restarts or '?'}")
     check("uptime.enabled", enabled in ("enabled", "enabled-runtime", "static"), f"автозапуск: {enabled or '?'}")
     check("uptime.linger", ling == "yes", f"Linger={ling or '?'} — {'работает без входа в систему' if ling == 'yes' else 'после перезагрузки без входа бот не поднимется'}")
+
+    # 5. Девять языков: страница обещает столько, на скольких говорит бот
+    pages = page_codes(ROOT)
+    speaks = bot_languages(bot)
+    check("langs.pages", len(pages) == 9 and set(pages) == set(EXPECTED_LANGS),
+          f"страница обещает {len(pages)} язык(ов): {', '.join(pages) or '—'}")
+    if speaks:
+        mute = [c for c in pages if c not in speaks]
+        check("langs.supported", not mute,
+              f"бот говорит на {len(speaks)}: {', '.join(speaks)}"
+              + (f"; ОБЕЩАНЫ, А БОТ НЕ ГОВОРИТ: {', '.join(mute)}" if mute else ""))
+    else:
+        check("langs.supported", False, f"не нашёл SUPPORTED в {bot / 'bot' / 'i18n.py'}")
+    quiet = own_cta_missing(ROOT, pages)
+    check("langs.own_cta", not quiet, "метка языка на своей странице: " + (", ".join(quiet) or "у всех девяти своя"))
 
     failed = [r for r in rows if not r["ok"]]
     for r in rows:
