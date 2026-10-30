@@ -58,7 +58,7 @@ Pagamento via Telegram Stars, direto no chat.
 
 Explicação avulsa — 30 Stars.
 
-Convide um amigo — quando ele resolver a primeira tarefa, você ganha mais uma explicação grátis. Até 20 explicações extras no total.
+Convide um amigo — quando ele receber a primeira explicação, você ganha mais uma explicação grátis. Até 20 explicações extras no total.
 
 ## Para pais
 
