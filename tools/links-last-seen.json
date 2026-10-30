@@ -1,8 +1,8 @@
 {
- "checked_at": "2026-10-30T07:55:58+00:00",
+ "checked_at": "2026-10-30T10:55:58+00:00",
  "addresses": 68,
  "failed": 0,
- "unverified": 1,
+ "unverified": 0,
  "hosts": [
   "api.web3forms.com",
   "auraplusplus.com",
@@ -47,7 +47,7 @@
   "https://realisticai.io": "ok",
   "https://showmebest.ai/ai-tools/kerio-byte-github-io-uchisambot": "ok",
   "https://startupbase.io/products/uchisambot-study-helper?utm_source=startupbase&utm_medium=badge&utm_campaign=launch-badge-light": "ok",
-  "https://startupfa.me/s/-51?utm_source=kerio-byte.github.io": "unverified",
+  "https://startupfa.me/s/-51?utm_source=kerio-byte.github.io": "ok",
   "https://t.me/UchiSamBot?start=src_landing_en": "ok",
   "https://t.me/UchiSamBot?start=src_landing_en_band": "ok",
   "https://t.me/UchiSamBot?start=src_landing_en_shots": "ok",
