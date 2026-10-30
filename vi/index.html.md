@@ -12,7 +12,7 @@ UchiSamBot phân tích bài tập về nhà của bạn từng bước một, gi
 
 1. **Mở bot** — Nhấn vào nút và bấm Start — không cần cài đặt gì.
 2. **Gửi bài tập** — Nhập câu hỏi hoặc chụp ảnh đề bài.
-3. **Nhận phân tích từng bước** — Bot trình bày lời giải từng bước và giải thích mọi thao tác.
+3. **Nhận phân tích từng bước** — Bot phân tích từng bước và giải thích mọi thao tác.
 4. **Tự kiểm tra** — Nhờ bot kiểm tra bài giải của bạn, hoặc nhận tóm tắt và thẻ ghi nhớ.
 
 ## Có gì bên trong

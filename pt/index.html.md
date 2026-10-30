@@ -12,7 +12,7 @@ O UchiSamBot divide sua tarefa em passos, explica o assunto em palavras simples,
 
 1. **Abra o bot** — Toque no botão e aperte Start — não precisa instalar nada.
 2. **Envie uma tarefa** — Digite sua pergunta ou tire uma foto do enunciado.
-3. **Receba a explicação** — O bot percorre a solução passo a passo e explica cada etapa.
+3. **Receba a explicação** — O bot detalha passo a passo e explica cada etapa.
 4. **Confira você mesmo** — Peça para conferir sua resolução ou receba um resumo e flashcards.
 
 ## O que tem dentro
