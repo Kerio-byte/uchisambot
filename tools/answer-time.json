@@ -143,6 +143,47 @@
         }
       ],
       "violations": []
+    },
+    {
+      "date": "2026-10-30 21:09 +0200",
+      "model": "qwen",
+      "busy": false,
+      "contend": 0,
+      "queue_before": "0, 19982 MiB, 0 % | 1, 5450 MiB, 0 %",
+      "queue_after": "0, 19982 MiB, 97 % | 1, 5450 MiB, 0 %",
+      "text": {
+        "n": 2,
+        "min": 5.9,
+        "max": 6.3,
+        "p50": 6.1,
+        "p90": 6.3,
+        "mean": 6.1
+      },
+      "photo": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null,
+        "min": null,
+        "mean": null
+      },
+      "rows": [
+        {
+          "id": "t1",
+          "kind": "text",
+          "seconds": 6.3,
+          "chars": 634,
+          "error": ""
+        },
+        {
+          "id": "t2",
+          "kind": "text",
+          "seconds": 5.9,
+          "chars": 625,
+          "error": ""
+        }
+      ],
+      "violations": []
     }
   ]
 }
