@@ -10,9 +10,30 @@ and gets a step-by-step explanation back in the chat.
 
 ## Проверка
 
+Всё одной командой — `python3 tools/check-all.py`: он держит таблицу приборов
+(имя, ключи, таймаут, ярус) в коде, а не в этом списке, и печатает одну строку
+вердикта на прибор. `--offline` — без сети и браузера, `--fast` — сборка плюс
+локальные сверки, `--only <подстрока>` — подмножество, `--strict` — считать
+пропущенное провалом, `--list` — таблица. Сборка проверяется на
+воспроизводимость: два прогона подряд сравниваются по `git status`, а не «дерево
+пусто после первого» (в полночь меняется lastmod sitemap).
+
+Повод (30.10.2026). Приборов пятнадцать, а способа позвать их разом не было:
+этот список знал одиннадцать, четыре прибора (`check-internal`, `locale-key-parity`,
+`placeholder-parity`, `og-cards`) не упоминались вовсе, у трёх рабочий режим
+начинается с неочевидного ключа. Отдельно нашлось хуже: `locale-key-parity.py` и
+`placeholder-parity.py` были скриптами без `main()` и без `sys.exit` — они печатали
+`TOTAL 0` и `MISMATCHED 0` и всегда выходили кодом 0. Мёртвый ключ (язык с 8 из 9)
+и лишний `{zzz}` они показывали, но ни один раннер и ни один `&&` этого не видел.
+Теперь оба возвращают 1 при находке. Проверено мутацией копии дерева: на чистом
+дереве 0, на копии без `a11y.skip` в `es` — `UNEVEN: a11y.skip 8/9` и код 1,
+на копии с лишним `{zzz}` в `ru` — `ru/a11y.skip: extra=['zzz']` и код 1.
+
 Сборка и проверки — из корня репозитория, без внешних сервисов:
 
 ```
+python3 tools/check-all.py                # ВСЕ приборы этого дерева: вердикт по строке на каждый
+python3 tools/check-all.py --offline      # то же без сети и браузера (для крона)
 python3 tools/build.py                    # пересобрать страницы и sitemap (идемпотентно)
 python3 tools/check-site-technical.py     # шапки девяти языков, числа в словарях, живой сайт против дерева
 python3 tools/check-links.py              # внешние адреса; реестр — tools/links-last-seen.json
@@ -28,6 +49,12 @@ python3 tools/legal-tail-read.py --root . --out evidence/legal-tail-$(date +%Y%m
                                           # нижняя часть privacy/terms глазами: последний раздел и подвал
 python3 tools/probe-anchors.py --sections faq,contact
                                           # опоры, против которых глаз сверяет кадр, без вызова модели
+python3 tools/check-internal.py           # 223 внутренние ссылки и якоря на 12 страницах
+python3 tools/locale-key-parity.py        # ключи словарей: мёртвые и языки не с девятью ключами
+python3 tools/placeholder-parity.py       # {плейсхолдеры}: паритет по языкам и протечки на страницы
+python3 tools/og-cards.py --check         # карточки og 1200x630 на девять языков, без перерисовки
+python3 tools/apply-bot-profile.py --check  # профиль бота против tools/bot-profile.json
+python3 tools/subset-deva.py --check      # Deva-подмножество шрифта против реестра
 ```
 
 `legal-tail-read.py` и `probe-anchors.py` работают только вместе с прибором `landing-eye.py`,
