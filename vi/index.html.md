@@ -26,7 +26,7 @@ UchiSamBot phân tích bài tập về nhà của bạn từng bước một, gi
 
 ## Không chỉ có đáp án. Hãy học cách tự giải bài tiếp theo.
 
-Lời giải từng bước giúp bạn hiểu vì sao mỗi bước đúng, để tự làm một bài tương tự.
+Phân tích từng bước giúp bạn hiểu vì sao mỗi bước đúng, để tự làm một bài tương tự.
 
 ## Các môn học
 
@@ -111,7 +111,7 @@ Khác với chatbot thông thường, ở đây có phương pháp dạy học: 
 
 ### Bot có thể sai không?
 
-Lời giải do AI tạo ra nên có thể có lỗi. Bot trình bày từng bước để bạn đối chiếu cách làm với sách giáo khoa hoặc hỏi giáo viên. Nếu thấy câu trả lời sai, hãy gửi cho chúng tôi qua biểu mẫu: chúng tôi đọc mọi tin nhắn.
+Phân tích do AI tạo ra nên có thể có lỗi. Bot trình bày từng bước để bạn đối chiếu cách làm với sách giáo khoa hoặc hỏi giáo viên. Nếu thấy câu trả lời sai, hãy gửi cho chúng tôi qua biểu mẫu: chúng tôi đọc mọi tin nhắn.
 
 ## Có câu hỏi hoặc góp ý?
 
