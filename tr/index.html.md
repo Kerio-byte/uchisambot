@@ -62,7 +62,7 @@ Bir arkadaşını davet et — o ilk ödevini çözünce sen bir ücretsiz çöz
 
 ## Ebeveynler için
 
-- Kayıt yok, kişisel bilgi istenmiyor.
+- Kayıt yok, doldurulacak bir şey de yok: ad, telefon numarası veya e-posta hiç istemiyoruz. Telegram profilinin herkese açık kısmından birkaç gözlem saklıyoruz; listesi Gizlilik Politikası'nda.
 - Avrupa Birliği'nde (Finlandiya) kendi sunucumuzda çalışır.
 - Tüm yapay zekâ işlemleri kendi altyapımızda yapılır — sorular üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
 - Verileri istediğin zaman sildirebilirsin — ebeveynler bunu çocukları adına isteyebilir.

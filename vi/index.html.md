@@ -62,7 +62,7 @@ Mời một người bạn — khi bạn ấy giải xong bài đầu tiên, b�
 
 ## Dành cho phụ huynh
 
-- Không cần đăng ký, không cần thông tin cá nhân.
+- Không cần đăng ký, cũng không có gì để điền: chúng tôi không bao giờ hỏi tên, số điện thoại hay email. Một vài quan sát từ phần công khai của hồ sơ Telegram thì có được lưu; danh sách nằm trong Chính sách bảo mật.
 - Chạy trên máy chủ riêng của chúng tôi tại Liên minh châu Âu (Phần Lan).
 - Mọi xử lý AI đều diễn ra trên hạ tầng riêng của chúng tôi — bài tập không được gửi cho dịch vụ AI bên thứ ba.
 - Bạn có thể yêu cầu xóa dữ liệu bất cứ lúc nào — phụ huynh có thể yêu cầu thay cho con.
