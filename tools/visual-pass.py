@@ -22,6 +22,16 @@
   python3 tools/visual-pass.py                 # 9 языков, оба окна, снимки
   python3 tools/visual-pass.py --no-shots      # только числа
   python3 tools/visual-pass.py --langs=en,ru   # подмножество
+  python3 tools/visual-pass.py --frames        # ещё и кадры по блокам для глаза
+
+Повод (31.10.2026). Глаз (`landing-eye.py`) читает кадры ОДНОГО блока:
+`evidence/visual-<дата>/<lang>-{m,d}-<section>.png`. Резал их одноразовый
+`landing-visual-pass.py` вне репозитория — у него нет ни `--help`, ни
+`--langs`, и он падает на первом `goto`. К 31.10 кадров за сегодня не было
+вовсе: зарегистрированный прибор снимал только полные страницы, а глаз
+без своих кадров отвечает `FAIL: нет кадров` — то есть «смотрел глазами»
+держалось на скрипте, которого уже нет. `--frames` режет кадры здесь же,
+теми же окнами и в том же каталоге, что ждёт глаз.
 
 Возврат 0 — дефектов нет, 1 — есть.
 """
@@ -52,6 +62,36 @@ def url_for(lang: str) -> str:
     return BASE + rel if BASE else (ROOT / rel.lstrip("/")).as_uri()
 
 
+# Блоки, которые глаз просит по имени (ключи совпадают с SECTION_MARK в
+# landing-eye.py), и их селекторы. Список держится здесь, а не в голове:
+# разойдётся с глазом — кадр получит имя, которого глаз не спросит.
+SECTIONS = {
+    "head": "header.top",
+    "hero": "section.hero",
+    "band": ".band",
+    "principle": ".principle-band",
+    "ref": ".ref-band",
+    "parents": ".parents-band",
+    "contact": "#contact",
+    "footer": "footer",
+}
+
+
+def cut_frames(pg, shots: Path, lang: str, side: str) -> int:
+    """Кадры одного блока — ровно те имена, что ждёт landing-eye.py."""
+    cut = 0
+    for name, sel in SECTIONS.items():
+        el = pg.query_selector(sel)
+        if el is None:
+            continue
+        box = el.bounding_box()
+        if not box or box["height"] < 8 or box["width"] < 8:
+            continue
+        el.screenshot(path=str(shots / f"{lang}-{side}-{name}.png"))
+        cut += 1
+    return cut
+
+
 def main() -> int:
     from playwright.sync_api import sync_playwright
 
@@ -60,6 +100,8 @@ def main() -> int:
     ap.add_argument("--no-shots", action="store_true")
     ap.add_argument("--control", action="store_true",
                     help="вставить блок шире окна: прибор ОБЯЗАН покраснеть")
+    ap.add_argument("--frames", action="store_true",
+                    help="резать кадры по блокам для landing-eye.py")
     args = ap.parse_args()
     langs = [x for x in args.langs.split(",") if x]
     day = f"{date.today():%Y%m%d}"
@@ -69,8 +111,10 @@ def main() -> int:
     control = args.control
     if not args.no_shots and not control:
         shots.mkdir(parents=True, exist_ok=True)
+    if args.frames and control:
+        ap.error("--frames с --control несовместимы: контроль не пишет кадров")
 
-    rows, fails = [], 0
+    rows, fails, frames = [], 0, 0
     with sync_playwright() as p:
         br = p.chromium.launch(args=["--no-sandbox"])
         for name, width, height, mobile in VIEWPORTS:
@@ -120,6 +164,9 @@ def main() -> int:
                     shot = shots / f"{name}-{lang}.png"
                     pg.screenshot(path=str(shot), full_page=(name == "mobile"))
                     pr["shot"] = str(shot.relative_to(ROOT))
+                if args.frames:
+                    side = "m" if mobile else "d"
+                    frames += cut_frames(pg, shots, lang, side)
                 ctx.close()
         br.close()
 
@@ -130,6 +177,12 @@ def main() -> int:
     print(f"evidence: {out}")
     if not args.no_shots and not control:
         print(f"снимки: {shots.relative_to(ROOT)} ({len(rows)} шт.)")
+    if args.frames:
+        want = len(SECTIONS) * len(rows)
+        print(f"кадры по блокам: {frames} из {want} возможных")
+        if want and frames < len(langs) * 2:
+            print("FAIL: кадров меньше, чем блоков у одного языка — глаз прочитает пустоту")
+            fails += 1
     if control:
         caught = sum(1 for r in rows if "H-OVERFLOW" in r["bad"])
         print(f"КОНТРОЛЬ: поймал {caught} из {len(rows)}")

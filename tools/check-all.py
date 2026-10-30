@@ -60,11 +60,17 @@ TOTAL_RE = re.compile(r"^TOTAL\s+(\d+)$")
 LEAK_RE = re.compile(r"^LEAKS\s+(\d+)$")
 CAUGHT_RE = re.compile(r"поймал\s+(\d+)\s+из\s+(\d+)")
 ADDR_RE = re.compile(r"адресов:\s*(\d+).*?мёртвых:\s*(\d+)")
+EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(\d+)")
 
 # Приборы-КОНТРОЛИ: они нарочно портят вход и обязаны ПОКРАСНЕТЬ. Их красный —
 # это их зелёный. Первый полный прогон 30.10 покрасил visual-control, поймавший
 # 18 из 18, — раннер считал цвет контроля как цвет страницы.
 CONTROL = {"redirects-control", "visual-control"}
+
+# Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
+# Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
+EYE_LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
+EYE_PAGES = "hero,contact,footer"
 
 # name, argv (после `python3`), tier, timeout, что именно проверяет
 BATTERIES = [
@@ -82,9 +88,10 @@ BATTERIES = [
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
     ("redirects-control",["tools/check-redirects.py", "--control"],             "live",   240, "сам прибор: обязан краснеть на пяти кривых ответах"),
     ("claim-basis",      ["tools/claim-basis.py"],                              "live",   240, "адрес LLM, веса, служба, Linger, девять языков"),
-    ("visual-420",       ["tools/visual-pass.py"],                              "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки"),
+    ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
+    ("eye-pages",        ["landing-eye.py"],                                    "eye",    900, "глаз читает блоки всех девяти языков по кадрам visual-420"),
     ("eye-anchors",      ["tools/probe-anchors.py"],                            "eye",    300, "опоры блоков под глаз"),
     ("eye-legal-tail",   ["tools/legal-tail-read.py", "--root", "."],           "eye",    300, "нижняя часть privacy/terms глазами"),
 ]
@@ -126,7 +133,14 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
             return dict(name=name, tier=tier, status="SKIP", checks="-", secs=0.0,
                         why="прибор landing-eye.py не найден (публичное дерево его не хранит)",
                         tail=[])
-        cmd += ["--eye", str(eye)]
+        if name == "eye-pages":
+            # Глаз не лежит в дереве, поэтому его зовут напрямую, а не флагом --eye.
+            # Кадры к этому моменту уже нарезал visual-420 (ярус visual идёт выше).
+            cmd = [sys.executable, "-u", str(eye), "--root", ".",
+                   "--frames", f"evidence/visual-{time.strftime('%Y%m%d')}",
+                   "--sections", EYE_PAGES, "--langs", ",".join(EYE_LANGS)]
+        else:
+            cmd += ["--eye", str(eye)]
         if name == "eye-legal-tail":
             EVIDENCE.mkdir(exist_ok=True)
             cmd += ["--out", str(EVIDENCE / f"legal-tail-{time.strftime('%Y%m%d')}.json")]
@@ -150,10 +164,13 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
         l = LEAK_RE.search(out)
         c = CAUGHT_RE.search(out)
         a = ADDR_RE.search(out)
+        e = EYE_RE.search(out)
         if c:
             checks = f"поймал {c.group(1)}/{c.group(2)}"
         elif a:
             checks = f"{a.group(1)}/мёртвых {a.group(2)}"
+        elif e:
+            checks = f"{e.group(1)} языков/бед {e.group(2)}"
         elif t and l:
             checks = f"{t.group(1)} живых"
         elif t:
