@@ -62,7 +62,7 @@ Ajak temanmu — saat dia menyelesaikan tugas pertamanya, kamu dapat satu pembah
 
 ## Untuk orang tua
 
-- Tanpa pendaftaran dan tanpa isian apa pun: nama, nomor telepon, atau email tidak pernah kami minta. Beberapa pengamatan dari bagian publik profil Telegram tetap kami simpan; daftarnya ada di Kebijakan Privasi.
+- Tanpa pendaftaran dan tanpa isian apa pun: bot tidak pernah meminta nama, nomor telepon, atau email. Beberapa pengamatan dari bagian publik profil Telegram tetap kami simpan; daftarnya ada di Kebijakan Privasi.
 - Berjalan di server kami sendiri di Uni Eropa (Finlandia).
 - Semua pemrosesan AI berjalan di infrastruktur kami sendiri — soal tidak dikirim ke layanan AI pihak ketiga.
 - Minta datanya dihapus kapan saja — orang tua dapat memintanya atas nama anak.

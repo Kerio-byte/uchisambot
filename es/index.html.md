@@ -62,7 +62,7 @@ Invita a un amigo — cuando resuelva su primera tarea, te llevas otro desglose 
 
 ## Para padres
 
-- No hay que registrarse ni rellenar nada: nunca pedimos nombre, teléfono ni correo. Sí guardamos algunas observaciones de la parte pública del perfil de Telegram; la lista está en la Política de privacidad.
+- No hay que registrarse ni rellenar nada: el bot nunca pide nombre, teléfono ni correo. Sí guardamos algunas observaciones de la parte pública del perfil de Telegram; la lista está en la Política de privacidad.
 - Funciona en nuestro propio servidor en la Unión Europea (Finlandia).
 - Todo el procesamiento de IA se realiza en nuestra propia infraestructura — las tareas no se envían a servicios de IA de terceros.
 - Puedes pedirnos que borremos los datos en cualquier momento — los padres pueden solicitarlo en nombre de sus hijos.

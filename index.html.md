@@ -62,7 +62,7 @@ Invite a friend — when they solve their first task, you get one more free brea
 
 ## For parents
 
-- No sign-up and nothing to fill in — we never ask for a name, phone number or email. We do keep a few observations from the public part of the Telegram profile; the list is in the Privacy Policy.
+- No sign-up and nothing to fill in — the bot never asks for a name, phone number or email. We do keep a few observations from the public part of the Telegram profile; the list is in the Privacy Policy.
 - Runs on our own server in the European Union (Finland).
 - All AI processing runs on our own infrastructure — tasks are not sent to third-party AI services.
 - Ask us to delete the data at any time — parents can make this request for their child.
