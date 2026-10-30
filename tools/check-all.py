@@ -231,6 +231,20 @@ def build_reproducible():
                 checks="2 прогона", secs=secs, why="", tail=[])
 
 
+# Приборы, которые живут вне этого дерева (рядом со скиллом stars-bots-ops) и поэтому
+# в ИТОГО не попадают. Молчать о них нельзя: «ИТОГО ok 19» читается как «всё проверено»,
+# а обещания и цены держат ровно эти три прибора. 30.10.2026 нашлось: раннер их не знал,
+# и зелёный итог ничего не говорил о ценах, о времени разбора и о словах страницы.
+EXTERNAL = [
+    ("landing-sweep.py", "слова страницы против claims.json, три тысячи проверок на девяти языках",
+     "python3 $SKILL/landing-sweep.py --root . --json out.json"),
+    ("landing-price-parity.py", "цены страницы против prices.json и bot/payments.py",
+     "python3 $SKILL/landing-price-parity.py --landing ."),
+    ("landing-answer-time.py", "«сколько ждать разбор» живым замером через venv бота",
+     "python3 $SKILL/landing-answer-time.py --write"),
+]
+
+
 def main():
     ap = argparse.ArgumentParser(description="все приборы лендинга одной командой")
     ap.add_argument("--offline", action="store_true", help="только ярусы build и offline")
@@ -276,6 +290,10 @@ def main():
         print("не проверяли: " + ", ".join(f"{r['name']} ({r['why']})" for r in skipped))
     if bad:
         print("упало: " + ", ".join(r["name"] for r in bad))
+    print(f"вне дерева, НЕ запускались ({len(EXTERNAL)}): "
+          + ", ".join(n for n, _, _ in EXTERNAL))
+    print("  зелёный ИТОГО выше — это дерево, а не обещания и цены; "
+          "их держат приборы выше, их зовут отдельно")
 
     if args.json:
         EVIDENCE.mkdir(exist_ok=True)
