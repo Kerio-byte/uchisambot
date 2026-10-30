@@ -38,7 +38,7 @@ Penjelasan langkah demi langkah membantu memahami cara kerjanya, agar kamu bisa 
 
 Dan pertanyaan sekolah lain apa pun yang membuatmu buntu.
 
-## Chat asli dengan botnya
+## Tampilan chat dengan bot
 
 Beginilah tampilan pembahasan — bot bekerja dalam 9 bahasa.
 

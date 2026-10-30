@@ -38,7 +38,7 @@ As explicações passo a passo mostram por que cada etapa funciona, para você r
 
 E qualquer outra dúvida escolar em que você ficar preso.
 
-## Conversas reais com o bot
+## Como é o chat com o bot
 
 É assim que uma explicação aparece — o bot funciona em 9 idiomas.
 
