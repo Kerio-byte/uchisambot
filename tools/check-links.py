@@ -27,8 +27,18 @@
 Запуск:
   python3 tools/check-links.py            # проверить и обновить реестр
   python3 tools/check-links.py --offline  # только собрать адреса, без сети
+  python3 tools/check-links.py --control  # проверка самого прибора, без сети
 
 Возврат 0 — мёртвых и ошибочных нет, 1 — есть.
+
+Повод (31.10.2026). До этого дня прибор проверял 116 живых адресов и всегда
+был зелёным: «0 мёртвых» держалось на том, что мёртвых не попадалось, а не
+на том, что прибор умеет их назвать. Соседние приборы (`check-redirects.py`,
+`visual-pass.py`) контроль уже имели. Здесь появился свой: локальный сервер
+отдаёт семь заведомо известных ответов, и прибор обязан разложить их ровно
+по классам — 200 и 405-затем-200 в ok, 404 и 410 в dead, 403 и 429 в blocked,
+500-на-both в error. Ошибка раскладки — код 1; реестр в этом режиме не
+пишется вовсе.
 """
 from __future__ import annotations
 
@@ -109,11 +119,85 @@ def probe(url: str) -> tuple[str, str]:
     return "error", last
 
 
+def control() -> int:
+    """Проверка самого прибора: локальный сервер отдаёт известные ответы.
+
+    Сеть не нужна: сервер поднимается на 127.0.0.1 со случайным портом.
+    Раскладка по классам сравнивается с ожиданием; любое расхождение — провал.
+    """
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    class Handler(BaseHTTPRequestHandler):
+        def _answer(self, code: int, body: bytes = b"") -> None:
+            self.send_response(code)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            if self.command != "HEAD":
+                self.wfile.write(body)
+
+        def do_HEAD(self) -> None:
+            self._route()
+
+        def do_GET(self) -> None:
+            self._route()
+
+        def _route(self) -> None:
+            path = urlsplit(self.path).path
+            if path == "/ok":
+                self._answer(200, b"ok")
+            elif path == "/missing":
+                self._answer(404)
+            elif path == "/gone":
+                self._answer(410)
+            elif path == "/forbidden":
+                self._answer(403)
+            elif path == "/flood":
+                self._answer(429)
+            elif path == "/broken":
+                self._answer(500)
+            elif path == "/head405":
+                self._answer(405 if self.command == "HEAD" else 200, b"ok")
+            else:
+                self._answer(404)
+
+        def log_message(self, *a) -> None:      # тишина в выводе прибора
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    rows = [
+        ("/ok", "ok"), ("/missing", "dead"), ("/gone", "dead"),
+        ("/forbidden", "blocked"), ("/flood", "blocked"),
+        ("/broken", "error"), ("/head405", "ok"),
+    ]
+    bad = 0
+    try:
+        for path, want in rows:
+            got, note = probe(base + path)
+            mark = "ok " if got == want else "FAIL"
+            if got != want:
+                bad += 1
+            print(f"  {mark} {path:<11} ждали {want:<8} получили {got} ({note})")
+    finally:
+        server.shutdown()
+        server.server_close()
+    print(f"поймал {len(rows) - bad} из {len(rows)}")
+    print(f"CHECKS: {len(rows)}, FAILED: {bad}")
+    return 0 if bad == 0 else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true",
                     help="только собрать адреса, сеть не трогать")
+    ap.add_argument("--control", action="store_true",
+                    help="проверка самого прибора: локальные известные ответы")
     args = ap.parse_args()
+
+    if args.control:
+        return control()
 
     urls = collect()
     if args.offline:

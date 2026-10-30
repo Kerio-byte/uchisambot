@@ -65,7 +65,7 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 # Приборы-КОНТРОЛИ: они нарочно портят вход и обязаны ПОКРАСНЕТЬ. Их красный —
 # это их зелёный. Первый полный прогон 30.10 покрасил visual-control, поймавший
 # 18 из 18, — раннер считал цвет контроля как цвет страницы.
-CONTROL = {"redirects-control", "visual-control"}
+CONTROL = {"redirects-control", "visual-control", "links-control"}
 
 # Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
 # Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
@@ -85,6 +85,7 @@ BATTERIES = [
     ("weight",           ["tools/check-weight.py"],                             "offline",180, "вес первого экрана, ленивость, потолки"),
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
     ("links",            ["tools/check-links.py"],                              "live",   420, "116 внешних адресов"),
+    ("links-control",    ["tools/check-links.py", "--control"],                 "offline",120, "сам прибор: обязан разложить семь известных ответов по классам"),
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
     ("redirects-control",["tools/check-redirects.py", "--control"],             "live",   240, "сам прибор: обязан краснеть на пяти кривых ответах"),
     ("claim-basis",      ["tools/claim-basis.py"],                              "live",   240, "адрес LLM, веса, служба, Linger, девять языков"),

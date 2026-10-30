@@ -8,6 +8,17 @@ and gets a step-by-step explanation back in the chat.
 - **Stack:** hand-written HTML and CSS, no framework and no build step for the page itself.
 - **Contact:** the form on the page.
 
+Повод (31.10.2026, второй блок). Прибор ссылок проверял 116 живых адресов и
+всегда был зелёным: «мёртвых 0» держалось на том, что мёртвых не попадалось, а не
+на том, что прибор умеет их назвать. У `check-redirects.py` и `visual-pass.py`
+контроль был, у ссылок — нет. Теперь есть: `tools/check-links.py --control`
+поднимает локальный сервер и требует разложить семь известных ответов ровно по
+классам (200 и 405→200 — ok, 404 и 410 — dead, 403 и 429 — blocked, 500 на обоих
+методах — error); реестр в этом режиме не пишется. Проверено мутацией: с
+`404 → ok` в классификаторе контроль краснеет `FAILED: 2`, на живом коде —
+`CHECKS: 7, FAILED: 0`. В таблицу приборов добавлена строка `links-control`,
+ярус `offline`: сети не нужно, сервер на 127.0.0.1.
+
 Повод (31.10.2026). Глаз (`landing-eye.py`) читает кадры одного блока —
 `evidence/visual-<дата>/<lang>-{m,d}-<section>.png`, — а резал их одноразовый
 `landing-visual-pass.py` вне репозитория: у него нет ни `--help`, ни `--langs`,
@@ -51,6 +62,7 @@ python3 tools/check-all.py --offline      # то же без сети и бра�
 python3 tools/build.py                    # пересобрать страницы и sitemap (идемпотентно)
 python3 tools/check-site-technical.py     # шапки девяти языков, числа в словарях, живой сайт против дерева
 python3 tools/check-links.py              # внешние адреса; реестр — tools/links-last-seen.json
+python3 tools/check-links.py --control    # проверка самого прибора: семь известных ответов локально
 python3 tools/check-weight.py             # вес страницы, ленивость картинок, потолки
 python3 tools/check-redirects.py          # переходы http→https, слэши языков, /index.html, 404
 python3 tools/check-redirects.py --control  # проверка самого прибора: обязан покраснеть на кривых ответах
