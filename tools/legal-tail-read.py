@@ -78,6 +78,21 @@ def load_eye(path: Path):
     return mod
 
 
+def compare(eye_mod, expected: str, seen: str) -> tuple[bool, str]:
+    """Сверка строки по возможностям прибора, а не по его нынешнему имени.
+
+    29.10.2026 прибор переписан (3da24ec6) и `headline_agrees` стал `agrees` — этот файл
+    продолжал звать старое имя и падал AttributeError КАЖДЫЙ запуск, то есть нижняя часть
+    правовых документов не читалась ни разу после переписывания. Имя теперь спрашивается,
+    а не угадывается: переименование в приборе больше не превращает проверку в traceback.
+    """
+    for name in ("headline_agrees", "agrees"):
+        if hasattr(eye_mod, name):
+            ok, why = getattr(eye_mod, name)(expected, seen)
+            return bool(ok), str(why)
+    raise SystemExit("FAIL прибор не умеет сверять строки: ни headline_agrees, ни agrees")
+
+
 def page_text(path: Path) -> list[str]:
     """Строки страницы в порядке чтения — вывод tools/page-text.py, без своих правил."""
     flat = path.parent / "tools" / "page-text.py"
@@ -142,11 +157,11 @@ def read_tail(eye_mod, frames: Path, doc: str, vp: str = "d") -> dict:
         row["verdict"] = "FAIL"
         row["grounding"] = "ответ вне формата"
         return row
-    ok, why = eye_mod.headline_agrees(expected, got["headline"] or got["line"])
+    ok, why = compare(eye_mod, expected, got["headline"] or got["line"])
     row["grounded"], row["grounding"] = ok, why
     seen_footer = parse_footer(answer)
     row["seen_footer"] = seen_footer
-    f_ok, f_why = (eye_mod.headline_agrees(exp_footer, seen_footer) if exp_footer
+    f_ok, f_why = (compare(eye_mod, exp_footer, seen_footer) if exp_footer
                    else (False, "нет опоры подвала"))
     row["footer_ok"], row["footer_grounding"] = f_ok, f_why
     if not ok:
@@ -175,7 +190,7 @@ def control(eye_mod, frames: Path, docs: list[str], vp: str = "d") -> bool | Non
         print(f"CONTROL: модель недоступна ({exc.__class__.__name__})")
         return None
     got = eye_mod.parse(answer)
-    ok, why = eye_mod.headline_agrees(expected, got["headline"] or got["line"])
+    ok, why = compare(eye_mod, expected, got["headline"] or got["line"])
     if ok:
         print(f"CONTROL FAIL: заголовок «{expected}» принят на хвосте {b} ({why})")
         return False
