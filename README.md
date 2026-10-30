@@ -22,8 +22,23 @@ python3 tools/check-redirects.py --control  # проверка самого пр
 python3 tools/check-redirects.py --offline  # без сети: canonical, hreflang, отсутствие ссылок на /en/
 python3 tools/visual-pass.py              # 420 px и десктоп: вылезание, обрезка, кнопки; снимки в evidence/
 python3 tools/visual-pass.py --control    # проверка самого прибора: обязан поймать блок шире окна
+python3 tools/probe-narrow.py             # 320 px (узкий iPhone SE): вылезание и обрезка на девяти языках
 python3 tools/claim-basis.py              # основание обещаний в живом продукте: адрес LLM, веса, служба, Linger, девять языков
 ```
+
+Смысл обещаний сверяется реестрами, а не глазами. Три прибора живут рядом со скиллом
+`earn-hunt/stars-bots-ops/scripts` (они ходят в соседний репозиторий бота, поэтому лежат
+не в этом дереве):
+
+```
+landing-sweep.py         # слова страницы против tools/claims.json: 3046 проверок на девяти языках
+landing-price-parity.py  # цены страницы против tools/prices.json и против bot/payments.py (XTR, паки, реферал)
+landing-answer-time.py   # «сколько ждать разбор»: живой замер production-путём бота против tools/answer-time.json
+```
+
+`landing-answer-time.py` сам переходит в `venv` бота: замер идёт через `bot.handlers`, а он тянет
+aiogram, и под системным python прибор раньше падал голым traceback вместо замера. Замер пишется
+в реестр ключом `--write` (сессия: дата, модель, состояние очереди GPU до/после, секунды по задачам).
 
 `tools/check-redirects.py` держит адресную поверхность: плоский http обязан уводить на https,
 `/xx` — на `/xx/`, неизвестный вложенный адрес — отдавать 404 со своей страницей, canonical каждой
