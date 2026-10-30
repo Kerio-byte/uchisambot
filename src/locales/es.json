@@ -85,7 +85,7 @@
   "q11a": "Las explicaciones las genera una IA, así que puede haber errores. El bot muestra cada paso para que compares el razonamiento con tu libro de texto o con tu profesor. Si una respuesta te parece incorrecta, envíanosla con el formulario: leemos todos los mensajes.",
   "parents.title": "Para padres",
   "parents.sub": "En resumen: cómo cuidamos los datos de tus hijos.",
-  "parents.b1": "No hay que registrarse ni rellenar nada: nunca pedimos nombre, teléfono ni correo. Sí guardamos algunas observaciones de la parte pública del perfil de Telegram; la lista está en la Política de privacidad.",
+  "parents.b1": "No hay que registrarse ni rellenar nada: el bot nunca pide nombre, teléfono ni correo. Sí guardamos algunas observaciones de la parte pública del perfil de Telegram; la lista está en la Política de privacidad.",
   "parents.b2": "Funciona en nuestro propio servidor en la Unión Europea (Finlandia).",
   "parents.b3": "Todo el procesamiento de IA se realiza en nuestra propia infraestructura — las tareas no se envían a servicios de IA de terceros.",
   "parents.b4": "Puedes pedirnos que borremos los datos en cualquier momento — los padres pueden solicitarlo en nombre de sus hijos.",
