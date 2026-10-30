@@ -62,7 +62,7 @@ Convide um amigo — quando ele resolver a primeira tarefa, você ganha mais uma
 
 ## Para pais
 
-- Sem cadastro e sem dados pessoais.
+- Sem cadastro e sem nada para preencher: nunca pedimos nome, telefone ou e-mail. Guardamos algumas observações da parte pública do perfil do Telegram; a lista está na Política de Privacidade.
 - Funciona no nosso próprio servidor na União Europeia (Finlândia).
 - Todo o processamento de IA acontece na nossa própria infraestrutura — as tarefas não são enviadas a serviços de IA de terceiros.
 - Você pode pedir a exclusão dos dados a qualquer momento — os pais podem solicitar em nome dos filhos.
