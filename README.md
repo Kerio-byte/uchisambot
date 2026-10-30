@@ -8,6 +8,20 @@ and gets a step-by-step explanation back in the chat.
 - **Stack:** hand-written HTML and CSS, no framework and no build step for the page itself.
 - **Contact:** the form on the page.
 
+Повод (31.10.2026). Глаз (`landing-eye.py`) читает кадры одного блока —
+`evidence/visual-<дата>/<lang>-{m,d}-<section>.png`, — а резал их одноразовый
+`landing-visual-pass.py` вне репозитория: у него нет ни `--help`, ни `--langs`,
+и он падает на первом `goto`. К 31.10 кадров за сегодня не было вовсе, и глаз
+на честном вызове отвечал `FAIL: нет кадров`: «смотрел глазами» держалось на
+скрипте, которого уже нет. Теперь `tools/visual-pass.py --frames` режет кадры
+там же и теми же окнами (флаг включён в прогон `visual-420`, 144 кадра на девяти
+языках), а в таблице приборов появился `eye-pages` — глаз читает шапку, связь и
+подвал каждого языка и сверяет прочитанное с HTML, а не с памятью модели.
+
+`landing-visual-pass.py` (внешний, одноразовый) больше не нужен: его роль держит
+`tools/visual-pass.py --frames`, и это проверено — 144 кадра, имена совпадают с
+ожиданием глаза, контроль глаза отверг чужой заголовок на кадрах `ru`.
+
 ## Проверка
 
 Всё одной командой — `python3 tools/check-all.py`: он держит таблицу приборов
@@ -42,6 +56,7 @@ python3 tools/check-redirects.py          # переходы http→https, сл�
 python3 tools/check-redirects.py --control  # проверка самого прибора: обязан покраснеть на кривых ответах
 python3 tools/check-redirects.py --offline  # без сети: canonical, hreflang, отсутствие ссылок на /en/
 python3 tools/visual-pass.py              # 420 px и десктоп: вылезание, обрезка, кнопки; снимки в evidence/
+python3 tools/visual-pass.py --frames     # то же плюс 144 кадра по блокам — их читает глаз (eye-pages)
 python3 tools/visual-pass.py --control    # проверка самого прибора: обязан поймать блок шире окна
 python3 tools/probe-narrow.py             # 320 px (узкий iPhone SE): вылезание и обрезка на девяти языках
 python3 tools/claim-basis.py              # основание обещаний в живом продукте: адрес LLM, веса, служба, Linger, девять языков
