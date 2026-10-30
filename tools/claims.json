@@ -30,5 +30,16 @@
       "tr": "cevaptan bir adım önce",
       "vi": "một bước trước đáp án"
     }
+  },
+  "unit_word": {
+    "note": "Четвёртая форма обещания «бот решает за тебя» (30.10.2026, четвёртый заход): не глагол и не оборот «глагол + решение», а САМО СЛОВО как то, что бот выдаёт. Вьетнамский называет единицу продукта «phân tích» (how.s3t «Nhận phân tích từng bước», p2t «Gói 5 lần phân tích»), а два ключа говорили «lời giải» — готовое решение: principle.sub «Lời giải từng bước giúp bạn hiểu…» и q11a «Lời giải do AI tạo ra…». Полоса рядом обещает «Không chỉ có đáp án» (не только ответ), а q10a — остановку за шаг до ответа; читатель слышал обещание готового решения. Законное употребление — «kiểm tra lời giải» (проверяет твоё решение), как en «checks your solution»; поэтому запрет снимается, если перед словом стоит проверка/сверка (allow_before).",
+    "by_lang": {
+      "vi": {
+        "keys": ["how.s3t", "how.s3d", "hero.sub", "demo.alt", "principle.title", "principle.sub", "q11a"],
+        "forbid": ["(?i)lời giải"],
+        "allow_before": ["kiểm tra", "đối chiếu", "so sánh", "chữa"],
+        "instead": "phân tích"
+      }
+    }
   }
 }
