@@ -17,10 +17,20 @@ python3 tools/build.py                    # пересобрать страни�
 python3 tools/check-site-technical.py     # шапки девяти языков, числа в словарях, живой сайт против дерева
 python3 tools/check-links.py              # внешние адреса; реестр — tools/links-last-seen.json
 python3 tools/check-weight.py             # вес страницы, ленивость картинок, потолки
+python3 tools/check-redirects.py          # переходы http→https, слэши языков, /index.html, 404
+python3 tools/check-redirects.py --control  # проверка самого прибора: обязан покраснеть на кривых ответах
+python3 tools/check-redirects.py --offline  # без сети: canonical, hreflang, отсутствие ссылок на /en/
 python3 tools/visual-pass.py              # 420 px и десктоп: вылезание, обрезка, кнопки; снимки в evidence/
 python3 tools/visual-pass.py --control    # проверка самого прибора: обязан поймать блок шире окна
 python3 tools/claim-basis.py              # основание обещаний в живом продукте: адрес LLM, веса, служба, Linger, девять языков
 ```
+
+`tools/check-redirects.py` держит адресную поверхность: плоский http обязан уводить на https,
+`/xx` — на `/xx/`, неизвестный вложенный адрес — отдавать 404 со своей страницей, canonical каждой
+страницы — указывать на неё саму, а `/index.html` — схлопываться в корень каноническим адресом
+(GitHub Pages редирект отдать не может). Список языков берётся из hreflang живой страницы, а не из
+головы. `--control` подаёт прибору пять заведомо кривых ответов и требует, чтобы он покраснел на
+всех пяти.
 
 `tools/claim-basis.py` смотрит за пределы страницы: читает маршрут LLM из `.env` бота
 (три ключа, секреты не печатаются), требует петлевой адрес и локальные веса в ответе
