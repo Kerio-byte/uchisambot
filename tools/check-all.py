@@ -82,6 +82,14 @@ EXTERNAL_REQUIRES = {
     "lang-leftovers-control": "landing-en-leftovers.py",
 }
 
+# Прогон page-extras зовёт три прибора сразу, а ключ батареи один. Эти три имени
+# нужны не запуску, а счёту реестра: иначе строка «не зовёт» считала бы зовущиеся
+# приборы непозванными и снова врала бы объёмом.
+for _key, _script in (("page-extras-axe", "landing-axe-audit.py"),
+                      ("page-extras-a11y", "landing-a11y-extra.py"),
+                      ("page-extras-badges", "landing-badge-rows.py")):
+    EXTERNAL_REQUIRES.setdefault(_key, _script)
+
 # Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
 # Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
 EYE_LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
@@ -154,6 +162,7 @@ BATTERIES = [
     ("prices-control",   ["tools/external.py", "--prices-control"],            "external",600, "сам прибор: три мутанта цен обязаны покраснеть"),
     ("lang-leftovers",   ["tools/external.py", "--lang-leftovers"],            "external",300, "непереведённый английский на восьми языковых страницах (прибор вне дерева)"),
     ("lang-leftovers-control", ["tools/external.py", "--lang-leftovers-control"], "external",900, "сам прибор: фраза-пустышка обязана быть поймана на каждом из восьми языков"),
+    ("page-extras",      ["tools/external.py", "--page-extras"],                 "external",1500, "три прибора вне дерева: axe-core, остаточная доступность, полоса значков"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),

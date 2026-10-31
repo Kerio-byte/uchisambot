@@ -213,6 +213,49 @@ def lang_leftovers_control():
     return 0
 
 
+PAGE_EXTRAS = [
+    ("landing-axe-audit.py", ["--root", "."], "axe-core по двенадцати страницам"),
+    ("landing-a11y-extra.py", ["--root", "."], "остаточная доступность: роли, порядок обхода, озвучка"),
+    ("landing-badge-rows.py", [], "полоса значков площадок по ширинам и языкам"),
+]
+
+
+def page_extras():
+    """Три прибора вне дерева, которые держат ту же страницу, но не звались никем.
+
+    31.10.2026, шестнадцатый блок. Раннер честно печатал «зовёт 3, не зовёт 78»,
+    и в этих 78 лежали ровно те приборы, что читают ЭТУ страницу: axe-core,
+    остаточная доступность, полоса значков. Красное в них не увидел бы никто,
+    пока кто-нибудь не вспомнил бы про них руками. Теперь они зовутся прогоном.
+    """
+    total = fail = 0
+    missing = []
+    for name, extra, what in PAGE_EXTRAS:
+        p = find_script(name)
+        if p is None:
+            missing.append(name)
+            print(f"НЕ НАЙДЕН: {name} — не проверяли")
+            continue
+        rc, out = run([p] + extra, timeout=420)
+        checks, failed = verdict(out)
+        if checks is None or failed is None:
+            print(f"{name}: вывод без CHECKS — считать непроверенным (код {rc})")
+            print("\n".join(out.splitlines()[-4:]))
+            return 2
+        total += checks
+        fail += failed
+        print(f"{name}: {checks}/{failed} — {what}" + ("" if rc == 0 else f" (код {rc})"))
+        if failed:
+            print("\n".join([ln for ln in out.splitlines() if FAILLINE_RE.match(ln)][:6]))
+        elif rc != 0:
+            fail += 1
+    print(f"CHECKS: {total}, FAILED: {fail}")
+    if missing:
+        print("не проверяли: " + ", ".join(missing))
+        return 3
+    return 1 if fail else 0
+
+
 def _stamp():
     import time
     return time.strftime("%Y%m%d-%H%M%S")
@@ -232,6 +275,9 @@ def main():
     g.add_argument("--lang-leftovers-control", dest="lang_leftovers_control",
                    action="store_true",
                    help="контроль: фраза-пустышка обязана быть поймана на каждом из восьми языков")
+    g.add_argument("--page-extras", dest="page_extras", action="store_true",
+                   help="три прибора вне дерева, читающие страницу: axe-core, "
+                        "остаточная доступность, полоса значков")
     a = ap.parse_args()
     if a.words:
         return words()
@@ -245,6 +291,8 @@ def main():
         return lang_leftovers()
     if a.lang_leftovers_control:
         return lang_leftovers_control()
+    if a.page_extras:
+        return page_extras()
     return 3
 
 
