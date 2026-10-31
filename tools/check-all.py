@@ -119,6 +119,8 @@ BATTERIES = [
     ("sitemap-control",  ["tools/check-sitemap.py", "--control"],                 "offline",180, "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"),
     ("markup",           ["tools/check-markup.py"],                             "offline",180, "разметка 11 страниц: дерево тегов, id, якоря, кавычки, голова"),
     ("markup-control",   ["tools/check-markup.py", "--control"],                 "offline",240, "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"),
+    ("jsonld",           ["tools/check-jsonld.py"],                              "offline",180, "JSON-LD девяти страниц: синтаксис, четыре узла, цены против prices.json, вопросы на странице"),
+    ("jsonld-control",   ["tools/check-jsonld.py", "--control"],                 "offline",240, "сам прибор: восемь мутантов обязаны покраснеть, каждый своим классом"),
     ("publish-tree",     ["tools/publish-tree.py", "--check"],                  "offline",180, "список публикации: полнота, границы мастерской, ссылки, читатели"),
     ("publish-tree-control", ["tools/publish-tree.py", "--control"],            "offline",240, "сам прибор: пять мутантов обязаны покраснеть, каждый своим сообщением"),
     ("locale-keys",      ["tools/locale-key-parity.py"],                        "offline",180, "ключи словарей: нет мёртвых и разъехавшихся"),
