@@ -88,7 +88,26 @@ EYE_PAGES = "hero,contact,footer"
 # Прибор, который прямо сейчас работает. Нужен не для красоты: прогон, убитый
 # снаружи (у крона свой потолок времени), обязан назвать, на чём его застали, —
 # иначе 900 секунд работы выглядят как «свип не запускали».
-INFLIGHT = {"name": None, "t0": 0.0}
+INFLIGHT = {"name": None, "t0": 0.0, "proc": None}
+
+
+def kill_tree(proc, grace: float = 2.0):
+    """Погасить прибор вместе с его детьми. Прибор стартует своей сессией
+    процессов (start_new_session), поэтому одного p.kill() мало: браузер
+    глаза живёт в той же группе, но не под ним — нужен killpg по группе."""
+    if proc is None or proc.poll() is not None:
+        return
+    import signal as _sig
+    for sig in (_sig.SIGTERM, _sig.SIGKILL):
+        try:
+            os.killpg(os.getpgid(proc.pid), sig)
+        except (ProcessLookupError, PermissionError):
+            return
+        try:
+            proc.wait(timeout=grace)
+            return
+        except subprocess.TimeoutExpired:
+            continue
 
 # name, argv (после `python3`), tier, timeout, что именно проверяет
 BATTERIES = [
@@ -103,6 +122,7 @@ BATTERIES = [
     ("deva-subset",      ["tools/subset-deva.py", "--check"],                   "offline",120, "Deva-подмножество шрифта против реестра"),
     ("og-cards",         ["tools/og-cards.py", "--check"],                      "offline",120, "карточки og: 1200x630 на девять языков"),
     ("bot-profile",      ["tools/apply-bot-profile.py", "--check"],             "offline",120, "профиль бота против bot-profile.json"),
+    ("sigterm-control",  ["tools/check-sigterm.py"],                            "offline",300, "сам прибор: SIGTERM раннеру гасит ребёнка, мутант без kill_tree обязан оставить сироту"),
     ("weight",           ["tools/check-weight.py"],                             "offline",180, "вес первого экрана, ленивость, потолки"),
     ("weight-control",   ["tools/check-weight.py", "--control"],                 "offline",180, "сам прибор: обязан увидеть потолок 1 байт и чужой язык в медиа"),
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
@@ -197,17 +217,27 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
             cmd += ["--out", str(EVIDENCE / f"eye-pages-{time.strftime('%Y%m%d')}.json")]
     t0 = time.time()
     INFLIGHT["name"], INFLIGHT["t0"] = name, t0
+    # 31.10.2026: прибор — отдельная сессия процессов. Иначе SIGTERM раннеру
+    # оставлял живым его ребёнка (браузер глаза, обход ссылок), а запись
+    # «прогон прерван» рядом с живым сиротой — ложь: следующий прогон
+    # подерётся с ним за тот же каталог evidence.
     try:
-        p = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True,
-                           timeout=timeout)
-        rc, out = p.returncode, (p.stdout or "") + (p.stderr or "")
+        p = subprocess.Popen(cmd, cwd=str(ROOT), stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, text=True,
+                             start_new_session=True)
+        INFLIGHT["proc"] = p
+        out, err = p.communicate(timeout=timeout)
+        rc, out = p.returncode, (out or "") + (err or "")
     except subprocess.TimeoutExpired as e:
         secs = round(time.time() - t0, 1)
+        kill_tree(INFLIGHT.get("proc"))
         raw = e.stdout or e.stderr or ""
         if isinstance(raw, bytes):
             raw = raw.decode("utf-8", "replace")
         return dict(name=name, tier=tier, status="FAIL", checks="-", secs=secs,
                     why=f"таймаут {timeout} с", tail=tail_of(raw))
+    finally:
+        INFLIGHT["proc"] = None
     secs = round(time.time() - t0, 1)
     # ПОСЛЕДНЕЕ совпадение, а не первое: прибор-мутация печатает вывод своего
     # мутанта как улику, и там есть своя строка «CHECKS: …, FAILED: 1». 31.10
@@ -367,10 +397,14 @@ def main():
     def on_signal(signum, frame):
         cut["why"] = f"прервано сигналом {signum} (внешний потолок времени)"
         cut["battery"] = INFLIGHT["name"]
+        # Ребёнок прибора гасится ДО записи журнала: иначе «прервано» стоит
+        # рядом с живым сиротой, который дописывает в тот же каталог evidence.
+        kill_tree(INFLIGHT.get("proc"))
         write_journal(complete=False)
         bad = [r for r in results if r["status"] == "FAIL"]
         print(f"\nИТОГО: ПРЕРВАНО сигналом {signum} на приборе {INFLIGHT['name']} "
               f"после {len(results)} приборов, упало {len(bad)}. "
+              f"Ребёнок прибора погашен. "
               f"Это не полный прогон: {journal or 'журнал не заказан (--json)'}")
         sys.stdout.flush()
         os._exit(2)
@@ -379,8 +413,14 @@ def main():
     signal.signal(signal.SIGINT, on_signal)
 
     for name, argv, tier, timeout, what in BATTERIES:
-        if args.only and args.only not in name:
-            continue
+        if args.only:
+            # 31.10.2026: --only links ловил и internal-links — прогон «одного
+            # прибора» тихо включал чужой. Точное имя прибора старше подстроки.
+            if args.only in {b[0] for b in BATTERIES}:
+                if name != args.only:
+                    continue
+            elif args.only not in name:
+                continue
         if args.budget:
             left = args.budget - (time.time() - t_start)
             if left < 30:
