@@ -68,7 +68,8 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 # 18 из 18, — раннер считал цвет контроля как цвет страницы.
 CONTROL = {"redirects-control", "visual-control", "links-control",
            "weight-control", "narrow-control", "internal-control",
-           "publish-tree-control", "prices-control", "words-control"}
+           "publish-tree-control", "prices-control", "words-control",
+           "zoom-control"}
 
 # Приборы, которые живут ВНЕ дерева (рядом со скиллом) и зовутся через tools/external.py.
 # До 31.10.2026 они существовали только строкой «вне дерева, НЕ запускались (3)»: цены,
@@ -177,6 +178,9 @@ BATTERIES = [
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
     ("narrow-control",   ["tools/probe-narrow.py", "--control"],                 "visual", 600, "сам прибор: обязан поймать блок 600 px в окне 320"),
+    ("zoom-200",         ["tools/check-text-zoom.py"],                          "visual", 600, "текст 200 % в тех же коробках на девяти языках: ширина, обрез, цели"),
+    ("zoom-320",         ["tools/check-text-zoom.py", "--width=320"],           "visual", 600, "то же при 320 px — узкое окно и крупный шрифт вместе"),
+    ("zoom-control",     ["tools/check-text-zoom.py", "--control"],             "visual", 900, "сам прибор: чистая копия зелёная, три мутанта обязаны покраснеть"),
     ("eye-pages",        ["landing-eye.py"],                                    "eye",    900, "глаз читает блоки всех девяти языков по кадрам visual-420"),
     ("eye-anchors",      ["tools/probe-anchors.py"],                            "eye",    300, "опоры блоков под глаз"),
     ("eye-legal-tail",   ["tools/legal-tail-read.py", "--root", "."],           "eye",    300, "нижняя часть privacy/terms глазами"),
