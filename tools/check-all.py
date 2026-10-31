@@ -48,6 +48,7 @@ import argparse
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
 import time
@@ -83,6 +84,11 @@ EXTERNAL_REQUIRES = {
 # Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
 EYE_LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 EYE_PAGES = "hero,contact,footer"
+
+# Прибор, который прямо сейчас работает. Нужен не для красоты: прогон, убитый
+# снаружи (у крона свой потолок времени), обязан назвать, на чём его застали, —
+# иначе 900 секунд работы выглядят как «свип не запускали».
+INFLIGHT = {"name": None, "t0": 0.0}
 
 # name, argv (после `python3`), tier, timeout, что именно проверяет
 BATTERIES = [
@@ -190,6 +196,7 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
             EVIDENCE.mkdir(exist_ok=True)
             cmd += ["--out", str(EVIDENCE / f"eye-pages-{time.strftime('%Y%m%d')}.json")]
     t0 = time.time()
+    INFLIGHT["name"], INFLIGHT["t0"] = name, t0
     try:
         p = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True,
                            timeout=timeout)
@@ -324,6 +331,11 @@ def main():
     ap.add_argument("--only", default="", help="подстрока имени прибора")
     ap.add_argument("--strict", action="store_true", help="SKIP считать провалом")
     ap.add_argument("--json", action="store_true", help="положить журнал в evidence/")
+    ap.add_argument("--budget", type=int,
+                    default=int(os.environ.get("LANDING_SWEEP_BUDGET", "0") or 0),
+                    help="секунд на весь прогон: остаток называется поимённо, прогон "
+                         "не притворяется полным (0 — без потолка; то же в "
+                         "LANDING_SWEEP_BUDGET)")
     ap.add_argument("--list", action="store_true", help="напечатать таблицу приборов и выйти")
     args = ap.parse_args()
 
@@ -335,9 +347,52 @@ def main():
     only_offline = args.offline or args.fast
     eye = find_eye() if not only_offline else None
     results = []
+    t_start = time.time()
+    cut: dict = {"why": None, "battery": None}
+    journal = (EVIDENCE / f"check-all-{time.strftime('%Y%m%d-%H%M%S')}.json") if args.json else None
+
+    def write_journal(complete):
+        """Журнал пишется после каждого прибора, а не одним куском в конце:
+        прогон, убитый снаружи, обязан оставить файл, в котором видно, сколько
+        успели проверить и на чём именно его застали."""
+        if not journal:
+            return
+        EVIDENCE.mkdir(exist_ok=True)
+        journal.write_text(json.dumps(
+            dict(when=time.strftime("%Y-%m-%dT%H:%M:%S"), offline=bool(only_offline),
+                 complete=bool(complete), elapsed=round(time.time() - t_start, 1),
+                 cut=cut["why"], in_flight=cut["battery"], results=results),
+            ensure_ascii=False, indent=1), encoding="utf-8")
+
+    def on_signal(signum, frame):
+        cut["why"] = f"прервано сигналом {signum} (внешний потолок времени)"
+        cut["battery"] = INFLIGHT["name"]
+        write_journal(complete=False)
+        bad = [r for r in results if r["status"] == "FAIL"]
+        print(f"\nИТОГО: ПРЕРВАНО сигналом {signum} на приборе {INFLIGHT['name']} "
+              f"после {len(results)} приборов, упало {len(bad)}. "
+              f"Это не полный прогон: {journal or 'журнал не заказан (--json)'}")
+        sys.stdout.flush()
+        os._exit(2)
+
+    signal.signal(signal.SIGTERM, on_signal)
+    signal.signal(signal.SIGINT, on_signal)
+
     for name, argv, tier, timeout, what in BATTERIES:
         if args.only and args.only not in name:
             continue
+        if args.budget:
+            left = args.budget - (time.time() - t_start)
+            if left < 30:
+                why = (f"бюджет прогона {args.budget} с исчерпан, осталось "
+                       f"{max(0, int(left))} с — прибор не запускался")
+                cut["why"] = why
+                cut["battery"] = name
+                results.append(dict(name=name, tier=tier, status="SKIP", checks="-",
+                                    secs=0.0, why=why, tail=[], what=what))
+                print(f"  SKIP {name:18} {'-':>10}  {0.0:6.1f} с  {why}")
+                write_journal(complete=False)
+                continue
         if only_offline and tier not in ("build", "offline"):
             why = {"visual": "режим без браузера",
                    "live": "режим без сети",
@@ -365,6 +420,7 @@ def main():
         print(line.rstrip())
         for t in r["tail"]:
             print(f"       | {t}")
+        write_journal(complete=False)
 
     bad = [r for r in results if r["status"] == "FAIL"]
     skipped = [r for r in results if r["status"] == "SKIP"]
@@ -372,7 +428,18 @@ def main():
     print(f"ИТОГО: приборов {len(results)}, ok {len(results)-len(bad)-len(skipped)}, "
           f"fail {len(bad)}, skip {len(skipped)}")
     if skipped:
-        print("не проверяли: " + ", ".join(f"{r['name']} ({r['why']})" for r in skipped))
+        # Причина у бюджетных пропусков одна на тридцать приборов — печатать её
+        # тридцать раз значит спрятать имена в стене текста. Группируем.
+        by_why: dict = {}
+        for r in skipped:
+            by_why.setdefault(r["why"], []).append(r["name"])
+        print("не проверяли: " + "; ".join(
+            f"{', '.join(names)} ({why})" for why, names in by_why.items()))
+    cut_off = [r for r in skipped if r["why"] and "бюджет прогона" in r["why"]]
+    if cut_off:
+        print(f"СВИП НЕПОЛНЫЙ: {len(cut_off)} приборов не запускались — бюджет "
+              f"{args.budget} с кончился на {round(time.time() - t_start, 1)} с: "
+              + ", ".join(r["name"] for r in cut_off))
     if bad:
         print("упало: " + ", ".join(r["name"] for r in bad))
     print(f"вне свипа по устройству ({len(MANUAL)}): "
@@ -380,17 +447,16 @@ def main():
     print("  остальные приборы обещаний и цен зовутся этим же прогоном (words, prices "
           "и их контроли); зелёный ИТОГО выше — про них тоже")
 
-    if args.json:
-        EVIDENCE.mkdir(exist_ok=True)
-        out = EVIDENCE / f"check-all-{time.strftime('%Y%m%d-%H%M%S')}.json"
-        out.write_text(json.dumps(dict(when=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                       offline=bool(only_offline),
-                                       results=results), ensure_ascii=False, indent=1),
-                       encoding="utf-8")
-        print(f"журнал: {out}")
+    write_journal(complete=True)
+    if journal:
+        print(f"журнал: {journal}")
 
     if bad:
         return 1
+    if cut_off:
+        # 31.10.2026: зелёное «ИТОГО» при неполном прогоне — тот же обман, что
+        # прибор без контроля. Бюджет кончился — прогон не проверен, код 2.
+        return 2
     if args.strict and skipped:
         return 1
     return 0
