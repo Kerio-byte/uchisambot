@@ -101,6 +101,8 @@ BATTERIES = [
     ("weight-control",   ["tools/check-weight.py", "--control"],                 "offline",180, "сам прибор: обязан увидеть потолок 1 байт и чужой язык в медиа"),
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
     ("links",            ["tools/check-links.py"],                              "live",   420, "116 внешних адресов"),
+    ("live-bytes",       ["tools/live-bytes.py"],                                "live",   240, "живой сайт против дерева: байт в байт, 16 файлов"),
+    ("live-bytes-control", ["tools/live-bytes.py", "--control"],                 "live",   240, "сам прибор: один испорченный байт обязан покраснеть именно им"),
     ("links-control",    ["tools/check-links.py", "--control"],                 "offline",120, "сам прибор: обязан разложить семь известных ответов по классам"),
     ("controls-mutation",["tools/controls-mutation.py"],                        "offline",300, "сам прибор: пять инструментов обязаны покраснеть на своих дефектах"),
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
