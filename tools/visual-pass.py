@@ -119,10 +119,17 @@ def main() -> int:
         br = p.chromium.launch(args=["--no-sandbox"])
         for name, width, height, mobile in VIEWPORTS:
             for lang in langs:
+                # 2x (31.10.2026): кадры для глаза снимались в 1x, и на десктопе текст
+                # внутри макета телефона выходил 7 px высотой — глаз сливал соседние
+                # строки чата в одну и докладывал «наложение текста» там, где в самой
+                # странице строки разделены 18 px. Любая мелкая типографика (сноски,
+                # подписи под кадром) в 1x нечитаема в принципе, значит и проверять её
+                # глазом нельзя. Геометрия проверок считается по DOM, а не по пикселям,
+                # поэтому масштаб съёмки на вердикты не влияет.
                 ctx = br.new_context(
                     viewport={"width": width, "height": height},
                     is_mobile=mobile, has_touch=mobile,
-                    device_scale_factor=1)
+                    device_scale_factor=2)
                 pg = ctx.new_page()
                 errs: list[str] = []
                 pg.on("pageerror", lambda e: errs.append(str(e)))
