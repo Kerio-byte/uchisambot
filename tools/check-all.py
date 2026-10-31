@@ -82,6 +82,8 @@ EXTERNAL_REQUIRES = {
     "lang-leftovers-control": "landing-en-leftovers.py",
     "engines": "landing-cross-engine.py",
     "engines-control": "landing-cross-engine.py",
+    "third-party": "landing-third-party.py",
+    "third-party-control": "landing-third-party.py",
 }
 
 # Прогон page-extras зовёт три прибора сразу, а ключ батареи один. Эти три имени
@@ -167,6 +169,8 @@ BATTERIES = [
     ("page-extras",      ["tools/external.py", "--page-extras"],                 "external",1500, "три прибора вне дерева: axe-core, остаточная доступность, полоса значков"),
     ("engines",          ["tools/external.py", "--engines"],                     "external",1500, "кросс-движок: страница в WebKit и Firefox (встроенный браузер Telegram на iOS), а не только в Chromium"),
     ("engines-control",  ["tools/external.py", "--engines-control"],             "external", 900, "сам прибор: своя клауза ширины краснеет там, где старая слепа, и дефект в КОПИИ дерева обязан покраснеть именем ru"),
+    ("third-party",      ["tools/external.py", "--third-party"],                 "external", 900, "сеть 12 страниц: браузер обязан сходить ТОЛЬКО к нам — обещание политики конфиденциальности, проверенное не разметкой"),
+    ("third-party-control", ["tools/external.py", "--third-party-control"],      "external", 900, "сам прибор: копия без правок зелёная, шесть мутантов (чужой хост, 404, JS, кука, storage, POST-маячок) краснеют каждый своим сообщением"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),

@@ -28,6 +28,8 @@
   python3 tools/external.py --words-control     # контроль: сломанная страница обязана покраснеть
   python3 tools/external.py --prices            # цены страницы против prices.json и кода бота
   python3 tools/external.py --prices-control    # контроль: три мутанта цен, каждый своим сообщением
+  python3 tools/external.py --third-party       # сеть: браузер обязан сходить только к нам
+  python3 tools/external.py --third-party-control  # контроль: шесть мутантов, каждый своим сообщением
 Код возврата: 0 — зелено, 1 — дефект, 2 — контроль не доказал прибор, 3 — прибора нет.
 """
 import argparse
@@ -354,6 +356,64 @@ def engines_control():
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def third_party():
+    """Политика конфиденциальности обещает: «ни одного запроса на чужой сервер».
+
+    31.10.2026, восемнадцатый блок. Обещание проверялось РАЗМЕТКОЙ: свип слов ищет
+    адреса в src/poster/url(). Но разметка — не сеть. Шрифт приезжает по url() из
+    соседнего CSS, пиксель аналитики — из вставки, которую регулярка не поймала,
+    кука ставится скриптом, в котором адреса нет вовсе. Прибор, который открывает
+    страницу браузером и записывает ВСЕ запросы, лежал в каталоге с 24.10 и не
+    звался никем — то есть единственное обещание политики, которое можно проверить
+    машинно, держалось на том, что кто-то вспомнит команду.
+    """
+    tool = need("landing-third-party.py")
+    rc, out = run([tool], timeout=600)
+    checks, failed = verdict(out)
+    if checks is None or failed is None:
+        print("НЕ РАЗОБРАЛ вывод прибора третьих сторон — считать непроверенным")
+        print("\n".join(out.splitlines()[-6:]))
+        return 2
+    print(f"CHECKS: {checks}, FAILED: {failed}")
+    if failed:
+        print("\n".join([ln for ln in out.splitlines() if FAILLINE_RE.match(ln)][:8]))
+        return 1
+    print("\n".join([ln for ln in out.splitlines() if "no foreign host" in ln][:2]))
+    return 0 if rc == 0 else 1
+
+
+def third_party_control():
+    """Шесть мутантов обязаны покраснеть, каждый своим сообщением.
+
+    Красное на мутанте ничего не доказывает, если копия красна сама по себе: поэтому
+    прибор сначала гоняет копию без правок и требует ноль провалов, и только потом
+    сажает шесть дефектов. Обёртка судит по «поймал N из M», а не по последней строке
+    CHECKS: каждый мутант печатает свой итог, и последний по счёту — всегда красный.
+    """
+    tool = need("landing-third-party.py")
+    rc, out = run([tool, "--control"], timeout=600)
+    m = re.search(r"поймал\s+(\d+)\s+из\s+(\d+)", out)
+    pristine = re.search(r"копия без правок: CHECKS:\s*(\d+), FAILED:\s*(\d+)", out)
+    if not m or not pristine:
+        print(f"НЕ РАЗОБРАЛ контроль третьих сторон (код {rc})")
+        print("\n".join(out.splitlines()[-6:]))
+        return 2
+    caught, total = int(m.group(1)), int(m.group(2))
+    if pristine.group(2) != "0":
+        print(f"НЕ ДОКАЗАНО: нетронутая копия красная ({pristine.group(2)} провалов)")
+        return 2
+    print(f"контроль: копия без правок {pristine.group(1)} проверок — 0 провалов; "
+          f"мутантов поймано {caught} из {total}")
+    for ln in out.splitlines():
+        if ln.startswith("поймал ["):
+            print("  " + ln)
+    if rc != 0 or caught != total:
+        print(f"НЕ ПОЙМАЛ: код {rc}, поймано {caught} из {total}")
+        return 2
+    print(f"CHECKS: {caught}, FAILED: 0")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description="внешние приборы лендинга одной командой")
     g = ap.add_mutually_exclusive_group(required=True)
@@ -375,6 +435,11 @@ def main():
                    help="кросс-движок: страница в WebKit и Firefox, а не только в Chromium")
     g.add_argument("--engines-control", dest="engines_control", action="store_true",
                    help="контроль: своя клауза ширины + дефект в КОПИИ дерева обязан покраснеть и назвать ru")
+    g.add_argument("--third-party", dest="third_party", action="store_true",
+                   help="сеть: браузер обязан сходить только к нам (обещание политики)")
+    g.add_argument("--third-party-control", dest="third_party_control", action="store_true",
+                   help="контроль: шесть мутантов (чужой хост, 404, JS, кука, storage, POST) "
+                        "обязаны покраснеть каждый своим сообщением")
     a = ap.parse_args()
     if a.words:
         return words()
@@ -394,6 +459,10 @@ def main():
         return engines()
     if a.engines_control:
         return engines_control()
+    if a.third_party:
+        return third_party()
+    if a.third_party_control:
+        return third_party_control()
     return 3
 
 
