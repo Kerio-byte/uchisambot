@@ -447,7 +447,7 @@ def main():
     print("  остальные приборы обещаний и цен зовутся этим же прогоном (words, prices "
           "и их контроли); зелёный ИТОГО выше — про них тоже")
 
-    write_journal(complete=True)
+    write_journal(complete=not cut["why"])
     if journal:
         print(f"журнал: {journal}")
 
