@@ -145,6 +145,11 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
         if name == "eye-legal-tail":
             EVIDENCE.mkdir(exist_ok=True)
             cmd += ["--out", str(EVIDENCE / f"legal-tail-{time.strftime('%Y%m%d')}.json")]
+        if name == "eye-pages":
+            # 31.10.2026: прибор звали без --out, и 395 секунд работы глаза существовали
+            # только строкой в отчёте раннера. «Дефектов 0» через месяц нечем проверить.
+            EVIDENCE.mkdir(exist_ok=True)
+            cmd += ["--out", str(EVIDENCE / f"eye-pages-{time.strftime('%Y%m%d')}.json")]
     t0 = time.time()
     try:
         p = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True,
