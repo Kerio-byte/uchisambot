@@ -86,6 +86,7 @@ BATTERIES = [
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
     ("links",            ["tools/check-links.py"],                              "live",   420, "116 внешних адресов"),
     ("links-control",    ["tools/check-links.py", "--control"],                 "offline",120, "сам прибор: обязан разложить семь известных ответов по классам"),
+    ("controls-mutation",["tools/controls-mutation.py"],                        "offline",300, "сам прибор: пять инструментов обязаны покраснеть на своих дефектах"),
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
     ("redirects-control",["tools/check-redirects.py", "--control"],             "live",   240, "сам прибор: обязан краснеть на пяти кривых ответах"),
     ("claim-basis",      ["tools/claim-basis.py"],                              "live",   240, "адрес LLM, веса, служба, Linger, девять языков"),
