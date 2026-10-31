@@ -168,8 +168,12 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
         return dict(name=name, tier=tier, status="FAIL", checks="-", secs=secs,
                     why=f"таймаут {timeout} с", tail=tail_of(raw))
     secs = round(time.time() - t0, 1)
-    m = CHECKS_RE.search(out)
-    checks = f"{m.group(1)}/{m.group(2)}" if m else "-"
+    # ПОСЛЕДНЕЕ совпадение, а не первое: прибор-мутация печатает вывод своего
+    # мутанта как улику, и там есть своя строка «CHECKS: …, FAILED: 1». 31.10
+    # раннер взял её за вердикт и покрасил исправный `controls-mutation`.
+    matches = CHECKS_RE.findall(out)
+    m = matches[-1] if matches else None
+    checks = f"{m[0]}/{m[1]}" if m else "-"
     if not m:
         t = TOTAL_RE.search(out)
         l = LEAK_RE.search(out)
@@ -222,7 +226,7 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
         return dict(name=name, tier=tier, status="ok", checks=checks, secs=secs,
                     why="", tail=[])
     bad = rc != 0
-    if m and int(m.group(2)):
+    if m and int(m[1]):
         bad = True
     return dict(name=name, tier=tier, status="FAIL" if bad else "ok", checks=checks,
                 secs=secs, why="" if not bad else first_failure_line(out),

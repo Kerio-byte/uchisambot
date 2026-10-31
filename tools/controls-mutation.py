@@ -216,6 +216,10 @@ def main() -> int:
         if not res["ok"]:
             bad += 1
     print(f"ИТОГО рецептов: {len(rows)}  недоказанных: {bad}")
+    # Свои числа в словаре раннера — ПОСЛЕ улик. Улика мутанта содержит его
+    # собственную строку «CHECKS: …, FAILED: 1», и без этой строки в конце
+    # исправный прибор читался как красный (31.10).
+    print(f"CHECKS: {len(rows)}, FAILED: {bad}")
 
     if a.json:
         out = ROOT / "evidence" / "controls-mutation.json"
