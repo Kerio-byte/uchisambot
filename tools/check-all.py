@@ -171,6 +171,8 @@ BATTERIES = [
     ("engines-control",  ["tools/external.py", "--engines-control"],             "external", 900, "сам прибор: своя клауза ширины краснеет там, где старая слепа, и дефект в КОПИИ дерева обязан покраснеть именем ru"),
     ("third-party",      ["tools/external.py", "--third-party"],                 "external", 900, "сеть 12 страниц: браузер обязан сходить ТОЛЬКО к нам — обещание политики конфиденциальности, проверенное не разметкой"),
     ("third-party-control", ["tools/external.py", "--third-party-control"],      "external", 900, "сам прибор: копия без правок зелёная, шесть мутантов (чужой хост, 404, JS, кука, storage, POST-маячок) краснеют каждый своим сообщением"),
+    ("form",             ["tools/check-form.py"],                                "external", 600, "форма связи девяти языков: ключ, subject, redirect по языку, приманка, потолок длины и три обещания отказов — проверенные браузером"),
+    ("form-control",     ["tools/check-form.py", "--control"],                   "external", 600, "сам прибор: копия без правок зелёная, семь мутантов краснеют каждый своим сообщением (очистку поля при отказе видит только браузер)"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
