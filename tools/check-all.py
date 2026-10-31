@@ -123,6 +123,8 @@ BATTERIES = [
     ("jsonld-control",   ["tools/check-jsonld.py", "--control"],                 "offline",240, "сам прибор: восемь мутантов обязаны покраснеть, каждый своим классом"),
     ("a11y",             ["tools/check-a11y.py"],                               "visual", 420, "доступность: контраст, цель нажатия, видимый фокус, alt, подписи полей, заголовки"),
     ("a11y-control",     ["tools/check-a11y.py", "--control"],                  "visual", 480, "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"),
+    ("css",              ["tools/check-css.py"],                               "visual", 300, "стили 12 страниц: скобки и объявления, url() на диск, @font-face и потребитель, var() без определения, CSS.supports у браузера"),
+    ("css-control",      ["tools/check-css.py", "--control"],                   "visual", 420, "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"),
     ("publish-tree",     ["tools/publish-tree.py", "--check"],                  "offline",180, "список публикации: полнота, границы мастерской, ссылки, читатели"),
     ("publish-tree-control", ["tools/publish-tree.py", "--control"],            "offline",240, "сам прибор: пять мутантов обязаны покраснеть, каждый своим сообщением"),
     ("locale-keys",      ["tools/locale-key-parity.py"],                        "offline",180, "ключи словарей: нет мёртвых и разъехавшихся"),
