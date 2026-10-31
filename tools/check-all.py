@@ -117,6 +117,8 @@ BATTERIES = [
     ("internal-control", ["tools/check-internal.py", "--control"],               "offline",120, "сам прибор: обязан поймать битый файл, якорь, src и пропавшую страницу"),
     ("sitemap",          ["tools/check-sitemap.py"],                             "offline",120, "sitemap.xml: покрытие 9 языков, файлы, alternate, lastmod, canonical"),
     ("sitemap-control",  ["tools/check-sitemap.py", "--control"],                 "offline",180, "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"),
+    ("markup",           ["tools/check-markup.py"],                             "offline",180, "разметка 11 страниц: дерево тегов, id, якоря, кавычки, голова"),
+    ("markup-control",   ["tools/check-markup.py", "--control"],                 "offline",240, "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"),
     ("publish-tree",     ["tools/publish-tree.py", "--check"],                  "offline",180, "список публикации: полнота, границы мастерской, ссылки, читатели"),
     ("publish-tree-control", ["tools/publish-tree.py", "--control"],            "offline",240, "сам прибор: пять мутантов обязаны покраснеть, каждый своим сообщением"),
     ("locale-keys",      ["tools/locale-key-parity.py"],                        "offline",180, "ключи словарей: нет мёртвых и разъехавшихся"),
