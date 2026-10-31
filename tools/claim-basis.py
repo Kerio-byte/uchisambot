@@ -102,6 +102,89 @@ def models(base: str) -> list[str]:
     return out
 
 
+def main_pid(unit: str) -> int:
+    try:
+        p = subprocess.run(["systemctl", "--user", "show", "-p", "MainPID", "--value", unit],
+                           capture_output=True, text=True, timeout=10)
+        return int((p.stdout or "0").strip() or 0)
+    except (ValueError, OSError):
+        return 0
+
+
+def proc_env(pid: int) -> dict[str, str]:
+    """Маршрут LLM из ЖИВОГО процесса, а не из файла.
+
+    .env можно переписать после запуска службы: файл будет говорить одно,
+    а бот продолжит работать с тем, что получил при старте. Секреты не читаются.
+    """
+    out: dict[str, str] = {}
+    try:
+        data = Path(f"/proc/{pid}/environ").read_bytes()
+    except OSError:
+        return out
+    for item in data.split(b"\0"):
+        key, sep, val = item.decode("utf-8", "replace").partition("=")
+        if sep and key in {"LLM_BASE_URL", "LLM_MODEL", "LLM_PROVIDER"}:
+            out[key] = val.strip()
+    return out
+
+
+def listeners(port: int) -> list[int]:
+    """Кто слушает порт: pid из ss. Пусто — никто или прав не хватило."""
+    try:
+        p = subprocess.run(["ss", "-ltnp", f"sport = :{port}"], capture_output=True, text=True, timeout=10)
+    except OSError:
+        return []
+    pids: list[int] = []
+    for x in re.findall(r"pid=(\d+)", p.stdout):
+        if int(x) not in pids:
+            pids.append(int(x))
+    return pids
+
+
+def routes_of(pid: int) -> list[tuple[int, str]]:
+    """Карта --route <слушает>:<куда>:... из командной строки прокси."""
+    try:
+        cmd = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").decode("utf-8", "replace")
+    except OSError:
+        return []
+    return [(int(a), b) for a, b in re.findall(r"--route\s+(\d+):([^:\s]+):", cmd)]
+
+
+def walk_chain(url: str, hops: int = 2) -> tuple[list[str], str]:
+    """Первый прыжок — адрес из настройки, дальше — по карте --route прокси.
+
+    Петля на входе ничего не доказывает: прокси на 127.0.0.1 может отправлять
+    запрос на чужой адрес, и обещание «задачи не уходят наружу» станет ложным
+    при зелёном llm.loopback. Возвращает (прыжки, приговор); пустой приговор — чисто.
+    """
+    steps: list[str] = []
+    m = re.search(r":(\d+)", url)
+    if not m:
+        return steps, "в адресе нет порта — цепочку не пройти"
+    port = int(m.group(1))
+    for _ in range(hops):
+        pids = listeners(port)
+        if not pids:
+            steps.append(f"{port}: слушателя нет")
+            return steps, f"порт {port} никто не слушает"
+        pid = pids[0]
+        rs = routes_of(pid)
+        if not rs:
+            steps.append(f"{port}: процесс {pid} без --route, сам сервер")
+            return steps, ""
+        nxt = [b for a, b in rs if a == port]
+        if not nxt:
+            steps.append(f"{port}: у процесса {pid} нет маршрута этого порта")
+            return steps, f"порт {port} слушает прокси, но куда он ведёт, не сказано"
+        if not nxt[0].isdigit():
+            steps.append(f"{port} -> {nxt[0]}")
+            return steps, f"прокси ведёт на {nxt[0]} — это не петля"
+        steps.append(f"{port} -> {nxt[0]}")
+        port = int(nxt[0])
+    return steps, ""
+
+
 def unit_state(unit: str) -> tuple[str, str, str]:
     def sc(*args: str) -> str:
         try:
@@ -168,8 +251,21 @@ def main() -> int:
     ap.add_argument("--bot-dir", default=str(DEFAULT_BOT))
     ap.add_argument("--offline", action="store_true")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--control", action="store_true", help="мутанты маршрута: чужой прыжок обязан покраснеть")
     args = ap.parse_args()
     bot = Path(args.bot_dir).expanduser().resolve()
+
+    # 0. Контроль прибора: правила разбора обязаны краснеть на чужих значениях
+    if args.control:
+        foreign = re.findall(r"--route\s+(\d+):([^:\s]+):", "--route 8080:1.1.1.1:3000")
+        own = re.findall(r"--route\s+(\d+):([^:\s]+):", "--route 8080:9080:3000")
+        check("control.route_foreign", bool(foreign) and not foreign[0][1].isdigit(),
+              f"чужой маршрут разобран как {foreign[0][1] if foreign else 'НЕ РАЗОБРАН'} — обязан считаться не-петлёй")
+        check("control.route_local", bool(own) and own[0][1].isdigit(),
+              f"свой маршрут разобран как {own[0][1] if own else 'НЕ РАЗОБРАН'} — обязан считаться петлёй")
+        cloud = host_of("https://api.openai.com/v1")
+        check("control.host_foreign", cloud == "api.openai.com" and cloud not in LOOPBACK,
+              f"хост чужого адреса разобран как {cloud or '?'} — обязан быть снаружи")
 
     # 1. Маршрут LLM
     env = read_env(bot)
@@ -193,6 +289,25 @@ def main() -> int:
                   f"{', '.join(Path(n).name for n in local) or 'НЕ НАЙДЕНЫ'}")
         except (urllib.error.URLError, OSError, ValueError) as exc:
             check("llm.weights_local", False, f"/v1/models не ответил: {type(exc).__name__}: {exc}")
+
+    # 2b. Живой процесс и цепочка прокси: файл может говорить одно, работать другое
+    if base:
+        pid = main_pid("study-bot")
+        live = proc_env(pid) if pid else {}
+        if not live:
+            check("llm.running", False,
+                  f"MainPID={pid or '?'}: окружение процесса не прочитать — чем бот работает на самом деле, не доказано")
+        else:
+            same = (host_of(live.get("LLM_BASE_URL", "")) == host_of(base)
+                    and live.get("LLM_MODEL", "") == model)
+            check("llm.running", same,
+                  f"процесс {pid}: {live.get('LLM_PROVIDER') or '—'} {host_of(live.get('LLM_BASE_URL', '')) or '?'}, "
+                  f"модель {live.get('LLM_MODEL') or '—'}"
+                  + ("" if same else f" — РАСХОДИТСЯ с .env ({host_of(base) or '?'}, {model or '—'})"))
+    if base and host_of(base) in LOOPBACK and not args.offline:
+        steps, verdict = walk_chain(base)
+        check("llm.chain", not verdict,
+              "цепочка: " + " -> ".join(steps) + ("" if not verdict else f" — {verdict}"))
 
     # 3. Код бота: чужие адреса
     hits: list[str] = []
