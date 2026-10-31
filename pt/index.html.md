@@ -60,13 +60,6 @@ Explicação avulsa — 30 Stars.
 
 Convide um amigo — quando ele receber a primeira explicação, você ganha mais uma explicação grátis. Até 20 explicações extras no total.
 
-## Para pais
-
-- Sem cadastro e sem nada para preencher: o bot nunca pede nome, telefone ou e-mail. Guardamos algumas observações da parte pública do perfil do Telegram; a lista está na Política de Privacidade.
-- Funciona no nosso próprio servidor na União Europeia (Finlândia).
-- Todo o processamento de IA acontece na nossa própria infraestrutura — as tarefas não são enviadas a serviços de IA de terceiros.
-- Você pode pedir a exclusão dos dados a qualquer momento — os pais podem solicitar em nome dos filhos.
-
 ## Perguntas frequentes
 
 ### Isso é colar?
@@ -113,6 +106,19 @@ Diferente de um chatbot comum, aqui há um método de ensino: cada explicação 
 
 As explicações são geradas por IA, por isso pode haver erros. O bot mostra cada passo para você conferir o raciocínio com o livro didático ou com o professor. Se uma resposta parecer errada, envie para nós pelo formulário: lemos todas as mensagens.
 
+## Para pais
+
+- Sem cadastro e sem nada para preencher: o bot nunca pede nome, telefone ou e-mail. Guardamos algumas observações da parte pública do perfil do Telegram; a lista está na Política de Privacidade.
+- Funciona no nosso próprio servidor na União Europeia (Finlândia).
+- Todo o processamento de IA acontece na nossa própria infraestrutura — as tarefas não são enviadas a serviços de IA de terceiros.
+- Você pode pedir a exclusão dos dados a qualquer momento — os pais podem solicitar em nome dos filhos.
+
+## Está preso numa tarefa agora mesmo?
+
+Envie para o bot — as primeiras 2 explicações são grátis.
+
+[Abrir no Telegram](https://t.me/UchiSamBot?start=src_llms)
+
 ## Dúvidas ou sugestões?
 
 Escreva para nós — sua mensagem vai direto para a nossa equipe e respondemos no seu e-mail. Sem spam e sem listas de e-mails.
@@ -122,9 +128,3 @@ Usamos seu e-mail apenas para responder a esta mensagem.
 - [Enviar mensagem](https://kerio-byte.github.io/uchisambot/pt/#contact)
 - [Política de Privacidade (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Termos de Uso (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
-
-## Está preso numa tarefa agora mesmo?
-
-Envie para o bot — as primeiras 2 explicações são grátis.
-
-[Abrir no Telegram](https://t.me/UchiSamBot?start=src_llms)

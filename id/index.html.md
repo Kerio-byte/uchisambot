@@ -60,13 +60,6 @@ Satu pembahasan — 30 Stars.
 
 Ajak temanmu — saat dia mendapat pembahasan pertamanya, kamu dapat satu pembahasan gratis lagi. Maksimal 20 pembahasan bonus.
 
-## Untuk orang tua
-
-- Tanpa pendaftaran dan tanpa isian apa pun: bot tidak pernah meminta nama, nomor telepon, atau email. Beberapa pengamatan dari bagian publik profil Telegram tetap kami simpan; daftarnya ada di Kebijakan Privasi.
-- Berjalan di server kami sendiri di Uni Eropa (Finlandia).
-- Semua pemrosesan AI berjalan di infrastruktur kami sendiri — soal tidak dikirim ke layanan AI pihak ketiga.
-- Minta datanya dihapus kapan saja — orang tua dapat memintanya atas nama anak.
-
 ## FAQ
 
 ### Apakah ini menyontek?
@@ -113,6 +106,19 @@ Berbeda dari chatbot biasa, di sini ada metode belajar: setiap pembahasan menjel
 
 Pembahasan dibuat oleh AI, jadi bisa ada kesalahan. Bot menunjukkan setiap langkah supaya kamu bisa memeriksa langkahnya di buku pelajaran atau dengan gurumu. Kalau jawaban terlihat salah, kirimkan ke kami lewat formulir: kami membaca semua pesan.
 
+## Untuk orang tua
+
+- Tanpa pendaftaran dan tanpa isian apa pun: bot tidak pernah meminta nama, nomor telepon, atau email. Beberapa pengamatan dari bagian publik profil Telegram tetap kami simpan; daftarnya ada di Kebijakan Privasi.
+- Berjalan di server kami sendiri di Uni Eropa (Finlandia).
+- Semua pemrosesan AI berjalan di infrastruktur kami sendiri — soal tidak dikirim ke layanan AI pihak ketiga.
+- Minta datanya dihapus kapan saja — orang tua dapat memintanya atas nama anak.
+
+## Sedang buntu dengan soal sekarang?
+
+Kirim ke botnya — 2 pembahasan pertama gratis.
+
+[Buka di Telegram](https://t.me/UchiSamBot?start=src_llms)
+
 ## Ada pertanyaan atau masukan?
 
 Tulis kepada kami — pesanmu sampai ke tim kami, dan kami balas ke emailmu. Tanpa spam, tanpa milis.
@@ -122,9 +128,3 @@ Kami memakai emailmu hanya untuk membalas pesan ini.
 - [Kirim pesan](https://kerio-byte.github.io/uchisambot/id/#contact)
 - [Kebijakan Privasi (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Ketentuan Layanan (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
-
-## Sedang buntu dengan soal sekarang?
-
-Kirim ke botnya — 2 pembahasan pertama gratis.
-
-[Buka di Telegram](https://t.me/UchiSamBot?start=src_llms)

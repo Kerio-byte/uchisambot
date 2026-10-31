@@ -174,6 +174,8 @@ BATTERIES = [
     ("third-party-control", ["tools/external.py", "--third-party-control"],      "external", 900, "сам прибор: копия без правок зелёная, шесть мутантов (чужой хост, 404, JS, кука, storage, POST-маячок) краснеют каждый своим сообщением"),
     ("form",             ["tools/check-form.py"],                                "external", 600, "форма связи девяти языков: ключ, subject, redirect по языку, приманка, потолок длины и три обещания отказов — проверенные браузером"),
     ("form-control",     ["tools/check-form.py", "--control"],                   "external", 600, "сам прибор: копия без правок зелёная, семь мутантов краснеют каждый своим сообщением (очистку поля при отказе видит только браузер)"),
+    ("ai-layer",         ["tools/check-ai-layer.py"],                             "offline", 180, "ИИ-слой: девять md-двойников против своих страниц (секции, порядок, цены, ответы FAQ, ролик и кадры языка, ссылки) и llms.txt против дерева"),
+    ("ai-layer-control", ["tools/check-ai-layer.py", "--control"],                "offline", 300, "сам прибор: копия без правок зелёная, восемь мутантов краснеют каждый своим классом"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),

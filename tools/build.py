@@ -728,22 +728,26 @@ def page_md(d: dict, lang: str) -> str:
           f"- **{d['p1t']} — {d['p1p']}**: {d['p1d']}",
           f"- **{d['p2t']} — {d['p2p']}**: {d['p2d']}",
           f"- **{d['p3t']} — {d['p3p']}**: {d['p3d']}",
-          "", d["price.fine"], "", d["ref.text"], "", f"## {d['parents.title']}", ""]
-    for b in ("b1", "b2", "b3", "b4"):
-        L.append(f"- {d[f'parents.{b}']}")
-    L += ["", f"## {d['faq.title']}", ""]
+          "", d["price.fine"], "", d["ref.text"], "", f"## {d['faq.title']}", ""]
+    # 01.11.2026 (21-й блок, прибор check-ai-layer): порядок секций двойника обязан
+    # совпадать с порядком страницы — ассистент, цитирующий страницу, идёт по её
+    # повествованию. Было: «родителям» → FAQ → контакты → призыв; на странице
+    # (index-src.html, строки 654/673/695/705): FAQ → родителям → призыв → контакты.
     i = 1
     while f"q{i}" in d:
         L += [f"### {d[f'q{i}']}", "", d[f"q{i}a"], ""]
         i += 1
-    L += [f"## {d['contact.title']}", "", d["contact.sub"], "", d["contact.note"], "",
+    L += [f"## {d['parents.title']}", ""]
+    for b in ("b1", "b2", "b3", "b4"):
+        L.append(f"- {d[f'parents.{b}']}")
+    L += ["",
+          # Призыв идёт ПЕРЕД контактами — как на странице; md, кончавшийся
+          # списком документов, не доносил до читателя ни призыва, ни оффера.
+          f"## {d['cta.title']}", "", d["cta.sub"], "", f"[{d['cta.btn']}]({bot})", "",
+          f"## {d['contact.title']}", "", d["contact.sub"], "", d["contact.note"], "",
           f"- [{d['contact.btn']}]({page_url}#contact)",
           f"- [{legal_label(d['foot.privacy'], 'foot.privacy', lang)}]({pp})",
-          f"- [{legal_label(d['foot.terms'], 'foot.terms', lang)}]({tt})", "",
-          # Финальная полоса страницы. Без неё md-двойник заканчивался списком
-          # документов: агент, цитирующий страницу, не доносил до читателя ни
-          # призыва, ни главного оффера «первые 2 разбора бесплатно».
-          f"## {d['cta.title']}", "", d["cta.sub"], "", f"[{d['cta.btn']}]({bot})", ""]
+          f"- [{legal_label(d['foot.terms'], 'foot.terms', lang)}]({tt})", ""]
     return "\n".join(L)
 
 

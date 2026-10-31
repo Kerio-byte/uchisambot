@@ -60,13 +60,6 @@ Tek çözüm — 30 Stars.
 
 Bir arkadaşını davet et — o ilk çözümünü aldığında sen bir ücretsiz çözüm daha kazanırsın. Toplamda en fazla 20 bonus çözüm.
 
-## Ebeveynler için
-
-- Kayıt yok, doldurulacak bir şey de yok: bot ad, telefon numarası veya e-posta hiç istemez. Telegram profilinin herkese açık kısmından birkaç gözlem saklıyoruz; listesi Gizlilik Politikası'nda.
-- Avrupa Birliği'nde (Finlandiya) kendi sunucumuzda çalışır.
-- Tüm yapay zekâ işlemleri kendi altyapımızda yapılır — sorular üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
-- Verileri istediğin zaman sildirebilirsin — ebeveynler bunu çocukları adına isteyebilir.
-
 ## Sıkça sorulan sorular
 
 ### Bu kopya çekmek mi?
@@ -113,6 +106,19 @@ Sıradan bir sohbet botundan farklı olarak burada bir öğretme yöntemi var: h
 
 Çözümleri yapay zekâ üretiyor, bu yüzden hata olabilir. Bot her adımı gösterir; böylece çözümü ders kitabınla ya da öğretmeninle karşılaştırabilirsin. Bir yanıt yanlış görünüyorsa formdan bize gönder: tüm mesajları okuyoruz.
 
+## Ebeveynler için
+
+- Kayıt yok, doldurulacak bir şey de yok: bot ad, telefon numarası veya e-posta hiç istemez. Telegram profilinin herkese açık kısmından birkaç gözlem saklıyoruz; listesi Gizlilik Politikası'nda.
+- Avrupa Birliği'nde (Finlandiya) kendi sunucumuzda çalışır.
+- Tüm yapay zekâ işlemleri kendi altyapımızda yapılır — sorular üçüncü taraf yapay zekâ hizmetlerine gönderilmez.
+- Verileri istediğin zaman sildirebilirsin — ebeveynler bunu çocukları adına isteyebilir.
+
+## Şu an bir soruda takıldın mı?
+
+Bota gönder — ilk 2 çözüm ücretsiz.
+
+[Telegram'da aç](https://t.me/UchiSamBot?start=src_llms)
+
 ## Sorunun ya da geri bildirimin var mı?
 
 Bize yaz — mesajın ekibimize ulaşır, sana e-postayla yanıt veririz. Spam yok, e-posta listesi yok.
@@ -122,9 +128,3 @@ E-postanı yalnızca bu mesaja yanıt vermek için kullanırız.
 - [Mesaj gönder](https://kerio-byte.github.io/uchisambot/tr/#contact)
 - [Gizlilik Politikası (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Kullanım Koşulları (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
-
-## Şu an bir soruda takıldın mı?
-
-Bota gönder — ilk 2 çözüm ücretsiz.
-
-[Telegram'da aç](https://t.me/UchiSamBot?start=src_llms)

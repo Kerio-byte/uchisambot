@@ -60,13 +60,6 @@ Một lần phân tích — 30 Stars.
 
 Mời một người bạn — khi bạn ấy nhận được phân tích đầu tiên, bạn sẽ nhận thêm một lần phân tích miễn phí. Tổng cộng tối đa 20 lượt phân tích thưởng.
 
-## Dành cho phụ huynh
-
-- Không cần đăng ký, cũng không có gì để điền: bot không bao giờ hỏi tên, số điện thoại hay email. Một vài quan sát từ phần công khai của hồ sơ Telegram thì có được lưu; danh sách nằm trong Chính sách bảo mật.
-- Chạy trên máy chủ riêng của chúng tôi tại Liên minh châu Âu (Phần Lan).
-- Mọi xử lý AI đều diễn ra trên hạ tầng riêng của chúng tôi — bài tập không được gửi cho dịch vụ AI bên thứ ba.
-- Bạn có thể yêu cầu xóa dữ liệu bất cứ lúc nào — phụ huynh có thể yêu cầu thay cho con.
-
 ## Câu hỏi thường gặp
 
 ### Đây có phải là gian lận không?
@@ -113,6 +106,19 @@ Khác với chatbot thông thường, ở đây có phương pháp dạy học: 
 
 Phân tích do AI tạo ra nên có thể có lỗi. Bot trình bày từng bước để bạn đối chiếu cách làm với sách giáo khoa hoặc hỏi giáo viên. Nếu thấy câu trả lời sai, hãy gửi cho chúng tôi qua biểu mẫu: chúng tôi đọc mọi tin nhắn.
 
+## Dành cho phụ huynh
+
+- Không cần đăng ký, cũng không có gì để điền: bot không bao giờ hỏi tên, số điện thoại hay email. Một vài quan sát từ phần công khai của hồ sơ Telegram thì có được lưu; danh sách nằm trong Chính sách bảo mật.
+- Chạy trên máy chủ riêng của chúng tôi tại Liên minh châu Âu (Phần Lan).
+- Mọi xử lý AI đều diễn ra trên hạ tầng riêng của chúng tôi — bài tập không được gửi cho dịch vụ AI bên thứ ba.
+- Bạn có thể yêu cầu xóa dữ liệu bất cứ lúc nào — phụ huynh có thể yêu cầu thay cho con.
+
+## Đang bí một bài ngay lúc này?
+
+Gửi bài cho bot — 2 lần phân tích đầu tiên miễn phí.
+
+[Mở trong Telegram](https://t.me/UchiSamBot?start=src_llms)
+
 ## Có câu hỏi hoặc góp ý?
 
 Hãy viết cho chúng tôi — tin nhắn của bạn sẽ đến với đội ngũ, và chúng tôi trả lời qua email của bạn. Không spam, không danh sách gửi thư.
@@ -122,9 +128,3 @@ Chúng tôi chỉ dùng email của bạn để trả lời tin nhắn này.
 - [Gửi tin nhắn](https://kerio-byte.github.io/uchisambot/vi/#contact)
 - [Chính sách bảo mật (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Điều khoản sử dụng (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
-
-## Đang bí một bài ngay lúc này?
-
-Gửi bài cho bot — 2 lần phân tích đầu tiên miễn phí.
-
-[Mở trong Telegram](https://t.me/UchiSamBot?start=src_llms)

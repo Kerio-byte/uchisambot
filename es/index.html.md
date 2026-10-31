@@ -60,13 +60,6 @@ Un desglose suelto — 30 Stars.
 
 Invita a un amigo — cuando reciba su primer desglose, te llevas otro desglose gratis. Hasta 20 desgloses extra en total.
 
-## Para padres
-
-- No hay que registrarse ni rellenar nada: el bot nunca pide nombre, teléfono ni correo. Sí guardamos algunas observaciones de la parte pública del perfil de Telegram; la lista está en la Política de privacidad.
-- Funciona en nuestro propio servidor en la Unión Europea (Finlandia).
-- Todo el procesamiento de IA se realiza en nuestra propia infraestructura — las tareas no se envían a servicios de IA de terceros.
-- Puedes pedirnos que borremos los datos en cualquier momento — los padres pueden solicitarlo en nombre de sus hijos.
-
 ## Preguntas frecuentes
 
 ### ¿Esto es hacer trampa?
@@ -113,6 +106,19 @@ A diferencia de un chatbot común, aquí hay un método de enseñanza: cada desg
 
 Las explicaciones las genera una IA, así que puede haber errores. El bot muestra cada paso para que compares el razonamiento con tu libro de texto o con tu profesor. Si una respuesta te parece incorrecta, envíanosla con el formulario: leemos todos los mensajes.
 
+## Para padres
+
+- No hay que registrarse ni rellenar nada: el bot nunca pide nombre, teléfono ni correo. Sí guardamos algunas observaciones de la parte pública del perfil de Telegram; la lista está en la Política de privacidad.
+- Funciona en nuestro propio servidor en la Unión Europea (Finlandia).
+- Todo el procesamiento de IA se realiza en nuestra propia infraestructura — las tareas no se envían a servicios de IA de terceros.
+- Puedes pedirnos que borremos los datos en cualquier momento — los padres pueden solicitarlo en nombre de sus hijos.
+
+## ¿Atascado con un ejercicio ahora mismo?
+
+Mándalo al bot — los primeros 2 desgloses son gratis.
+
+[Abrir en Telegram](https://t.me/UchiSamBot?start=src_llms)
+
 ## ¿Preguntas o comentarios?
 
 Escríbenos — tu mensaje llega a nuestro equipo y te respondemos a tu correo. Sin spam ni listas de correo.
@@ -122,9 +128,3 @@ Usamos tu correo solo para responder a este mensaje.
 - [Enviar mensaje](https://kerio-byte.github.io/uchisambot/es/#contact)
 - [Política de privacidad (EN/RU)](https://kerio-byte.github.io/uchisambot/privacy.html)
 - [Términos de servicio (EN/RU)](https://kerio-byte.github.io/uchisambot/terms.html)
-
-## ¿Atascado con un ejercicio ahora mismo?
-
-Mándalo al bot — los primeros 2 desgloses son gratis.
-
-[Abrir en Telegram](https://t.me/UchiSamBot?start=src_llms)
