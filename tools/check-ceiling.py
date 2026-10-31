@@ -38,9 +38,32 @@ ROOT = Path(__file__).resolve().parent.parent
 SWEEP = ROOT / "tools" / "check-all.py"
 EVIDENCE = ROOT / "evidence"
 CUT_CEILING = 8
-# Две батареи: build (0,6 с) успевает, site-technical (43 с) не успевает в 8 с
-# и обязан быть снят пределом, а не досидеть до своего таймаута.
-CUT_ONLY = "build,site-technical"
+# Потолок не зависит от того, какие приборы стоят в таблице, а нога cut раньше
+# зависела: она брала пару «build,site-technical» и рассчитывала, что
+# site-technical не успеет за 8 с (в комментарии стояло «43 с»). Прибор ускорился,
+# прогон стал укладываться в потолок — и нога покраснела при ИСПРАВНОМ
+# инструменте: она мерила скорость машины, а не обрыв. 31.10.2026, одиннадцатый
+# блок: обрыв теперь обеспечен построением, а не часами. В КОПИЮ таблицы первым
+# ставится заведомо медленный прибор — спит 30 с при потолке 8 с, — поэтому
+# «потолок кончился на этом приборе» наступает на любой машине и при любой
+# загрузке. Логика потолка в проверяемом коде при этом настоящая: копия несёт
+# только лишнюю строку таблицы.
+SLEEPER_ROW = ('    ("sleepprobe", ["-c", "import time; time.sleep(30)"], "offline", 240,\n'
+               '     "синтетический медленный прибор: держит потолок, страницу не читает"),\n')
+
+
+def with_sleeper(src):
+    """Копия инструмента, в таблице которой первым стоит медленный прибор."""
+    new, n = re.subn(r"^BATTERIES = \[\n", "BATTERIES = [\n" + SLEEPER_ROW,
+                     src, count=1, flags=re.M)
+    return new if n == 1 else src
+
+
+def sleeper_shadow(text):
+    """Положить копию рядом с настоящим tools/: ROOT считается от файла."""
+    path = ROOT / "tools" / "_mutant-ceiling-sleeper.py"
+    path.write_text(text, encoding="utf-8")
+    return path
 
 
 def run(sweep, args, env_extra=None):
@@ -72,7 +95,7 @@ def leg_default(sweep, checks):
 
 
 def leg_cut(sweep, checks, journal_before):
-    rc, out = run(sweep, ["--fast", "--only", CUT_ONLY, "--json"],
+    rc, out = run(sweep, ["--fast", "--only", "sleepprobe", "--json"],
                   {"LANDING_SWEEP_CEILING": str(CUT_CEILING)})
     new = sorted(set(p.name for p in EVIDENCE.glob("check-all-*.json")) - journal_before)
     named = re.search(r"СВИП НЕПОЛНЫЙ: (\d+) прибор", out)
@@ -125,19 +148,26 @@ def control(checks):
     shutil.rmtree(work, ignore_errors=True)
     work.mkdir(parents=True, exist_ok=True)
     src = SWEEP.read_text(encoding="utf-8")
+    # Нога cut проверяет потолок на копии со спящим прибором (см. SLEEPER_ROW),
+    # поэтому и мутант B строится из этой же копии: иначе он попросту не успел бы
+    # ничего сломать и «пережил проверку» соврал бы про исправный прибор.
+    sleepy = with_sleeper(src)
+
+    def drop_cap(text):
+        return text.replace("            if left < timeout:\n"
+                            "                eff_timeout, capped = max(1, int(left)), True",
+                            "            if False:\n"
+                            "                eff_timeout, capped = max(1, int(left)), True", 1)
 
     mutants = [
         ("A: DEFAULT_CEILING = 0 (потолка по умолчанию нет)", "default",
          re.sub(r"^DEFAULT_CEILING\s*=\s*\d+", "DEFAULT_CEILING = 0", src, count=1, flags=re.M)),
-        ("B: предел прибора по остатку вырезан", "cut",
-         src.replace("            if left < timeout:\n"
-                     "                eff_timeout, capped = max(1, int(left)), True",
-                     "            if False:\n"
-                     "                eff_timeout, capped = max(1, int(left)), True", 1)),
+        ("B: предел прибора по остатку вырезан", "cut", drop_cap(sleepy)),
     ]
     for title, expected_leg, text in mutants:
         checks += 1
-        if text == src:
+        origin = sleepy if expected_leg == "cut" else src
+        if text == origin or text is None:
             print(f"  FAIL мутация не наложилась: {title} — прибор не знает, "
                   f"что именно он ломает")
             return checks, False
@@ -173,7 +203,11 @@ def main():
         print(f"  {'ok  ' if ok else 'FAIL'} {fn.__name__[4:]:9} {why}")
 
     checks += 1
-    c, ok, why, jname, out = leg_cut(SWEEP, checks, journal_before)
+    cut_shadow = sleeper_shadow(with_sleeper(SWEEP.read_text(encoding="utf-8")))
+    try:
+        c, ok, why, jname, out = leg_cut(cut_shadow, checks, journal_before)
+    finally:
+        cut_shadow.unlink(missing_ok=True)
     failed += 0 if ok else 1
     print(f"  {'ok  ' if ok else 'FAIL'} cut       {why}")
 

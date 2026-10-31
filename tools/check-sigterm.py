@@ -12,7 +12,9 @@
   живая   — настоящий check-all.py, SIGTERM ПРЯМОМУ pid раннера, сразу как
             только у него появился ребёнок. Требует: код 2, журнал с
             complete=false, в cut назван сигнал и прибор, ребёнок мёртв;
-  мутант  — копия check-all.py без вызова kill_tree в обработчике. Требует,
+  мутант  — копия check-all.py без вызова kill_tree в обработчике И с DEVNULL
+            вместо труб у ребёнка (труба раннера рвётся вместе с раннером и
+            убивает ребёнка сама — см. комментарий у мутации). Требует,
             чтобы ребёнок ОСТАЛСЯ ЖИВ: иначе «сирот нет» — не проверка, а
             совпадение, и прибор зелёный у обеих версий кода.
 
@@ -33,8 +35,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 EVIDENCE = ROOT / "evidence"
-BATTERY = "links"          # 15 с сети: ребёнок успевает пожить под сигналом
+# 31.10.2026, одиннадцатый блок. Здесь стоял BATTERY = "links" («15 с сети:
+# ребёнок успевает пожить под сигналом»). Это была та же ошибка, что в контроле
+# потолка: проверка держалась на том, сколько живёт чужой прибор, а не на том,
+# что проверяется. Ребёнок `links` успевал завершиться сам за 4 с наблюдения —
+# и контроль честно отказывался засчитывать «сирот нет», потому что мёртвый
+# ребёнок ничего не доказывает. Теперь ребёнок — синтетический спящий прибор:
+# он не может умереть сам ни в одной руке, поэтому «жив» и «мёртв» означают
+# ровно то, что написано.
+BATTERY = "sleepprobe"
+SLEEPER_ROW = ('    ("sleepprobe", ["-c", "import time; time.sleep(30)"], "offline", 240,\n'
+               '     "синтетический медленный прибор: только для контроля сигнала"),\n')
 MUTANT_DIR = ROOT / ".sig-mutant"
+
+
+def sleeper_shadow(text: str, tag: str) -> Path:
+    """Копия инструмента с медленным прибором в таблице, рядом с tools/."""
+    patched, n = re.subn(r"^BATTERIES = \[\n", "BATTERIES = [\n" + SLEEPER_ROW,
+                         text, count=1, flags=re.M)
+    path = ROOT / "tools" / f"_sig-shadow-{tag}.py"
+    path.write_text(patched if n == 1 else text, encoding="utf-8")
+    return path
 
 
 def children_of(pid: int) -> list:
@@ -115,7 +136,12 @@ def main() -> int:
     problems = []
 
     # --- рука 1: живой раннер -------------------------------------------
-    a = arm("siglive", ROOT / "tools" / "check-all.py")
+    src = (ROOT / "tools" / "check-all.py").read_text()
+    live_shadow = sleeper_shadow(src, "live")
+    try:
+        a = arm("siglive", live_shadow)
+    finally:
+        live_shadow.unlink(missing_ok=True)
     checks += 5
     j = {}
     if a.get("journal"):
@@ -141,24 +167,42 @@ def main() -> int:
 
     # --- рука 2: мутант без kill_tree -----------------------------------
     MUTANT_DIR.mkdir(exist_ok=True)
-    src = (ROOT / "tools" / "check-all.py").read_text()
     mutant = MUTANT_DIR / "check-all-mutant.py"
     patched, n = re.subn(
         r'(cut\["battery"\] = INFLIGHT\["name"\]\n(?:\s*#[^\n]*\n)*)(\s*)'
         r'kill_tree\(INFLIGHT\.get\("proc"\)\)',
         r'\1\2pass  # мутант: ребёнка не гасим',
         src, count=1, flags=re.M)
+    # Вторая правка мутанта — не поведение, а снятие ПОСТОРОННЕЙ причины смерти.
+    # 31.10.2026, одиннадцатый блок: раннер держит stdout и stderr ребёнка
+    # трубами (run_battery: stdout=PIPE, stderr=PIPE). Раннер умирает — труба
+    # рвётся, и ребёнок умирает от BrokenPipe на первой же печати, хотя kill_tree
+    # никто не звал. Контроль это и поймал: «без kill_tree ребёнок тоже умер»,
+    # то есть «сирот нет» доказывало закрытую трубу, а не групповое убийство.
+    # Мутант отдаёт ребёнку DEVNULL — теперь единственное, что может его убить,
+    # это kill_tree, и живой сирота становится уликой.
+    patched, m = re.subn(
+        r"stdout=subprocess\.PIPE,\n\s*stderr=subprocess\.PIPE, text=True,",
+        "stdout=subprocess.DEVNULL,\n"
+        "                             stderr=subprocess.DEVNULL, text=True,",
+        patched, count=1)
 
-    if n != 1:
-        print(f"  FAIL мутация не наложилась (совпадений {n}) — прибор не знает, "
-              f"что ломать")
+    if n != 1 or m != 1:
+        print(f"  FAIL мутация не наложилась (kill_tree {n}, трубы {m}) — прибор "
+              f"не знает, что ломать")
         kill_group(a.get("kid") or 0)
         shutil.rmtree(MUTANT_DIR, ignore_errors=True)
         print(f"CHECKS: {checks + 1}, FAILED: {failed + 1}")
         return 1
     mutant.write_text(patched)
 
-    b = arm("sigmutant", mutant)
+    # Мутанту — тот же спящий ребёнок, что и живому раннеру: иначе руки
+    # сравнивают не обработчик сигнала, а два разных прибора.
+    mutant_shadow = sleeper_shadow(patched, "mutant")
+    try:
+        b = arm("sigmutant", mutant_shadow)
+    finally:
+        mutant_shadow.unlink(missing_ok=True)
     checks += 1
     if b.get("kid_alive") is True:
         print(f"  ok   контроль: без kill_tree ребёнок живёт (прибор умеет "
