@@ -123,6 +123,7 @@ BATTERIES = [
     ("og-cards",         ["tools/og-cards.py", "--check"],                      "offline",120, "карточки og: 1200x630 на девять языков"),
     ("bot-profile",      ["tools/apply-bot-profile.py", "--check"],             "offline",120, "профиль бота против bot-profile.json"),
     ("sigterm-control",  ["tools/check-sigterm.py"],                            "offline",300, "сам прибор: SIGTERM раннеру гасит ребёнка, мутант без kill_tree обязан оставить сироту"),
+    ("ceiling-control",  ["tools/check-ceiling.py", "--control"],               "offline",300, "сам прибор: потолок по умолчанию назван, потолок держится и снимается только по имени; два мутанта обязаны покраснеть"),
     ("weight",           ["tools/check-weight.py"],                             "offline",180, "вес первого экрана, ленивость, потолки"),
     ("weight-control",   ["tools/check-weight.py", "--control"],                 "offline",180, "сам прибор: обязан увидеть потолок 1 байт и чужой язык в медиа"),
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
@@ -190,7 +191,7 @@ def git_status():
     return out.stdout.strip()
 
 
-def run_battery(name, argv, tier, timeout, what, offline, eye):
+def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None):
     cmd = [sys.executable, "-u"] + argv
     if offline and name in OFFLINE_FLAG:
         cmd.append("--offline")
@@ -234,6 +235,13 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
         raw = e.stdout or e.stderr or ""
         if isinstance(raw, bytes):
             raw = raw.decode("utf-8", "replace")
+        if capped_need is not None:
+            # Прибор убит потолком прогона, а не своим таймаутом: это не поломка
+            # инструмента, а «не дошли». FAIL здесь обвинял бы исправный прибор.
+            return dict(name=name, tier=tier, status="SKIP", checks="-", secs=secs,
+                        why=(f"потолок прогона кончился на этом приборе: проработал "
+                             f"{secs} с из нужных {capped_need} с — не дочитан"),
+                        tail=tail_of(raw), cut="budget")
         return dict(name=name, tier=tier, status="FAIL", checks="-", secs=secs,
                     why=f"таймаут {timeout} с", tail=tail_of(raw))
     finally:
@@ -347,6 +355,9 @@ def build_reproducible():
 # нельзя: «ИТОГО ok 19» читается как «всё проверено» — поэтому они называются поимённо
 # с причиной. 31.10.2026: два из трёх прежних «вне дерева» переехали в батареи
 # (words, prices через tools/external.py); остался замер, который тратит генерации.
+DEFAULT_CEILING = 2400
+
+
 MANUAL = [
     ("landing-answer-time.py",
      "живой замер «сколько ждать разбор»: тратит настоящие генерации бота и занимает его "
@@ -361,13 +372,34 @@ def main():
     ap.add_argument("--only", default="", help="подстрока имени прибора")
     ap.add_argument("--strict", action="store_true", help="SKIP считать провалом")
     ap.add_argument("--json", action="store_true", help="положить журнал в evidence/")
-    ap.add_argument("--budget", type=int,
-                    default=int(os.environ.get("LANDING_SWEEP_BUDGET", "0") or 0),
+    ap.add_argument("--budget", type=int, default=None,
                     help="секунд на весь прогон: остаток называется поимённо, прогон "
                          "не притворяется полным (0 — без потолка; то же в "
-                         "LANDING_SWEEP_BUDGET)")
+                         "LANDING_SWEEP_BUDGET). Не задан — работает потолок по "
+                         f"умолчанию {DEFAULT_CEILING} с (LANDING_SWEEP_CEILING)")
+    ap.add_argument("--no-ceiling", action="store_true",
+                    help="снять потолок целиком: прогон живёт сколько нужно глазу. "
+                         "Только по имени — забывчивость не должна давать бесконечный прогон")
     ap.add_argument("--list", action="store_true", help="напечатать таблицу приборов и выйти")
     args = ap.parse_args()
+
+    # 31.10.2026, десятый блок. У прогона не было своей страховки: без --budget он жил
+    # сколько нужно глазу, и потолок держал только крон. Забыл крон — потолка нет вовсе.
+    # Теперь потолок есть по умолчанию и называется вслух, а снять его можно только
+    # по имени: бесконечность не должна получаться из забывчивости.
+    if args.budget is None:
+        envb = os.environ.get("LANDING_SWEEP_BUDGET", "").strip()
+        envc = os.environ.get("LANDING_SWEEP_CEILING", "").strip()
+        if envb:
+            args.budget, ceiling_src = int(envb), "задан в LANDING_SWEEP_BUDGET"
+        elif envc:
+            args.budget, ceiling_src = int(envc), "задан в LANDING_SWEEP_CEILING"
+        else:
+            args.budget, ceiling_src = DEFAULT_CEILING, "по умолчанию"
+    else:
+        ceiling_src = "задан ключом --budget"
+    if args.no_ceiling:
+        args.budget, ceiling_src = 0, "снят ключом --no-ceiling"
 
     if args.list:
         for n, a, t, to, w in BATTERIES:
@@ -378,6 +410,10 @@ def main():
     eye = find_eye() if not only_offline else None
     results = []
     t_start = time.time()
+    # Потолок называется вслух ДО первого прибора: прогон, который молча обрежет себя
+    # на 2400-й секунде, читается снаружи ровно как «свип сегодня не запускали».
+    print(f"потолок прогона: {args.budget} с ({ceiling_src})" if args.budget
+          else f"потолок прогона: нет ({ceiling_src})")
     cut: dict = {"why": None, "battery": None}
     journal = (EVIDENCE / f"check-all-{time.strftime('%Y%m%d-%H%M%S')}.json") if args.json else None
 
@@ -391,7 +427,8 @@ def main():
         journal.write_text(json.dumps(
             dict(when=time.strftime("%Y-%m-%dT%H:%M:%S"), offline=bool(only_offline),
                  complete=bool(complete), elapsed=round(time.time() - t_start, 1),
-                 cut=cut["why"], in_flight=cut["battery"], results=results),
+                 cut=cut["why"], in_flight=cut["battery"], budget=args.budget,
+                 ceiling_src=ceiling_src, results=results),
             ensure_ascii=False, indent=1), encoding="utf-8")
 
     def on_signal(signum, frame):
@@ -416,23 +453,35 @@ def main():
         if args.only:
             # 31.10.2026: --only links ловил и internal-links — прогон «одного
             # прибора» тихо включал чужой. Точное имя прибора старше подстроки.
-            if args.only in {b[0] for b in BATTERIES}:
-                if name != args.only:
+            # Через запятую — короткий набор: контроль потолка гоняет ровно две
+            # батареи, иначе вложенный прогон звал бы сам себя.
+            wanted = [w.strip() for w in args.only.split(",") if w.strip()]
+            if any(w in {b[0] for b in BATTERIES} for w in wanted):
+                if name not in wanted:
                     continue
-            elif args.only not in name:
+            elif not any(w in name for w in wanted):
                 continue
+        eff_timeout, capped = timeout, False
         if args.budget:
             left = args.budget - (time.time() - t_start)
-            if left < 30:
-                why = (f"бюджет прогона {args.budget} с исчерпан, осталось "
-                       f"{max(0, int(left))} с — прибор не запускался")
+            # Резерв обязан быть меньше самого потолка, иначе малый потолок не даёт
+            # запустить НИ ОДНОГО прибора и «неполный прогон» врёт о причине.
+            reserve = min(30, max(1, args.budget // 10))
+            if left < reserve:
+                why = (f"потолок прогона {args.budget} с ({ceiling_src}) исчерпан, "
+                       f"осталось {max(0, int(left))} с — прибор не запускался")
                 cut["why"] = why
                 cut["battery"] = name
                 results.append(dict(name=name, tier=tier, status="SKIP", checks="-",
-                                    secs=0.0, why=why, tail=[], what=what))
+                                    secs=0.0, why=why, tail=[], what=what, cut="budget"))
                 print(f"  SKIP {name:18} {'-':>10}  {0.0:6.1f} с  {why}")
                 write_journal(complete=False)
                 continue
+            # Потолок обязан быть потолком. Раньше остаток проверялся только ДО прибора,
+            # и один длинный прибор (глаз — 395 с) перепрыгивал объявленный потолок
+            # в разы: «2400 с» было обещанием, которого никто не держал.
+            if left < timeout:
+                eff_timeout, capped = max(1, int(left)), True
         if only_offline and tier not in ("build", "offline"):
             why = {"visual": "режим без браузера",
                    "live": "режим без сети",
@@ -453,7 +502,10 @@ def main():
         if tier == "build":
             r = build_reproducible()
         else:
-            r = run_battery(name, argv, tier, timeout, what, args.offline, eye)
+            r = run_battery(name, argv, tier, eff_timeout, what, args.offline, eye,
+                            capped_need=timeout if capped else None)
+        if r.get("cut") == "budget":
+            cut["why"], cut["battery"] = r["why"], r["name"]
         r["what"] = what
         results.append(r)
         line = f"  {r['status']:4} {r['name']:18} {r['checks']:>10}  {r['secs']:6.1f} с  {r['why']}"
@@ -467,6 +519,12 @@ def main():
     print()
     print(f"ИТОГО: приборов {len(results)}, ok {len(results)-len(bad)-len(skipped)}, "
           f"fail {len(bad)}, skip {len(skipped)}")
+    def _short(names, cap=8):
+        """Стена имён прячет сами имена: восемь и «ещё столько-то» читается, а
+        тридцать четыре через запятую — нет."""
+        head = ", ".join(names[:cap])
+        return head + (f" и ещё {len(names) - cap}" if len(names) > cap else "")
+
     if skipped:
         # Причина у бюджетных пропусков одна на тридцать приборов — печатать её
         # тридцать раз значит спрятать имена в стене текста. Группируем.
@@ -474,12 +532,15 @@ def main():
         for r in skipped:
             by_why.setdefault(r["why"], []).append(r["name"])
         print("не проверяли: " + "; ".join(
-            f"{', '.join(names)} ({why})" for why, names in by_why.items()))
-    cut_off = [r for r in skipped if r["why"] and "бюджет прогона" in r["why"]]
+            f"{_short(names)} ({why})" for why, names in by_why.items()))
+    cut_off = [r for r in skipped
+               if r.get("cut") == "budget"
+               or (r.get("why") and "потолок прогона" in r["why"])]
     if cut_off:
-        print(f"СВИП НЕПОЛНЫЙ: {len(cut_off)} приборов не запускались — бюджет "
-              f"{args.budget} с кончился на {round(time.time() - t_start, 1)} с: "
-              + ", ".join(r["name"] for r in cut_off))
+        print(f"СВИП НЕПОЛНЫЙ: {len(cut_off)} приборов не проверены — потолок "
+              f"{args.budget} с ({ceiling_src}) кончился на "
+              f"{round(time.time() - t_start, 1)} с: "
+              + _short([r["name"] for r in cut_off], 12))
     if bad:
         print("упало: " + ", ".join(r["name"] for r in bad))
     print(f"вне свипа по устройству ({len(MANUAL)}): "
