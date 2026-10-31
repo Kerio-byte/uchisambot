@@ -65,7 +65,8 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 # Приборы-КОНТРОЛИ: они нарочно портят вход и обязаны ПОКРАСНЕТЬ. Их красный —
 # это их зелёный. Первый полный прогон 30.10 покрасил visual-control, поймавший
 # 18 из 18, — раннер считал цвет контроля как цвет страницы.
-CONTROL = {"redirects-control", "visual-control", "links-control"}
+CONTROL = {"redirects-control", "visual-control", "links-control",
+           "weight-control", "narrow-control"}
 
 # Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
 # Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
@@ -83,6 +84,7 @@ BATTERIES = [
     ("og-cards",         ["tools/og-cards.py", "--check"],                      "offline",120, "карточки og: 1200x630 на девять языков"),
     ("bot-profile",      ["tools/apply-bot-profile.py", "--check"],             "offline",120, "профиль бота против bot-profile.json"),
     ("weight",           ["tools/check-weight.py"],                             "offline",180, "вес первого экрана, ленивость, потолки"),
+    ("weight-control",   ["tools/check-weight.py", "--control"],                 "offline",180, "сам прибор: обязан увидеть потолок 1 байт и чужой язык в медиа"),
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
     ("links",            ["tools/check-links.py"],                              "live",   420, "116 внешних адресов"),
     ("links-control",    ["tools/check-links.py", "--control"],                 "offline",120, "сам прибор: обязан разложить семь известных ответов по классам"),
@@ -93,6 +95,7 @@ BATTERIES = [
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
+    ("narrow-control",   ["tools/probe-narrow.py", "--control"],                 "visual", 600, "сам прибор: обязан поймать блок 600 px в окне 320"),
     ("eye-pages",        ["landing-eye.py"],                                    "eye",    900, "глаз читает блоки всех девяти языков по кадрам visual-420"),
     ("eye-anchors",      ["tools/probe-anchors.py"],                            "eye",    300, "опоры блоков под глаз"),
     ("eye-legal-tail",   ["tools/legal-tail-read.py", "--root", "."],           "eye",    300, "нижняя часть privacy/terms глазами"),
@@ -187,20 +190,29 @@ def run_battery(name, argv, tier, timeout, what, offline, eye):
         if c:
             checks = f"поймал {c.group(1)}/{c.group(2)}"
         else:
-            n = len(re.findall(r"поймал:", out))
-            checks = f"поймал {n}"
-        # У обоих контролей вердикт в ТЕКСТЕ, а код возврата 0 и на успехе, и на
+            n = len(re.findall(r"(?:ПОЙМАЛ|поймал)", out)) - len(re.findall(r"(?:НЕ ПОЙМАЛ|не поймал)", out))
+            checks = f"поймал {max(n, 0)}"
+        # У контролей вердикт в ТЕКСТЕ, а код возврата бывает 0 и на успехе, и на
         # провале: `check-redirects.py --control` печатает «прибор падает там, где
         # должен», `visual-pass.py --control` — «поймал N из N». Судить по коду
         # здесь нельзя (первый прогон 30.10 покрасил оба исправных контроля, второй
         # — позеленел бы на слепом). Поэтому читается вердикт, а код ловит только падение.
+        #
+        # 31.10: у `check-weight.py --control` и `probe-narrow.py --control` третий
+        # формат — «КОНТРОЛЬ: вес — поймал; чужой язык — поймал» и «КОНТРОЛЬ: ПОЙМАЛ»
+        # / «ПРОСМОТРЕЛ», то есть без числа пойманных. Без этой ветки оба исправных
+        # контроля читались бы как «не доказал прибор» и красили прогон.
         caught = CAUGHT_RE.search(out)
         verdict_ok = False
         if caught:
             verdict_ok = int(caught.group(1)) == int(caught.group(2)) and int(caught.group(2)) > 0
+        elif re.search(r"ПОЙМАЛ|поймал", out):
+            # Беcчисловой вердикт (weight, narrow) — но только когда «поймал N из M»
+            # не печаталось: иначе «поймал 5 из 7» перебивалось бы этим словом.
+            verdict_ok = True
         if "прибор падает там, где должен" in out:
             verdict_ok = True
-        if "НЕ ПОЙМАЛ" in out or "не поймал" in out:
+        if re.search(r"НЕ ПОЙМАЛ|не поймал|ПРОСМОТРЕЛ|просмотрел", out):
             verdict_ok = False
         if rc != 0 or not verdict_ok:
             return dict(name=name, tier=tier, status="FAIL", checks=checks, secs=secs,
