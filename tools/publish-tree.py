@@ -11,6 +11,9 @@
 Этот скрипт — единственный список того, что считается сайтом. Он умеет:
   --check          проверить список: всё на месте, ни одного файла мастерской,
                    и КАЖДАЯ внутренняя ссылка со страниц ведёт на файл из списка;
+  --control        доказать, что умеет краснеть: пять заведомо кривых деревьев,
+                   каждое обязано покраснеть СВОИМ сообщением (31.10.2026);
+  --root DIR       проверить другое дерево (этим пользуется --control);
   --stage DIR      разложить список в DIR (для ветки публикации);
   --list           напечатать список.
 
@@ -32,18 +35,37 @@ PeerPush/LaunchIgniter, на сайте нет ни одной ссылки) и 
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import json
 import posixpath
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
+from collections.abc import Callable
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = json.loads((ROOT / "tools" / "site.json").read_text(encoding="utf-8"))["base"]
 LANGS = ["ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
+
+
+def set_root(p: Path) -> None:
+    """Переключить корень проверки (нужен контролю: он гоняет прибор по мутанту).
+
+    До 31.10.2026 корень был вморожен в константу на импорте, и единственный
+    способ проверить прибор на заведомо кривом дереве — скопировать сам скрипт
+    внутрь мутанта. Такой контроль проверял бы копию, а не тот файл, что лежит
+    в репозитории.
+    """
+    global ROOT, BASE
+    ROOT = Path(p).resolve()
+    site = ROOT / "tools" / "site.json"
+    if site.is_file():
+        BASE = json.loads(site.read_text(encoding="utf-8"))["base"]
+
 
 # Ровно то, что нужно странице. Ничего из tools/, src/, demo/*.py|sh|json, README.md.
 PUBLIC_FILES = [
@@ -60,7 +82,18 @@ PUBLIC_DEMO = ["*.mp4"]                      # видео (полные демо
 BACKSTAGE = [
     "README.md", "index-src.html", "tools/", "src/", "demo/*.py", "demo/*.sh",
     "demo/*.json", "evidence/", ".gitignore", "submission-kit/",
+    # 31.10.2026: `docs/council-20261015.md` — разбор решений совета, файл лежит в
+    # отслеживаемых и при публикации КОРНЯ уезжал бы по адресу /docs/. Живьём его
+    # нет (сайт собирается с ветки публикации), но модель «Pages отдаёт всё, что в
+    # git» обязана называть каждый такой файл, иначе следующий переезд на корень
+    # увезёт его молча. Решение: docs/ объявлен мастерской поимённо, а не забыт.
+    "docs/",
 ]
+
+# Служебные каталоги, которые не отдаёт даже Pages: их существование не считается
+# публикацией, и в контроль полноты они не входят.
+LOCAL_ONLY = (".git", "__pycache__", ".shots-work")
+
 
 # Публикуется, но ни одной страницей не называется — и это правильно. Каждая
 # строка здесь отвечает на вопрос «кто просит этот файл, если не страница».
@@ -73,7 +106,15 @@ PUBLIC_UNLINKED = {
 
 
 def manifest() -> list[str]:
-    out = [f for f in PUBLIC_FILES if (ROOT / f).exists()]
+    """Список того, что обязано быть сайтом — независимо от того, что сейчас на диске.
+
+    До 31.10.2026 корневые файлы попадали в список только если существовали
+    (`if (ROOT / f).exists()`), поэтому проверка «всё из списка существует» не
+    могла покраснеть: пропавший llms.txt или robots.txt просто выпадал из списка,
+    и дерево оставалось зелёным. Список — это намерение, а не наблюдение; наличие
+    проверяет `check()`, раскладку — `stage()` (и она теперь назовёт пропажу).
+    """
+    out = list(PUBLIC_FILES)
     for d in PUBLIC_DIRS:
         out += [str(p.relative_to(ROOT)) for p in sorted((ROOT / d).rglob("*")) if p.is_file()]
     for lang in LANGS:
@@ -117,6 +158,17 @@ def served_files() -> list[str]:
     return sorted(files)
 
 
+def is_backstage(rel: str) -> bool:
+    """Файл объявлен мастерской: имя целиком, каталог с «/» или шаблон с «*»."""
+    for pat in BACKSTAGE:
+        if pat.endswith("/"):
+            if rel.startswith(pat):
+                return True
+        elif fnmatch.fnmatchcase(rel, pat) or rel == pat:
+            return True
+    return False
+
+
 def backstage_files() -> list[str]:
     pub = set(manifest())
     return [f for f in served_files() if f not in pub]
@@ -157,7 +209,7 @@ def references(files: list[str]) -> list[tuple[str, str, str]]:
     out = []
     for rel in files:
         p = ROOT / rel
-        if p.suffix not in (".html", ".md", ".txt", ".xml"):
+        if p.suffix not in (".html", ".md", ".txt", ".xml") or not p.is_file():
             continue
         text = p.read_text(encoding="utf-8", errors="replace")
         found = []
@@ -184,10 +236,11 @@ def unlinked(files: list[str]) -> list[tuple[str, int]]:
     кому-то нужен. Исключения — PUBLIC_UNLINKED.
     """
     texts = {f: (ROOT / f).read_text(encoding="utf-8", errors="replace")
-             for f in files if Path(f).suffix in (".html", ".md", ".txt", ".xml")}
+             for f in files
+             if Path(f).suffix in (".html", ".md", ".txt", ".xml") and (ROOT / f).is_file()}
     out = []
     for f in files:
-        if f in texts or f in PUBLIC_UNLINKED:
+        if f in texts or f in PUBLIC_UNLINKED or not (ROOT / f).is_file():
             continue
         name = Path(f).name
         if not any(name in body for body in texts.values()):
@@ -200,21 +253,38 @@ def check() -> int:
     pub = manifest()
     back = backstage_files()
     problems = []
+    checks = 0
 
     # 1) всё из списка существует
     for f in pub:
+        checks += 1
         if not (ROOT / f).is_file():
             problems.append(f"нет файла из списка: {f}")
 
-    # 2) мастерская не попала в список
+    # 2) граница сайта и мастерской — в ОБЕ стороны.
+    #
+    # До 31.10.2026 здесь стояла проверка, которая не могла покраснеть ни на одном
+    # дереве: `backstage_files()` по определению возвращает `served - pub`, а цикл
+    # проверял `if f in pub` внутри этого списка. Условие ложно всегда, то есть
+    # «мастерская не попала в список» было зелёным даже если в `pub` лежал весь
+    # `tools/`. Теперь один и тот же предикат спрашивают с двух сторон: файл,
+    # который хост отдаёт, обязан быть либо сайтом, либо объявленной мастерской;
+    # файл, объявленный сайтом, не имеет права быть мастерской.
     for f in back:
-        if f in pub:
-            problems.append(f"мастерская в списке публикации: {f}")
+        checks += 1
+        if not is_backstage(f):
+            problems.append(f"файл отдаётся, но не объявлен ни сайтом, ни мастерской: {f}")
+    for f in pub:
+        checks += 1
+        if is_backstage(f):
+            problems.append(f"мастерская объявлена сайтом: {f}")
 
     # 3) каждая внутренняя ссылка ведёт на файл из списка
     pubset = set(pub)
     dangling = []
-    for src, url, tgt in references(pub):
+    refs = references(pub)
+    for src, url, tgt in refs:
+        checks += 1
         cand = tgt
         if cand.endswith("/") or cand == "":
             cand = cand + "index.html"
@@ -223,15 +293,18 @@ def check() -> int:
     problems += [f"ссылка на файл вне публикации: {d}" for d in dangling[:20]]
 
     # 4) обратный счёт: страница не смотрит в мастерскую
-    for src, url, tgt in references(pub):
-        for b in ("tools/", "src/", "demo/captions", "index-src.html", "README.md", "evidence/"):
+    for src, url, tgt in refs:
+        checks += 1
+        for b in ("tools/", "src/", "demo/captions", "index-src.html", "README.md", "evidence/", "docs/"):
             if tgt.startswith(b):
                 problems.append(f"страница ссылается на мастерскую: {src}: {url}")
 
     # 5) у каждого опубликованного файла есть читатель (24.10.2026)
     lost = unlinked(pub)
     for f, size in lost:
+        checks += 1
         problems.append(f"файл публикуется, но сайт его не называет: {f} ({size // 1024} КБ)")
+    checks += len(pub) - len(lost)
 
     unlinked_by_decision = len(set(PUBLIC_UNLINKED) & set(pub))
     size = sum((ROOT / f).stat().st_size for f in pub if (ROOT / f).is_file())
@@ -241,7 +314,8 @@ def check() -> int:
     print(f"мастерская (в публикацию не идёт): {len(back)} файлов")
     for b in back:
         print(f"   - {b}")
-    print(f"внутренних ссылок проверено: {len(references(pub))}")
+    print(f"внутренних ссылок проверено: {len(refs)}")
+    print(f"CHECKS: {checks}, FAILED: {len(problems)}")
     if problems:
         print("ПРОВАЛ:")
         for p in problems:
@@ -253,11 +327,22 @@ def check() -> int:
 
 def stage(dest: Path) -> int:
     dest.mkdir(parents=True, exist_ok=True)
+    missing = []
+    staged = 0
     for f in manifest():
+        src = ROOT / f
+        if not src.is_file():
+            missing.append(f)
+            continue
         target = dest / f
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(ROOT / f, target)
-    print(f"разложено: {len(manifest())} файлов -> {dest}")
+        shutil.copy2(src, target)
+        staged += 1
+    print(f"разложено: {staged} файлов -> {dest}")
+    if missing:
+        # Список — намерение: молча разложить меньше, чем обещано, нельзя.
+        print(f"НЕ РАЗЛОЖЕНО ({len(missing)}): " + ", ".join(missing[:10]))
+        return 1
     return 0
 
 
@@ -322,17 +407,129 @@ def verify_served(dest: Path) -> int:
     return 0
 
 
+def _synthetic(root: Path) -> None:
+    """Чистое мини-дерево с тем же набором файлов, что у сайта, но заглушками."""
+    root.mkdir(parents=True, exist_ok=True)
+    names = [f for f in PUBLIC_FILES if f.endswith((".html", ".md", ".txt", ".xml"))]
+    body = "".join(f"<p>{f}</p>" for f in names) + "<!-- .nojekyll -->"
+    (root / "index.html").write_text(
+        '<html><body><img src="img/pic.png"><a href="fonts/f.ttf">f</a>'
+        '<a href="privacy.html">p</a><a href="terms.html">t</a>'
+        f"{body}</body></html>", encoding="utf-8")
+    for f in names:
+        if f != "index.html":
+            (root / f).write_text(f"# {f}\n", encoding="utf-8")
+    (root / ".nojekyll").write_text("", encoding="utf-8")
+    (root / "sitemap.xml").write_text("<urlset></urlset>", encoding="utf-8")
+    (root / "img").mkdir(exist_ok=True)
+    (root / "img" / "pic.png").write_bytes(b"png")
+    (root / "fonts").mkdir(exist_ok=True)
+    (root / "fonts" / "f.ttf").write_bytes(b"ttf")
+    for lang in LANGS:
+        d = root / lang
+        d.mkdir(exist_ok=True)
+        (d / "index.html").write_text(
+            '<html><body><img src="../img/pic.png"><a href="../index.html">h</a></body></html>',
+            encoding="utf-8")
+        (d / "index.html.md").write_text("# x\n\n[home](../index.html)\n", encoding="utf-8")
+
+
+# мутант: (имя, что ломаем, чем прибор обязан покраснеть)
+def _mutants() -> list[tuple[str, str, Callable[[Path], None]]]:
+    def missing(d: Path) -> None:
+        (d / "llms.txt").unlink()
+
+    def undeclared(d: Path) -> None:
+        (d / "stray-notes.txt").write_text("заметки\n", encoding="utf-8")
+
+    def orphan(d: Path) -> None:
+        (d / "img" / "orphan.png").write_bytes(b"png")
+
+    def dangling(d: Path) -> None:
+        p = d / "index.html"
+        p.write_text(p.read_text(encoding="utf-8") + '<a href="gone.html">g</a>', encoding="utf-8")
+
+    def workshop(d: Path) -> None:
+        (d / "tools").mkdir(exist_ok=True)
+        (d / "tools" / "secret.py").write_text("x = 1\n", encoding="utf-8")
+        p = d / "index.html"
+        p.write_text(p.read_text(encoding="utf-8") + '<a href="tools/secret.py">s</a>',
+                     encoding="utf-8")
+
+    return [
+        ("файл из списка пропал", "нет файла из списка", missing),
+        ("отдаётся файл, которого нет ни в сайте, ни в мастерской",
+         "не объявлен ни сайтом, ни мастерской", undeclared),
+        ("в публикации лежит картинка, которую никто не называет",
+         "сайт его не называет", orphan),
+        ("страница ссылается на несуществующий файл",
+         "ссылка на файл вне публикации", dangling),
+        ("страница ссылается в мастерскую", "ссылается на мастерскую", workshop),
+    ]
+
+
+def control() -> int:
+    """Пять мутантов: прибор обязан покраснеть на каждом и по СВОЕЙ причине.
+
+    Зачем (31.10.2026). Пять проверок этого файла ни разу не были увидены
+    красными: дерево в репозитории чистое, значит «зелено» могло значить и
+    «проверено», и «проверка мертва». Вторая проверка была ровно такой —
+    тавтологией по построению. Контроль подаёт прибору заведомо кривые деревья и
+    требует не просто ненулевой код, а ту строку, которую ждёт именно этот дефект:
+    код возврата 1 от чужой причины тоже считается «не поймал».
+    """
+    base = Path(tempfile.mkdtemp(prefix="publish-tree-base-"))
+    caught = 0
+    mutants = _mutants()
+    try:
+        _synthetic(base)
+        rc = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--root", str(base)],
+                            capture_output=True, text=True, timeout=120)
+        clean = rc.returncode == 0
+        print(f"  чистое дерево: {'зелёное' if clean else 'КРАСНОЕ (прибор шумит)'} — "
+              f"{'ok' if clean else rc.stdout[-400:]}")
+        if not clean:
+            return 1
+        for i, (title, marker, mutate) in enumerate(mutants, 1):
+            d = base.parent / f"publish-tree-mutant-{i}"
+            shutil.copytree(base, d)
+            mutate(d)
+            r = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--root", str(d)],
+                               capture_output=True, text=True, timeout=120)
+            ok = r.returncode == 1 and marker in r.stdout
+            caught += 1 if ok else 0
+            why = "поймал" if ok else (
+                "ПРОСМОТРЕЛ" if r.returncode == 0 else "покраснел по чужой причине")
+            print(f"  {i}. {title}: {why}")
+            shutil.rmtree(d, ignore_errors=True)
+    finally:
+        shutil.rmtree(base, ignore_errors=True)
+    total = len(mutants)
+    print(f"КОНТРОЛЬ: поймал {caught} из {total}")
+    if caught != total:
+        print("ПРОВАЛ: прибор не доказал, что умеет краснеть")
+        return 1
+    print("ПРИБОР ДОКАЗАН: каждое из пяти нарушений ловится своим сообщением")
+    return 0
+
+
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--check", action="store_true")
+    ap = argparse.ArgumentParser(description="список публикации: что именно уезжает в свет")
+    ap.add_argument("--check", action="store_true", help="проверить дерево (по умолчанию)")
+    ap.add_argument("--control", action="store_true", help="доказать, что прибор умеет краснеть")
+    ap.add_argument("--root", metavar="DIR", help="корень другого дерева (для контроля)")
     ap.add_argument("--stage", metavar="DIR")
     ap.add_argument("--verify-served", metavar="DIR")
     ap.add_argument("--list", action="store_true")
     a = ap.parse_args()
+    if a.root:
+        set_root(Path(a.root))
     if a.list:
         for f in manifest():
             print(f)
         return 0
+    if a.control:
+        return control()
     if a.stage:
         return stage(Path(a.stage))
     if a.verify_served:

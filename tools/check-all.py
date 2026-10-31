@@ -66,7 +66,8 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 # это их зелёный. Первый полный прогон 30.10 покрасил visual-control, поймавший
 # 18 из 18, — раннер считал цвет контроля как цвет страницы.
 CONTROL = {"redirects-control", "visual-control", "links-control",
-           "weight-control", "narrow-control", "internal-control"}
+           "weight-control", "narrow-control", "internal-control",
+           "publish-tree-control"}
 
 # Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
 # Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
@@ -79,6 +80,8 @@ BATTERIES = [
     ("site-technical",   ["tools/check-site-technical.py"],                     "offline",180, "шапки девяти языков, числа в словарях"),
     ("internal-links",   ["tools/check-internal.py"],                           "offline",180, "внутренние ссылки, якоря и своё имущество (src/poster) на 12 страницах"),
     ("internal-control", ["tools/check-internal.py", "--control"],               "offline",120, "сам прибор: обязан поймать битый файл, якорь, src и пропавшую страницу"),
+    ("publish-tree",     ["tools/publish-tree.py", "--check"],                  "offline",180, "список публикации: полнота, границы мастерской, ссылки, читатели"),
+    ("publish-tree-control", ["tools/publish-tree.py", "--control"],            "offline",240, "сам прибор: пять мутантов обязаны покраснеть, каждый своим сообщением"),
     ("locale-keys",      ["tools/locale-key-parity.py"],                        "offline",180, "ключи словарей: нет мёртвых и разъехавшихся"),
     ("placeholders",     ["tools/placeholder-parity.py"],                       "offline",180, "плейсхолдеры и незакрытые фигурные скобки"),
     ("deva-subset",      ["tools/subset-deva.py", "--check"],                   "offline",120, "Deva-подмножество шрифта против реестра"),
