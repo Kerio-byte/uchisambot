@@ -172,6 +172,47 @@ def prices_control():
     return 0
 
 
+def lang_leftovers():
+    """Непереведённый английский на восьми языковых страницах.
+
+    31.10.2026: прибор жил рядом со скиллом и его не звал ни один прогон. Девять
+    языков — обещание страницы, а держал его прибор, которого свип не знал.
+    """
+    tool = need("landing-en-leftovers.py")
+    rc, out = run([tool, "--root", "."], timeout=300)
+    checks, failed = verdict(out)
+    if checks is None:
+        print("НЕ РАЗОБРАЛ вывод прибора непереведённого — считать непроверенным")
+        print("\n".join(out.splitlines()[-6:]))
+        return 2
+    print(f"CHECKS: {checks}, FAILED: {failed}")
+    if failed:
+        print("\n".join([ln for ln in out.splitlines() if ln.strip()][-8:]))
+        return 1
+    return 0
+
+
+def lang_leftovers_control():
+    """Мутант — фраза-пустышка на каждом из восьми языков (EN не в счёте).
+
+    Требуется не «код 0», а итоговая строка контроля и восемь поймавших языков:
+    прибор, поймавший фразу на одном языке, девяти языков не держит.
+    """
+    tool = need("landing-en-leftovers.py")
+    rc, out = run([tool, "--root", ".", "--mutate", "all"], timeout=600)
+    caught = [ln for ln in out.splitlines()
+              if re.match(r"\s*(ru|es|pt|hi|id|tr|vi|uk)\s*:", ln)]
+    marker = "фраза поймана на каждом из восьми" in out
+    if rc != 0 or not marker or len(caught) < 8:
+        print(f"НЕ ПОЙМАЛ: код {rc}, языков {len(caught)} из 8, "
+              f"итоговой строки контроля {'есть' if marker else 'нет'}")
+        print("\n".join(out.splitlines()[-6:]))
+        return 2
+    print(f"мутант: поймано языков {len(caught)} из 8, EN не в счёте")
+    print("поймал 1 из 1")
+    return 0
+
+
 def _stamp():
     import time
     return time.strftime("%Y%m%d-%H%M%S")
@@ -186,6 +227,11 @@ def main():
     g.add_argument("--prices", action="store_true", help="цены страницы против кода бота")
     g.add_argument("--prices-control", dest="prices_control", action="store_true",
                    help="контроль: три мутанта цен обязаны покраснеть")
+    g.add_argument("--lang-leftovers", dest="lang_leftovers", action="store_true",
+                   help="непереведённый английский на восьми языковых страницах")
+    g.add_argument("--lang-leftovers-control", dest="lang_leftovers_control",
+                   action="store_true",
+                   help="контроль: фраза-пустышка обязана быть поймана на каждом из восьми языков")
     a = ap.parse_args()
     if a.words:
         return words()
@@ -195,6 +241,10 @@ def main():
         return prices()
     if a.prices_control:
         return prices_control()
+    if a.lang_leftovers:
+        return lang_leftovers()
+    if a.lang_leftovers_control:
+        return lang_leftovers_control()
     return 3
 
 

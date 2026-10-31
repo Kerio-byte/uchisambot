@@ -78,6 +78,8 @@ EXTERNAL_REQUIRES = {
     "words-control": "landing-sweep.py",
     "prices": "landing-price-parity.py",
     "prices-control": "landing-price-parity.py",
+    "lang-leftovers": "landing-en-leftovers.py",
+    "lang-leftovers-control": "landing-en-leftovers.py",
 }
 
 # Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
@@ -150,6 +152,8 @@ BATTERIES = [
     ("words-control",    ["tools/external.py", "--words-control"],             "external",900, "сам прибор: сломанная страница обязана покраснеть своим [ru]"),
     ("prices",           ["tools/external.py", "--prices"],                    "external",300, "цены страницы против prices.json и кода бота"),
     ("prices-control",   ["tools/external.py", "--prices-control"],            "external",600, "сам прибор: три мутанта цен обязаны покраснеть"),
+    ("lang-leftovers",   ["tools/external.py", "--lang-leftovers"],            "external",300, "непереведённый английский на восьми языковых страницах (прибор вне дерева)"),
+    ("lang-leftovers-control", ["tools/external.py", "--lang-leftovers-control"], "external",900, "сам прибор: фраза-пустышка обязана быть поймана на каждом из восьми языков"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
@@ -194,6 +198,24 @@ def find_external(script):
             for p in base.glob(pat):
                 return p
     return None
+
+
+def external_inventory():
+    """Что реально лежит рядом со скиллом и что из этого зовёт прогон.
+
+    31.10.2026. Строка «остальные приборы обещаний и цен зовутся этим же прогоном»
+    была неправдой по объёму: рядом лежало около девяти десятков приборов, и почти
+    все не звал никто. Список берётся у каталога, а не из головы: список в голове
+    разъезжается молча, каталог — нет.
+    """
+    script = (find_external("landing-sweep.py")
+              or find_external("landing-price-parity.py"))
+    if script is None:
+        return None, [], [], []
+    d = script.parent
+    have = {p.name for p in d.glob("landing-*.py")}
+    wired = {n for n in EXTERNAL_REQUIRES.values() if n in have}
+    return d, sorted(have), sorted(have - wired), sorted(wired)
 
 
 def git_status():
@@ -556,8 +578,15 @@ def main():
         print("упало: " + ", ".join(r["name"] for r in bad))
     print(f"вне свипа по устройству ({len(MANUAL)}): "
           + "; ".join(f"{n} — {why}" for n, why in MANUAL))
-    print("  остальные приборы обещаний и цен зовутся этим же прогоном (words, prices "
-          "и их контроли); зелёный ИТОГО выше — про них тоже")
+    inv_dir, inv_have, inv_unrun, inv_wired = external_inventory()
+    if inv_dir is None:
+        print("каталог приборов вне дерева не найден — про них ничего не утверждаю")
+    else:
+        print(f"приборов вне дерева в каталоге {len(inv_have)}, зовёт этот прогон "
+              f"{len(inv_wired)}, не зовёт {len(inv_unrun)}: "
+              + (_short(inv_unrun, 6) if inv_unrun else "нет"))
+        print("  зелёный ИТОГО выше — про таблицу и про названные зовущимися; "
+              "непозванные приборы страницу НЕ проверяли")
 
     write_journal(complete=not cut["why"])
     if journal:
