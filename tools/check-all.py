@@ -67,7 +67,17 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 # 18 из 18, — раннер считал цвет контроля как цвет страницы.
 CONTROL = {"redirects-control", "visual-control", "links-control",
            "weight-control", "narrow-control", "internal-control",
-           "publish-tree-control"}
+           "publish-tree-control", "prices-control", "words-control"}
+
+# Приборы, которые живут ВНЕ дерева (рядом со скиллом) и зовутся через tools/external.py.
+# До 31.10.2026 они существовали только строкой «вне дерева, НЕ запускались (3)»: цены,
+# слова страницы и «сколько ждать разбор» держали приборы, которых не звал ни один прогон.
+EXTERNAL_REQUIRES = {
+    "words": "landing-sweep.py",
+    "words-control": "landing-sweep.py",
+    "prices": "landing-price-parity.py",
+    "prices-control": "landing-price-parity.py",
+}
 
 # Глаз читает блоки страницы по кадрам; кадры режет visual-420 (флаг --frames).
 # Список блоков держится здесь и обязан совпадать с tools/visual-pass.py:SECTIONS.
@@ -96,6 +106,10 @@ BATTERIES = [
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
     ("redirects-control",["tools/check-redirects.py", "--control"],             "live",   240, "сам прибор: обязан краснеть на пяти кривых ответах"),
     ("claim-basis",      ["tools/claim-basis.py"],                              "live",   240, "адрес LLM, веса, служба, Linger, девять языков"),
+    ("words",            ["tools/external.py", "--words"],                     "external",900, "слова девяти страниц против claims.json (прибор вне дерева)"),
+    ("words-control",    ["tools/external.py", "--words-control"],             "external",900, "сам прибор: сломанная страница обязана покраснеть своим [ru]"),
+    ("prices",           ["tools/external.py", "--prices"],                    "external",300, "цены страницы против prices.json и кода бота"),
+    ("prices-control",   ["tools/external.py", "--prices-control"],            "external",600, "сам прибор: три мутанта цен обязаны покраснеть"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
@@ -119,6 +133,21 @@ def find_eye():
     # в тексте и валит коммит — так и поймала первую версию этой строки 30.10).
     for pat in ("*/*/*/*/scripts/landing-eye.py", "*/*/*/scripts/landing-eye.py",
                 "*/*/scripts/landing-eye.py"):
+        for base in (Path.home(), Path.home() / "Projects"):
+            if not base.is_dir():
+                continue
+            for p in base.glob(pat):
+                return p
+    return None
+
+
+def find_external(script):
+    """Тот же шаблонный поиск, что у глаза: публичное дерево не называет наших путей."""
+    env = os.environ.get("LANDING_TOOLS", "").strip()
+    if env and (Path(env) / script).is_file():
+        return Path(env) / script
+    for pat in (f"*/*/*/*/scripts/{script}", f"*/*/*/scripts/{script}",
+                f"*/*/scripts/{script}"):
         for base in (Path.home(), Path.home() / "Projects"):
             if not base.is_dir():
                 continue
@@ -275,17 +304,14 @@ def build_reproducible():
                 checks="2 прогона", secs=secs, why="", tail=[])
 
 
-# Приборы, которые живут вне этого дерева (рядом со скиллом stars-bots-ops) и поэтому
-# в ИТОГО не попадают. Молчать о них нельзя: «ИТОГО ok 19» читается как «всё проверено»,
-# а обещания и цены держат ровно эти три прибора. 30.10.2026 нашлось: раннер их не знал,
-# и зелёный итог ничего не говорил о ценах, о времени разбора и о словах страницы.
-EXTERNAL = [
-    ("landing-sweep.py", "слова страницы против claims.json, три тысячи проверок на девяти языках",
-     "python3 $SKILL/landing-sweep.py --root . --json out.json"),
-    ("landing-price-parity.py", "цены страницы против prices.json и bot/payments.py",
-     "python3 $SKILL/landing-price-parity.py --landing ."),
-    ("landing-answer-time.py", "«сколько ждать разбор» живым замером через venv бота",
-     "python3 $SKILL/landing-answer-time.py --write"),
+# Приборы, которые в свип НЕ встают по устройству, а не по забывчивости. Молчать о них
+# нельзя: «ИТОГО ok 19» читается как «всё проверено» — поэтому они называются поимённо
+# с причиной. 31.10.2026: два из трёх прежних «вне дерева» переехали в батареи
+# (words, prices через tools/external.py); остался замер, который тратит генерации.
+MANUAL = [
+    ("landing-answer-time.py",
+     "живой замер «сколько ждать разбор»: тратит настоящие генерации бота и занимает его "
+     "очередь — зовётся вручную, не кроном"),
 ]
 
 
@@ -311,9 +337,22 @@ def main():
         if args.only and args.only not in name:
             continue
         if only_offline and tier not in ("build", "offline"):
+            why = {"visual": "режим без браузера",
+                   "live": "режим без сети",
+                   "eye": "режим без браузера и сети",
+                   "external": "внешние приборы ходят в сеть — не в этом режиме",
+                   }.get(tier, "режим без сети и браузера")
             results.append(dict(name=name, tier=tier, status="SKIP", checks="-",
-                                secs=0.0, why="режим без сети и браузера", tail=[]))
+                                secs=0.0, why=why, tail=[]))
             continue
+        if tier == "external":
+            req = EXTERNAL_REQUIRES.get(name)
+            if req and not find_external(req):
+                r = dict(name=name, tier=tier, status="SKIP", checks="-", secs=0.0,
+                         why=f"прибор вне дерева не найден ({req})", tail=[], what=what)
+                results.append(r)
+                print(f"  {r['status']:4} {name:18} {'-':>10}  {0.0:6.1f} с  {r['why']}")
+                continue
         if tier == "build":
             r = build_reproducible()
         else:
@@ -334,10 +373,10 @@ def main():
         print("не проверяли: " + ", ".join(f"{r['name']} ({r['why']})" for r in skipped))
     if bad:
         print("упало: " + ", ".join(r["name"] for r in bad))
-    print(f"вне дерева, НЕ запускались ({len(EXTERNAL)}): "
-          + ", ".join(n for n, _, _ in EXTERNAL))
-    print("  зелёный ИТОГО выше — это дерево, а не обещания и цены; "
-          "их держат приборы выше, их зовут отдельно")
+    print(f"вне свипа по устройству ({len(MANUAL)}): "
+          + "; ".join(f"{n} — {why}" for n, why in MANUAL))
+    print("  остальные приборы обещаний и цен зовутся этим же прогоном (words, prices "
+          "и их контроли); зелёный ИТОГО выше — про них тоже")
 
     if args.json:
         EVIDENCE.mkdir(exist_ok=True)
