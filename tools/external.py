@@ -69,9 +69,12 @@ def need(name):
     return p
 
 
-def run(cmd, timeout=600):
+def run(cmd, timeout=600, env=None):
+    e = dict(os.environ)
+    e.update(env or {})
     p = subprocess.run([sys.executable, "-u"] + [str(c) for c in cmd],
-                       cwd=str(ROOT), capture_output=True, text=True, timeout=timeout)
+                       cwd=str(ROOT), capture_output=True, text=True, timeout=timeout,
+                       env=e)
     return p.returncode, (p.stdout or "") + (p.stderr or "")
 
 
@@ -261,6 +264,96 @@ def _stamp():
     return time.strftime("%Y%m%d-%H%M%S")
 
 
+def engines():
+    """Страница в WebKit и Firefox: два движка, которых у прогона не было ни одного.
+
+    31.10.2026, семнадцатый блок. Сорок восемь батарей читали эту страницу в Chromium:
+    его запускает visual-420, его запускают a11y и css, его запускает глаз. Ни одна
+    не спрашивала WebKit. А люди приходят в основном из встроенного браузера Telegram:
+    на iPhone это WKWebView — WebKit, не Chromium. Дефект этого класса невидим сразу
+    с двух сторон: в Chromium его нет вовсе (правило раскладки, которого движок не
+    знает, просто выбрасывается), а глазом он выглядит как замысел — слово легло на
+    1-2 px шире, шапка на телефоне разъехалась, ряд языков сломался на две строки.
+    """
+    tool = need("landing-cross-engine.py")
+    # Порт у прибора вбит числом (8244). Второй такой же прогон рядом — это не дефект
+    # страницы, но stack trace читается как дефект, а «красное от чужой причины»
+    # дефектом не считается. Поэтому занятый порт называется вслух и уходит кодом 3:
+    # не проверяли ≠ проверено.
+    import socket as _sock
+    with _sock.socket(_sock.AF_INET, _sock.SOCK_STREAM) as s:
+        s.setsockopt(_sock.SOL_SOCKET, _sock.SO_REUSEADDR, 1)
+        if s.connect_ex(("127.0.0.1", 8244)) == 0:
+            print("порт 8244 занят: страницу прямо сейчас читает другой прогон — "
+                  "кросс-движок не проверяли")
+            return 3
+    rc, out = run([tool], timeout=1500, env={"LANDING_ROOT": str(ROOT)})
+    checks, failed = verdict(out)
+    if checks is None or failed is None:
+        print("НЕ РАЗОБРАЛ вывод кросс-движка — считать непроверенным")
+        print("\n".join(out.splitlines()[-6:]))
+        return 2
+    print(f"движки: прогонов {checks}, проблем {failed}, код {rc}")
+    print(f"CHECKS: {checks}, FAILED: {failed}")
+    if failed:
+        print("\n".join([ln for ln in out.splitlines() if ln.strip().startswith("[")]
+                        [:8]) or "\n".join(out.splitlines()[-8:]))
+        return 1
+    return 0 if rc == 0 else 1
+
+
+def engines_control():
+    """Мутант: дефект ширины, посаженный в КОПИЮ дерева, обязан покраснеть и назвать ru.
+
+    Два требования, а не одно. Первое: прибор умеет краснеть — это доказывает его
+    собственный `--control`, где клауза считается по clientWidth, а не по innerWidth
+    (вторая на том же дефекте слепа, и это печатается числом). Второе: прибор читает
+    то дерево, которое ему назвали. Если он молча берёт живой репозиторий по вбитому
+    в него пути, дефект в копии не покраснеет — и «зелено» будет значить «смотрел не
+    туда». Поэтому копия, а не живое дерево: у копии и дефект, и ответ.
+    """
+    tool = need("landing-cross-engine.py")
+    rc_c, out_c = run([tool, "--control"], timeout=300, env={"LANDING_ROOT": str(ROOT)})
+    caught = "КОНТРОЛЬ ПОЙМАЛ" in out_c
+    clause = [ln.strip() for ln in out_c.splitlines() if ln.strip().startswith(("новая клауза", "КОНТРОЛЬ"))]
+    if rc_c != 0 or not caught:
+        print(f"НЕ ПОЙМАЛ: собственный контроль прибора дал код {rc_c}, строки: {clause[:2]}")
+        return 2
+    print(f"своя клауза: {clause[1] if len(clause) > 1 else clause[0]}")
+
+    tmp = Path(tempfile.mkdtemp(prefix="engines-control-", dir=str(SCRATCH)))
+    try:
+        for p in ROOT.iterdir():
+            if p.name in (".git", "evidence", "__pycache__", ".shots-work"):
+                continue
+            dst = tmp / p.name
+            shutil.copytree(p, dst) if p.is_dir() else shutil.copy2(p, dst)
+        page = tmp / "ru" / "index.html"
+        html = page.read_text(encoding="utf-8", errors="replace")
+        m = re.search(r"<body[^>]*>", html, re.I)
+        if not m:
+            print("НЕ ПОЙМАЛ: в копии ru/index.html нет <body> — дефект некуда посадить")
+            return 2
+        wide = '<div id="ctl-wide" style="width:700px;height:4px;background:#000"></div>'
+        page.write_text(html[:m.end()] + wide + html[m.end():], encoding="utf-8")
+
+        rc_m, out_m = run([tool, "--shorts"], timeout=900, env={"LANDING_ROOT": str(tmp)})
+        checks_m, failed_m = verdict(out_m)
+        own = [ln for ln in out_m.splitlines() if re.match(r"\s*\[[a-z]+/[a-z]+/ru\]", ln)]
+        if failed_m is None:
+            print("НЕ ПОЙМАЛ: вывод мутанта не разобран")
+            print("\n".join(out_m.splitlines()[-6:]))
+            return 2
+        if rc_m == 0 or failed_m < 1 or not own:
+            print(f"НЕ ПОЙМАЛ: мутант дал код {rc_m}, проблем {failed_m}, своих [*/ru] — {len(own)}")
+            return 2
+        print(f"мутант: код {rc_m}, проблем {failed_m}, своих [*/ru] {len(own)}; первая — {own[0].strip()[:110]}")
+        print("поймал 1 из 1")
+        return 0
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main():
     ap = argparse.ArgumentParser(description="внешние приборы лендинга одной командой")
     g = ap.add_mutually_exclusive_group(required=True)
@@ -278,6 +371,10 @@ def main():
     g.add_argument("--page-extras", dest="page_extras", action="store_true",
                    help="три прибора вне дерева, читающие страницу: axe-core, "
                         "остаточная доступность, полоса значков")
+    g.add_argument("--engines", action="store_true",
+                   help="кросс-движок: страница в WebKit и Firefox, а не только в Chromium")
+    g.add_argument("--engines-control", dest="engines_control", action="store_true",
+                   help="контроль: своя клауза ширины + дефект в КОПИИ дерева обязан покраснеть и назвать ru")
     a = ap.parse_args()
     if a.words:
         return words()
@@ -293,6 +390,10 @@ def main():
         return lang_leftovers_control()
     if a.page_extras:
         return page_extras()
+    if a.engines:
+        return engines()
+    if a.engines_control:
+        return engines_control()
     return 3
 
 

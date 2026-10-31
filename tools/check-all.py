@@ -80,6 +80,8 @@ EXTERNAL_REQUIRES = {
     "prices-control": "landing-price-parity.py",
     "lang-leftovers": "landing-en-leftovers.py",
     "lang-leftovers-control": "landing-en-leftovers.py",
+    "engines": "landing-cross-engine.py",
+    "engines-control": "landing-cross-engine.py",
 }
 
 # Прогон page-extras зовёт три прибора сразу, а ключ батареи один. Эти три имени
@@ -163,6 +165,8 @@ BATTERIES = [
     ("lang-leftovers",   ["tools/external.py", "--lang-leftovers"],            "external",300, "непереведённый английский на восьми языковых страницах (прибор вне дерева)"),
     ("lang-leftovers-control", ["tools/external.py", "--lang-leftovers-control"], "external",900, "сам прибор: фраза-пустышка обязана быть поймана на каждом из восьми языков"),
     ("page-extras",      ["tools/external.py", "--page-extras"],                 "external",1500, "три прибора вне дерева: axe-core, остаточная доступность, полоса значков"),
+    ("engines",          ["tools/external.py", "--engines"],                     "external",1500, "кросс-движок: страница в WebKit и Firefox (встроенный браузер Telegram на iOS), а не только в Chromium"),
+    ("engines-control",  ["tools/external.py", "--engines-control"],             "external", 900, "сам прибор: своя клауза ширины краснеет там, где старая слепа, и дефект в КОПИИ дерева обязан покраснеть именем ru"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
