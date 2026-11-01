@@ -30,13 +30,14 @@
     FOCUS     у каждого интерактивного элемента при клавиатурном фокусе меняется
               хоть что-то видимое (контур, тень, рамка, фон).
 
-Честность вместо зелёного: текст над картинкой или градиентом не измеряется
-вслепую — он попадает в строку UNMEASURED с причиной. «Не измерили» не имеет права
-выглядеть как «измерили и хорошо».
+Честность вместо зелёного: текст над настоящей картинкой (background-image: url)
+не измеряется вслепую — он попадает в строку UNMEASURED с причиной. «Не измерили»
+не имеет права выглядеть как «измерили и хорошо». Градиент — не картинка: его стопы
+читаются, текст меряется по каждому, в вердикт идёт худший.
 
-Контроль (--control): семь мутантов на копии дерева, каждый обязан покраснеть своим
-классом — контраст, alt, второй h1, поле без подписи, пустая ссылка, цель 10 px,
-снятый фокус.
+Контроль (--control): восемь мутантов на копии дерева, каждый обязан покраснеть своим
+классом — контраст, контраст на градиенте, alt, второй h1, поле без подписи,
+пустая ссылка, цель 10 px, снятый фокус.
 
 Запуск:
   python3 tools/check-a11y.py                 # всё
@@ -290,12 +291,26 @@ CONTRAST_JS = r"""
     }
     return bits.join('>');
   };
+  const stopColors = (img) => {
+    // Градиент измерим: это набор цветов, любой из них может оказаться под текстом.
+    // url() — настоящая картинка, её по-прежнему не измеряем вслепую.
+    if (/url\(/i.test(img)) return null;
+    const m = img.match(/rgba?\([^)]*\)|#[0-9a-f]{3,8}/gi);
+    if (!m) return null;
+    const cols = [];
+    for (const s of m) { const c = parse(s); if (c && c.a > 0) cols.push(c); }
+    return cols.length ? cols : null;
+  };
   const bgOf = (el) => {
     let n = el, acc = null;
     while (n && n.nodeType === 1) {
       const s = getComputedStyle(n);
       if (s.backgroundImage && s.backgroundImage !== 'none') {
-        return { unmeasured: 'фон-картинка у ' + path(n) };
+        const stops = stopColors(s.backgroundImage);
+        if (!stops) return { unmeasured: 'фон-картинка у ' + path(n) };
+        const base = acc || { r: 255, g: 255, b: 255, a: 1 };
+        // текст лежит поверх ЛЮБОЙ точки градиента — меряем по каждой
+        return { colors: stops.map((c) => (c.a < 0.999 ? over(c, base) : c)) };
       }
       const c = parse(s.backgroundColor);
       if (c && c.a > 0) {
@@ -330,12 +345,17 @@ CONTRAST_JS = r"""
       if (!unmeasured.some((u) => u.el === key)) unmeasured.push({ el: key, why: bg.unmeasured });
       continue;
     }
-    const eff = fg.a < 0.999 ? over(fg, bg.color) : fg;
+    const backs = bg.colors || [bg.color];
+    let r = Infinity;
+    for (const back of backs) {
+      const e = fg.a < 0.999 ? over(fg, back) : fg;
+      const q = ratio(e, back);
+      if (q < r) r = q;
+    }
     const fs = parseFloat(s.fontSize);
     const fw = Number(s.fontWeight) || 400;
     const large = fs >= 24 || (fs >= 18.66 && fw >= 700);
     const need = large ? 3.0 : 4.5;
-    const r = ratio(eff, bg.color);
     if (r + 0.005 < need) {
       fails.push({
         el: path(el), text: node.nodeValue.trim().slice(0, 48),
@@ -484,6 +504,9 @@ MUTANTS = [
     ("TAP", "цель 10 px", lambda h: h.replace("</head>",
         '<style>a,button,summary{min-height:0!important;height:10px!important;'
         'padding:0!important;font-size:6px!important;line-height:10px!important}</style></head>', 1)),
+    ("CONTRAST", "контраст на градиенте", lambda h: h.replace("</head>",
+        '<style>.price.hot{background:linear-gradient(180deg,#F5F8FF,#fff)!important}'
+        '.price.hot h3,.price.hot .amount,.price.hot p{color:#FBFDFF!important}</style></head>', 1)),
     ("FOCUS", "снятый фокус", lambda h: h.replace("</head>",
         '<style>*:focus-visible{outline:0 none!important}</style></head>', 1)),
 ]
@@ -544,7 +567,7 @@ def main() -> int:
 
     root = Path(a.root).resolve()
     if a.control:
-        print("КОНТРОЛЬ: семь мутантов, каждый обязан покраснеть своим классом")
+        print("КОНТРОЛЬ: восемь мутантов, каждый обязан покраснеть своим классом")
         ok = run_control(a.offline)
         print(f"МУТАНТЫ {ok}/{len(MUTANTS)}")
         return 0 if ok == len(MUTANTS) else 1
