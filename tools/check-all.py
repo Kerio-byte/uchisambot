@@ -148,6 +148,8 @@ BATTERIES = [
     ("placeholders",     ["tools/placeholder-parity.py"],                       "offline",180, "плейсхолдеры и незакрытые фигурные скобки"),
     ("deva-subset",      ["tools/subset-deva.py", "--check"],                   "offline",120, "Deva-подмножество шрифта против реестра"),
     ("og-cards",         ["tools/og-cards.py", "--check"],                      "offline",120, "карточки og: 1200x630 на девять языков"),
+    ("og-ink",           ["tools/check-og-ink.py"],                             "offline",180, "карточки og: текст своего языка действительно нарисован — знаки, полосы строк, правый край, отличие девяти карточек друг от друга"),
+    ("og-ink-control",   ["tools/check-og-ink.py", "--control"],                "offline",300, "сам прибор: пустая карточка, две карточки одним языком, текст за краем, карточки нет — четыре мутанта обязаны быть названы"),
     ("bot-profile",      ["tools/apply-bot-profile.py", "--check"],             "offline",120, "профиль бота против bot-profile.json"),
     ("sigterm-control",  ["tools/check-sigterm.py"],                            "offline",300, "сам прибор: SIGTERM раннеру гасит ребёнка, мутант без kill_tree обязан оставить сироту"),
     ("ceiling-control",  ["tools/check-ceiling.py", "--control"],               "offline",300, "сам прибор: потолок по умолчанию назван, потолок держится и снимается только по имени; два мутанта обязаны покраснеть"),
