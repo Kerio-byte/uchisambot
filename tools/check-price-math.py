@@ -169,6 +169,61 @@ def load_prices(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# Слова «бесплатно» на каждом языке — по ним ищется фраза-обещание в ИИ-слое.
+FREE_WORDS = {
+    "en": ("free",),
+    "ru": ("бесплатн",),
+    "es": ("gratis",),
+    "pt": ("grátis", "gratis"),
+    "hi": ("मुफ़्त",),
+    "id": ("gratis",),
+    "tr": ("ücretsiz",),
+    "vi": ("miễn phí",),
+    "uk": ("безкоштовн",),
+}
+
+
+def ai_twins(root: Path) -> list[tuple[Path, str]]:
+    """Файлы ИИ-слоя: llms.txt и десять md-двойников — с языком каждого."""
+    out = [(root / "llms.txt", "en"), (root / "index.html.md", "en")]
+    out += [(root / lang / "index.html.md", lang) for lang in LANGS if lang != "en"]
+    return out
+
+
+def check_ai_layer(root: Path, prices: dict) -> list[str]:
+    """Тот же обещанный счёт бесплатных разборов — в файлах, которые читают ИИ.
+
+    Дырка 01.11.2026 (блок 33): price-math читает НАРИСОВАННЫЕ страницы, а llms.txt
+    и десять md-двойников называют то же число словами и цифрой — и никем не сверялись.
+    Меняешь free_breakdowns в prices.json: девять карточек обновятся, а файл для ИИ
+    продолжит обещать прежнее число, и ассистент процитирует его человеку.
+    Правило: первое слово «бесплатно» в файле, ближайшее число ПЕРЕД ним (40 знаков)
+    обязано равняться free_breakdowns. Нет числа — находка: обещание не названо.
+    """
+    bad: list[str] = []
+    free = int(prices["free_breakdowns"])
+    for path, lang in ai_twins(root):
+        name = path.relative_to(root) if path.is_relative_to(root) else path.name
+        if not path.is_file():
+            bad.append(f"ИИ {name}: файла нет — обещание «{free} бесплатно» не проверить")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        low = text.lower()
+        pos = min((low.find(w) for w in FREE_WORDS[lang] if low.find(w) >= 0), default=-1)
+        if pos < 0:
+            bad.append(f"ИИ {name}: слова «бесплатно» нет — обещание не названо")
+            continue
+        window = text[max(0, pos - 40):pos]
+        nums = re.findall(r"\d+", window)
+        if not nums:
+            bad.append(f"ИИ {name}: перед «бесплатно» нет числа — обещание «{free}» не названо")
+            continue
+        got = int(nums[-1])
+        if got != free:
+            bad.append(f"ИИ {name}: «{got} бесплатно», а в prices.json {free}")
+    return bad
+
+
 def check_tree(root: Path, prices_path: Path) -> tuple[list[str], dict]:
     prices = load_prices(prices_path)
     bad: list[str] = []
@@ -178,6 +233,7 @@ def check_tree(root: Path, prices_path: Path) -> tuple[list[str], dict]:
         bad += b
         if s:
             stats[lang] = s
+    bad += check_ai_layer(root, prices)
     return bad, stats
 
 
@@ -192,6 +248,10 @@ def control() -> int:
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(src, dst)
         shutil.copy(ROOT / "tools" / "prices.json", base / "prices.json")
+        for src, _ in ai_twins(ROOT):
+            dst = base / src.relative_to(ROOT)
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(src, dst)
         prices_path = base / "prices.json"
 
         bad, _ = check_tree(base, prices_path)
@@ -241,14 +301,23 @@ def control() -> int:
             data["pack15"]["price"] = 360
             p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
+        def free_ai(d: Path) -> None:
+            p = d / "llms.txt"
+            s = p.read_text(encoding="utf-8")
+            if "First 2 breakdowns free" not in s:
+                raise SystemExit("мутант не поставить: в llms.txt нет английского обещания")
+            p.write_text(s.replace("First 2 breakdowns free", "First 3 breakdowns free", 1),
+                         encoding="utf-8")
+
         run("цена за разбор разошлась", per_item, "ru")
         run("процент выгоды разошёлся", save_pct, "tr")
         run("бесплатных разборов больше", free_count, "uk")
         run("строка одиночной цены пропала", no_fine, "es")
+        run("файл для ИИ обещает другое число", free_ai, "llms.txt")
         run("пакет подорожал, страница нет", price_changed, "нет в prices.json", count=len(LANGS))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
-    total = 5
+    total = 6
     print(f"МУТАНТЫ {len(caught)}/{total}")
     return 0 if len(caught) == total else 1
 
