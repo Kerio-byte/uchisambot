@@ -350,7 +350,7 @@ def run_control(zoom: float) -> int:
 
     print(f"КОНТРОЛЬ прибора (зум {zoom:g}): чистая копия обязана быть зелёной, "
           f"три мутанта — красными")
-    results: dict[str, object] = {}
+    results: dict[str, dict] = {}
     ok = True
     with sync_playwright() as p:
         br = p.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
@@ -390,7 +390,9 @@ def run_control(zoom: float) -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"zoom": zoom, "control": results}, ensure_ascii=False, indent=1),
                    encoding="utf-8")
-    print(f"КОНТРОЛЬ: {'ПРОЙДЕН' if ok else 'ПРОВАЛЕН'} — evidence: {out}")
+    print(f"КОНТРОЛЬ: {'ПРОЙДЕН' if ok else 'ПРОВАЛЕН'} — поймал "
+          f"{sum(1 for r in results.values() if r.get('caught'))} "
+          f"из {sum(1 for r in results.values() if 'caught' in r)} — evidence: {out}")
     return 0 if ok else 1
 
 
