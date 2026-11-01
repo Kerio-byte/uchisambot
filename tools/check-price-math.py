@@ -24,15 +24,27 @@
   * бесплатных разборов в заголовке столько же, сколько `free_breakdowns`;
   * строка `price-fine` называет одиночную цену.
 
+ИИ-слой (блоки 33 и 34, 01.11.2026) — те же обещания в файлах, которые читают
+ассистенты, а не люди. `llms.txt` и девять индексных md-двойников называют цену
+числом, а `terms.html.md` — в одном предложении, через «;», двуязычно (en + ru):
+
+  * бесплатных разборов названо столько же, сколько `free_breakdowns`;
+  * в каждом индексном двойнике есть одиночная цена, обе цены пакета и обе цены
+    «за разбор» — пропавшую строку видно, а не «нечего сверять»;
+  * цена пакета равна реестру, цена за разбор — частному цена/размер, «выгода N%» —
+    арифметике цен, а «голое» число в строке пакета — его размеру;
+  * в условиях перед каждой ценой пакета стоит его размер, а цена — из реестра.
+
 Чего прибор НЕ делает (названо, чтобы «не измерили» не читалось как «измерили и хорошо»):
 не проверяет валюту и слово «звёзды» (это решение продукта: в семи языках стоит
-«Stars», в ru и hi переведено) и не сверяет проценты с кодом бота — скидку бот не
-считает, её пишет страница.
+«Stars», в ru и hi переведено; слово здесь только якорь цены) и не сверяет проценты
+с кодом бота — скидку бот не считает, её пишет страница. В условиях не проверяется
+порядок цен (какая за какой идёт) и текст возврата — только числа и размеры.
 
 Запуск:
   python3 tools/check-price-math.py              # девять страниц этого дерева
   python3 tools/check-price-math.py --root DIR   # то же на копии дерева
-  python3 tools/check-price-math.py --control    # проверка самого прибора: пять мутантов
+  python3 tools/check-price-math.py --control    # проверка самого прибора: тринадцать мутантов
   python3 tools/check-price-math.py --json       # машинный вывод
 """
 from __future__ import annotations
@@ -183,6 +195,21 @@ FREE_WORDS = {
 }
 
 
+# Слово валюты на каждом языке — им цена привязывается к числу в ИИ-слое.
+# Регулярные куски, не литералы: в ru слово склоняется и пишется с ё и без.
+CURRENCY_WORDS = {
+    "en": ("[Ss]tars",),
+    "ru": ("зв[её]зд",),
+    "es": ("[Ss]tars",),
+    "pt": ("[Ss]tars",),
+    "hi": ("स्टार",),
+    "id": ("[Ss]tars",),
+    "tr": ("[Ss]tars",),
+    "vi": ("[Ss]tars",),
+    "uk": ("[Ss]tars", "зірк", "зірок"),
+}
+
+
 def ai_twins(root: Path) -> list[tuple[Path, str]]:
     """Файлы ИИ-слоя: llms.txt и десять md-двойников — с языком каждого."""
     out = [(root / "llms.txt", "en"), (root / "index.html.md", "en")]
@@ -224,6 +251,161 @@ def check_ai_layer(root: Path, prices: dict) -> list[str]:
     return bad
 
 
+def check_ai_prices(root: Path, prices: dict) -> tuple[list[str], dict]:
+    """Цены и «выгода %» — в md-двойниках, которые читают ИИ-ассистенты.
+
+    Дырка 01.11.2026 (блок 34). Тридцать третий блок закрыл в ИИ-слое один обещанный
+    счёт — бесплатные разборы. А цены рядом остались непрочитанными: двойник называет
+    те же 30 / 120 за 5 / 300 за 15, те же «24 за разбор» и «выгода 20%», и ни один
+    прибор туда не смотрит. `price-math` по устройству читает нарисованные страницы.
+    Поменяй цену в prices.json и словарях: девять карточек проверятся, а десять
+    двойников продолжат называть старую цену и старую скидку — и ассистент процитирует
+    человеку цену, которой бот уже не берёт.
+
+    Правило не знает языка: цена — это число, за которым сразу стоит слово валюты
+    (Stars / звёзд / स्टार्स). Строка с ДВУМЯ такими числами — строка пакета: первое
+    равно цене пакета в реестре, второе — частному цена/размер, оставшееся «голое»
+    число — размер пакета, а проценты на строке — выгоде пакета. Строка с ОДНИМ —
+    одиночная цена, она обязана равняться `single` и не нести ни размера, ни процентов.
+    В каждом файле все три цены и обе цены «за разбор» обязаны быть названы.
+    """
+    bad: list[str] = []
+    single = int(prices["single"])
+    packs = {int(prices[k]["price"]): int(prices[k]["size"]) for k in ("pack5", "pack15")}
+    per_of = {price: price // size for price, size in packs.items()}
+    save_of = {}
+    for price, size in packs.items():
+        exact = (single - price // size) / single * 100
+        save_of[price] = {int(exact), int(round(exact))}
+    seen_packs: set[int] = set()
+    seen_per: set[int] = set()
+    seen_single = False
+    files_read = 0
+    price_lines = 0
+
+    for path, lang in ai_twins(root):
+        if not path.is_file():
+            continue  # пустой файл уже назван check_ai_layer
+        name = path.relative_to(root) if path.is_relative_to(root) else path.name
+        files_read += 1
+        verbs = CURRENCY_WORDS[lang]
+        file_packs: set[int] = set()
+        file_per: set[int] = set()
+        file_single = False
+        cur_re = re.compile(r"(\d+)\s*(?:" + "|".join(verbs) + ")")
+        pct_re = re.compile(r"(\d+)\s*%|%\s*(\d+)")
+        for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+            anchors = [(int(m.group(1)), m.start(), m.end()) for m in cur_re.finditer(line)]
+            if not anchors:
+                continue
+            price_lines += 1
+            pcts = [int(m.group(1) or m.group(2)) for m in pct_re.finditer(line)]
+            pct_spans = [(m.start(), m.end()) for m in pct_re.finditer(line)]
+            plain = [int(m.group(0)) for m in NUM_RE.finditer(line)
+                     if not any(s <= m.start() < e for s, e in
+                                [(a[1], a[2]) for a in anchors] + pct_spans)]
+            if len(anchors) == 1:
+                got = anchors[0][0]
+                seen_single = True
+                file_single = True
+                if got != single:
+                    bad.append(f"ИИ {name}:{lineno}: одиночная цена {got}, а в prices.json {single}")
+                if plain:
+                    bad.append(f"ИИ {name}:{lineno}: в строке одиночной цены лишние числа "
+                               f"{plain} — это не цена")
+                if pcts:
+                    bad.append(f"ИИ {name}:{lineno}: в строке одиночной цены проценты {pcts}")
+                continue
+            if len(anchors) > 2:
+                bad.append(f"ИИ {name}:{lineno}: цен, привязанных к валюте, {len(anchors)}, а не две")
+            price, per = anchors[0][0], anchors[1][0]
+            if price not in packs:
+                bad.append(f"ИИ {name}:{lineno}: цена пакета {price}, которой нет в prices.json")
+                continue
+            seen_packs.add(price)
+            seen_per.add(per)
+            file_packs.add(price)
+            file_per.add(per)
+            if per != per_of[price]:
+                bad.append(f"ИИ {name}:{lineno}: {per} за разбор, а {price}/{packs[price]} = "
+                           f"{per_of[price]}")
+            if plain != [packs[price]]:
+                bad.append(f"ИИ {name}:{lineno}: размер пакета на строке {plain}, "
+                           f"а у цены {price} размер {packs[price]}")
+            if not pcts:
+                bad.append(f"ИИ {name}:{lineno}: выгода пакета {price} не названа в процентах")
+            for got in pcts:
+                if got not in save_of[price]:
+                    exact = (single - per_of[price]) / single * 100
+                    bad.append(f"ИИ {name}:{lineno}: выгода {got}%, а ({single}-{per_of[price]})"
+                               f"/{single} = {exact:.2f}% (допустимо "
+                               f"{'/'.join(str(a) for a in sorted(save_of[price]))}%)")
+        # Файл, где цену просто убрали, не даёт ни одной строки с валютой — молчание
+        # прибора здесь читалось бы как «всё верно». Поэтому каждый ИНДЕКСНЫЙ двойник
+        # обязан назвать все три цены и обе цены «за разбор». llms.txt — витрина
+        # со ссылками, цен он не называет по устройству, к нему это правило не относится.
+        if path.name == "index.html.md":
+            if not file_single:
+                bad.append(f"ИИ {name}: одиночная цена не названа — обещание {single} пропало")
+            for price in packs:
+                if price not in file_packs:
+                    bad.append(f"ИИ {name}: цена пакета {price} не названа")
+            for per in sorted(set(per_of.values())):
+                if per not in file_per:
+                    bad.append(f"ИИ {name}: цена за разбор {per} не названа")
+
+    terms = root / "terms.html.md"
+    if not terms.is_file():
+        bad.append("ИИ terms.html.md: файла нет — цены в условиях не проверить")
+    else:
+        # Условия — проза, а не карточки: три цены стоят в одном предложении через «;».
+        # Правило здесь другое: каждое число при валюте — либо одиночная цена, либо цена
+        # пакета; перед ценой пакета ближайшее «голое» число обязано быть его размером.
+        files_read += 1
+        verbs = CURRENCY_WORDS["en"] + CURRENCY_WORDS["ru"]  # файл двуязычный
+        cur_re = re.compile(r"(\d+)\s*(?:" + "|".join(verbs) + ")")
+        pct_re = re.compile(r"(\d+)\s*%|%\s*(\d+)")
+        for lineno, line in enumerate(terms.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+            anchors = [(int(m.group(1)), m.start(), m.end()) for m in cur_re.finditer(line)]
+            if not anchors:
+                continue
+            price_lines += 1
+            pct_spans = [(m.start(), m.end()) for m in pct_re.finditer(line)]
+            pcts = [int(m.group(1) or m.group(2)) for m in pct_re.finditer(line)]
+            for num, start, _end in anchors:
+                if num == single:
+                    seen_single = True
+                    continue
+                if num not in packs:
+                    bad.append(f"ИИ terms.html.md:{lineno}: цена {num}, которой нет в prices.json")
+                    continue
+                seen_packs.add(num)
+                before = [int(m.group(0)) for m in NUM_RE.finditer(line)
+                          if m.start() < start
+                          and not any(s <= m.start() < e for s, e in
+                                      [(a[1], a[2]) for a in anchors] + pct_spans)]
+                size = before[-1] if before else None
+                if size != packs[num]:
+                    bad.append(f"ИИ terms.html.md:{lineno}: перед ценой {num} стоит размер "
+                               f"{size}, а в prices.json {packs[num]}")
+                for got in pcts:
+                    if got not in save_of[num]:
+                        bad.append(f"ИИ terms.html.md:{lineno}: выгода {got}% при цене {num}, "
+                                   f"а в prices.json выгоды нет вовсе")
+
+    if not seen_single:
+        bad.append("ИИ: одиночная цена не названа ни в одном файле ИИ-слоя")
+    for price in packs:
+        if price not in seen_packs:
+            bad.append(f"ИИ: цена пакета {price} не названа ни в одном файле ИИ-слоя")
+    for per in sorted(set(per_of.values())):
+        if per not in seen_per:
+            bad.append(f"ИИ: цена за разбор {per} не названа ни в одном файле ИИ-слоя")
+    stat = {"files": files_read, "lines": price_lines,
+            "packs": sorted(seen_packs), "per": sorted(seen_per), "single": seen_single}
+    return bad, stat
+
+
 def check_tree(root: Path, prices_path: Path) -> tuple[list[str], dict]:
     prices = load_prices(prices_path)
     bad: list[str] = []
@@ -234,6 +416,9 @@ def check_tree(root: Path, prices_path: Path) -> tuple[list[str], dict]:
         if s:
             stats[lang] = s
     bad += check_ai_layer(root, prices)
+    ai_bad, ai_stat = check_ai_prices(root, prices)
+    bad += ai_bad
+    stats["ai"] = ai_stat
     return bad, stats
 
 
@@ -252,6 +437,7 @@ def control() -> int:
             dst = base / src.relative_to(ROOT)
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(src, dst)
+        shutil.copy(ROOT / "terms.html.md", base / "terms.html.md")  # цены в условиях
         prices_path = base / "prices.json"
 
         bad, _ = check_tree(base, prices_path)
@@ -309,15 +495,75 @@ def control() -> int:
             p.write_text(s.replace("First 2 breakdowns free", "First 3 breakdowns free", 1),
                          encoding="utf-8")
 
+        def ai_per(d: Path) -> None:
+            p = d / "index.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "24 Stars per breakdown" not in s:
+                raise SystemExit("мутант не поставить: в en-двойнике нет «24 Stars per breakdown»")
+            p.write_text(s.replace("24 Stars per breakdown", "25 Stars per breakdown", 1),
+                         encoding="utf-8")
+
+        def ai_pack(d: Path) -> None:
+            p = d / "ru" / "index.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "120 звёзд" not in s:
+                raise SystemExit("мутант не поставить: в ru-двойнике нет «120 звёзд»")
+            p.write_text(s.replace("120 звёзд", "150 звёзд", 1), encoding="utf-8")
+
+        def ai_save(d: Path) -> None:
+            p = d / "tr" / "index.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "%33 tasarruf" not in s:
+                raise SystemExit("мутант не поставить: в tr-двойнике нет «%33 tasarruf»")
+            p.write_text(s.replace("%33 tasarruf", "%30 tasarruf", 1), encoding="utf-8")
+
+        def ai_size(d: Path) -> None:
+            p = d / "index.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "Pack of 15 breakdowns" not in s:
+                raise SystemExit("мутант не поставить: в en-двойнике нет «Pack of 15 breakdowns»")
+            p.write_text(s.replace("Pack of 15 breakdowns", "Pack of 10 breakdowns", 1),
+                         encoding="utf-8")
+
+        def ai_single(d: Path) -> None:
+            p = d / "uk" / "index.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "Один розбір — 30 Stars." not in s:
+                raise SystemExit("мутант не поставить: в uk-двойнике нет одиночной цены")
+            p.write_text(s.replace("Один розбір — 30 Stars.", "Один розбір — 25 Stars.", 1),
+                         encoding="utf-8")
+
+        def ai_terms(d: Path) -> None:
+            p = d / "terms.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "a pack of 5 — 120 Stars" not in s:
+                raise SystemExit("мутант не поставить: в terms нет «a pack of 5 — 120 Stars»")
+            p.write_text(s.replace("a pack of 5 — 120 Stars", "a pack of 6 — 120 Stars", 1),
+                         encoding="utf-8")
+
+        def ai_gone(d: Path) -> None:
+            p = d / "es" / "index.html.md"
+            s = p.read_text(encoding="utf-8")
+            if "Un desglose suelto — 30 Stars." not in s:
+                raise SystemExit("мутант не поставить: в es-двойнике нет строки одиночной цены")
+            p.write_text(s.replace("Un desglose suelto — 30 Stars.", "", 1), encoding="utf-8")
+
         run("цена за разбор разошлась", per_item, "ru")
         run("процент выгоды разошёлся", save_pct, "tr")
         run("бесплатных разборов больше", free_count, "uk")
         run("строка одиночной цены пропала", no_fine, "es")
         run("файл для ИИ обещает другое число", free_ai, "llms.txt")
         run("пакет подорожал, страница нет", price_changed, "нет в prices.json", count=len(LANGS))
+        run("двойник: цена за разбор разошлась", ai_per, "25 за разбор")
+        run("двойник: цена пакета не из реестра", ai_pack, "150, которой нет")
+        run("двойник: выгода пакета разошлась", ai_save, "выгода 30%")
+        run("двойник: размер пакета разошёлся", ai_size, "размер пакета на строке [10]")
+        run("двойник: одиночная цена разошлась", ai_single, "одиночная цена 25")
+        run("условия: размер пакета разошёлся", ai_terms, "стоит размер 6")
+        run("двойник: цену убрали целиком", ai_gone, "одиночная цена не названа")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
-    total = 6
+    total = 13
     print(f"МУТАНТЫ {len(caught)}/{total}")
     return 0 if len(caught) == total else 1
 
@@ -326,7 +572,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="тарифы: числа «за разбор» и «выгода %» верны")
     ap.add_argument("--root", default="", help="дерево со страницами (по умолчанию это)")
     ap.add_argument("--prices", default="", help="реестр цен (по умолчанию tools/prices.json)")
-    ap.add_argument("--control", action="store_true", help="проверка самого прибора: пять мутантов")
+    ap.add_argument("--control", action="store_true", help="проверка самого прибора: тринадцать мутантов")
     ap.add_argument("--json", action="store_true", help="машинный вывод")
     a = ap.parse_args()
 
@@ -345,6 +591,10 @@ def main() -> int:
         bits = [f"{packs[k]['price']}->{packs[k]['per']} ({packs[k]['save']}%)"
                 for k in ("pack5", "pack15") if k in packs]
         print(f"  {lang:2} {' '.join(bits) or '?':28} бесплатно {s.get('free')}")
+    ai = stats.get("ai") or {}
+    print(f"  ИИ-слой: файлов {ai.get('files')}, строк с ценой {ai.get('lines')}, "
+          f"пакеты {ai.get('packs')}, за разбор {ai.get('per')}, "
+          f"одиночная {'названа' if ai.get('single') else 'НЕ названа'}")
     if bad:
         print(f"НАХОДОК {len(bad)}:")
         for line in bad:
