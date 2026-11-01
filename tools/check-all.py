@@ -160,6 +160,8 @@ BATTERIES = [
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
     ("answer-time",      ["tools/check-answer-time.py"],                        "offline",120, "обещание «сколько ждать разбор» против реестра замеров: девять страниц, разметка для поиска, девять md-двойников, каждый замер против потолка"),
     ("answer-time-control", ["tools/check-answer-time.py", "--control"],       "offline",180, "сам прибор: шесть мутантов обязаны покраснеть, каждый своим сообщением"),
+    ("subjects",         ["tools/check-subjects.py"],                           "offline",120, "список предметов: реестр subjects.json против чипов, ответа FAQ, разметки для поиска, md-двойников и обеих половин Terms"),
+    ("subjects-control", ["tools/check-subjects.py", "--control"],              "offline",180, "сам прибор: шесть мутантов (чип, видимый ответ, разметка, двойник, половина Terms, название языка вместо предмета) обязаны покраснеть, каждый своим сообщением"),
     ("bot-labels",       ["tools/check-bot-labels.py"],                          "offline",120, "метки ссылок на бота против грамматики бота: язык страницы = язык приветствия"),
     ("bot-labels-control", ["tools/check-bot-labels.py", "--control"],            "offline",300, "сам прибор: четыре мутанта обязаны покраснеть, каждый своим сообщением"),
     ("links",            ["tools/check-links.py"],                              "live",   420, "116 внешних адресов"),

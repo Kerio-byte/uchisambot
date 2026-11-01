@@ -83,7 +83,9 @@ def load_prices() -> dict:
     До этого числа числа JSON-LD были литералами здесь, а видимые цены — строками в 9
     словарях: правка одной стороны оставляла вторую врать молча (поисковик показывал старую
     цену, человек — новую, и ни одна проверка этого не видела). Теперь JSON-LD собирается
-    из этого файла, а свип сверяет с ним тексты всех языков.
+    из этого файла, а свип сверяет с ним тексты всех языков (прибор `tools/external.py --prices`,
+    батарея `prices`; арифметику карточки цены — `tools/check-price-math.py`, батареи
+    `prices`/`prices-control`, JSON-LD — `tools/check-jsonld.py`, батареи `jsonld`).
     """
     p = json.loads(PRICES_FILE.read_text(encoding="utf-8"))
     assert isinstance(p.get("free_breakdowns"), int) and p["free_breakdowns"] >= 0, "prices: free_breakdowns"
@@ -432,7 +434,8 @@ def normalized_hand_written() -> dict:
 def font_css(lang: str) -> str:
     """CSS-блок шрифтов страницы (22.10.2026): состав зависит от письменности языка.
 
-    Правило (и его проверяет свип):
+    Правило (и его проверяет `tools/check-lang-fonts.py`, батареи `lang-fonts` и
+    `lang-fonts-control` в свипе):
       * мини-сабсеты переключателя (tools/lang-fonts.json) объявлены всегда, КРОМЕ
         письменности самой страницы — там полный сабсет уже грузится текстом, и
         название текущего языка в шапке берётся из него;
