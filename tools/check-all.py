@@ -152,6 +152,8 @@ BATTERIES = [
     ("weight",           ["tools/check-weight.py"],                             "offline",180, "вес первого экрана, ленивость, потолки"),
     ("weight-control",   ["tools/check-weight.py", "--control"],                 "offline",180, "сам прибор: обязан увидеть потолок 1 байт и чужой язык в медиа"),
     ("referral-parity",  ["tools/referral-parity.py"],                          "offline",120, "реферальные числа страницы против кода бота"),
+    ("bot-labels",       ["tools/check-bot-labels.py"],                          "offline",120, "метки ссылок на бота против грамматики бота: язык страницы = язык приветствия"),
+    ("bot-labels-control", ["tools/check-bot-labels.py", "--control"],            "offline",300, "сам прибор: четыре мутанта обязаны покраснеть, каждый своим сообщением"),
     ("links",            ["tools/check-links.py"],                              "live",   420, "116 внешних адресов"),
     ("live-bytes",       ["tools/live-bytes.py"],                                "live",   240, "живой сайт против дерева: байт в байт, 16 файлов"),
     ("live-bytes-control", ["tools/live-bytes.py", "--control"],                 "live",   240, "сам прибор: один испорченный байт обязан покраснеть именно им"),
