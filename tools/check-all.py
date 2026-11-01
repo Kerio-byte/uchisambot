@@ -71,6 +71,23 @@ CONTROL = {"redirects-control", "visual-control", "links-control",
            "publish-tree-control", "prices-control", "words-control",
            "zoom-control"}
 
+# Приборы, у которых есть ТРЕТИЙ ответ, кроме «сошлось» и «не сошлось»: «я не смог
+# проверить». До 01.11.2026 раннер знал только код 1 и красил такой ответ в FAIL.
+# Замер этого дня: прогон `--offline` упал на `bot-profile` (сеть до api.telegram.org
+# не ответила), повторный прогон того же дерева без единой правки — 0 провалов.
+# Красное, которое приходит и уходит само, учат игнорировать — и следующее настоящее
+# красное прячется за привычкой.
+#
+# ПОЧЕМУ НЕ ОБЩЕЕ ПРАВИЛО «код 2 = не проверено»: у tools/external.py код 2 значит
+# ОБРАТНОЕ — «контроль не доказал прибор» (см. его докстринг). Общий маппинг покрасил
+# бы провал контроля в зелёное. Поэтому код объявляется ПОИМЁННО, вместе со словом,
+# которым прибор обязан этот код назвать: код без слова — не «не проверено», а FAIL.
+SKIP_RC = {
+    "bot-profile": (2, "Bot API не ответил"),
+    "bot-labels": (3, "код бота недоступен"),
+}
+SKIP_WORDS = ("НЕ ПРОВЕРЕНО", "ПРОПУСК")
+
 # Приборы, которые живут ВНЕ дерева (рядом со скиллом) и зовутся через tools/external.py.
 # До 31.10.2026 они существовали только строкой «вне дерева, НЕ запускались (3)»: цены,
 # слова страницы и «сколько ждать разбор» держали приборы, которых не звал ни один прогон.
@@ -384,6 +401,16 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
                         tail=tail_of(out))
         return dict(name=name, tier=tier, status="ok", checks=checks, secs=secs,
                     why="", tail=[])
+    # «Я не смог проверить» — отдельный ответ, а не дефект страницы. Прибор обязан
+    # сказать это СЛОВОМ и своим кодом: одного кода мало (иначе прибор, который просто
+    # сломался и вернул тот же код, молча превратился бы в «не проверено»).
+    if rc and name in SKIP_RC:
+        code, _why = SKIP_RC[name]
+        said = next((l.strip() for l in out.splitlines()
+                     if any(l.strip().startswith(w) for w in SKIP_WORDS)), "")
+        if rc == code and said:
+            return dict(name=name, tier=tier, status="SKIP", checks=checks, secs=secs,
+                        why=said[:200], tail=[])
     bad = rc != 0
     if m and int(m[1]):
         bad = True
