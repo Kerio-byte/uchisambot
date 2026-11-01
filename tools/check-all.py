@@ -215,6 +215,8 @@ BATTERIES = [
     ("ai-layer-control", ["tools/check-ai-layer.py", "--control"],                "offline", 300, "сам прибор: копия без правок зелёная, тринадцать мутантов краснеют каждый своим классом"),
     ("load-ledger",      ["tools/check-load-ledger.py"],                          "visual", 600, "журнал браузера на 12 страницах из ОПУБЛИКОВАННОГО дерева: каждый запрос получил ответ, ни одной ошибки консоли и ни одного падения JS; меньше 3 запросов на страницу — BLIND"),
     ("load-ledger-control", ["tools/check-load-ledger.py", "--control"],          "visual", 600, "сам прибор: чистая копия зелёная, четыре мутанта краснеют каждый своим сообщением (фон из CSS, throw, console.error, srcset)"),
+    ("paint",            ["tools/check-paint.py"],                              "visual", 600, "как страница встаёт: CLS и LCP на девяти языках при 420 px из опубликованного дерева; нет записи LCP — BLIND"),
+    ("paint-control",    ["tools/check-paint.py", "--control"],                  "visual", 600, "сам прибор: чистая копия зелёная, три мутанта (поздний блок, картинка без размеров, поздний абзац) пойманы, величины различны — 0.310/0.930/0.106"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
