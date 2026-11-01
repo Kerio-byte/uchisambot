@@ -127,6 +127,8 @@ def kill_tree(proc, grace: float = 2.0):
 # name, argv (после `python3`), tier, timeout, что именно проверяет
 BATTERIES = [
     ("build",            ["tools/build.py"],                                   "build",  180, "пересборка страниц и sitemap"),
+    ("repro",            ["tools/check-repro.py"],                          "build",  300, "чистая копия HEAD (git archive) собирается побайтно в то же дерево: весь список публикации, включая картинки и шрифты; грязное дерево — ПРОПУСК, а не зелёное"),
+    ("repro-control",    ["tools/check-repro.py", "--control"],            "build",  600, "сам прибор: три мутанта — байт в странице, байт в картинке, удалённый шрифт; каждый обязан быть назван по имени"),
     ("site-technical",   ["tools/check-site-technical.py"],                     "offline",180, "шапки девяти языков, числа в словарях"),
     ("internal-links",   ["tools/check-internal.py"],                           "offline",180, "внутренние ссылки, якоря и своё имущество (src/poster) на 12 страницах"),
     ("internal-control", ["tools/check-internal.py", "--control"],               "offline",120, "сам прибор: обязан поймать битый файл, якорь, src и пропавшую страницу"),
