@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Живой сайт против репозитория: байт в байт.
 
 Зачем (31.10.2026). Девять страниц собираются в дереве, а посетитель читает копию
@@ -9,13 +10,28 @@
 и до 31.10 его не держал никто: `build.py` сверяет дерево само с собой,
 `publish-tree.py` — список публикации, а живой ответ не читал ни один прибор.
 
-`--control` подаёт прибору копию дерева с одним испорченным байтом и требует,
-чтобы он назвал ровно этот файл: прибор, который не умеет краснеть, ничего
-не доказывает.
+Повод (01.11.2026, блок 28). Заголовок прибора говорил «байт в байт», а его
+собственный `SKIP_DIRS` выбрасывал `img` и `fonts`: сверялись только страницы и
+текстовые файлы — 16 из 107 опубликованных. Вне сверки оставались 57 картинок и
+11 шрифтов, то есть ровно то, чем один язык отличается от другого: постеры и ролики
+у каждого свои (правило владельца 15.10). Поломка тихая: перевели текст, а на живой
+странице играет английский ролик — файл существует, код ответа 200, журнал загрузки
+доволен, все приборы зелёные. Теперь список берётся не из обхода дерева, а из
+`publish-tree.manifest()` — того же списка, которым публикация раскладывает сайт:
+один источник истины на публикацию и на сверку, чтобы они не разошлись в первый
+же месяц.
+
+`--control` подаёт прибору копию дерева с двумя испорченными байтами — в странице
+и в картинке — и требует, чтобы он назвал ровно эти два файла: прибор, который не
+умеет краснеть, ничего не доказывает. Мутант в картинке нужен отдельно: до этой
+правки прибор на порчу любого файла из `img/` молчал.
+
+Питфолл: `url_for()` превращает `xx/index.html` в `…/xx/`, потому что Pages отдаёт
+страницу по адресу каталога; для остальных файлов адрес — путь как есть.
 """
 import argparse
 import hashlib
-import re
+import importlib.util
 import shutil
 import sys
 import tempfile
@@ -24,27 +40,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = "https://kerio-byte.github.io/uchisambot/"
-SKIP_DIRS = {"src", "demo", "docs", "evidence", "submission-kit", "img", "fonts",
-             "tools", "__pycache__", ".git"}
+TEXT_SUFFIXES = {".html", ".xml", ".txt", ".md"}
 
 
-def deployed(root: Path):
-    """Страницы и текстовые файлы, которые читает человек или робот.
+def _publish_tree():
+    """Модуль публикации по пути: в имени дефис, обычный import не сработает."""
+    spec = importlib.util.spec_from_file_location("publish_tree", ROOT / "tools" / "publish-tree.py")
+    if spec is None or spec.loader is None:
+        raise RuntimeError("tools/publish-tree.py не читается")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
-    Мастерская (`.shots-work`, скрытые каталоги) и исходники (`index-src.html`)
-    в публикацию не идут: живой сайт их не отдаёт, и спрашивать с него нечего.
+
+def published() -> list[Path]:
+    """Ровно то, что публикация обязана выложить: список намерения, не обход дерева.
+
+    `manifest()` — единственное место, где перечислен сайт. Пока сверка строила
+    свой список (`rglob` + `SKIP_DIRS`), она молча проверяла меньше, чем публикация
+    выкладывала, и расхождение двух списков было невидимо обоим.
     """
-    out = []
-    for p in sorted(root.rglob("*")):
-        rel = p.relative_to(root)
-        if any(part in SKIP_DIRS or part.startswith(".") for part in rel.parts) or not p.is_file():
-            continue
-        if rel.name.endswith("-src.html"):
-            continue
-        if p.suffix not in {".html", ".xml", ".txt"}:
-            continue
-        out.append(rel)
-    return out
+    return [Path(f) for f in _publish_tree().manifest()]
 
 
 def url_for(rel: Path) -> str:
@@ -55,13 +71,13 @@ def url_for(rel: Path) -> str:
 
 
 def fetch(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "live-bytes/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "live-bytes/2.0"})
     with urllib.request.urlopen(req, timeout=25) as r:
         return r.read()
 
 
 def compare(root: Path, verbose: bool = True):
-    files = deployed(root)
+    files = published()
     bad = []
     for rel in files:
         url = url_for(rel)
@@ -84,28 +100,38 @@ def compare(root: Path, verbose: bool = True):
 
 
 def control():
-    """Копия дерева с одним испорченным байтом обязана покраснеть именно им."""
+    """Копия дерева с двумя испорченными байтами обязана покраснеть именно ими.
+
+    Классов два — текст и бинарный файл. Прибор, который ловит только первый,
+    выглядит зелёным на сломанном постере.
+    """
+    files = published()
     with tempfile.TemporaryDirectory() as td:
         copy = Path(td) / "tree"
         copy.mkdir()
-        victim = None
-        for rel in deployed(ROOT):
+        for rel in files:
             dst = copy / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / rel, dst)
-            if victim is None and rel.name == "index.html":
-                victim = rel
-        if victim is None:
-            print("КОНТРОЛЬ: НЕ ПОЙМАН — в дереве нет ни одной страницы")
+        page = next((rel for rel in files if rel.name == "index.html"), None)
+        asset = next((rel for rel in files
+                      if rel.suffix not in TEXT_SUFFIXES
+                      and 0 < (ROOT / rel).stat().st_size < 400_000), None)
+        if page is None or asset is None:
+            print("КОНТРОЛЬ: НЕ ПОЙМАН — в публикации нет то ли страницы, то ли картинки")
             return 1
-        page = copy / victim
-        text = page.read_text(encoding="utf-8")
-        page.write_text(text.replace("</title>", " </title>", 1), encoding="utf-8")
+        text = (copy / page).read_text(encoding="utf-8")
+        (copy / page).write_text(text.replace("</title>", " </title>", 1), encoding="utf-8")
+        blob = bytearray((copy / asset).read_bytes())
+        blob[-1] ^= 0xFF  # последний байт: файл на месте, содержимое — уже нет
+        (copy / asset).write_bytes(bytes(blob))
         _files, bad = compare(copy, verbose=False)
-        caught = [rel for rel, _ in bad]
-        ok = set(caught) == {victim}
-        print(f"КОНТРОЛЬ: {'поймал' if ok else 'НЕ ПОЙМАЛ'} 1 из 1 — "
-              f"испорчен {victim}, прибор сказал {caught or 'ничего'}")
+        caught = {rel for rel, _ in bad}
+        want = {page, asset}
+        ok = caught == want
+        print(f"КОНТРОЛЬ: {'поймал' if ok else 'НЕ ПОЙМАЛ'} {len(caught & want)} из {len(want)} — "
+              f"испорчено {sorted(str(x) for x in want)}, прибор сказал "
+              f"{sorted(str(x) for x in caught) or 'ничего'}")
         return 0 if ok else 1
 
 
@@ -118,7 +144,9 @@ def main() -> int:
     if args.control:
         return control()
     files, bad = compare(Path(args.root), verbose=not args.quiet)
-    print(f"\nИТОГО: {len(files)} файлов, расхождений {len(bad)}")
+    text = sum(1 for f in files if f.suffix in TEXT_SUFFIXES)
+    print(f"\nИТОГО: {len(files)} файлов (текст {text}, медиа {len(files) - text}), "
+          f"расхождений {len(bad)}")
     if bad:
         print("ПРОВАЛЕНО: живой сайт не равен дереву (публикация отстала?)")
         for rel, why in bad:
