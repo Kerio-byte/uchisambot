@@ -30,6 +30,10 @@ JSON-LD. Рядом с каждой страницей с 22.10 лежит вт�
           существует, а ссылка на бота несёт метку источника (start=).
   LLMS  — llms.txt перечисляет все девять двойников, оба legal-двойника и
           ролики, и все его адреса резолвятся в файлы дерева.
+  TIME  — секунды, обещанные в llms.txt («35 s», «13 s»), сверяются с байтами
+          самого mp4 (mvhd), а не с реестром; слово в квадратных скобках обязано
+          быть названием языка этого файла у переключателя; каждый ролик дерева
+          обязан быть назван ровно один раз.
   LEGAL — ни один заголовок privacy/terms не потерян при конвертации в md.
 
 Ожидания берутся из дерева (страницы, их заголовки, карточки, FAQ) и из
@@ -45,6 +49,7 @@ import argparse
 import json
 import re
 import shutil
+import struct
 import sys
 import tempfile
 from html import unescape
@@ -66,8 +71,59 @@ CODES = {
     "MEDIA": "ролик или кадры чужого языка / не те файлы",
     "LINK": "ссылка двойника никуда не ведёт",
     "LLMS": "llms.txt неполон или ведёт в пустоту",
+    "TIME": "длительность ролика не та, что обещана в llms.txt",
     "LEGAL": "заголовок legal-страницы потерян в md",
 }
+
+
+def _mp4_boxes(data: bytes, start: int, end: int):
+    """Обход верхнеуровневых боксов mp4: (тип, начало полезной части, конец)."""
+    pos = start
+    while pos + 8 <= end:
+        size = struct.unpack(">I", data[pos:pos + 4])[0]
+        kind = data[pos + 4:pos + 8].decode("latin-1", "replace")
+        head = 8
+        if size == 1:  # 64-битный размер
+            size = struct.unpack(">Q", data[pos + 8:pos + 16])[0]
+            head = 16
+        elif size == 0:  # «до конца файла»
+            size = end - pos
+        if size < head or pos + size > end:
+            return
+        yield kind, pos + head, pos + size
+        pos += size
+
+
+def mp4_seconds(path: Path) -> float | None:
+    """Длительность из самого контейнера (mvhd), без ffprobe: обещание в llms.txt
+    сверяется с байтами файла, а не с реестром, который пишет тот же генератор.
+    Сверено с ffprobe на всех 11 роликах дерева — расхождений 0."""
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return None
+    moov = next(((s, e) for kind, s, e in _mp4_boxes(data, 0, len(data))
+                 if kind == "moov"), None)
+    if moov is None:
+        return None
+    for kind, s, e in _mp4_boxes(data, *moov):
+        if kind != "mvhd":
+            continue
+        if data[s] == 1:  # версия 1: 64-битные времена
+            timescale = struct.unpack(">I", data[s + 20:s + 24])[0]
+            dur = struct.unpack(">Q", data[s + 24:s + 32])[0]
+        else:
+            timescale = struct.unpack(">I", data[s + 12:s + 16])[0]
+            dur = struct.unpack(">I", data[s + 16:s + 20])[0]
+        return dur / timescale if timescale else None
+    return None
+
+
+def switcher_names(html: str) -> dict[str, str]:
+    """Как переключатель языка на странице называет каждый язык — своими словами.
+    llms.txt обязан звать ролик тем же словом: иначе агент читает одно, а видит другое."""
+    return {m.group(1): norm(m.group(2))
+            for m in re.finditer(r'<a[^>]*hreflang="([a-z]{2})"[^>]*>(.*?)</a>', html, re.S)}
 
 
 def norm(s: str) -> str:
@@ -309,6 +365,54 @@ def scan(root: Path) -> list[dict]:
             elif not t.exists():
                 fail("LLMS", "llms.txt", f"нет файла: {url}")
 
+        # TIME: обещанные секунды и названный язык против самих файлов роликов.
+        # llms.txt пишет «Demo video (35 s, English)» и «Hero loops (13 s, ...)»,
+        # а это литералы в build.py: перерисовали ролик короче — обещание осталось.
+        names = switcher_names((root / "index.html").read_text(encoding="utf-8"))
+        claim: int | None = None
+        mentioned: list[str] = []
+        for line in llms.splitlines():
+            if line.startswith("## "):
+                claim = None
+                continue
+            link = re.match(r"- \[([^\]]+)\]\(([^)\s]+\.mp4)\)", line)
+            if not link:
+                head = re.search(r"\((\d+)\s*s\b", line)
+                if head:
+                    claim = int(head.group(1))
+                continue
+            label, url = link.group(1), link.group(2)
+            inline = re.search(r"\((\d+)\s*s\b", label)
+            secs = int(inline.group(1)) if inline else claim
+            checks += 1
+            tgt = resolve(url, root)
+            if tgt is None or not tgt.exists():
+                continue  # пустой адрес — забота класса LLMS, не TIME
+            mentioned.append(tgt.name)
+            actual = mp4_seconds(tgt)
+            if secs is None:
+                fail("TIME", tgt.name, "длительность не обещана ни в строке, ни в заголовке группы")
+            elif actual is None:
+                fail("TIME", tgt.name, "длительность не читается из контейнера")
+            elif abs(actual - secs) >= 1.0:
+                fail("TIME", tgt.name,
+                     f"обещано {secs} с, а в файле {actual:.1f} с")
+            m_loop = re.search(r"demo-web(?:-([a-z]{2}))?\.mp4$", tgt.name)
+            if m_loop:  # луп героя: слово в квадратных скобках — язык этого файла
+                lang = m_loop.group(1) or "en"
+                checks += 1
+                want = names.get(lang)
+                if want and norm(label) != want:
+                    fail("TIME", tgt.name,
+                         f"подписан «{norm(label)}», а переключатель зовёт {lang} «{want}»")
+        # полнота: ролик, лежащий в дереве, обязан быть назван — иначе молчание
+        # прибора читается как «верно» (так llms.txt знал два ролика из одиннадцати)
+        for mp4 in sorted((root / "demo").glob("*.mp4")):
+            checks += 1
+            n = mentioned.count(mp4.name)
+            if n != 1:
+                fail("TIME", mp4.name, f"в llms.txt упомянут {n} раз, нужно 1")
+
     # legal-двойники
     for name in ("privacy", "terms"):
         hp, mp = root / f"{name}.html", root / f"{name}.html.md"
@@ -357,7 +461,9 @@ def _setup(tmp: Path) -> Path:
         (base / lang).mkdir()
         shutil.copy2(ROOT / lang / "index.html", base / lang / "index.html")
         shutil.copy2(ROOT / lang / "index.html.md", base / lang / "index.html.md")
-    # пустышки для всех наших целей — кроме тех, что уже скопированы
+    # пустышки для всех наших целей — кроме тех, что уже скопированы.
+    # Медиа копируем настоящим: TIME читает длительность из байтов контейнера,
+    # и пустой файл ему нечего мерить.
     for p in list(base.rglob("*.md")) + [base / "llms.txt"]:
         txt = p.read_text(encoding="utf-8")
         for url in re.findall(r"\]\(([^)\s]+)\)", txt):
@@ -366,7 +472,11 @@ def _setup(tmp: Path) -> Path:
             t = resolve(url, base)
             if t and not t.exists():
                 t.parent.mkdir(parents=True, exist_ok=True)
-                t.write_bytes(b"")
+                src = ROOT / t.relative_to(base)
+                if t.suffix == ".mp4" and src.exists():
+                    shutil.copy2(src, t)
+                else:
+                    t.write_bytes(b"")
     return base
 
 
@@ -427,6 +537,18 @@ def control() -> int:
         def drop_legal(t: str) -> str:
             return re.sub(r"\n## [^\n]+\n", "\n", t, count=1)
 
+        def wrong_demo_seconds(t: str) -> str:
+            return t.replace("(35 s, English)", "(20 s, English)", 1)
+
+        def wrong_loop_seconds(t: str) -> str:
+            return t.replace("Hero loops (13 s,", "Hero loops (30 s,", 1)
+
+        def wrong_loop_label(t: str) -> str:
+            return t.replace("- [हिन्दी](", "- [Türkçe](", 1)
+
+        def drop_loop(t: str) -> str:
+            return re.sub(r"\n- \[Tiếng Việt\]\([^\n]*\n", "\n", t, count=1)
+
         caught = [
             mutate("index.html.md", "PRICE", drop_price),
             mutate("es/index.html.md", "SECT", drop_sect),
@@ -437,6 +559,10 @@ def control() -> int:
             mutate("llms.txt", "LLMS", drop_llms),
             mutate("uk/index.html.md", "FAQ", phantom_faq, "FAQ-фантом"),
             mutate("privacy.html.md", "LEGAL", drop_legal),
+            mutate("llms.txt", "TIME", wrong_demo_seconds, "TIME-секунды демо"),
+            mutate("llms.txt", "TIME", wrong_loop_seconds, "TIME-секунды лупов"),
+            mutate("llms.txt", "TIME", wrong_loop_label, "TIME-чужое слово"),
+            mutate("llms.txt", "TIME", drop_loop, "TIME-луп не назван"),
         ]
         ok = sum(1 for _, hit in caught if hit)
         print("КОНТРОЛЬ: " + "  ".join(f"{c} — {'поймал' if h else 'ПРОСМОТРЕЛ'}"
