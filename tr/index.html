@@ -88,6 +88,15 @@ a{color:var(--brand);text-decoration:none}
 a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:12px}
 .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
 h1,h2,h3{line-height:1.2;margin:0}
+/* Длинное слово не задаёт ширину страницы (01.11.2026, блок 22, известное красное).
+   При 200 % системного текста одно слово кеглем 70 px шире колонки телефона (280 px
+   содержимого при окне 320) — и это же слово становится min-content грид-ребёнка,
+   распирая его блок. anywhere разрешает перенос ВНУТРИ слова и, в отличие от
+   break-word, уменьшает min-content: колонка остаётся 280, слово ломается по буквам.
+   hyphens:auto там, где браузер знает словарь языка, ставит перенос по слогам —
+   читается лучше, чем обрыв. */
+h1,h2,h3,.lead,.amount{overflow-wrap:anywhere;hyphens:auto}
+p,li,summary,figcaption,span,label,button{overflow-wrap:anywhere}
 p{margin:0}
 h1{font-size:clamp(30px,5.4vw,56px);font-weight:800;letter-spacing:-.03em}
 h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
@@ -109,7 +118,7 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.01em}
    Лучше лишняя строка шапки, чем разорванное слово. */
 .brand,.nav,.lang-dd{flex:0 0 auto}
 .lang-dd summary span{white-space:nowrap}
-.skip{position:fixed;left:10px;top:-60px;z-index:70;background:#0E1526;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
+.skip{position:fixed;left:10px;top:-60px;z-index:70;max-width:calc(100vw - 20px);overflow-wrap:anywhere;background:#0E1526;color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none}
 .skip:focus{top:10px}
 main:focus{outline:none}
 main{display:block}
@@ -170,7 +179,8 @@ main{display:block}
 }
 
 .hero{padding:48px 0 8px}
-.hero-in{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center}
+.hero-in{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center;min-width:0}
+.hero-in>*{min-width:0}
 .lead{color:var(--muted);font-size:18px;margin:18px 0 26px;max-width:560px}
 .cta-row{display:flex;gap:14px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:#fff;font-weight:600;font-size:17px;
@@ -285,9 +295,18 @@ main{display:block}
 }
 
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:14px}
-.price h3{font-size:16px;color:var(--muted);font-weight:600}
-.price .amount{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:10px 0 8px;color:var(--brand)}
-.price p{color:var(--muted);font-size:14.5px}
+/* Почему карточки цен шире телефона (01.11.2026, блок 22, известное красное).
+   Грид- и флекс-дети имеют min-width:auto = ширина самого длинного НЕРАЗРЫВНОГО слова
+   в их содержимом. Украинское «Безкоштовно» кеглем 30 px при 200 % системного шрифта
+   (так настроен Android у родителей школьников) — это 380 px одного слова: карточка
+   распирала колонку 1fr до 440 px, документ до 460 при окне 420, и страница ездила
+   вбок ровно на блоке цены. min-width:0 возвращает колонке право быть уже содержимого,
+   overflow-wrap разрешает слову перенестись внутри себя. То же у всех прочих
+   карточных сеток: дефект общий, лечим класс, а не одну страницу. */
+.price-grid>*,.cards>*,.steps>li,.shots>figure,.parents-list>li,.ref-band>*{min-width:0}
+.price h3{font-size:16px;color:var(--muted);font-weight:600;overflow-wrap:break-word}
+.price .amount{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:10px 0 8px;color:var(--brand);overflow-wrap:anywhere;hyphens:auto}
+.price p{color:var(--muted);font-size:14.5px;overflow-wrap:break-word}
 .price.hot{border-color:#C9D6FF;background:linear-gradient(180deg,#F5F8FF,#fff)}
 @media(max-width:860px){.price-grid{grid-template-columns:1fr}}
 .price-fine{text-align:center;color:var(--muted);font-size:14px;margin-bottom:22px}
@@ -309,9 +328,16 @@ main{display:block}
 
 /* Блок «Родителям»: проверяемые факты о данных — из политики конфиденциальности */
 .parents-band{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr);gap:32px;align-items:start;background:linear-gradient(180deg,#F2F7FF,#fff);border:1px solid #D7E1FF;border-radius:var(--r);padding:30px 30px 26px;box-shadow:var(--shadow)}
+.parents-band>*{min-width:0}
 .parents-head h2{font-size:clamp(22px,2.6vw,27px)}
 .parents-head p{color:var(--muted);font-size:15px;margin-top:10px;max-width:44ch}
 .parents-head .privacy-link{display:inline-block;margin-top:14px;font-size:14.5px;font-weight:600;padding:1px 0;min-height:24px}
+/* Отдельным правилом, а не правкой строки выше (01.11.2026): строка выше — маркер
+   приёмочного прибора (landing-sweep.py, «2.5.8 privacy link target» сверяет её дословно).
+   Дописываем то, что нужно для 200 % текста: ссылка не шире колонки и переносится
+   внутри длинного слова — иначе «конфиденциальности» кеглем 29 px распирало блок до 356 px
+   при окне 320. */
+.parents-head .privacy-link{max-width:100%;overflow-wrap:anywhere}
 .parents-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .parents-list li{display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.5}
 .parents-list svg{flex:0 0 auto;margin-top:3px;color:var(--brand)}
@@ -396,7 +422,7 @@ footer{padding:44px 0 34px;margin-top:56px;border-top:1px solid var(--line)}
   /* Нижняя липкая кнопка (59 px) перекрывала сфокусированный вопрос FAQ: браузер докручивал
      элемент ровно к нижней кромке экрана. Резерв снизу = высота кнопки + запас (WCAG 2.4.11). */
   html{scroll-padding-bottom:calc(78px + env(safe-area-inset-bottom))}
-  .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:6px 14px;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
+  .sticky-cta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;max-width:100vw;padding:6px 14px;padding:6px 14px calc(6px + env(safe-area-inset-bottom));background:rgba(247,250,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(115%);visibility:hidden;transition:transform .22s ease,visibility .22s ease}
   .sticky-cta.show{transform:none;visibility:visible}
   .sticky-cta .btn{width:100%;min-height:44px;padding:10px 18px;font-size:16px;border-radius:12px}
 }
