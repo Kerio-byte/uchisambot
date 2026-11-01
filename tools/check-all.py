@@ -69,7 +69,7 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 CONTROL = {"redirects-control", "visual-control", "links-control",
            "weight-control", "narrow-control", "internal-control",
            "publish-tree-control", "prices-control", "words-control",
-           "zoom-control"}
+           "zoom-control", "validator-control"}
 
 # Приборы, у которых есть ТРЕТИЙ ответ, кроме «сошлось» и «не сошлось»: «я не смог
 # проверить». До 01.11.2026 раннер знал только код 1 и красил такой ответ в FAIL.
@@ -85,6 +85,11 @@ CONTROL = {"redirects-control", "visual-control", "links-control",
 SKIP_RC = {
     "bot-profile": (2, "Bot API не ответил"),
     "bot-labels": (3, "код бота недоступен"),
+    # Валидатор живёт вне дерева и ставится из npm: без пакета или без сети на
+    # установку разметку посторонним прибором не читали. Это ПРОПУСК с названной
+    # командой установки, а не зелёное.
+    "validator": (3, "ПРОПУСК"),
+    "validator-control": (3, "ПРОПУСК"),
 }
 SKIP_WORDS = ("НЕ ПРОВЕРЕНО", "ПРОПУСК")
 
@@ -146,6 +151,8 @@ BATTERIES = [
     ("build",            ["tools/build.py"],                                   "build",  180, "пересборка страниц и sitemap"),
     ("repro",            ["tools/check-repro.py"],                          "build",  300, "чистая копия HEAD (git archive) собирается побайтно в то же дерево: весь список публикации, включая картинки и шрифты; грязное дерево — ПРОПУСК, а не зелёное"),
     ("repro-control",    ["tools/check-repro.py", "--control"],            "build",  600, "сам прибор: три мутанта — байт в странице, байт в картинке, удалённый шрифт; каждый обязан быть назван по имени"),
+    ("validator",        ["tools/check-validator.py"],                      "offline",240, "посторонний валидатор HTML (html-validate 11.17.0 вне дерева): 12 страниц из списка публикации против снимка находок — прибавка, убыль и любой структурный класс краснеют поимённо; пакеты внутри дерева — красное"),
+    ("validator-control", ["tools/check-validator.py", "--control"],        "offline",420, "сам прибор: шесть мутантов (лишний br, снятый закрывающий тег, повтор атрибута, node_modules в дереве, структурное правило в снимке, чужая версия валидатора)"),
     ("site-technical",   ["tools/check-site-technical.py"],                     "offline",180, "шапки девяти языков, числа в словарях"),
     ("internal-links",   ["tools/check-internal.py"],                           "offline",180, "внутренние ссылки, якоря и своё имущество (src/poster) на 12 страницах"),
     ("internal-control", ["tools/check-internal.py", "--control"],               "offline",120, "сам прибор: обязан поймать битый файл, якорь, src и пропавшую страницу"),

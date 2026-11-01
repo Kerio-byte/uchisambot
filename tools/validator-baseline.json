@@ -1,0 +1,52 @@
+{
+  "allowed_rules": [
+    "void-style",
+    "aria-label-misuse"
+  ],
+  "findings": {
+    "es/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "hi/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "id/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "privacy.html": {
+      "void-style": 3
+    },
+    "pt/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "ru/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "terms.html": {
+      "void-style": 3
+    },
+    "tr/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "uk/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    },
+    "vi/index.html": {
+      "aria-label-misuse": 1,
+      "void-style": 13
+    }
+  },
+  "measured_on": "11 published pages, tree of 02.11.2026",
+  "validator": "html-validate@11.17.0"
+}
