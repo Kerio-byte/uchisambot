@@ -386,13 +386,13 @@ def verify_served(dest: Path) -> int:
             super().__init__(*a, directory=str(dest), **kw)
 
     handler = _Quiet
-    with socketserver.TCPServer(("[адрес]", 0), handler) as srv:
+    with socketserver.TCPServer(("127.0.0.1", 0), handler) as srv:
         port = srv.server_address[1]
         threading.Thread(target=srv.serve_forever, daemon=True).start()
         bad = []
         for u in sorted(urls):
             try:
-                with urllib.request.urlopen(f"http://[адрес]:{port}/{u}", timeout=15) as r:
+                with urllib.request.urlopen(f"http://127.0.0.1:{port}/{u}", timeout=15) as r:
                     if r.status != 200:
                         bad.append(f"{u} -> {r.status}")
             except Exception as e:

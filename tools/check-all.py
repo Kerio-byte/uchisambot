@@ -182,6 +182,8 @@ BATTERIES = [
     ("lang-fonts",       ["tools/check-lang-fonts.py"],                           "offline",  90, "шрифты переключателя: девять названий покрыты объявленными unicode-range на каждой странице, реестр не отстал от LABELS, range без фантомов, вес лица покрывает веса страницы"),
     ("lang-fonts-control", ["tools/check-lang-fonts.py", "--control"],            "offline", 300, "сам прибор: семь мутантов (переименован язык, выпал кодпойнт ї, фантомный кодпойнт, чужой отпечаток, отставший реестр имён, разный вес лица, мини-лицо на своей странице)"),
     ("ai-layer-control", ["tools/check-ai-layer.py", "--control"],                "offline", 300, "сам прибор: копия без правок зелёная, восемь мутантов краснеют каждый своим классом"),
+    ("load-ledger",      ["tools/check-load-ledger.py"],                          "visual", 600, "журнал браузера на 12 страницах из ОПУБЛИКОВАННОГО дерева: каждый запрос получил ответ, ни одной ошибки консоли и ни одного падения JS; меньше 3 запросов на страницу — BLIND"),
+    ("load-ledger-control", ["tools/check-load-ledger.py", "--control"],          "visual", 600, "сам прибор: чистая копия зелёная, четыре мутанта краснеют каждый своим сообщением (фон из CSS, throw, console.error, srcset)"),
     ("visual-420",       ["tools/visual-pass.py", "--frames"],                  "visual", 600, "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"),
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
