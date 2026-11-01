@@ -47,15 +47,31 @@ ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_DIRTY = {"tools/links-last-seen.json"}
 
 
-def published(root: Path) -> list[str]:
-    """Список публикации по дереву `root` — из publish-tree, не копией."""
+def _module(root: Path):
+    """Модуль публикации по пути — в имени дефис, обычный import не сработает."""
     spec = importlib.util.spec_from_file_location("publish_tree", root / "tools" / "publish-tree.py")
     if spec is None or spec.loader is None:
         raise RuntimeError("tools/publish-tree.py не читается")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     mod.set_root(root)
-    return list(mod.manifest())
+    return mod
+
+
+def published(root: Path) -> list[str]:
+    """Список публикации по дереву `root` — из publish-tree, не копией."""
+    return list(_module(root).manifest())
+
+
+def kinds_of(root: Path, files: list[str]) -> tuple[int, int]:
+    """Текст и медиа одной меркой публикации (`publish-tree.kind`), не своей.
+
+    До 02.11.2026 прибор считал текстом всё, что лежит вне `img/` и `fonts/`,
+    и печатал «текст 39, медиа 68» про те же 107 файлов, о которых `live-bytes`
+    печатал «текст 29, медиа 78»: ролики `demo/*.mp4` и пустой `.nojekyll`
+    попадали у него в текст, а лицензии шрифтов у соседа — в медиа.
+    """
+    return _module(root).split_kinds(files)
 
 
 def sha(path: Path) -> str:
@@ -138,15 +154,14 @@ def run() -> int:
         files = published(clean)
         expected = hashes_of(clean, files)
         diffs = compare(expected, ROOT)
-        text = [f for f in files if not f.startswith(("img/", "fonts/"))]
-        media = [f for f in files if f.startswith(("img/", "fonts/"))]
+        text, media = kinds_of(clean, files)
         if diffs:
             print(f"РАСХОЖДЕНИЙ {len(diffs)} из {len(files)}: чистая сборка не равна дереву")
             for line in diffs[:12]:
                 print("  " + line)
             return 1
         print(f"ok: чистая копия HEAD собрана и совпала с деревом — файлов {len(files)} "
-              f"(текст {len(text)}, медиа {len(media)}), расхождений 0")
+              f"(текст {text}, медиа {media}), расхождений 0")
         return 0
 
 

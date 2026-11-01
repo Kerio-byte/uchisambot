@@ -144,8 +144,8 @@ def main() -> int:
     if args.control:
         return control()
     files, bad = compare(Path(args.root), verbose=not args.quiet)
-    text = sum(1 for f in files if f.suffix in TEXT_SUFFIXES)
-    print(f"\nИТОГО: {len(files)} файлов (текст {text}, медиа {len(files) - text}), "
+    text, media = _publish_tree().split_kinds([str(f) for f in files])
+    print(f"\nИТОГО: {len(files)} файлов (текст {text}, медиа {media}), "
           f"расхождений {len(bad)}")
     if bad:
         print("ПРОВАЛЕНО: живой сайт не равен дереву (публикация отстала?)")

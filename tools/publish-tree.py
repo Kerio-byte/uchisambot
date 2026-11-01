@@ -105,6 +105,60 @@ PUBLIC_UNLINKED = {
 }
 
 
+TEXT_SUFFIXES = {".html", ".xml", ".txt", ".md"}
+
+
+def kind(rel: str) -> str:
+    """«text» или «media» — по содержимому файла, а не по имени его каталога.
+
+    Повод (02.11.2026). Два прибора печатали разбивку ОДНОГО И ТОГО ЖЕ списка
+    публикации, каждый своей меркой, и README цитировал оба числа рядом как
+    описание одних и тех же 107 файлов:
+
+      live-bytes:  «текст 29, медиа 78» — текстом считал только суффиксы
+                   (.html/.xml/.txt/.md), поэтому лицензию шрифта
+                   `fonts/LICENSE-OFL.txt` называл медиа;
+      check-repro: «текст 39, медиа 68» — текстом считал всё, что лежит вне
+                   `img/` и `fonts/`, поэтому текстом называл одиннадцать
+                   роликов `demo/*.mp4` и пустой флаг `.nojekyll`.
+
+    Обе метки врали в разные стороны, и по числам нельзя было понять, где
+    правда. Здесь одна мерка на оба прибора: файл читается и декодируется как
+    UTF-8 без нулевых байтов — текст; иначе медиа. Суффикс остаётся только
+    запасным путём на случай, если файл не открывается (тогда честнее сказать
+    «не знаю» тем же словом, которым его называет публикация).
+
+    Читаются первые 64 КБ: у роликов нулевой байт стоит в первых четырёх
+    (`00 00 00 20 66 74 79 70`), у шрифтов — в первых двух, а текстовые файлы
+    публикации меньше этого порога целиком, кроме страниц, у которых первые
+    64 КБ уже доказывают свою природу. Обрезка многобайтового символа на
+    границе окна снимается откусыванием хвоста — иначе кириллическая страница
+    на шве объявилась бы медиа.
+    """
+    path = ROOT / rel
+    head = b""
+    try:
+        with path.open("rb") as fh:
+            head = fh.read(65536)
+    except OSError:
+        return "text" if Path(rel).suffix in TEXT_SUFFIXES else "media"
+    if b"\x00" in head:
+        return "media"
+    for cut in (0, 1, 2, 3):
+        try:
+            (head[: len(head) - cut] if cut else head).decode("utf-8")
+            return "text"
+        except UnicodeDecodeError:
+            continue
+    return "text" if Path(rel).suffix in TEXT_SUFFIXES else "media"
+
+
+def split_kinds(files: list[str]) -> tuple[int, int]:
+    """Сколько в списке текста и сколько медиа — одной меркой `kind()`."""
+    text = sum(1 for f in files if kind(f) == "text")
+    return text, len(files) - text
+
+
 def manifest() -> list[str]:
     """Список того, что обязано быть сайтом — независимо от того, что сейчас на диске.
 
@@ -306,9 +360,30 @@ def check() -> int:
         problems.append(f"файл публикуется, но сайт его не называет: {f} ({size // 1024} КБ)")
     checks += len(pub) - len(lost)
 
+    # 6) одна мера «текст/медиа» на всю публикацию (02.11.2026).
+    #
+    # Проверяются три образца — ровно те файлы, на которых две прежние мерки
+    # разошлись: лицензия шрифта (суффиксный прибор звал её медиа), ролик и
+    # пустой флаг .nojekyll (каталогозависимый прибор звал их текстом). Если
+    # кто-нибудь вернёт меру «по каталогу» или «по суффиксу», образцы скажут
+    # об этом сразу, а не через расхождение двух чисел в README.
+    for rel, want in (("fonts/LICENSE-OFL.txt", "text"),
+                      ("fonts/LICENSE-OFL-NotoSansDevanagari.txt", "text"),
+                      ("demo/uchiambot-demo.mp4", "media"),
+                      ("demo/uchiambot-demo-web-ru.mp4", "media"),
+                      (".nojekyll", "text"),
+                      ("index.html", "text"),
+                      ("img/badges/liftoff-day.webp", "media")):
+        checks += 1
+        got = kind(rel)
+        if got != want:
+            problems.append(f"мера файла врёт: {rel} назван «{got}», а он «{want}»")
+
     unlinked_by_decision = len(set(PUBLIC_UNLINKED) & set(pub))
     size = sum((ROOT / f).stat().st_size for f in pub if (ROOT / f).is_file())
-    print(f"публикация: {len(pub)} файлов, {size / 1048576:.1f} МБ")
+    text_n, media_n = split_kinds(pub)
+    print(f"публикация: {len(pub)} файлов, {size / 1048576:.1f} МБ "
+          f"(текст {text_n}, медиа {media_n} — мерой `kind()`, одной на все приборы)")
     print(f"названо страницами: {len(pub) - len(lost) - unlinked_by_decision} файлов, "
           f"без ссылки по решению: {unlinked_by_decision}, без читателя: {len(lost)}")
     print(f"мастерская (в публикацию не идёт): {len(back)} файлов")
