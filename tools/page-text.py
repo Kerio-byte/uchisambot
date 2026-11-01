@@ -36,6 +36,7 @@
 смысловой проход должен читать ответы FAQ, а не только вопросы. Для «что
 именно видно на экране» есть браузерные батареи, у них другой вопрос.
 """
+import argparse
 import re
 import sys
 from html.parser import HTMLParser
@@ -133,10 +134,26 @@ def flatten(html: str) -> str:
 
 
 def main() -> None:
-    path = Path(sys.argv[1] if len(sys.argv) > 1 else "index.html")
+    # 01.11.2026: у прибора не было разбора доводов — первый довод всегда считался
+    # путём. `--help` падал трейсбеком на файле с именем "--help", а `--chars 500
+    # index.html` искал файл по имени "--chars". Свип (tools/check-all.py) зовёт
+    # этот прибор без доводов и потому молчал о поломке: обычный интерфейс есть
+    # у всех остальных приборов дерева, и у этого он теперь тоже есть.
+    ap = argparse.ArgumentParser(
+        prog="page-text.py",
+        description="Читаемый текст страницы: то, что человек видит без разметки.")
+    ap.add_argument("path", nargs="?", default="index.html",
+                    help="страница (по умолчанию index.html в текущем каталоге)")
+    ap.add_argument("--chars", type=int, default=0,
+                    help="обрезать вывод до N знаков (0 — весь текст)")
+    args = ap.parse_args()
+
+    path = Path(args.path)
+    if not path.is_file():
+        ap.error(f"нет такого файла: {path}")
     text = flatten(path.read_text(encoding="utf-8"))
-    if "--chars" in sys.argv:
-        text = text[: int(sys.argv[sys.argv.index("--chars") + 1])]
+    if args.chars:
+        text = text[: args.chars]
     print(text)
 
 
