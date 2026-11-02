@@ -60,6 +60,14 @@
 `winW == width` на каждой загруженной странице — иначе печатает ШИРИНА НЕ ПРИМЕНЕНА.
 Переданный аргумент доказывает вызов, а не окно.
 
+Мутант, который ломается ТОЛЬКО на узком (02.11.2026, блок 64). Долг блока 63:
+три классических мутанта краснеют на ЛЮБОЙ ширине, поэтому зелёное на 320 всё ещё
+опиралось на историю. Режим `--width-sensitivity` мерит одну и ту же коробку дважды:
+на узком окне она обязана покраснеть, на широком — остаться зелёной. Вторая половина
+не менее важна: без неё мутант доказывал бы лишь то, что прибор умеет красить.
+  python3 tools/check-text-zoom.py --width-sensitivity --width=320   # 320 против 420
+  python3 tools/check-text-zoom.py --width-sensitivity --width=320 --wide=360
+
 Страницы вне девяти языков (02.11.2026, блок 61). Долг блока 60: `--set=legal` у
 `probe-narrow` закрыл вылезание/обрезку/цели на privacy, terms и 404, но ЗУМ текста
 эти три страницы не мерил вовсе — прибор ходил только по девяти языкам. Аудитория
@@ -375,7 +383,31 @@ def run(browser, targets: list[tuple[str, str, str, int]], zoom: float, root: Pa
     return rows, fails
 
 
-def mutant_tree(src: Path, mut: str, page: str = "ru/index.html") -> Path:
+# Что НЕ копируется в чистую копию и в мутанта: одно место для всех контролей.
+SKIP_COPY = {".git", "evidence", ".shots-work", "tools", "src", "docs", "submission-kit",
+             "__pycache__"}
+
+
+def copy_page_tree(src: Path, prefix: str) -> Path:
+    """Копия дерева страницы без служебных каталогов — общая для всех контролей.
+
+    02.11.2026 (блок 64): набор пропускаемого жил в двух копиях (мутант и чистая
+    копия), а третий контроль завёл бы третью. Контроль, который копирует не то же,
+    что соседний, доказывает не тот прибор.
+    """
+    import shutil
+    import tempfile
+
+    dst = Path(tempfile.mkdtemp(prefix=prefix))
+    for item in src.iterdir():
+        if item.name in SKIP_COPY:
+            continue
+        (shutil.copytree(item, dst / item.name) if item.is_dir()
+         else shutil.copy2(item, dst / item.name))
+    return dst
+
+
+def mutant_tree(src: Path, mut: str, page: str = "ru/index.html", box: int = 0) -> Path:
     """Копия дерева (как у соседних контролей) + один дефект в указанной странице.
 
     02.11.2026 (блок 61): страница стала параметром. Контроль набора legal обязан
@@ -383,15 +415,7 @@ def mutant_tree(src: Path, mut: str, page: str = "ru/index.html") -> Path:
     прибор на девяти языках и промолчит про три страницы, ради которых затевался.
     """
     import shutil
-    import tempfile
-    skip = {".git", "evidence", ".shots-work", "tools", "src", "docs", "submission-kit",
-            "__pycache__"}
-    dst = Path(tempfile.mkdtemp(prefix="zoom-mut-"))
-    for item in src.iterdir():
-        if item.name in skip:
-            continue
-        (shutil.copytree(item, dst / item.name) if item.is_dir()
-         else shutil.copy2(item, dst / item.name))
+    dst = copy_page_tree(src, "zoom-mut-")
     target = dst / page
     html = target.read_text(encoding="utf-8")
     if mut == "clip":
@@ -415,6 +439,14 @@ def mutant_tree(src: Path, mut: str, page: str = "ru/index.html") -> Path:
     elif mut == "tap":
         html = html.replace("</body>", '<button type="button" style="width:12px;height:12px">'
                                         "</button></body>", 1)
+    elif mut == "narrow":
+        # 02.11.2026 (блок 64). Мутант, который ломается ТОЛЬКО на узком экране:
+        # коробка шире узкого окна на 20 px и уже широкого, поэтому на 420 он обязан
+        # быть зелёным. Старые три краснеют на любой ширине — ими нельзя доказать,
+        # что прибор вообще замечает узкое.
+        assert box > 0, "мутанту narrow нужна ширина коробки"
+        html = html.replace("</body>", f'<div style="width:{box}px;height:12px;'
+                                        f'font-size:8px">narrow</div></body>', 1)
     else:
         raise SystemExit(f"неизвестный мутант {mut}")
     target.write_text(html, encoding="utf-8")
@@ -456,14 +488,7 @@ def run_control(zoom: float, pageset: str = "langs", width: int = WIDTH) -> int:
         br = p.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
         # A. нетронутая копия: без этого красное на мутанте ничего не доказывает
         import tempfile
-        clean = Path(tempfile.mkdtemp(prefix="zoom-clean-"))
-        skip = {".git", "evidence", ".shots-work", "tools", "src", "docs", "submission-kit",
-                "__pycache__"}
-        for item in ROOT.iterdir():
-            if item.name in skip:
-                continue
-            (shutil.copytree(item, clean / item.name) if item.is_dir()
-             else shutil.copy2(item, clean / item.name))
+        clean = copy_page_tree(ROOT, "zoom-clean-")
         rows, fails = run(br, targets_for(pageset, ["ru"], clean), zoom,
                           clean, "clean/" if legal else "clean/ru ", width)
         results["clean"] = {"fails": fails, "bad": [r["bad"] for r in rows],
@@ -506,6 +531,68 @@ def run_control(zoom: float, pageset: str = "langs", width: int = WIDTH) -> int:
     return 0 if ok else 1
 
 
+def run_width_sensitivity(narrow: int, wide: int = 420) -> int:
+    """Мутант, который ломается ТОЛЬКО на узкой ширине — долг, названный блоком 63.
+
+    Три классических мутанта (`clip`, `wide`, `tap`) краснеют на ЛЮБОЙ ширине, поэтому
+    зелёное на 320 держалось на красном прогоне ДО правки, то есть на истории: через
+    месяц никто не вспомнил бы, почему этому зелёному верили. Здесь одна и та же
+    коробка мерится дважды, и обязательны ОБЕ половины:
+      * на узком окне — покраснеть (H-OVERFLOW): прибор видит узкое;
+      * на широком — остаться зелёной: иначе мутант ломал бы везде и доказывал бы
+        только то, что прибор умеет красить.
+    Коробка не подбирается на глаз: она шире узкого окна на 20 px и уже широкого, а оба
+    окна подтверждает САМА страница (`winW`), как и в `--control`.
+    """
+    import shutil
+
+    from playwright.sync_api import sync_playwright
+
+    box = narrow + 20
+    if box >= wide:
+        raise SystemExit(f"широкое окно ({wide}) обязано быть шире коробки ({box}): "
+                         f"иначе мутант краснеет в обоих замерах и ничего не доказывает")
+    print(f"ЧУВСТВИТЕЛЬНОСТЬ К ШИРИНЕ: коробка {box} px, узкое окно {narrow} px, "
+          f"широкое {wide} px, зум {ZOOM:g}")
+    checks: dict[str, bool] = {}
+    with sync_playwright() as p:
+        br = p.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
+        clean = copy_page_tree(ROOT, "zoom-widths-clean-")
+        for stage, want_w in (("чистая копия, узкое", narrow),
+                              ("чистая копия, широкое", wide)):
+            rows, fails = run(br, targets_for("langs", ["ru"], clean), ZOOM, clean,
+                              f"clean/{stage} ", want_w)
+            seen = sorted({int(r.get("winW") or 0) for r in rows})
+            good = seen == [want_w] and fails == 0
+            checks[stage] = good
+            print(f"  {stage} ({want_w} px): окно={seen or 'ничего'} провалов={fails} "
+                  f"-> {'ГОДНА' if good else 'НЕ ГОДНА'}")
+        shutil.rmtree(clean, ignore_errors=True)
+        for stage, want_w, must_fail in (("мутант на широком", wide, False),
+                                         ("мутант на узком", narrow, True)):
+            tree = mutant_tree(ROOT, "narrow", "ru/index.html", box)
+            rows, fails = run(br, targets_for("langs", ["ru"], tree), ZOOM, tree,
+                              f"{stage} ", want_w)
+            caught = any("H-OVERFLOW" in r["bad"] for r in rows)
+            good = caught == must_fail and fails == (1 if must_fail else 0)
+            checks[stage] = good
+            print(f"  {stage} ({want_w} px): H-OVERFLOW={'да' if caught else 'нет'} "
+                  f"провалов={fails} -> {'ВЕРНО' if good else 'НЕВЕРНО'}")
+            shutil.rmtree(tree, ignore_errors=True)
+        br.close()
+
+    ok = all(checks.values())
+    out = OUT.with_name(f"text-zoom-width-sensitivity-w{narrow}-{date.today():%Y%m%d}.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"narrow": narrow, "wide": wide, "box": box,
+                               "checks": checks}, ensure_ascii=False, indent=1),
+                   encoding="utf-8")
+    halves = sum(1 for k, v in checks.items() if v and k.startswith("мутант"))
+    print(f"КОНТРОЛЬ: {'ПРОЙДЕН' if ok else 'ПРОВАЛЕН'} — поймал {halves} из 2 "
+          f"(узкая красная половина и широкая зелёная) — evidence: {out}")
+    return 0 if ok else 1
+
+
 def main() -> int:
     from playwright.sync_api import sync_playwright
 
@@ -514,12 +601,15 @@ def main() -> int:
     langs = LANGS
     width = WIDTH
     pageset = "langs"
+    wide = WIDTH
     identity_control = "--identity-control" in sys.argv
     for a in sys.argv[1:]:
         if a.startswith("--zoom="):
             zoom = float(a.split("=", 1)[1])
         elif a.startswith("--width="):
             width = int(a.split("=", 1)[1])
+        elif a.startswith("--wide="):
+            wide = int(a.split("=", 1)[1])
         elif a.startswith("--langs="):
             langs = [x for x in a.split("=", 1)[1].split(",") if x]
         elif a.startswith("--set="):
@@ -566,6 +656,9 @@ def main() -> int:
         print(f"КОНТРОЛЬ ЛИЧНОСТИ: {'ПОЙМАЛ' if caught else 'ПРОСМОТРЕЛ'} "
               f"поймал {hit} из {len(rows)}")
         return 0 if caught else 1
+
+    if "--width-sensitivity" in sys.argv:
+        return run_width_sensitivity(width, wide)
 
     if "--control" in sys.argv:
         return run_control(zoom, pageset, width)
