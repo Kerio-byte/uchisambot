@@ -1,0 +1,321 @@
+{
+ "catalog": "scripts",
+ "entries": {
+  "landing-a11y-extra.py": {
+   "verdict": "wired"
+  },
+  "landing-answer-time.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-axe-audit.py": {
+   "verdict": "wired"
+  },
+  "landing-backtab.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-badge-rows.py": {
+   "verdict": "wired"
+  },
+  "landing-bot-keys.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-bot-lang.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-bot-money.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-bot-profile.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-bot-vars.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-breadth-merge.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-browser-smoke.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-contact-delivery.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-contact-e2e.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-control-breadth-ledger.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-control-breadth.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-controls-coverage.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-controls-ledger.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-count-ledger.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-cross-engine.py": {
+   "verdict": "wired"
+  },
+  "landing-cwv.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-deeplink.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-en-leftovers.py": {
+   "verdict": "wired"
+  },
+  "landing-env-prefs.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-external-links.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-eye.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-first-screen.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-font-identity-twin.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-font-identity.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-fonts.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-glyph-fallback.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-header-engines.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-inbox-canary.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-keyboard-form.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-landscape-page.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-langlist-fit.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-legal-pages.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-links-audit.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-live-assets.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-live-bytes.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-live-ledger.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-live-run.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-live-runtime.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-min-font.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-nu-validate.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-open-trace.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-page-canary-ledger.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-page-canary.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-page-contrast.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-page-fold.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-page-lang.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-page-overflow.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-pixel-density.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-poster-frames.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-price-parity.py": {
+   "verdict": "wired"
+  },
+  "landing-print-contrast.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-print-crossengine.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-print-main.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-print-pages.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-print-paper.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-print.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-regress-all.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-render-check.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-return.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-rotate.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-set-parity.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-site-move-test.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-stop-rule.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-sweep.py": {
+   "verdict": "wired"
+  },
+  "landing-tablet-menu.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-tablet-page.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-text-clip.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-third-party.py": {
+   "verdict": "wired"
+  },
+  "landing-toggle-clear.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-video-failure.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-video-hang.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-video-motion.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-video-weight.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-viewports-extra.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-visual-pass.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  },
+  "landing-wcag22-targets.py": {
+   "verdict": "debt",
+   "why": "не разобран: страницу этим прибором не проверяли"
+  }
+ }
+}
