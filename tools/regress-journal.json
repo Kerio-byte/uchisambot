@@ -6,7 +6,7 @@
     "checks": 267,
     "failed": 0,
     "problems": null,
-    "tail": "  [ok  ] menu no-js en: CSS ceiling applied (258 px at this height)\n  [ok  ] menu no-js en: open list is cut by the ceiling, not taller than the screen\n  [ok  ] menu no-js en: all nine entries still reachable by scrolling\n  [ok  ] menu no-js en: list stops scroll chaining without the script\nCHECKS: 267, FAILED: 0  (69 s)\nJSON: ~/.hermes/cache/scratch/landing-a11y-extra-results.json",
+    "tail": "  [ok  ] menu no-js en: CSS ceiling applied (258 px at this height)\n  [ok  ] menu no-js en: open list is cut by the ceiling, not taller than the screen\n  [ok  ] menu no-js en: all nine entries still reachable by scrolling\n  [ok  ] menu no-js en: list stops scroll chaining without the script\nCHECKS: 267, FAILED: 0  (69 s)\nJSON: <internal>",
     "err": ""
   },
   {
@@ -76,7 +76,7 @@
     "checks": 18,
     "failed": 0,
     "problems": null,
-    "tail": "ДЕГРАДАЦИЯ ЗНАЧКОВ, оборван один файл: запросов 1, скрыто 1, видимых целых 6, видимых битых 0\nПРОГОНОВ: 18\nС ПРОБЛЕМАМИ: 0\nCHECKS: 18, FAILED: 0\nok без замечаний: ['en/desktop', 'ru/desktop', 'es/desktop', 'pt/desktop', 'hi/desktop', 'id/desktop', 'tr/desktop', 'vi/desktop', 'uk/desktop', 'en/mobile', 'ru/mobile', 'es/mobile', 'pt/mobile', 'hi/mobile', 'id/mobile', 'tr/mobile', 'vi/mobile', 'uk/mobile']\nJSON: ~/.hermes/cache/scratch/landing-browser-smoke-results.json",
+    "tail": "ДЕГРАДАЦИЯ ЗНАЧКОВ, оборван один файл: запросов 1, скрыто 1, видимых целых 6, видимых битых 0\nПРОГОНОВ: 18\nС ПРОБЛЕМАМИ: 0\nCHECKS: 18, FAILED: 0\nok без замечаний: ['en/desktop', 'ru/desktop', 'es/desktop', 'pt/desktop', 'hi/desktop', 'id/desktop', 'tr/desktop', 'vi/desktop', 'uk/desktop', 'en/mobile', 'ru/mobile', 'es/mobile', 'pt/mobile', 'hi/mobile', 'id/mobile', 'tr/mobile', 'vi/mobile', 'uk/mobile']\nJSON: <internal>",
     "err": ""
   },
   {
@@ -96,7 +96,7 @@
     "checks": 69,
     "failed": 0,
     "problems": null,
-    "tail": "  [ok  ] hi desktop: CLS <= 0.1\n  [ok  ] hi desktop: постер ровно одна загрузка\n  [ok  ] hi desktop: тап FAQ -> кадр <= 200 ms\n  [ok  ] hi desktop: no JS errors\nCHECKS: 69, FAILED: 0  (77 s)\nJSON: ~/.hermes/cache/scratch/landing-cwv-results.json",
+    "tail": "  [ok  ] hi desktop: CLS <= 0.1\n  [ok  ] hi desktop: постер ровно одна загрузка\n  [ok  ] hi desktop: тап FAQ -> кадр <= 200 ms\n  [ok  ] hi desktop: no JS errors\nCHECKS: 69, FAILED: 0  (77 s)\nJSON: <internal>",
     "err": ""
   },
   {
@@ -126,7 +126,7 @@
     "checks": 45,
     "failed": 0,
     "problems": null,
-    "tail": "  [ok  ] wk rm en: видео не играет ни в одной пробе\n  [ok  ] wk rm en: loop снят, автозапуска нет\n  [ok  ] wk rm en: reveal отключён, все .rv видны\n  [ok  ] wk rm en: без JS-ошибок\nCHECKS: 45, FAILED: 0  (22 s)\nJSON: ~/.hermes/cache/scratch/landing-env-prefs-results.json",
+    "tail": "  [ok  ] wk rm en: видео не играет ни в одной пробе\n  [ok  ] wk rm en: loop снят, автозапуска нет\n  [ok  ] wk rm en: reveal отключён, все .rv видны\n  [ok  ] wk rm en: без JS-ошибок\nCHECKS: 45, FAILED: 0  (22 s)\nJSON: <internal>",
     "err": ""
   },
   {
@@ -256,7 +256,7 @@
     "checks": 12,
     "failed": 0,
     "problems": null,
-    "tail": "ИТОГО сообщений: 126; из них известных ложных: 126, информационных: 0\nинформационные (не дефекты): «Trailing slash on void elements» — валидный HTML5, атрибуты в кавычках\n=== РЕАЛЬНЫЕ НАХОДКИ (error/warning) ===\nнет\nCHECKS: 12, FAILED: 0\nJSON: ~/.hermes/cache/scratch/landing-nu-validate-results.json",
+    "tail": "ИТОГО сообщений: 126; из них известных ложных: 126, информационных: 0\nинформационные (не дефекты): «Trailing slash on void elements» — валидный HTML5, атрибуты в кавычках\n=== РЕАЛЬНЫЕ НАХОДКИ (error/warning) ===\nнет\nCHECKS: 12, FAILED: 0\nJSON: <internal>",
     "err": ""
   },
   {
@@ -306,7 +306,7 @@
     "checks": 558,
     "failed": 0,
     "problems": null,
-    "tail": "ok   phone-390@1x uk: showmebest.webp 2400px >= 160px (1.0)\nok   phone-390@1x uk: liftoff-launched.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: liftoff-day.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: постер <= 52 КБ\nCHECKS: 558, FAILED: 0  (175 s)\nJSON: ~/.hermes/cache/scratch/landing-pixel-density.json",
+    "tail": "ok   phone-390@1x uk: showmebest.webp 2400px >= 160px (1.0)\nok   phone-390@1x uk: liftoff-launched.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: liftoff-day.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: постер <= 52 КБ\nCHECKS: 558, FAILED: 0  (175 s)\nJSON: <internal>",
     "err": ""
   },
   {
@@ -386,7 +386,7 @@
     "checks": 147,
     "failed": 0,
     "problems": null,
-    "tail": "uk  листов  7 | прозрачных  0 | fixed 0 | светлый текст  0 | лента 678/678 | колонки 3 | FAQ да | пустых 0\nprivacy.html листов  8 | fixed 0 | светлый текст  0 | знаков 18146 | пустых 0\nterms.html   листов  5 | fixed 0 | светлый текст  0 | знаков  9714 | пустых 0\n404.html     листов  1 | fixed 0 | светлый текст  0 | знаков   354 | пустых 0\nCHECKS: 147, FAILED: 0\nJSON: ~/.hermes/cache/scratch/landing-print.json  TMP: ~/.hermes/cache/scratch/landing-print-ipse0679",
+    "tail": "uk  листов  7 | прозрачных  0 | fixed 0 | светлый текст  0 | лента 678/678 | колонки 3 | FAQ да | пустых 0\nprivacy.html листов  8 | fixed 0 | светлый текст  0 | знаков 18146 | пустых 0\nterms.html   листов  5 | fixed 0 | светлый текст  0 | знаков  9714 | пустых 0\n404.html     листов  1 | fixed 0 | светлый текст  0 | знаков   354 | пустых 0\nCHECKS: 147, FAILED: 0\nJSON: <internal>  TMP: <internal>",
     "err": ""
   },
   {
@@ -417,7 +417,7 @@
     "failed": 0,
     "problems": null,
     "tail": "CHECKS: 288, FAILED: 0  (174 s)\nevidence: ~/Projects/stars-bots/promo/landing-20261012/evidence/rotate-20261102T151901.json",
-    "err": " \"~/.hermes/tools/python-3.14.7+20260901-linux-x64/lib/python3.14/shutil.py\", line 257, in copyfileobj\n    fdst_write(buf)\n    ~~~~~~~~~~^^^^^\n  File \"~/.hermes/tools/python-3.14.7+20260901-linux-x64/lib/python3.14/socketserver.py\", line 845, in write\n    self._sock.sendall(b)\n    ~~~~~~~~~~~~~~~~~~^^^\nBrokenPipeError: [Errno 32] Broken pipe\n----------------------------------------"
+    "err": " \"<internal>\", line 257, in copyfileobj\n    fdst_write(buf)\n    ~~~~~~~~~~^^^^^\n  File \"<internal>\", line 845, in write\n    self._sock.sendall(b)\n    ~~~~~~~~~~~~~~~~~~^^^\nBrokenPipeError: [Errno 32] Broken pipe\n----------------------------------------"
   },
   {
     "script": "landing-site-move-test.py",
@@ -497,7 +497,7 @@
     "failed": 0,
     "problems": null,
     "tail": "[17/21] S5-autoplay-hang/en/webkit: 14.5 c rs=0 paused=False btn=play marker='stalled' hits=1 stalled=7/20 failed_so_far=0\n[18/21] S7-hang-midfile/en/chromium: 13.9 c rs=4 paused=False btn=pause marker=None hits=2 stalled=1/4 failed_so_far=0\n[19/21] S7-hang-midfile/ru/chromium: 15.1 c rs=4 paused=False btn=pause marker=None hits=2 stalled=1/4 failed_so_far=0\n[20/21] S7-hang-midfile/en/webkit: 27.6 c rs=4 paused=False btn=pause marker=None hits=2 stalled=1/4 failed_so_far=0\n[21/21] S6-paused-before-hang/en/chromium: 12.2 c rs=0 paused=True btn=play marker=None hits=1 stalled=0/20 failed_so_far=0\nCHECKS: 144, FAILED: 0",
-    "err": "ine 442, in handle\n    return await self._handle_internal(route)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"~/.hermes/installs/420e881a3bf98b3b/environments/b071e77fe1ee43279febbc3c98989cda/venv/lib/python3.14/site-packages/playwright/_impl/_helper.py\", line 484, in _handle_internal\n    return await handled_future\n           ^^^^^^^^^^^^^^^^^^^^\nasyncio.exceptions.CancelledError"
+    "err": "ine 442, in handle\n    return await self._handle_internal(route)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<internal>\", line 484, in _handle_internal\n    return await handled_future\n           ^^^^^^^^^^^^^^^^^^^^\nasyncio.exceptions.CancelledError"
   },
   {
     "script": "landing-video-motion.py",
@@ -526,7 +526,7 @@
     "checks": 94,
     "failed": 0,
     "problems": null,
-    "tail": "  [ok  ] D ru: hero CTA clickable at load time\n  [ok  ] D ru: video no error, buffers/plays (either probe >=2 or playing)\n  [ok  ] D ru: poster image loads (still shown until video plays)\n  [ok  ] D ru: no JS errors under throttle\nCHECKS: 94, FAILED: 0  (98 s)\nJSON: ~/.hermes/cache/scratch/landing-viewports-extra-results.json",
+    "tail": "  [ok  ] D ru: hero CTA clickable at load time\n  [ok  ] D ru: video no error, buffers/plays (either probe >=2 or playing)\n  [ok  ] D ru: poster image loads (still shown until video plays)\n  [ok  ] D ru: no JS errors under throttle\nCHECKS: 94, FAILED: 0  (98 s)\nJSON: <internal>",
     "err": ""
   },
   {
@@ -546,7 +546,7 @@
     "checks": 43,
     "failed": 0,
     "problems": null,
-    "tail": "C) ANCHOR LANDING — desktop\n  [ok  ] 2.4.11 anchor desktop/en: якоря садятся ниже липкой шапки (якорей 5)\n  [ok  ] 2.4.11 anchor desktop/ru: якоря садятся ниже липкой шапки (якорей 5)\n  [ok  ] 2.4.11: без JS-ошибок за весь блок\nCHECKS: 43, FAILED: 0  (88 s)\nJSON: ~/.hermes/cache/scratch/landing-wcag22-results.json",
+    "tail": "C) ANCHOR LANDING — desktop\n  [ok  ] 2.4.11 anchor desktop/en: якоря садятся ниже липкой шапки (якорей 5)\n  [ok  ] 2.4.11 anchor desktop/ru: якоря садятся ниже липкой шапки (якорей 5)\n  [ok  ] 2.4.11: без JS-ошибок за весь блок\nCHECKS: 43, FAILED: 0  (88 s)\nJSON: <internal>",
     "err": ""
   }
 ]
