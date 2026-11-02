@@ -33,9 +33,16 @@
 правила включаются, на 361 выключаются, и обе стороны обязаны быть чистыми. Ширина стала
 параметром (`--width=360`), чтобы класс закрывался замером, а не рассуждением.
 
-Запуск: python3 tools/probe-narrow.py [--control] [--langs en,ru,...] [--width=320]
-Пишет evidence/narrow-<дата>.json (при нестандартной ширине — narrow-w<ширина>-<дата>.json)
-и печатает итог. Код 0 = чисто, 1 = находки.
+Запуск: python3 tools/probe-narrow.py [--control] [--langs en,ru,...] [--width=320] [--set=legal]
+Пишет evidence/narrow-<дата>.json (при нестандартной ширине — narrow-w<ширина>-<дата>.json,
+для --set=legal — narrow-legal[-w<ширина>][-control]-<дата>.json) и печатает итог.
+Код 0 = чисто, 1 = находки.
+
+Страницы вне девяти языков (02.11.2026, блок 60). `--set=legal` гоняет те же три клаузы
+по privacy.html, terms.html и 404.html: до этого их мерил только a11y — статикой и одним
+окном 420. Футер лендинга ведёт на privacy и terms с каждого языка, то есть узкий телефон
+открывает их так же часто, как саму страницу, а вёрстка там своя: длинные перечни, адреса
+почты, таблицы. Прибор тот же — второй такой же прибор был бы вторым источником правды.
 """
 import json
 import os
@@ -50,6 +57,12 @@ ROOT = Path(os.environ.get("LANDING_ROOT") or Path(__file__).resolve().parents[1
 BASE = os.environ.get("LANDING_URL", "").rstrip("/")
 OUT = Path(os.environ.get("LANDING_OUT", ROOT / "evidence" / f"narrow-{date.today():%Y%m%d}.json"))
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
+# Страницы вне девяти языков. Их видит каждый посетитель с футера страницы, но узкая
+# проба ходила только по языкам: у юридических страниц своя вёрстка (длинные перечни,
+# адреса, таблицы), и ломается она иначе, чем лендинг.
+LEGAL = [("privacy", "/privacy.html", "Privacy Policy", 800),
+         ("terms", "/terms.html", "Terms of Service", 800),
+         ("404", "/404.html", "Page not found", 40)]
 WIDTH = 320  # iPhone SE 1st gen / Galaxy J1 / узкое окно встроенного браузера
 
 PROBE = r"""
@@ -138,13 +151,17 @@ def main() -> int:
     from playwright.sync_api import sync_playwright
 
     control = "--control" in sys.argv
+    identity_control = "--identity-control" in sys.argv
     langs = LANGS
+    pageset = "langs"
     width = WIDTH
     for a in sys.argv:
         if a.startswith("--langs="):
             langs = [x for x in a.split("=", 1)[1].split(",") if x]
         elif a.startswith("--width="):
             width = int(a.split("=", 1)[1])
+        elif a.startswith("--set="):
+            pageset = a.split("=", 1)[1]
 
     # 30.10.2026 (проверка блока 53). Докстринг обещал отдельный файл для контроля, а код писал
     # оба прогона в один path: контрольный прогон затирал ЧИСТОЕ доказательство (narrow-<дата>.json
@@ -152,21 +169,46 @@ def main() -> int:
     # 02.11.2026: ширина стала параметром, и имя файла обязано нести её — иначе замер на 360
     # затирал бы доказательство замера на 320. Та же ошибка, что выше, на шаг дальше.
     global OUT
-    if width != WIDTH and not os.environ.get("LANDING_OUT"):
-        OUT = OUT.with_name(f"narrow-w{width}-" + OUT.name.split("narrow-", 1)[-1])
-    if control and not os.environ.get("LANDING_OUT"):
-        OUT = OUT.with_name("narrow-control-" + OUT.name.split("narrow-", 1)[-1])
+    # 02.11.2026 (блок 60). Страницы вне девяти языков — privacy, terms, 404 — не мерил
+    # ни один узкий прибор дерева: проба ходила только по девяти языкам, а a11y смотрел
+    # эти три страницы статикой и одним окном 420. Имя файла доказательства собирается
+    # из частей ОДИН раз, потому что правка по одному суффиксу уже дважды затирала чужое
+    # доказательство (блок 53 — контроль поверх чистого, блок 59 — 360 поверх 320).
+    if not os.environ.get("LANDING_OUT"):
+        stem = ["narrow-legal"] if pageset == "legal" else ["narrow"]
+        # Порядок частей сохранён от прежнего кода (narrow-control-w360-…): имена уже
+        # лежащих в evidence файлов и ссылки на них в README не должны поменяться.
+        if control:
+            stem.append("control")
+        if identity_control:
+            stem.append("identity")
+        if width != WIDTH:
+            stem.append(f"w{width}")
+        OUT = OUT.with_name("-".join(stem) + f"-{date.today():%Y%m%d}.json")
+
+    if pageset == "legal":
+        rows_spec = LEGAL
+        if identity_control:
+            # Контроль канарейки: каждой странице подсовываем ЧУЖОЕ имя. Если канарейка
+            # не покраснеет, зелёный прогон legal ничего не значит — он и на пустом
+            # документе зелёный.
+            rows_spec = [(n, p, LEGAL[(i + 1) % len(LEGAL)][2], f)
+                         for i, (n, p, _, f) in enumerate(LEGAL)]
+        targets = [(name, BASE + path if BASE else (ROOT / path.lstrip("/")).as_uri(), needle, floor)
+                   for name, path, needle, floor in rows_spec]
+    else:
+        targets = [(lang, url_for(lang), "", 0) for lang in langs]
 
     rows, fails = [], 0
     with sync_playwright() as p:
         br = p.chromium.launch(args=["--no-sandbox"])
-        for lang in langs:
+        for label, url, needle, floor in targets:
             ctx = br.new_context(viewport={"width": width, "height": 640}, is_mobile=True,
                                  has_touch=True, device_scale_factor=2)
             pg = ctx.new_page()
             errs = []
             pg.on("pageerror", lambda e: errs.append(str(e)))
-            pg.goto(url_for(lang), wait_until="load")
+            pg.goto(url, wait_until="load")
             pg.wait_for_timeout(700)
             pg.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             pg.wait_for_timeout(1200)
@@ -178,11 +220,23 @@ def main() -> int:
                     document.body.appendChild(d); }""")
                 pg.wait_for_timeout(150)
             pr = pg.evaluate(PROBE, width)
-            pr["lang"] = lang
+            pr["lang"] = label
+            pr["page"] = url
             pr["width"] = width
             pr["jsErrors"] = errs
+            # Канарейка личности страницы. Без неё «ноль находок» можно получить, сняв мерку
+            # с пустого документа или с чужой страницы по неверному адресу: ни вылезания,
+            # ни обрезки там нет по определению. Так уже случалось в дереве (публичная
+            # поверхность ловила мёртвый сайт отдельной канарейкой).
+            an = pg.evaluate("""() => ({title: document.title || '',
+                                      text: (document.body.innerText || '').trim().length})""")
+            pr["title"] = an["title"]
+            pr["textLen"] = an["text"]
+            wrong_page = bool(needle) and (needle.lower() not in an["title"].lower() or an["text"] < floor)
             wide = pr["docW"] > pr["want"] + 1 or pr["bodyW"] > pr["want"] + 1
             bad = []
+            if wrong_page:
+                bad.append("PAGE-IDENTITY")
             if wide:
                 bad.append("H-OVERFLOW")
             if pr["clipCount"]:
@@ -195,7 +249,7 @@ def main() -> int:
             if bad:
                 fails += 1
             rows.append(pr)
-            print(f"{'FAIL' if bad else 'OK  '} {lang}: doc={pr['docW']} vw={pr['vw']} "
+            print(f"{'FAIL' if bad else 'OK  '} {label}: doc={pr['docW']} vw={pr['vw']} "
                   f"off={pr['offCount']} carousel={pr['carouselCount']} "
                   f"clip={pr['clipCount']} tapSmall={pr['smallCount']} "
                   f"{','.join(bad)}")
@@ -207,14 +261,24 @@ def main() -> int:
         br.close()
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"viewport": width, "control": control, "rows": rows}, ensure_ascii=False, indent=1),
+    OUT.write_text(json.dumps({"viewport": width, "control": control, "identityControl": identity_control,
+                               "rows": rows}, ensure_ascii=False, indent=1),
                    encoding="utf-8")
-    checks = len(rows) * 3
+    checks = len(rows) * (4 if pageset == "legal" else 3)
     print(f"CHECKS: {checks}, FAILED: {fails}")
     print(f"evidence: {OUT}")
+    if identity_control:
+        hit = sum(1 for r in rows if "PAGE-IDENTITY" in r["bad"])
+        caught = bool(rows) and hit == len(rows)
+        print(f"КОНТРОЛЬ ЛИЧНОСТИ: {'ПОЙМАЛ' if caught else 'ПРОСМОТРЕЛ'} поймал {hit} из {len(rows)}")
+        return 0 if caught else 1
     if control:
-        caught = any("H-OVERFLOW" in r["bad"] for r in rows)
-        print("КОНТРОЛЬ:", "ПОЙМАЛ" if caught else "ПРОСМОТРЕЛ")
+        hit = sum(1 for r in rows if "H-OVERFLOW" in r["bad"])
+        caught = hit > 0
+        # Число пойманных печатается отдельным словом «поймал N из M»: раннер читает
+        # именно эту форму (CAUGHT_RE), и без неё контроль из трёх страниц выглядел
+        # как «поймал 1» — то есть будто проба открыла одну страницу из трёх.
+        print(f"КОНТРОЛЬ: {'ПОЙМАЛ' if caught else 'ПРОСМОТРЕЛ'} поймал {hit} из {len(rows)}")
         return 0 if caught else 1
     return 0 if fails == 0 else 1
 
