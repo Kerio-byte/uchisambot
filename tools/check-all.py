@@ -263,6 +263,13 @@ BATTERIES = [
     ("zoom-legal",       ["tools/check-text-zoom.py", "--set=legal"],           "visual", 400, "зум 200 % на трёх страницах вне языков (privacy, terms, 404) + канарейка личности страницы"),
     ("zoom-legal-control", ["tools/check-text-zoom.py", "--set=legal", "--control"], "visual", 900, "сам прибор на этих страницах: чистая копия зелёная, три мутанта в privacy.html обязаны покраснеть"),
     ("zoom-legal-identity", ["tools/check-text-zoom.py", "--set=legal", "--identity-control"], "visual", 400, "канарейка личности: каждой странице подсунуто чужое имя — все три обязаны покраснеть, иначе зелёный выше значит «ноль прочитанного»"),
+    # 02.11.2026 (блок 62). Долг блока 61: legal не мерились на узкой ширине И с зумом
+    # одновременно — узкие пробы и зум жили раздельно. Первый же замер на 320 покраснел:
+    # 404 отдавала doc=322, потому что поля body(24)+card(32) съедали 112 px из 320, а
+    # «UchiSamBot» в бренде, «404» и кнопка не рвутся. Правка — @media(max-width:360px)
+    # в 404.html; ниже 360-й ширины старые поля перестают помещаться (W-114 < 232).
+    ("zoom-legal-320",   ["tools/check-text-zoom.py", "--set=legal", "--width=320"], "visual", 400, "зум 200 % и ширина 320 вместе на privacy/terms/404: запас карточки в узком окне"),
+    ("zoom-legal-360",   ["tools/check-text-zoom.py", "--set=legal", "--width=360"], "visual", 400, "то же на границе 360, где включаются @media(max-width:360px) — проверка, что правка поля не оставила щели между ширинами"),
     ("zoom-control",     ["tools/check-text-zoom.py", "--control"],             "visual", 900, "сам прибор: чистая копия зелёная, три мутанта обязаны покраснеть"),
     ("eye-pages",        ["landing-eye.py"],                                    "eye",    900, "глаз читает блоки всех девяти языков по кадрам visual-420"),
     ("eye-anchors",      ["tools/probe-anchors.py"],                            "eye",    300, "опоры блоков под глаз"),
