@@ -43,6 +43,10 @@ header.top{border-bottom:1px solid var(--line);background:#fff}
 .top-in img{border-radius:8px}
 main{padding:40px 0 10px}
 h1,.pg-ttl{font-size:clamp(24px,3.4vw,32px);letter-spacing:-.01em;margin:0 0 6px}
+/* 02.11.2026 (блок 61). Зум текста 200 % (WCAG 1.4.4): то же, что на privacy.html —
+   длинное слово без переноса уводит страницу вбок. Перенос включается только когда
+   слово не влезает, обычный вид не меняется. */
+h1,.pg-ttl,h2,h3,p,li{overflow-wrap:break-word}
 .meta{color:var(--muted);font-size:14px;margin-bottom:30px}
 .note-lang{background:#EAF0FF;border-left:3px solid var(--brand);border-radius:0 10px 10px 0;padding:12px 14px;margin:0 0 12px;font-size:14px;line-height:1.5}
 h2,h3{font-size:19px;margin:30px 0 10px}

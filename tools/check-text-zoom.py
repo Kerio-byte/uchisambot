@@ -47,8 +47,21 @@
   python3 tools/check-text-zoom.py --zoom 1.5       # мягче
   python3 tools/check-text-zoom.py --control        # доказательство прибора
   python3 tools/check-text-zoom.py --langs=ru,hi    # только эти
+  python3 tools/check-text-zoom.py --set=legal      # privacy, terms, 404 на 420 px
 Код возврата: 0 — чисто, 1 — находки или мутант не покраснел.
 Пишет evidence/text-zoom-<дата>.json (контроль — отдельным файлом).
+
+Страницы вне девяти языков (02.11.2026, блок 61). Долг блока 60: `--set=legal` у
+`probe-narrow` закрыл вылезание/обрезку/цели на privacy, terms и 404, но ЗУМ текста
+эти три страницы не мерил вовсе — прибор ходил только по девяти языкам. Аудитория
+privacy/terms — те же родители с крупным системным шрифтом, и вёрстка там своя
+(перечни, адреса почты). Набор страниц берётся ИМПОРТОМ из `tools/probe-narrow.py`
+(там он один), потому что второй список тех же трёх страниц — второй источник правды
+и разъедется молча. Канарейка личности страницы (`WRONG-PAGE`): у каждой страницы
+сверяется заголовок, иначе «ноль находок» получается и на пустом, и на чужом
+документе по неверному адресу. Доказательство прибора на этих страницах —
+`--set=legal --control` (чистая копия зелёная, три мутанта в privacy.html красные)
+и `--set=legal --identity-control` (чужое имя в канарейке обязано покраснеть).
 """
 from __future__ import annotations
 
@@ -67,6 +80,30 @@ OUT = Path(os.environ.get("LANDING_OUT",
 LANGS = ["en", "ru", "es", "pt", "hi", "id", "tr", "vi", "uk"]
 WIDTH = 420          # современный телефон; 320 px держит отдельная батарея narrow-320
 ZOOM = 2.0           # WCAG 1.4.4 Resize text: 200 % без потери содержания
+
+
+def legal_pages() -> list[tuple[str, str, str, int]]:
+    """Страницы вне девяти языков — из ОДНОГО места, где они перечислены.
+
+    02.11.2026 (блок 61). Список privacy/terms/404 живёт в tools/probe-narrow.py
+    (имя, путь, строка-канарейка, минимум текста). Копия того же списка здесь была бы
+    вторым источником правды: страницу добавят там, забудут тут — и «ноль находок»
+    будет означать «ноль прочитанного». Поэтому импорт, а не копия. Скрипт
+    в дереве называется через дефис (не модуль), отсюда importlib, и защищено
+    `if __name__ == "__main__"` в соседе — импорт ничего не запускает.
+    """
+    import importlib.util
+
+    src = ROOT / "tools" / "probe-narrow.py"
+    spec = importlib.util.spec_from_file_location("probe_narrow_registry", src)
+    if spec is None or spec.loader is None:
+        raise SystemExit(f"не читается реестр страниц: {src}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    pages = [(name, path, needle, floor) for name, path, needle, floor in mod.LEGAL]
+    if len(pages) != 3:      # реестр вырос/сжался — прибор обязан это заметить, а не молчать
+        raise SystemExit(f"ждали три страницы вне языков, в реестре {len(pages)}")
+    return pages
 
 # Зум текста: каждому элементу — его вычисленный размер, умноженный на ZOOM.
 APPLY = r"""
@@ -265,21 +302,34 @@ def verdict(pr: dict) -> list[str]:
         bad.append("TEXT-CLIPPED")
     if pr["smallCount"]:
         bad.append("TAP-SMALL")
-    if pr["textNodes"] < 40 or pr["docW"] < 100:
+    # Сколько текста на странице — порог СВОЙ у каждой страницы и приходит из реестра
+    # (privacy/terms — 800 знаков, 404 — 40). Общий порог 40 узлов 02.11.2026 объявил
+    # дефектом саму 404-страницу: она законно короткая. Порог, который не знает, какую
+    # страницу открыли, меряет не страницу, а собственную догадку.
+    floor = int(pr.get("floor") or 0)
+    if floor and pr.get("textChars", 0) < floor:
+        bad.append("BLIND")
+    if pr["textNodes"] < (40 if not floor else 5) or pr["docW"] < 100:
         bad.append("BLIND")      # страница не прочиталась — «чисто» было бы ложью
+    # Канарейка личности страницы. Без неё «ноль находок» одинаково получается
+    # и на пустом документе, и на чужой странице по неверному адресу.
+    needle = pr.get("needle") or ""
+    if needle and needle.lower() not in (pr.get("title") or "").lower():
+        bad.append("WRONG-PAGE")
     return bad
 
 
-def run(browser, langs: list[str], zoom: float, root: Path, label: str,
+def run(browser, targets: list[tuple[str, str, str, int]], zoom: float, root: Path, label: str,
         width: int = WIDTH) -> tuple[list[dict], int]:
+    """targets — (имя для отчёта, адрес, строка-канарейка, минимум знаков текста)."""
     rows, fails = [], 0
-    for lang in langs:
+    for name, url, needle, floor in targets:
         ctx = browser.new_context(viewport={"width": width, "height": 900}, is_mobile=True,
                                   has_touch=True, device_scale_factor=2)
         pg = ctx.new_page()
         errs: list[str] = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
-        pg.goto(url_for(lang, root), wait_until="load")
+        pg.goto(url, wait_until="load")
         pg.wait_for_timeout(600)
         pg.evaluate("window.scrollTo(0, document.body.scrollHeight)")   # догрузить ленивое
         pg.wait_for_timeout(900)
@@ -288,7 +338,9 @@ def run(browser, langs: list[str], zoom: float, root: Path, label: str,
         zoomed = pg.evaluate(APPLY, zoom)
         pg.wait_for_timeout(250)
         pr = pg.evaluate(PROBE, width)
-        pr.update({"lang": lang, "zoomed": zoomed, "jsErrors": errs})
+        pr.update({"lang": name, "zoomed": zoomed, "jsErrors": errs,
+                   "needle": needle, "title": pg.title(), "floor": floor,
+                   "textChars": pg.evaluate("(document.body.innerText||'').trim().length")})
         bad = verdict(pr)
         if errs:
             bad.append("JS-ERROR")
@@ -296,7 +348,7 @@ def run(browser, langs: list[str], zoom: float, root: Path, label: str,
         if bad:
             fails += 1
         rows.append(pr)
-        print(f"{'FAIL' if bad else 'OK  '} {label}{lang}: doc={pr['docW']} want={pr['want']} "
+        print(f"{'FAIL' if bad else 'OK  '} {label}{name}: doc={pr['docW']} want={pr['want']} "
               f"zoom={zoomed}el clip={pr['clipCount']} off={pr['offCount']} "
               f"carousel={pr['carouselCount']} tap={pr['smallCount']} "
               f"h={pr['pageH']} {','.join(bad)}")
@@ -311,8 +363,13 @@ def run(browser, langs: list[str], zoom: float, root: Path, label: str,
     return rows, fails
 
 
-def mutant_tree(src: Path, mut: str) -> Path:
-    """Копия дерева (как у соседних контролей) + один дефект в ru/index.html."""
+def mutant_tree(src: Path, mut: str, page: str = "ru/index.html") -> Path:
+    """Копия дерева (как у соседних контролей) + один дефект в указанной странице.
+
+    02.11.2026 (блок 61): страница стала параметром. Контроль набора legal обязан
+    ломать ту страницу, которую этот набор открывает (privacy.html), иначе он докажет
+    прибор на девяти языках и промолчит про три страницы, ради которых затевался.
+    """
     import shutil
     import tempfile
     skip = {".git", "evidence", ".shots-work", "tools", "src", "docs", "submission-kit",
@@ -323,33 +380,52 @@ def mutant_tree(src: Path, mut: str) -> Path:
             continue
         (shutil.copytree(item, dst / item.name) if item.is_dir()
          else shutil.copy2(item, dst / item.name))
-    ru = dst / "ru" / "index.html"
-    html = ru.read_text(encoding="utf-8")
+    target = dst / page
+    html = target.read_text(encoding="utf-8")
     if mut == "clip":
-        marker = "</h1>"
-        i = html.find(marker)
-        assert i > 0, "не нашёл h1 для мутанта clip"
-        j = html.rfind("<h1", 0, i)
-        html = html[:j] + '<div style="height:30px;overflow:hidden">' + html[j:i + 5] + "</div>" + html[i + 5:]
+        if "</h1>" in html:
+            tag, i = "h1", html.find("</h1>")
+        else:
+            # Страница без заголовка: берём последний абзац — короткий не обрежется,
+            # и «мутант не пойман» соврало бы про прибор, а не про страницу.
+            import re
+            ends = [m.start() for m in re.finditer(r"</p>", html)]
+            assert ends, f"нет ни h1, ни p для мутанта clip в {page}"
+            tag, i = "p", max(ends)
+        j = html.rfind(f"<{tag}", 0, i)
+        assert j > 0, f"не нашёл <{tag}> для мутанта clip в {page}"
+        k = i + len(tag) + 3
+        html = html[:j] + '<div style="height:30px;overflow:hidden">' + html[j:k] + "</div>" + html[k:]
     elif mut == "wide":
         html = html.replace("</body>", '<div style="width:900px;white-space:nowrap;'
                                         'font-size:28px">mutant wide line that cannot wrap</div>'
                                         "</body>", 1)
     elif mut == "tap":
         html = html.replace("</body>", '<button type="button" style="width:12px;height:12px">'
-                                        "m</button></body>", 1)
+                                        "</button></body>", 1)
     else:
         raise SystemExit(f"неизвестный мутант {mut}")
-    ru.write_text(html, encoding="utf-8")
+    target.write_text(html, encoding="utf-8")
     return dst
 
 
-def run_control(zoom: float) -> int:
+def targets_for(pageset: str, langs: list[str],
+                root: Path = ROOT) -> list[tuple[str, str, str, int]]:
+    """Что мерить: девять языков или три страницы вне языков. Одна точка правды."""
+    if pageset == "legal":
+        return [(name, BASE + path if BASE else (root / path.lstrip("/")).as_uri(), needle, floor)
+                for name, path, needle, floor in legal_pages()]
+    return [(lang, url_for(lang, root), "", 0) for lang in langs]
+
+
+def run_control(zoom: float, pageset: str = "langs") -> int:
     import shutil
     from playwright.sync_api import sync_playwright
 
-    print(f"КОНТРОЛЬ прибора (зум {zoom:g}): чистая копия обязана быть зелёной, "
-          f"три мутанта — красными")
+    legal = pageset == "legal"
+    page = "privacy.html" if legal else "ru/index.html"
+    print(f"КОНТРОЛЬ прибора (зум {zoom:g}, набор {pageset}): чистая копия обязана быть зелёной, "
+          f"три мутанта в {page} — красными")
     results: dict[str, dict] = {}
     ok = True
     with sync_playwright() as p:
@@ -364,7 +440,8 @@ def run_control(zoom: float) -> int:
                 continue
             (shutil.copytree(item, clean / item.name) if item.is_dir()
              else shutil.copy2(item, clean / item.name))
-        rows, fails = run(br, ["ru"], zoom, clean, "clean/ru ")
+        rows, fails = run(br, targets_for(pageset, ["ru"], clean), zoom,
+                          clean, "clean/" if legal else "clean/ru ")
         results["clean"] = {"fails": fails, "bad": [r["bad"] for r in rows]}
         if fails:
             print("  КОНТРОЛЬ НЕ СОСТОЯЛСЯ: нетронутая копия красная — "
@@ -374,13 +451,15 @@ def run_control(zoom: float) -> int:
         # B. мутанты
         for mut, want_msg in (("clip", "TEXT-CLIPPED"), ("wide", "H-OVERFLOW"),
                               ("tap", "TAP-SMALL")):
-            tree = mutant_tree(ROOT, mut)
-            rows, fails = run(br, ["ru"], zoom, tree, f"{mut}/ru ")
+            tree = mutant_tree(ROOT, mut, page)
+            rows, fails = run(br, targets_for(pageset, ["ru"], tree), zoom, tree,
+                              f"{mut}/" if legal else f"{mut}/ru ")
             caught = [r for r in rows if want_msg in r["bad"]]
             got = caught[0]["bad"] if caught else []
             print(f"  мутант {mut}: ожидалось {want_msg}, получено {got or 'ничего'} "
                   f"-> {'ПОЙМАН' if caught else 'ПРОСМОТРЕЛ'}")
-            results[mut] = {"expected": want_msg, "caught": bool(caught), "bad": got}
+            results[mut] = {"expected": want_msg, "caught": bool(caught), "bad": got,
+                            "page": page}
             if not caught:
                 ok = False
             shutil.rmtree(tree, ignore_errors=True)
@@ -388,8 +467,8 @@ def run_control(zoom: float) -> int:
 
     out = OUT.with_name("text-zoom-control-" + OUT.name.split("text-zoom-", 1)[-1])
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"zoom": zoom, "control": results}, ensure_ascii=False, indent=1),
-                   encoding="utf-8")
+    out.write_text(json.dumps({"zoom": zoom, "set": pageset, "control": results},
+                              ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"КОНТРОЛЬ: {'ПРОЙДЕН' if ok else 'ПРОВАЛЕН'} — поймал "
           f"{sum(1 for r in results.values() if r.get('caught'))} "
           f"из {sum(1 for r in results.values() if 'caught' in r)} — evidence: {out}")
@@ -399,9 +478,12 @@ def run_control(zoom: float) -> int:
 def main() -> int:
     from playwright.sync_api import sync_playwright
 
+    global OUT
     zoom = ZOOM
     langs = LANGS
     width = WIDTH
+    pageset = "langs"
+    identity_control = "--identity-control" in sys.argv
     for a in sys.argv[1:]:
         if a.startswith("--zoom="):
             zoom = float(a.split("=", 1)[1])
@@ -409,17 +491,64 @@ def main() -> int:
             width = int(a.split("=", 1)[1])
         elif a.startswith("--langs="):
             langs = [x for x in a.split("=", 1)[1].split(",") if x]
-    if "--control" in sys.argv:
-        return run_control(zoom)
+        elif a.startswith("--set="):
+            pageset = a.split("=", 1)[1]
+    if pageset not in ("langs", "legal"):
+        raise SystemExit(f"неизвестный набор страниц: {pageset}")
 
-    print(f"зум текста {zoom:g}x, ширина {width} px, языков {len(langs)}")
+    # Имя доказательства несёт набор, ширину и режим. Правка «по одному суффиксу» уже
+    # дважды затирала чужой замер (блок 53 — контроль поверх чистого, блок 59 — 360
+    # поверх 320), поэтому части собираются один раз здесь.
+    if not os.environ.get("LANDING_OUT"):
+        parts = ["text-zoom"] + (["legal"] if pageset == "legal" else [])
+        if identity_control:
+            parts.append("identity")
+        if width != WIDTH:
+            parts.append(f"w{width}")
+        if len(parts) > 1:      # имя по умолчанию не трогаем: на него ссылаются README и журнал
+            OUT = OUT.with_name("-".join(parts) + f"-{date.today():%Y%m%d}.json")
+
+    if identity_control:
+        # Канарейка: каждой странице подсунуто ЧУЖОЕ имя. Если ни одна не покраснела,
+        # канарейка читает пустоту, и зелёный прогон legal ничего не доказывает.
+        if pageset != "legal":
+            raise SystemExit("--identity-control имеет смысл только с --set=legal")
+        pages = legal_pages()
+        swapped = [(n, p, pages[(i + 1) % len(pages)][2], fl)
+                   for i, (n, p, _nd, fl) in enumerate(pages)]
+        targets = [(n, BASE + p if BASE else (ROOT / p.lstrip("/")).as_uri(), nd, fl)
+                   for n, p, nd, fl in swapped]
+        print(f"КАНАРЕЙКА ЛИЧНОСТИ (зум {zoom:g}, ширина {width} px): каждой странице "
+              f"подсунуто чужое имя — все обязаны покраснеть")
+        with sync_playwright() as pr_:
+            br = pr_.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
+            rows, _fails = run(br, targets, zoom, ROOT, "", width)
+            br.close()
+        hit = sum(1 for r in rows if "WRONG-PAGE" in r["bad"])
+        caught = bool(rows) and hit == len(rows)
+        OUT.parent.mkdir(parents=True, exist_ok=True)
+        OUT.write_text(json.dumps({"zoom": zoom, "width": width, "set": pageset,
+                                   "identityControl": True, "rows": rows},
+                                  ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"CHECKS: {len(rows)}, FAILED: {0 if caught else 1}")
+        print(f"evidence: {OUT}")
+        print(f"КОНТРОЛЬ ЛИЧНОСТИ: {'ПОЙМАЛ' if caught else 'ПРОСМОТРЕЛ'} "
+              f"поймал {hit} из {len(rows)}")
+        return 0 if caught else 1
+
+    if "--control" in sys.argv:
+        return run_control(zoom, pageset)
+
+    what = ("страниц вне языков: privacy, terms, 404" if pageset == "legal"
+            else f"языков {len(langs)}")
+    print(f"зум текста {zoom:g}x, ширина {width} px, {what}")
     with sync_playwright() as p:
         br = p.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
-        rows, fails = run(br, langs, zoom, ROOT, "", width)
+        rows, fails = run(br, targets_for(pageset, langs), zoom, ROOT, "", width)
         br.close()
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"zoom": zoom, "width": width, "rows": rows},
+    OUT.write_text(json.dumps({"zoom": zoom, "width": width, "set": pageset, "rows": rows},
                               ensure_ascii=False, indent=1), encoding="utf-8")
     checks = len(rows) * 3
     print(f"CHECKS: {checks}, FAILED: {fails}")

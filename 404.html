@@ -25,6 +25,9 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;back
 .brand{display:flex;align-items:center;gap:10px;margin-bottom:20px;font-weight:800;letter-spacing:-.02em}
 .code{font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--brand);margin:0 0 8px}
 h1{font-size:clamp(22px,4.6vw,30px);line-height:1.25;letter-spacing:-.02em;margin:0 0 10px}
+/* 02.11.2026 (блок 61). То же, что на privacy/terms: длинное слово при увеличенном
+   шрифте уводит страницу вбок. Перенос только когда слово не влезает. */
+h1,p,li{overflow-wrap:break-word}
 p{margin:0 0 20px;color:var(--muted)}
 .langs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0;list-style:none}
 .langs a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--line);

@@ -78,7 +78,8 @@ CONTROL = {"redirects-control", "visual-control", "links-control",
            # 02.11.2026 (блок 60): два контроля новой пробы legal — вылезание и личность
            # страницы. Оба нарочно красные; без записи здесь их красный снова сочли бы
            # провалом страницы, как narrow-360-control в блоке 59.
-           "narrow-legal-control", "narrow-legal-identity"}
+           "narrow-legal-control", "narrow-legal-identity",
+           "zoom-legal-control", "zoom-legal-identity"}
 
 # Приборы, у которых есть ТРЕТИЙ ответ, кроме «сошлось» и «не сошлось»: «я не смог
 # проверить». До 01.11.2026 раннер знал только код 1 и красил такой ответ в FAIL.
@@ -256,6 +257,12 @@ BATTERIES = [
     ("narrow-legal-identity", ["tools/probe-narrow.py", "--set=legal", "--identity-control"], "visual", 300, "канарейка личности: каждой странице подсунуто ЧУЖОЕ имя, все три обязаны покраснеть — иначе «ноль находок» получается и с пустого документа"),
     ("zoom-200",         ["tools/check-text-zoom.py"],                          "visual", 600, "текст 200 % в тех же коробках на девяти языках: ширина, обрез, цели"),
     ("zoom-320",         ["tools/check-text-zoom.py", "--width=320"],           "visual", 600, "то же при 320 px — узкое окно и крупный шрифт вместе"),
+    # 02.11.2026 (блок 61). Долг блока 60: зум текста не мерил privacy/terms/404 вовсе.
+    # Первый же замер нашёл настоящее: русский заголовок privacy на 200 % требовал 517 px
+    # в коробке 380 и уводил страницу вбок на 537. Правка — overflow-wrap на трёх страницах.
+    ("zoom-legal",       ["tools/check-text-zoom.py", "--set=legal"],           "visual", 400, "зум 200 % на трёх страницах вне языков (privacy, terms, 404) + канарейка личности страницы"),
+    ("zoom-legal-control", ["tools/check-text-zoom.py", "--set=legal", "--control"], "visual", 900, "сам прибор на этих страницах: чистая копия зелёная, три мутанта в privacy.html обязаны покраснеть"),
+    ("zoom-legal-identity", ["tools/check-text-zoom.py", "--set=legal", "--identity-control"], "visual", 400, "канарейка личности: каждой странице подсунуто чужое имя — все три обязаны покраснеть, иначе зелёный выше значит «ноль прочитанного»"),
     ("zoom-control",     ["tools/check-text-zoom.py", "--control"],             "visual", 900, "сам прибор: чистая копия зелёная, три мутанта обязаны покраснеть"),
     ("eye-pages",        ["landing-eye.py"],                                    "eye",    900, "глаз читает блоки всех девяти языков по кадрам visual-420"),
     ("eye-anchors",      ["tools/probe-anchors.py"],                            "eye",    300, "опоры блоков под глаз"),
