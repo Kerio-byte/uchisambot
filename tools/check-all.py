@@ -60,6 +60,9 @@ CHECKS_RE = re.compile(r"CHECKS:\s*(\d+),\s*FAILED:\s*(\d+)")
 TOTAL_RE = re.compile(r"^TOTAL\s+(\d+)$")
 LEAK_RE = re.compile(r"^LEAKS\s+(\d+)$")
 CAUGHT_RE = re.compile(r"поймал\s+(\d+)\s+из\s+(\d+)")
+# 03.11.2026 (блок 66): часть приборов печатает вердикт контроля как «МУТАНТЫ 4/4»,
+# без слова «поймал». Журнал показывал у них «-», то есть контроль был, а числа не было.
+MUTANTS_RE = re.compile(r"МУТАНТЫ\s+(?:ВСЕГО\s+)?(\d+)\s*/\s*(\d+)")
 ADDR_RE = re.compile(r"адресов:\s*(\d+).*?мёртвых:\s*(\d+)")
 EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(\d+)")
 
@@ -87,7 +90,12 @@ CONTROL = {"redirects-control", "visual-control", "links-control",
            # 02.11.2026 (блок 64): мутант, который ломается ТОЛЬКО на узком. Его красный
            # на 320 — это его зелёный; без записи здесь законный красный мутанта снова
            # сочли бы провалом страницы.
-           "zoom-width-sensitivity"}
+           # 03.11.2026 (блок 66): два контроля визуального яруса — `paint-control` и
+           # `load-ledger-control` — в наборе не значились, хотя заведены вместе с
+           # батареями. По коду их прогон зелёный и без записи, поэтому пропажа не
+           # бросалась в глаза; а журнал показывал «поймал 3/3» там, где paint-control
+           # доказал пять мутантов (прибор печатает два вердикта в одной выдаче).
+           "paint-control", "load-ledger-control"}
 
 # Приборы, у которых есть ТРЕТИЙ ответ, кроме «сошлось» и «не сошлось»: «я не смог
 # проверить». До 01.11.2026 раннер знал только код 1 и красил такой ответ в FAIL.
@@ -437,9 +445,17 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
         elif t:
             checks = f"{t.group(1)}"
     if name in CONTROL:
-        c = CAUGHT_RE.search(out)
+        # Вердикт контроля — строка с САМЫМ БОЛЬШИМ знаменателем, а не первая.
+        # 03.11.2026: `check-paint.py --control` печатает два вердикта подряд —
+        # сначала план из трёх CLS-мутантов («поймал 3 из 3»), потом ВСЕГО с окном
+        # и прокруткой («поймал 5 из 5»). Журнал брал первую и показывал 3/3 там,
+        # где прибор доказал пять: число в журнале было МЕНЬШЕ правды и не совпадало
+        # с описанием батареи («пять мутантов 5/5»). Читатель журнала видел контроль
+        # на трёх мутантах, а страница опиралась на пять.
+        found = CAUGHT_RE.findall(out) or MUTANTS_RE.findall(out)
+        c = max(found, key=lambda mt: int(mt[1])) if found else None
         if c:
-            checks = f"поймал {c.group(1)}/{c.group(2)}"
+            checks = f"поймал {c[0]}/{c[1]}"
         else:
             n = len(re.findall(r"(?:ПОЙМАЛ|поймал)", out)) - len(re.findall(r"(?:НЕ ПОЙМАЛ|не поймал)", out))
             checks = f"поймал {max(n, 0)}"
@@ -453,10 +469,10 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
         # формат — «КОНТРОЛЬ: вес — поймал; чужой язык — поймал» и «КОНТРОЛЬ: ПОЙМАЛ»
         # / «ПРОСМОТРЕЛ», то есть без числа пойманных. Без этой ветки оба исправных
         # контроля читались бы как «не доказал прибор» и красили прогон.
-        caught = CAUGHT_RE.search(out)
+        caught = c
         verdict_ok = False
         if caught:
-            verdict_ok = int(caught.group(1)) == int(caught.group(2)) and int(caught.group(2)) > 0
+            verdict_ok = int(caught[0]) == int(caught[1]) and int(caught[1]) > 0
         elif re.search(r"ПОЙМАЛ|поймал", out):
             # Беcчисловой вердикт (weight, narrow) — но только когда «поймал N из M»
             # не печаталось: иначе «поймал 5 из 7» перебивалось бы этим словом.
