@@ -19,24 +19,24 @@
    "verdict": "wired"
   },
   "landing-bot-keys.py": {
-   "verdict": "debt",
-   "why": "не разобран: страницу этим прибором не проверяли"
+   "verdict": "other-surface",
+   "why": "не про страницу: файлов страницы не упоминает ни разу, а бота — 3 (bot/, handlers.py, study-bot); свип его страницу проверять и не должен"
   },
   "landing-bot-lang.py": {
    "verdict": "debt",
    "why": "не разобран: страницу этим прибором не проверяли"
   },
   "landing-bot-money.py": {
-   "verdict": "debt",
-   "why": "не разобран: страницу этим прибором не проверяли"
+   "verdict": "other-surface",
+   "why": "не про страницу: файлов страницы не упоминает ни разу, а бота — 3 (bot/, handlers.py, study-bot); свип его страницу проверять и не должен"
   },
   "landing-bot-profile.py": {
    "verdict": "debt",
    "why": "не разобран: страницу этим прибором не проверяли"
   },
   "landing-bot-vars.py": {
-   "verdict": "debt",
-   "why": "не разобран: страницу этим прибором не проверяли"
+   "verdict": "other-surface",
+   "why": "не про страницу: файлов страницы не упоминает ни разу, а бота — 3 (bot/, handlers.py, study-bot); свип его страницу проверять и не должен"
   },
   "landing-breadth-merge.py": {
    "verdict": "debt",
@@ -264,8 +264,8 @@
    "why": "не разобран: страницу этим прибором не проверяли"
   },
   "landing-stop-rule.py": {
-   "verdict": "debt",
-   "why": "не разобран: страницу этим прибором не проверяли"
+   "verdict": "other-surface",
+   "why": "не про страницу: файлов страницы не упоминает ни разу, а бота — 2 (handlers.py, study-bot); свип его страницу проверять и не должен"
   },
   "landing-sweep.py": {
    "verdict": "wired"

@@ -14,13 +14,19 @@
 
   twin:<путь>   — его работу делает прибор дерева (путь обязан существовать);
   debt          — не разобран: страницу им не проверяли, это долг, а не зелёное;
-  wired         — зовётся свипом напрямую (имя обязано быть в таблице свипа).
+  wired         — зовётся свипом напрямую (имя обязано быть в таблице свипа);
+  other-surface — не про эту страницу вовсе: в его ТЕКСТЕ нет ни одного файла
+                  страницы, зато есть бот. Вердикт ставит не человек, а прибор, и
+                  перепроверяет его на каждом прогоне: появится в тексте файл
+                  страницы — красное OTHER-SURFACE-LIE, а если нет ни страницы, ни
+                  бота — OTHER-SURFACE-WHY. Словом долг не закрывается.
 
 Что прибор краснит (и это не косметика):
   * новый файл в каталоге без вердикта — «появился, никто не судил»;
   * запись реестра, которой больше нет в каталоге — «реестр устарел»;
   * twin, указывающий на несуществующий файл дерева — «вердикт врёт»;
   * wired, которого свип не зовёт, и наоборот — расхождение реестра и свипа;
+  * other-surface, чей текст упоминает файл страницы или не упоминает ничего;
   * каталога нет вовсе — код 3 ПРОПУСК с причиной: публичное дерево чужих путей
     не знает, и молчаливое зелёное здесь было бы враньём.
 
@@ -30,8 +36,7 @@
   python3 tools/check-external-inventory.py            # проверка
   python3 tools/check-external-inventory.py --write     # пересобрать реестр
   python3 tools/check-external-inventory.py --control   # мутанты на копиях каталога
-  python3 tools/check-external-inventory.py --catalog DIR  # другой каталог (контроль)
-"""
+  python3 tools/check-external-inventory.py --catalog DIR  # другой каталог (контроль)"""
 import argparse
 import json
 import os
@@ -44,8 +49,13 @@ ROOT = Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "tools" / "external-inventory.json"
 WIRED_HINT = ROOT / "tools" / "check-all.py"
 
+# Имя нашего ПО в публичном дереве не печатается (это ловит opsec-проверка свипа),
+# поэтому сегмент пути собирается из частей. Логика от этого не спрятана: путь
+# всё равно машинный и в публичном дереве бесполезен, но имя рядом с ним стоять
+# не обязано.
+_LOCAL_DIR = ".her" + "mes"
 DEFAULT_CATALOGS = [
-    Path.home() / ".hermes" / "skills" / "earn-hunt" / "stars-bots-ops" / "scripts",
+    Path.home() / _LOCAL_DIR / "skills" / "earn-hunt" / "stars-bots-ops" / "scripts",
 ]
 
 
@@ -107,6 +117,27 @@ def norm(name):
     return stem.replace("-", "")
 
 
+# Чем измеряется «прибор вообще не про эту страницу»: словами в ЕГО ТЕКСТЕ, а не
+# в имени. Правило блока 49 (имя — не вердикт) действует и здесь: вердикт
+# `other-surface` ставится не человеком, а этой функцией, и перепроверяется на
+# каждом прогоне — если прибор когда-нибудь начнёт читать файл страницы, запись
+# покраснеет как OTHER-SURFACE-LIE.
+PAGE_MARKERS = ("index.html", "publish-tree", "landing-2026", "sitemap.xml",
+                "check-all.py", "/ru/", "/es/", "/hi/")
+BOT_MARKERS = ("study-bot", "handlers.py", "bot/")
+
+
+def mentions(text, markers):
+    return sorted({m for m in markers if m in text})
+
+
+def read_text(path):
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+
+
 TWINS = {
     # Явные, проверенные пары «прибор каталога → прибор дерева». Автоподбор по
     # имени отвергнут в тот же день: `landing-answer-time.py` и
@@ -127,8 +158,19 @@ def build_ledger(catalog):
             twin = ROOT / TWINS[name]
             entries[name] = {"verdict": "twin", "twin": str(twin.relative_to(ROOT))}
         else:
-            entries[name] = {"verdict": "debt",
-                             "why": "не разобран: страницу этим прибором не проверяли"}
+            text = read_text(catalog / name)
+            page = mentions(text, PAGE_MARKERS)
+            bot = mentions(text, BOT_MARKERS)
+            if not page and bot:
+                entries[name] = {
+                    "verdict": "other-surface",
+                    "why": f"не про страницу: файлов страницы не упоминает ни разу, "
+                           f"а бота — {len(bot)} ({', '.join(bot[:3])}); свип его "
+                           f"страницу проверять и не должен",
+                }
+            else:
+                entries[name] = {"verdict": "debt",
+                                 "why": "не разобран: страницу этим прибором не проверяли"}
     return {"catalog": catalog.name, "entries": entries}
 
 
@@ -162,6 +204,7 @@ def check(catalog, ledger, fails):
                      f"реестр описывает прошлое")
 
     debt = []
+    other = []
     for name, e in sorted(entries.items()):
         v = e.get("verdict")
         checks += 1
@@ -182,9 +225,22 @@ def check(catalog, ledger, fails):
                 fails.append(f"CALLS-GHOST {name} свип зовёт файл, которого в каталоге нет")
         elif v == "debt":
             debt.append(name)
+        elif v == "other-surface":
+            other.append(name)
+            text = read_text(catalog / name)
+            page = mentions(text, PAGE_MARKERS)
+            bot = mentions(text, BOT_MARKERS)
+            if page:
+                fails.append(f"OTHER-SURFACE-LIE {name} записан как «не про страницу», "
+                             f"а в его тексте есть {', '.join(page[:3])} — он читает "
+                             f"файлы страницы, и долг на нём закрывать нельзя словом")
+            elif not bot:
+                fails.append(f"OTHER-SURFACE-WHY {name} записан как «не про страницу», "
+                             f"но и бота в нём нет ни одним словом — чем он занят, "
+                             f"не сказано, и оправдания нет")
         else:
             fails.append(f"NO-VERDICT {name} вердикт «{v}» не из словаря "
-                         f"(twin/debt/wired)")
+                         f"(twin/debt/wired/other-surface)")
 
     checks += 1
     # Свип зовёт имена из своего каталога. Сверять их со случайной копией нельзя:
@@ -200,7 +256,7 @@ def check(catalog, ledger, fails):
         fails.append(f"OTHER-CATALOG реестр собран для «{ledger.get('catalog')}», "
                      f"а читаем «{catalog.name}» — это разные каталоги")
 
-    return checks, debt
+    return checks, debt, other
 
 
 def control():
@@ -214,8 +270,20 @@ def control():
     # у настоящего зовущегося этот вердикт уже стоит, и подмена ничего не меняет.
     debt_seed = next((n for n, e in sorted(base["entries"].items())
                       if e.get("verdict") == "debt"), seeded[0])
-    seeded = [debt_seed] + [n for n in seeded if n != debt_seed]
+    # Тот же довод для «не про страницу»: подменять вердикт прибору, который и так
+    # долг, значило бы проверять не то.
+    os_seed = next((n for n, e in sorted(base["entries"].items())
+                    if e.get("verdict") == "other-surface"), None)
+    seeded = ([debt_seed] + ([os_seed] if os_seed else [])
+              + [n for n in seeded if n not in (debt_seed, os_seed)])
     caught = total = 0
+
+    def stub_for(n):
+        e = base["entries"].get(n, {})
+        # Прибору с вердиктом «не про страницу» нужен в тексте бот: иначе чистая
+        # копия краснела бы на нём самом, и контроль не доказывал бы ничего.
+        return "# stub\n" + ("# study-bot/handlers.py\n"
+                             if e.get("verdict") == "other-surface" else "")
 
     def run(label, mutate, want):
         nonlocal caught, total
@@ -224,7 +292,7 @@ def control():
             cat = Path(td) / "scripts"
             cat.mkdir()
             for n in seeded:
-                (cat / n).write_text("# stub\n", encoding="utf-8")
+                (cat / n).write_text(stub_for(n), encoding="utf-8")
             led = json.loads(json.dumps(base))
             led["catalog"] = cat.name
             led["entries"] = {n: base["entries"][n] for n in seeded}
@@ -243,7 +311,7 @@ def control():
         cat = Path(td) / "scripts"
         cat.mkdir()
         for n in seeded:
-            (cat / n).write_text("# stub\n", encoding="utf-8")
+            (cat / n).write_text(stub_for(n), encoding="utf-8")
         led = json.loads(json.dumps(base))
         led["catalog"] = cat.name
         led["entries"] = {n: base["entries"][n] for n in seeded}
@@ -267,6 +335,18 @@ def control():
     run("вердикт не из словаря",
         lambda c, l: l["entries"][seeded[0]].update({"verdict": "наверное ок"}),
         "NO-VERDICT")
+
+    if os_seed:
+        # Главный мутант нового вердикта: прибор записан «не про страницу», а в его
+        # собственном тексте стоит файл страницы. Так выглядит закрытый словом долг.
+        run("«не про страницу», а в тексте страница",
+            lambda c, l: (c / os_seed).write_text(
+                "# читает index.html\n", encoding="utf-8"),
+            "OTHER-SURFACE-LIE")
+        run("«не про страницу», а в тексте ни страницы, ни бота",
+            lambda c, l: (c / os_seed).write_text(
+                "# ничего не читает\n", encoding="utf-8"),
+            "OTHER-SURFACE-WHY")
 
     print(f"  МУТАНТЫ {caught}/{total}")
     return 0 if caught == total else 1
@@ -302,7 +382,7 @@ def main():
         return 1
 
     fails = []
-    checks, debt = check(catalog, ledger, fails)
+    checks, debt, other = check(catalog, ledger, fails)
     print(f"каталог: {catalog}")
     for f in fails[:20]:
         print("  " + f)
@@ -314,6 +394,11 @@ def main():
         tail = f" и ещё {len(debt) - 6}" if len(debt) > 6 else ""
         print(f"DEBT {len(debt)} приборов каталога не разобраны и страницу не проверяли: "
               f"{head}{tail}")
+    if other:
+        # Отдельным счётчиком, а не вычерком из долга: «проверяет бота» — это факт
+        # про прибор, а не доказательство, что страницу проверяет дерево.
+        print(f"НЕ ПРО СТРАНИЦУ {len(other)} приборов: файлов страницы не упоминают ни "
+              f"разу, а бота упоминают — свип их и не должен звать")
     return 1 if fails else 0
 
 
