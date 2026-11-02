@@ -46,10 +46,19 @@
   python3 tools/check-text-zoom.py                  # 9 языков, 420 px, зум 200 %
   python3 tools/check-text-zoom.py --zoom 1.5       # мягче
   python3 tools/check-text-zoom.py --control        # доказательство прибора
+  python3 tools/check-text-zoom.py --control --width=320   # контроль НА ТОЙ ЖЕ ширине
   python3 tools/check-text-zoom.py --langs=ru,hi    # только эти
   python3 tools/check-text-zoom.py --set=legal      # privacy, terms, 404 на 420 px
 Код возврата: 0 — чисто, 1 — находки или мутант не покраснел.
 Пишет evidence/text-zoom-<дата>.json (контроль — отдельным файлом).
+
+Ширина в контроле (02.11.2026, блок 63). До этого блока `--control` не принимал
+`--width` и молча мерил 420: у зелёного на 320 и 360 не было своего мутанта, и
+доказательством служил красный прогон до правки, а не прибор. Теперь ширина идёт в
+контроль и проверяется не аргументом, а САМОЙ страницей: `PROBE` возвращает
+`winW` (window.innerWidth того окна, куда его пустили), и контроль требует
+`winW == width` на каждой загруженной странице — иначе печатает ШИРИНА НЕ ПРИМЕНЕНА.
+Переданный аргумент доказывает вызов, а не окно.
 
 Страницы вне девяти языков (02.11.2026, блок 61). Долг блока 60: `--set=legal` у
 `probe-narrow` закрыл вылезание/обрезку/цели на privacy, terms и 404, но ЗУМ текста
@@ -275,6 +284,9 @@ PROBE = r"""
   }
 
   return { want, docW, bodyW, textNodes: checked,
+           // Окно, в котором прибор реально работал. Контроль на своей ширине без этого
+           // поля доказывает, что аргумент доехал до функции, а не что окно такое.
+           winW: window.innerWidth,
            widest: widest.filter(w => w.why !== 'reported').slice(0, 4),
            offCount: off.length, off: off.slice(0, 6),
            carouselCount: carousel.length,
@@ -418,16 +430,28 @@ def targets_for(pageset: str, langs: list[str],
     return [(lang, url_for(lang, root), "", 0) for lang in langs]
 
 
-def run_control(zoom: float, pageset: str = "langs") -> int:
+def run_control(zoom: float, pageset: str = "langs", width: int = WIDTH) -> int:
     import shutil
     from playwright.sync_api import sync_playwright
 
     legal = pageset == "legal"
     page = "privacy.html" if legal else "ru/index.html"
-    print(f"КОНТРОЛЬ прибора (зум {zoom:g}, набор {pageset}): чистая копия обязана быть зелёной, "
-          f"три мутанта в {page} — красными")
+    print(f"КОНТРОЛЬ прибора (зум {zoom:g}, набор {pageset}, ширина {width} px): чистая копия "
+          f"обязана быть зелёной, три мутанта в {page} — красными")
     results: dict[str, dict] = {}
     ok = True
+
+    def width_proved(rows: list[dict], stage: str) -> bool:
+        """Ширину доказывает САМА страница: PROBE отдаёт window.innerWidth своего окна.
+        До блока 63 `--control` не принимал `--width` и молча мерил 420 — то есть у
+        зелёного на 320 и 360 не было своего мутанта. Аргумент, доехавший до функции,
+        доказывает вызов; окно, ответившее о себе, доказывает замер."""
+        seen = sorted({int(r.get("winW") or 0) for r in rows})
+        if seen != [width]:
+            print(f"  ШИРИНА НЕ ПРИМЕНЕНА ({stage}): просили {width} px, окно ответило "
+                  f"{seen or 'ничего'}")
+            return False
+        return True
     with sync_playwright() as p:
         br = p.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
         # A. нетронутая копия: без этого красное на мутанте ничего не доказывает
@@ -441,8 +465,11 @@ def run_control(zoom: float, pageset: str = "langs") -> int:
             (shutil.copytree(item, clean / item.name) if item.is_dir()
              else shutil.copy2(item, clean / item.name))
         rows, fails = run(br, targets_for(pageset, ["ru"], clean), zoom,
-                          clean, "clean/" if legal else "clean/ru ")
-        results["clean"] = {"fails": fails, "bad": [r["bad"] for r in rows]}
+                          clean, "clean/" if legal else "clean/ru ", width)
+        results["clean"] = {"fails": fails, "bad": [r["bad"] for r in rows],
+                            "winW": sorted({int(r.get("winW") or 0) for r in rows})}
+        if not width_proved(rows, "чистая копия"):
+            ok = False
         if fails:
             print("  КОНТРОЛЬ НЕ СОСТОЯЛСЯ: нетронутая копия красная — "
                   "красное на мутантах ничего не доказывает")
@@ -453,13 +480,16 @@ def run_control(zoom: float, pageset: str = "langs") -> int:
                               ("tap", "TAP-SMALL")):
             tree = mutant_tree(ROOT, mut, page)
             rows, fails = run(br, targets_for(pageset, ["ru"], tree), zoom, tree,
-                              f"{mut}/" if legal else f"{mut}/ru ")
+                              f"{mut}/" if legal else f"{mut}/ru ", width)
             caught = [r for r in rows if want_msg in r["bad"]]
             got = caught[0]["bad"] if caught else []
             print(f"  мутант {mut}: ожидалось {want_msg}, получено {got or 'ничего'} "
                   f"-> {'ПОЙМАН' if caught else 'ПРОСМОТРЕЛ'}")
+            # winW у мутантов только записывается, а не сверяется: мутант wide нарочно
+            # расширяет документ до 900, и окно честно отвечает 900 — это свойство
+            # мутанта, а не неприменённая ширина. Ширину доказывает чистая копия.
             results[mut] = {"expected": want_msg, "caught": bool(caught), "bad": got,
-                            "page": page}
+                            "page": page, "winW": sorted({int(r.get("winW") or 0) for r in rows})}
             if not caught:
                 ok = False
             shutil.rmtree(tree, ignore_errors=True)
@@ -467,7 +497,8 @@ def run_control(zoom: float, pageset: str = "langs") -> int:
 
     out = OUT.with_name("text-zoom-control-" + OUT.name.split("text-zoom-", 1)[-1])
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"zoom": zoom, "set": pageset, "control": results},
+    out.write_text(json.dumps({"zoom": zoom, "width": width, "set": pageset,
+                               "control": results},
                               ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"КОНТРОЛЬ: {'ПРОЙДЕН' if ok else 'ПРОВАЛЕН'} — поймал "
           f"{sum(1 for r in results.values() if r.get('caught'))} "
@@ -537,7 +568,7 @@ def main() -> int:
         return 0 if caught else 1
 
     if "--control" in sys.argv:
-        return run_control(zoom, pageset)
+        return run_control(zoom, pageset, width)
 
     what = ("страниц вне языков: privacy, terms, 404" if pageset == "legal"
             else f"языков {len(langs)}")
