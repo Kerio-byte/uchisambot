@@ -69,7 +69,12 @@ EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(
 CONTROL = {"redirects-control", "visual-control", "links-control",
            "weight-control", "narrow-control", "internal-control",
            "publish-tree-control", "prices-control", "words-control",
-           "zoom-control", "validator-control"}
+           "zoom-control", "validator-control",
+           # 02.11.2026: контроль, заведённый на НОВОЙ ширине прибора, обязан быть здесь
+           # по имени — иначе его законный красный считается провалом страницы. Ровно на
+           # этом первый прогон после добавления и покраснел: «упало: narrow-360-control».
+           "narrow-360-control",
+           "breakpoints-control"}
 
 # Приборы, у которых есть ТРЕТИЙ ответ, кроме «сошлось» и «не сошлось»: «я не смог
 # проверить». До 01.11.2026 раннер знал только код 1 и красил такой ответ в FAIL.
@@ -232,6 +237,11 @@ BATTERIES = [
     ("visual-control",   ["tools/visual-pass.py", "--control"],                 "visual", 300, "сам прибор: обязан поймать блок шире окна"),
     ("narrow-320",       ["tools/probe-narrow.py"],                             "visual", 600, "320 px на девяти языках"),
     ("narrow-control",   ["tools/probe-narrow.py", "--control"],                 "visual", 600, "сам прибор: обязан поймать блок 600 px в окне 320"),
+    ("narrow-360",       ["tools/probe-narrow.py", "--width=360"],               "visual", 600, "360 px — САМА граница @media(max-width:360px), где правила включаются (до 02.11 не мерил никто: было 320 и 420)"),
+    ("narrow-360-control", ["tools/probe-narrow.py", "--width=360", "--control"], "visual", 600, "сам прибор на новой ширине: блок 600 px в окне 360 обязан покраснеть — иначе параметр ширины не дошёл до пробы"),
+    ("narrow-361",       ["tools/probe-narrow.py", "--width=361"],               "visual", 600, "361 px — другая сторона той же границы: правила выключаются. Зелёный прогон сам доказывает, что параметр дошёл: при want=320 страница 361 дала бы H-OVERFLOW"),
+    ("breakpoints",      ["tools/probe-breakpoints.py"],                         "visual", 600, "каждая точка перелома стилей (вычитывается из CSSOM, а не из литерала) в трёх ширинах w-1/w/w+1 на девяти языках: 25 ширин, 225 проверок"),
+    ("breakpoints-control", ["tools/probe-breakpoints.py", "--control"],         "visual", 600, "сам прибор: блок 600 px обязан покраснеть на каждой ширине уже 600 — замер 02.11 поймал 72 из 72"),
     ("zoom-200",         ["tools/check-text-zoom.py"],                          "visual", 600, "текст 200 % в тех же коробках на девяти языках: ширина, обрез, цели"),
     ("zoom-320",         ["tools/check-text-zoom.py", "--width=320"],           "visual", 600, "то же при 320 px — узкое окно и крупный шрифт вместе"),
     ("zoom-control",     ["tools/check-text-zoom.py", "--control"],             "visual", 900, "сам прибор: чистая копия зелёная, три мутанта обязаны покраснеть"),

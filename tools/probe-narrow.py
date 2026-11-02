@@ -27,8 +27,15 @@
 `carouselCount` и в вердикт не входят; в `offCount` остаётся только то, что вылезло
 из блока БЕЗ прокрутки, — то есть настоящая поломка.
 
-Запуск: python3 tools/probe-narrow.py [--control] [--langs en,ru,...]
-Пишет evidence/narrow-<дата>.json и печатает итог. Код 0 = чисто, 1 = находки.
+Граница 360 (02.11.2026). В стилях страниц девятнадцать блоков `@media(max-width:360px)`,
+а приборы дерева мерили 320 и 420 — саму границу не видел никто, ни с одной стороны.
+Это тот же класс, что «ноль дефектов в двух окнах и поломка между ними»: ровно на 360
+правила включаются, на 361 выключаются, и обе стороны обязаны быть чистыми. Ширина стала
+параметром (`--width=360`), чтобы класс закрывался замером, а не рассуждением.
+
+Запуск: python3 tools/probe-narrow.py [--control] [--langs en,ru,...] [--width=320]
+Пишет evidence/narrow-<дата>.json (при нестандартной ширине — narrow-w<ширина>-<дата>.json)
+и печатает итог. Код 0 = чисто, 1 = находки.
 """
 import json
 import os
@@ -131,22 +138,30 @@ def main() -> int:
     from playwright.sync_api import sync_playwright
 
     control = "--control" in sys.argv
-    # 30.10.2026 (проверка блока 53). Докстринг обещал отдельный файл для контроля, а код писал
-    # оба прогона в один path: контрольный прогон затирал ЧИСТОЕ доказательство (narrow-<дата>.json
-    # после --control содержал vw=600 и H-OVERFLOW). Ровно та же ошибка, что у юридической батареи.
-    global OUT
-    if control and not os.environ.get("LANDING_OUT"):
-        OUT = OUT.with_name("narrow-control-" + OUT.name.split("narrow-", 1)[-1])
     langs = LANGS
+    width = WIDTH
     for a in sys.argv:
         if a.startswith("--langs="):
             langs = [x for x in a.split("=", 1)[1].split(",") if x]
+        elif a.startswith("--width="):
+            width = int(a.split("=", 1)[1])
+
+    # 30.10.2026 (проверка блока 53). Докстринг обещал отдельный файл для контроля, а код писал
+    # оба прогона в один path: контрольный прогон затирал ЧИСТОЕ доказательство (narrow-<дата>.json
+    # после --control содержал vw=600 и H-OVERFLOW). Ровно та же ошибка, что у юридической батареи.
+    # 02.11.2026: ширина стала параметром, и имя файла обязано нести её — иначе замер на 360
+    # затирал бы доказательство замера на 320. Та же ошибка, что выше, на шаг дальше.
+    global OUT
+    if width != WIDTH and not os.environ.get("LANDING_OUT"):
+        OUT = OUT.with_name(f"narrow-w{width}-" + OUT.name.split("narrow-", 1)[-1])
+    if control and not os.environ.get("LANDING_OUT"):
+        OUT = OUT.with_name("narrow-control-" + OUT.name.split("narrow-", 1)[-1])
 
     rows, fails = [], 0
     with sync_playwright() as p:
         br = p.chromium.launch(args=["--no-sandbox"])
         for lang in langs:
-            ctx = br.new_context(viewport={"width": 320, "height": 640}, is_mobile=True,
+            ctx = br.new_context(viewport={"width": width, "height": 640}, is_mobile=True,
                                  has_touch=True, device_scale_factor=2)
             pg = ctx.new_page()
             errs = []
@@ -162,8 +177,9 @@ def main() -> int:
                     d.style.cssText = 'position:absolute;left:0;top:0;width:600px;height:2px';
                     document.body.appendChild(d); }""")
                 pg.wait_for_timeout(150)
-            pr = pg.evaluate(PROBE, WIDTH)
+            pr = pg.evaluate(PROBE, width)
             pr["lang"] = lang
+            pr["width"] = width
             pr["jsErrors"] = errs
             wide = pr["docW"] > pr["want"] + 1 or pr["bodyW"] > pr["want"] + 1
             bad = []
@@ -191,7 +207,7 @@ def main() -> int:
         br.close()
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"viewport": 320, "control": control, "rows": rows}, ensure_ascii=False, indent=1),
+    OUT.write_text(json.dumps({"viewport": width, "control": control, "rows": rows}, ensure_ascii=False, indent=1),
                    encoding="utf-8")
     checks = len(rows) * 3
     print(f"CHECKS: {checks}, FAILED: {fails}")
