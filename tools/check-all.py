@@ -685,7 +685,8 @@ def main():
               f"{len(inv_wired)}, не зовёт {len(inv_unrun)}: "
               + (_short(inv_unrun, 6) if inv_unrun else "нет"))
         print("  зелёный ИТОГО выше — про таблицу и про названные зовущимися; "
-              "непозванные приборы страницу НЕ проверяли")
+              "непозванные приборы страницу либо не смотрели, либо не про неё — разбор "
+              "поимённо печатает external-inventory (DEBT / НЕ ПРО СТРАНИЦУ)")
 
     write_journal(complete=not cut["why"])
     if journal:
