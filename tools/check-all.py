@@ -63,6 +63,11 @@ CAUGHT_RE = re.compile(r"поймал\s+(\d+)\s+из\s+(\d+)")
 # 03.11.2026 (блок 66): часть приборов печатает вердикт контроля как «МУТАНТЫ 4/4»,
 # без слова «поймал». Журнал показывал у них «-», то есть контроль был, а числа не было.
 MUTANTS_RE = re.compile(r"МУТАНТЫ\s+(?:ВСЕГО\s+)?(\d+)\s*/\s*(\d+)")
+# Третий словарь (03.11.2026, блок 67): «КОНТРОЛЬ: мутантов 6, поймано 6»
+# (`check-subjects.py --control`) и «мутантов: 8  поймано: 8» (`check-source-labels.py
+# --control`). Порядок здесь ОБРАТНЫЙ — сначала всего, потом поймано; раннер этого
+# словаря не знал и показывал у обоих «поймал 0» при полном наборе мутантов.
+MUTANTS_ALT_RE = re.compile(r"мутантов:?\s*(\d+)[,;]?\s*(?:из них\s*)?поймано:?\s*(\d+)")
 ADDR_RE = re.compile(r"адресов:\s*(\d+).*?мёртвых:\s*(\d+)")
 EYE_RE = re.compile(r"ИТОГО:\s*языков\s*(\d+),\s*дефектов\s*(\d+)")
 
@@ -96,6 +101,29 @@ CONTROL = {"redirects-control", "visual-control", "links-control",
            # бросалась в глаза; а журнал показывал «поймал 3/3» там, где paint-control
            # доказал пять мутантов (прибор печатает два вердикта в одной выдаче).
            "paint-control", "load-ledger-control"}
+
+# 03.11.2026 (блок 67). Набор CONTROL перечислялся ПОИМЁННО, и это снова дало ту же
+# болезнь, что блок 66 нашёл у `paint-control`: из 46 батарей с именем `-control` в
+# наборе значили 20, а 26 судились ОБЩЕЙ веткой. А общая ветка выносит приговор
+# только по коду возврата (`bad = rc != 0`) и не читает слов прибора. Значит контроль,
+# потерявший мутанта и всё равно вернувший 0, попадал в журнал зелёным — а число
+# в колонке стояло «-», и отличить полный контроль от контроля без класса было нечем.
+# Ровно это видно на `css-control`: прибор печатает «МУТАНТЫ 7/7», журнал — «-».
+#
+# Перечисление поимённо — это обещание, а не механизм: новый `X-control` заводится
+# вместе с батареей и в набор не попадает (так и вышло 26 раз). Поэтому членство
+# теперь выводится из ИМЕНИ: `-control` на конце. Два контроля-канарейки краснеют не
+# мутантом, а подменой имени страницы, и суффикса у них нет — они названы отдельно.
+CONTROL_EXTRA = {"narrow-legal-identity", "zoom-legal-identity"}
+
+
+def is_control(name: str) -> bool:
+    """Батарея — контроль (нарочно красная, если прибор слеп), а не страница.
+
+    Имя решает, а не список: см. комментарий выше и блок 66 (два контроля визуального
+    яруса жили вне набора, и журнал показывал меньше правды).
+    """
+    return name in CONTROL or name in CONTROL_EXTRA or name.endswith("-control")
 
 # Приборы, у которых есть ТРЕТИЙ ответ, кроме «сошлось» и «не сошлось»: «я не смог
 # проверить». До 01.11.2026 раннер знал только код 1 и красил такой ответ в FAIL.
@@ -432,10 +460,17 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
         t = TOTAL_RE.search(out)
         l = LEAK_RE.search(out)
         c = CAUGHT_RE.search(out)
+        mu = MUTANTS_RE.search(out)
         a = ADDR_RE.search(out)
         e = EYE_RE.search(out)
         if c:
             checks = f"поймал {c.group(1)}/{c.group(2)}"
+        elif mu:
+            # 03.11.2026 (блок 67): MUTANTS_RE стоял только в ветке CONTROL, поэтому
+            # прибор, печатающий «МУТАНТЫ 7/7» без слова «поймал», давал в журнале «-»
+            # (ровно это и было у css-control). Число мутантов — вердикт прибора, и
+            # место ему в колонке независимо от того, назван контроль в наборе или нет.
+            checks = f"поймал {mu.group(1)}/{mu.group(2)}"
         elif a:
             checks = f"{a.group(1)}/мёртвых {a.group(2)}"
         elif e:
@@ -444,7 +479,7 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
             checks = f"{t.group(1)} живых"
         elif t:
             checks = f"{t.group(1)}"
-    if name in CONTROL:
+    if is_control(name):
         # Вердикт контроля — строка с САМЫМ БОЛЬШИМ знаменателем, а не первая.
         # 03.11.2026: `check-paint.py --control` печатает два вердикта подряд —
         # сначала план из трёх CLS-мутантов («поймал 3 из 3»), потом ВСЕГО с окном
@@ -452,12 +487,13 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
         # где прибор доказал пять: число в журнале было МЕНЬШЕ правды и не совпадало
         # с описанием батареи («пять мутантов 5/5»). Читатель журнала видел контроль
         # на трёх мутантах, а страница опиралась на пять.
-        found = CAUGHT_RE.findall(out) or MUTANTS_RE.findall(out)
+        found = (list(CAUGHT_RE.findall(out)) + list(MUTANTS_RE.findall(out))
+                 + [(cc, tt) for tt, cc in MUTANTS_ALT_RE.findall(out)])
         c = max(found, key=lambda mt: int(mt[1])) if found else None
         if c:
             checks = f"поймал {c[0]}/{c[1]}"
         else:
-            n = len(re.findall(r"(?:ПОЙМАЛ|поймал)", out)) - len(re.findall(r"(?:НЕ ПОЙМАЛ|не поймал)", out))
+            n = len(re.findall(r"(?:ПОЙМАЛ|поймал|ПОЙМАНО|поймано)", out)) - len(re.findall(r"(?:НЕ ПОЙМАЛ|не поймал|НЕ ПОЙМАНО|не поймано)", out))
             checks = f"поймал {max(n, 0)}"
         # У контролей вердикт в ТЕКСТЕ, а код возврата бывает 0 и на успехе, и на
         # провале: `check-redirects.py --control` печатает «прибор падает там, где
@@ -473,12 +509,24 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
         verdict_ok = False
         if caught:
             verdict_ok = int(caught[0]) == int(caught[1]) and int(caught[1]) > 0
-        elif re.search(r"ПОЙМАЛ|поймал", out):
+        elif re.search(r"ПОЙМАЛ|поймал|ПОЙМАНО|поймано", out):
             # Беcчисловой вердикт (weight, narrow) — но только когда «поймал N из M»
             # не печаталось: иначе «поймал 5 из 7» перебивалось бы этим словом.
             verdict_ok = True
         if "прибор падает там, где должен" in out:
             verdict_ok = True
+        # Четвёртый словарь (блок 67): мутант назван не числом, а ИМЕНЕМ проверки —
+        # `claim-basis.py --control` печатает `[ok] control.route_foreign: …` и итог
+        # «CHECKS: 15, FAILED: 0». Это полноценный контроль: три мутанта поданы
+        # прибору и он обязан их разобрать. Но принимать за доказательство голый
+        # «FAILED: 0» нельзя — прибор без режима контроля напечатал бы то же самое.
+        # Поэтому нужны ОБА: хотя бы одна строка мутанта по имени и ноль провалов.
+        named_ok = re.findall(r"\[\s*ok\s*\]\s*control\.", out)
+        named_bad = re.findall(r"\[\s*(?:fail|FAIL|провал)[^\]]*\]\s*control\.", out)
+        ch = re.search(r"CHECKS:\s*(\d+),\s*FAILED:\s*0", out)
+        if named_ok and not named_bad and ch:
+            verdict_ok = True
+            checks = f"{ch.group(1)}/0 контроль"
         if re.search(r"НЕ ПОЙМАЛ|не поймал|ПРОСМОТРЕЛ|просмотрел", out):
             verdict_ok = False
         if rc != 0 or not verdict_ok:
