@@ -199,6 +199,8 @@ BATTERIES = [
     ("controls-mutation",["tools/controls-mutation.py"],                        "offline",300, "сам прибор: пять инструментов обязаны покраснеть на своих дефектах"),
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
     ("redirects-control",["tools/check-redirects.py", "--control"],             "live",   240, "сам прибор: обязан краснеть на пяти кривых ответах"),
+    ("public-surface",   ["tools/check-public-surface.py"],                      "live",   180, "что мир видит КРОМЕ страниц: канарейка (наш ли это сайт), 14 адресов мастерской обязаны отвечать 404 (список выведен из дерева, а не написан руками), ветка публикации против списка в обе стороны"),
+    ("public-surface-control", ["tools/check-public-surface.py", "--control"],   "offline",300, "сам прибор: чистая копия зелёная, четыре мутанта (README.md отдаётся, нет канарейки, лишний файл на ветке, пропавший файл) краснеют каждый своим сообщением; 5/5"),
     ("claim-basis",      ["tools/claim-basis.py"],                              "live",   240, "адрес LLM, живой процесс против файла, цепочка прокси, веса, служба, Linger, девять языков"),
     ("claim-basis-control", ["tools/claim-basis.py", "--control"],               "offline",120, "сам прибор: чужой прыжок прокси и чужой адрес обязаны покраснеть"),
     ("words",            ["tools/external.py", "--words"],                     "external",900, "слова девяти страниц против claims.json (прибор вне дерева)"),
