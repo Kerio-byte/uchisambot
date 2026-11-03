@@ -71,8 +71,12 @@ h1,h2,h3{line-height:1.2;margin:0}
    распирая его блок. anywhere разрешает перенос ВНУТРИ слова и, в отличие от
    break-word, уменьшает min-content: колонка остаётся 280, слово ломается по буквам.
    hyphens:auto там, где браузер знает словарь языка, ставит перенос по слогам —
-   читается лучше, чем обрыв. */
-h1,h2,h3,.lead,.amount{overflow-wrap:anywhere;hyphens:auto}
+   в развёрнутом тексте читается лучше, чем обрыв. В заголовках выключено: глаз
+   прочёл разорванное дефисом слово в h1 английского как дефект (03.11.2026) —
+   заголовок читают одним взглядом, и перенос через дефис в нём — видимый дефект;
+   от переполнения заголовки по-прежнему держит overflow-wrap:anywhere. */
+h1,h2,h3{overflow-wrap:anywhere}
+.lead,.amount{overflow-wrap:anywhere;hyphens:auto}
 p,li,summary,figcaption,span,label,button{overflow-wrap:anywhere}
 p{margin:0}
 h1{font-size:clamp(30px,5.4vw,56px);font-weight:800;letter-spacing:-.03em}
