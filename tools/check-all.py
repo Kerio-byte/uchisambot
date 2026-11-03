@@ -123,6 +123,36 @@ CONTROL = {"redirects-control", "visual-control", "links-control",
 CONTROL_EXTRA = {"narrow-legal-identity", "zoom-legal-identity"}
 
 
+def control_fractions(out):
+    """Дроби-мутанты из вывода контроля: [(поймано, всего), ...].
+
+    03.11.2026 (блок 70). Раннер брал дробь с САМЫМ БОЛЬШИМ знаменателем из всего
+    вывода. Пока прибор печатает одну дробь — правило безразлично. Их стало две
+    (paint: план 3/3 и ВСЕГО 5/5), и правило выбрало верную, потому что большая
+    дробь там И ЕСТЬ вердикт. Но правило ничего не знает о том, ЧЬЯ это дробь:
+    юнит на синтетике показал, что строка вложенного прибора («поймал 1 из 12»)
+    перебивает вердикт «поймал 3 из 3», и колонка журнала называет чужое число —
+    прибор доказал три мутанта, а журнал пишет двенадцать. Сегодня таких вложенных
+    дробей не печатает ни один контроль (замер 23 приборов), то есть это долг
+    кода, а не страницы.
+    Поэтому кандидаты берутся из строк со СЛОВАРЁМ ВЕРДИКТА (КОНТРОЛЬ, МУТАНТЫ,
+    «мутантов», «поймано»), а если таких строк нет — из всех: у прибора, который
+    печатает вердикт голой строкой «поймал 5 из 5», поведение не меняется.
+    """
+    verdict_line = re.compile(r"КОНТРОЛЬ|МУТАНТЫ|мутантов|поймано", re.IGNORECASE)
+    every, on_verdict = [], []
+    for line in out.splitlines():
+        found = (list(CAUGHT_RE.findall(line)) + list(MUTANTS_RE.findall(line))
+                 + [(cc, tt) for tt, cc in MUTANTS_ALT_RE.findall(line)]
+                 + list(CAUGHT_SLASH_RE.findall(line)))
+        if not found:
+            continue
+        every.extend(found)
+        if verdict_line.search(line):
+            on_verdict.extend(found)
+    return on_verdict or every
+
+
 def is_control(name: str) -> bool:
     """Батарея — контроль (нарочно красная, если прибор слеп), а не страница.
 
@@ -493,9 +523,10 @@ def run_battery(name, argv, tier, timeout, what, offline, eye, capped_need=None)
         # где прибор доказал пять: число в журнале было МЕНЬШЕ правды и не совпадало
         # с описанием батареи («пять мутантов 5/5»). Читатель журнала видел контроль
         # на трёх мутантах, а страница опиралась на пять.
-        found = (list(CAUGHT_RE.findall(out)) + list(MUTANTS_RE.findall(out))
-                 + [(cc, tt) for tt, cc in MUTANTS_ALT_RE.findall(out)]
-                 + list(CAUGHT_SLASH_RE.findall(out)))
+        # 03.11.2026 (блок 70): кандидаты берутся по строкам и предпочитают строки
+        # со словарём вердикта — иначе дробь вложенного прибора с большим
+        # знаменателем называла бы себя вердиктом (юнит: 2 случая из 4).
+        found = control_fractions(out)
         c = max(found, key=lambda mt: int(mt[1])) if found else None
         if c:
             checks = f"поймал {c[0]}/{c[1]}"
