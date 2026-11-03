@@ -401,6 +401,7 @@ def third_party_control():
     caught, total = int(m.group(1)), int(m.group(2))
     if pristine.group(2) != "0":
         print(f"НЕ ДОКАЗАНО: нетронутая копия красная ({pristine.group(2)} провалов)")
+        print(f"МУТАНТЫ {caught}/{total}")
         return 2
     print(f"контроль: копия без правок {pristine.group(1)} проверок — 0 провалов; "
           f"мутантов поймано {caught} из {total}")
@@ -409,8 +410,13 @@ def third_party_control():
             print("  " + ln)
     if rc != 0 or caught != total:
         print(f"НЕ ПОЙМАЛ: код {rc}, поймано {caught} из {total}")
+        print(f"МУТАНТЫ {caught}/{total}")
         return 2
     print(f"CHECKS: {caught}, FAILED: 0")
+    # 03.11.2026 (блок 69): без этой строки свип считал слово «поймал» в шести
+    # строках мутантов и писал «поймал 7» — число без знаменателя, которое молча
+    # уменьшится, если один мутант переживёт правку.
+    print(f"МУТАНТЫ {caught}/{total}")
     return 0
 
 

@@ -164,12 +164,17 @@ def control(checks):
          re.sub(r"^DEFAULT_CEILING\s*=\s*\d+", "DEFAULT_CEILING = 0", src, count=1, flags=re.M)),
         ("B: предел прибора по остатку вырезан", "cut", drop_cap(sleepy)),
     ]
+    caught = 0
     for title, expected_leg, text in mutants:
         checks += 1
         origin = sleepy if expected_leg == "cut" else src
         if text == origin or text is None:
             print(f"  FAIL мутация не наложилась: {title} — прибор не знает, "
                   f"что именно он ломает")
+            # 03.11.2026 (блок 69): закрывающая дробь печатается и на провале.
+            # Иначе при потерянном мутанте прибор не печатал бы знаменателя, и
+            # свип считал бы слово «мутант» вместо доказанной дроби.
+            print(f"МУТАНТЫ {caught}/{len(mutants)}")
             return checks, False
         mfile = work / f"mutant-{expected_leg}.py"
         mfile.write_text(text, encoding="utf-8")
@@ -187,8 +192,11 @@ def control(checks):
             shadow.unlink(missing_ok=True)
         if ok:
             print(f"  FAIL мутант пережил проверку: {title} — «{why}»")
+            print(f"МУТАНТЫ {caught}/{len(mutants)}")
             return checks, False
+        caught += 1
         print(f"  ok   мутант поймала нога {expected_leg}: {title}")
+    print(f"МУТАНТЫ {caught}/{len(mutants)}")
     return checks, True
 
 
