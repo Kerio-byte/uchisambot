@@ -1,1120 +1,552 @@
-{
- "when": "2026-11-03T06:43:50",
- "offline": false,
- "complete": false,
- "elapsed": 2382.3,
- "cut": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
- "in_flight": "eye-legal-tail",
- "budget": 2400,
- "ceiling_src": "задан ключом --budget",
- "results": [
-  {
-   "name": "env",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "5/0",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "окружение: интерпретатор, PIL, playwright и сборки браузеров, которых он ждёт; «не годно» — код 2 и слово НЕ ПРОВЕРЕНО"
-  },
-  {
-   "name": "build",
-   "tier": "build",
-   "status": "ok",
-   "checks": "2 прогона",
-   "secs": 0.6,
-   "why": "",
-   "tail": [],
-   "what": "пересборка страниц и sitemap"
-  },
-  {
-   "name": "build",
-   "tier": "build",
-   "status": "ok",
-   "checks": "2 прогона",
-   "secs": 0.6,
-   "why": "",
-   "tail": [],
-   "what": "чистая копия HEAD (git archive) собирается побайтно в то же дерево: весь список публикации, включая картинки и шрифты; грязное дерево — ПРОПУСК, а не зелёное"
-  },
-  {
-   "name": "build",
-   "tier": "build",
-   "status": "ok",
-   "checks": "2 прогона",
-   "secs": 0.5,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: три мутанта — байт в странице, байт в картинке, удалённый шрифт; каждый обязан быть назван по имени"
-  },
-  {
-   "name": "external-inventory",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "приборы, живущие ВНЕ дерева: у каждого вердикт (зовётся / twin с существующим файлом / долг / не про эту страницу, доказанный её же текстом); новый файл каталога без вердикта, пропавший файл, врущий twin, «зовётся» на прибор из списка ручных и «не про страницу» с файлом страницы в тексте — красное поимённо"
-  },
-  {
-   "name": "external-inventory-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: семь мутантов на временных каталогах (новый без вердикта, пропавший, врущий twin, ложное «зовётся», вердикт не из словаря, «не про страницу» с файлом страницы в тексте, «не про страницу» без единого слова) плюс чистая копия"
-  },
-  {
-   "name": "validator",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "32/0",
-   "secs": 1.6,
-   "why": "",
-   "tail": [],
-   "what": "посторонний валидатор HTML (html-validate 11.17.0 вне дерева): 12 страниц из списка публикации против снимка находок — прибавка, убыль и любой структурный класс краснеют поимённо; пакеты внутри дерева — красное"
-  },
-  {
-   "name": "validator-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 6/6",
-   "secs": 5.7,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: шесть мутантов (лишний br, снятый закрывающий тег, повтор атрибута, node_modules в дереве, структурное правило в снимке, чужая версия валидатора)"
-  },
-  {
-   "name": "site-technical",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "48/0",
-   "secs": 3.1,
-   "why": "",
-   "tail": [],
-   "what": "шапки девяти языков, числа в словарях"
-  },
-  {
-   "name": "internal-links",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "360/0",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "внутренние ссылки, якоря и своё имущество (src/poster) на 12 страницах"
-  },
-  {
-   "name": "internal-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 5/5",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: обязан поймать битый файл, якорь, src и пропавшую страницу"
-  },
-  {
-   "name": "sitemap",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "322/0",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "sitemap.xml: покрытие 9 языков, файлы, alternate, lastmod, canonical"
-  },
-  {
-   "name": "sitemap-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"
-  },
-  {
-   "name": "markup",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "20464/0",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "разметка 11 страниц: дерево тегов, id, якоря, кавычки, голова"
-  },
-  {
-   "name": "markup-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 0.5,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"
-  },
-  {
-   "name": "jsonld",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "1218/0",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "JSON-LD девяти страниц: синтаксис, четыре узла, цены против prices.json, вопросы на странице"
-  },
-  {
-   "name": "jsonld-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 8/8",
-   "secs": 0.5,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: восемь мутантов обязаны покраснеть, каждый своим классом"
-  },
-  {
-   "name": "a11y",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "-",
-   "secs": 4.9,
-   "why": "",
-   "tail": [],
-   "what": "доступность: контраст, цель нажатия, видимый фокус, alt, подписи полей, заголовки"
-  },
-  {
-   "name": "a11y-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 8/8",
-   "secs": 4.3,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: восемь мутантов обязаны покраснеть, каждый своим классом (включая контраст на градиенте)"
-  },
-  {
-   "name": "css",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "-",
-   "secs": 1.2,
-   "why": "",
-   "tail": [],
-   "what": "стили 12 страниц: скобки и объявления, url() на диск, @font-face и потребитель, var() без определения, CSS.supports у браузера"
-  },
-  {
-   "name": "css-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 1.8,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: семь мутантов обязаны покраснеть, каждый своим классом"
-  },
-  {
-   "name": "publish-tree",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "1429/0",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "список публикации: полнота, границы мастерской, ссылки, читатели"
-  },
-  {
-   "name": "publish-tree-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 5/5",
-   "secs": 0.9,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: пять мутантов обязаны покраснеть, каждый своим сообщением"
-  },
-  {
-   "name": "locale-keys",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "ключи словарей: нет мёртвых и разъехавшихся"
-  },
-  {
-   "name": "placeholders",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "плейсхолдеры и незакрытые фигурные скобки"
-  },
-  {
-   "name": "deva-subset",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "Deva-подмножество шрифта против реестра"
-  },
-  {
-   "name": "og-cards",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "карточки og: 1200x630 на девять языков"
-  },
-  {
-   "name": "og-ink",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.6,
-   "why": "",
-   "tail": [],
-   "what": "карточки og: текст своего языка действительно нарисован — знаки, полосы строк, правый край, отличие девяти карточек друг от друга"
-  },
-  {
-   "name": "og-ink-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 4/4",
-   "secs": 2.2,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: пустая карточка, две карточки одним языком, текст за краем, карточки нет — четыре мутанта обязаны быть названы"
-  },
-  {
-   "name": "price-math",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "тарифы: цена за разбор равна пакет/размер, выгода в процентах сходится с ценами, бесплатных разборов столько же, строка одиночной цены называет цену"
-  },
-  {
-   "name": "price-math-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 13/13",
-   "secs": 0.4,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: цена за разбор, процент выгоды, число бесплатных, одиночная цена и подорожавший пакет — пять мутантов обязаны быть названы"
-  },
-  {
-   "name": "bot-profile",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 6.8,
-   "why": "",
-   "tail": [],
-   "what": "профиль бота против bot-profile.json"
-  },
-  {
-   "name": "sigterm-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "6/0 контроль",
-   "secs": 9.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: SIGTERM раннеру гасит ребёнка, мутант без kill_tree обязан оставить сироту"
-  },
-  {
-   "name": "ceiling-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 2/2",
-   "secs": 41.0,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: потолок по умолчанию назван, потолок держится и снимается только по имени; два мутанта обязаны покраснеть"
-  },
-  {
-   "name": "weight",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.6,
-   "why": "",
-   "tail": [],
-   "what": "вес первого экрана, ленивость, потолки"
-  },
-  {
-   "name": "weight-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 2",
-   "secs": 0.6,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: обязан увидеть потолок 1 байт и чужой язык в медиа"
-  },
-  {
-   "name": "referral-parity",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "",
-   "tail": [],
-   "what": "реферальные числа страницы против кода бота"
-  },
-  {
-   "name": "answer-time",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "59/0",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "обещание «сколько ждать разбор» против реестра замеров: девять страниц, разметка для поиска, девять md-двойников, каждый замер против потолка"
-  },
-  {
-   "name": "answer-time-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 6/6",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: шесть мутантов обязаны покраснеть, каждый своим сообщением"
-  },
-  {
-   "name": "subjects",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "266/0",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "список предметов: реестр subjects.json против чипов, ответа FAQ, разметки для поиска, md-двойников и обеих половин Terms"
-  },
-  {
-   "name": "subjects-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 6/6",
-   "secs": 0.3,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: шесть мутантов (чип, видимый ответ, разметка, двойник, половина Terms, название языка вместо предмета) обязаны покраснеть, каждый своим сообщением"
-  },
-  {
-   "name": "bot-labels",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "метки ссылок на бота против грамматики бота: язык страницы = язык приветствия"
-  },
-  {
-   "name": "bot-labels-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 4/4",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: четыре мутанта обязаны покраснеть, каждый своим сообщением"
-  },
-  {
-   "name": "bot-profile-texts",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "профиль бота против словарей сайта: лимиты Telegram, long и name дословно равны meta.desc и meta.title восьми языков, нарисованные страницы, число бесплатных разборов в short; рукописный русский текст печатается строкой ДОЛГ"
-  },
-  {
-   "name": "bot-profile-texts-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: семь мутантов (длина, расхождение с словарём, число разборов, предмет-автоним, имя, страница, _note без имени прибора) обязаны покраснеть, каждый своим сообщением"
-  },
-  {
-   "name": "links",
-   "tier": "live",
-   "status": "ok",
-   "checks": "116/мёртвых 0",
-   "secs": 3.6,
-   "why": "",
-   "tail": [],
-   "what": "116 внешних адресов"
-  },
-  {
-   "name": "live-bytes",
-   "tier": "live",
-   "status": "ok",
-   "checks": "-",
-   "secs": 17.8,
-   "why": "",
-   "tail": [],
-   "what": "живой сайт против дерева: байт в байт, все 107 файлов публикации"
-  },
-  {
-   "name": "live-bytes-control",
-   "tier": "live",
-   "status": "ok",
-   "checks": "поймал 2/2",
-   "secs": 10.9,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: порча байта в странице И в картинке обязана покраснеть обоими файлами"
-  },
-  {
-   "name": "transport",
-   "tier": "live",
-   "status": "ok",
-   "checks": "89/0",
-   "secs": 4.5,
-   "why": "",
-   "tail": [],
-   "what": "что сеть везёт: gzip у девяти страниц, сверка разжатого тела с деревом, vary, max-age 600, HTTP/2, accept-ranges у медиа, число «35,7 КБ» в README против измеренного"
-  },
-  {
-   "name": "transport-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 6/6",
-   "secs": 3.9,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: локальный сервер без gzip, с max-age=0, без vary, с обрезанным телом и с жатьём уже сжатого — пять порч обязаны быть названы, чистая копия зелёная"
-  },
-  {
-   "name": "links-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 0.7,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: обязан разложить семь известных ответов по классам"
-  },
-  {
-   "name": "controls-mutation",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "5/0",
-   "secs": 1.9,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: пять инструментов обязаны покраснеть на своих дефектах"
-  },
-  {
-   "name": "redirects",
-   "tier": "live",
-   "status": "ok",
-   "checks": "34/0",
-   "secs": 4.5,
-   "why": "",
-   "tail": [],
-   "what": "http→https, слэши, /index.html, 404, canonical"
-  },
-  {
-   "name": "redirects-control",
-   "tier": "live",
-   "status": "ok",
-   "checks": "поймал 8",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: обязан краснеть на пяти кривых ответах"
-  },
-  {
-   "name": "public-surface",
-   "tier": "live",
-   "status": "ok",
-   "checks": "-",
-   "secs": 2.9,
-   "why": "",
-   "tail": [],
-   "what": "что мир видит КРОМЕ страниц: канарейка (наш ли это сайт), 14 адресов мастерской обязаны отвечать 404 (список выведен из дерева, а не написан руками), ветка публикации против списка в обе стороны"
-  },
-  {
-   "name": "public-surface-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 5/5",
-   "secs": 2.7,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: чистая копия зелёная, четыре мутанта (README.md отдаётся, нет канарейки, лишний файл на ветке, пропавший файл) краснеют каждый своим сообщением; 5/5"
-  },
-  {
-   "name": "claim-basis",
-   "tier": "live",
-   "status": "ok",
-   "checks": "12/0",
-   "secs": 0.4,
-   "why": "",
-   "tail": [],
-   "what": "адрес LLM, живой процесс против файла, цепочка прокси, веса, служба, Linger, девять языков"
-  },
-  {
-   "name": "claim-basis-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "15/0 контроль",
-   "secs": 0.4,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: чужой прыжок прокси и чужой адрес обязаны покраснеть"
-  },
-  {
-   "name": "words",
-   "tier": "external",
-   "status": "FAIL",
-   "checks": "3046/1",
-   "secs": 77.1,
-   "why": "CHECKS: 3046, FAILED: 1",
-   "tail": [
-    "CHECKS: 3046, FAILED: 1",
-    "FAIL [opsec] что отдаёт сайт: ни адресов, ни путей, ни имён нашего софта | README.md:35 путь на сервере «<home>/»; README.md:52 путь на сервере «<home>/»; tools/check-env.py:16 путь в домашнем каталоге «<home>/.cache/»"
-   ],
-   "what": "слова девяти страниц против claims.json (прибор вне дерева)"
-  },
-  {
-   "name": "words-control",
-   "tier": "external",
-   "status": "FAIL",
-   "checks": "-",
-   "secs": 75.3,
-   "why": "контроль упал сам",
-   "tail": [
-    "НЕ ПОЙМАЛ: боевое дерево уже красное (1 провалов) — контролю нечего доказывать"
-   ],
-   "what": "сам прибор: сломанная страница обязана покраснеть своим [ru]"
-  },
-  {
-   "name": "prices",
-   "tier": "external",
-   "status": "ok",
-   "checks": "11/0",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "цены страницы против prices.json и кода бота"
-  },
-  {
-   "name": "prices-control",
-   "tier": "external",
-   "status": "ok",
-   "checks": "поймал 3/3",
-   "secs": 0.9,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: три мутанта цен обязаны покраснеть"
-  },
-  {
-   "name": "lang-leftovers",
-   "tier": "external",
-   "status": "ok",
-   "checks": "16/0",
-   "secs": 0.3,
-   "why": "",
-   "tail": [],
-   "what": "непереведённый английский на восьми языковых страницах (прибор вне дерева)"
-  },
-  {
-   "name": "lang-leftovers-control",
-   "tier": "external",
-   "status": "ok",
-   "checks": "поймал 1/1",
-   "secs": 0.3,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: фраза-пустышка обязана быть поймана на каждом из восьми языков"
-  },
-  {
-   "name": "page-extras",
-   "tier": "external",
-   "status": "ok",
-   "checks": "1296/0",
-   "secs": 209.5,
-   "why": "",
-   "tail": [],
-   "what": "три прибора вне дерева: axe-core, остаточная доступность, полоса значков"
-  },
-  {
-   "name": "engines",
-   "tier": "external",
-   "status": "ok",
-   "checks": "60/0",
-   "secs": 442.2,
-   "why": "",
-   "tail": [],
-   "what": "кросс-движок: страница в WebKit и Firefox (встроенный браузер Telegram на iOS), а не только в Chromium"
-  },
-  {
-   "name": "engines-control",
-   "tier": "external",
-   "status": "ok",
-   "checks": "поймал 1/1",
-   "secs": 290.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: своя клауза ширины краснеет там, где старая слепа, и дефект в КОПИИ дерева обязан покраснеть именем ru"
-  },
-  {
-   "name": "third-party",
-   "tier": "external",
-   "status": "ok",
-   "checks": "108/0",
-   "secs": 55.0,
-   "why": "",
-   "tail": [],
-   "what": "сеть 12 страниц: браузер обязан сходить ТОЛЬКО к нам — обещание политики конфиденциальности, проверенное не разметкой"
-  },
-  {
-   "name": "third-party-control",
-   "tier": "external",
-   "status": "ok",
-   "checks": "поймал 6/6",
-   "secs": 40.5,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: копия без правок зелёная, шесть мутантов (чужой хост, 404, JS, кука, storage, POST-маячок) краснеют каждый своим сообщением"
-  },
-  {
-   "name": "form",
-   "tier": "external",
-   "status": "ok",
-   "checks": "158/0",
-   "secs": 21.1,
-   "why": "",
-   "tail": [],
-   "what": "форма связи девяти языков: ключ, subject, redirect по языку, приманка, потолок длины и три обещания отказов — проверенные браузером"
-  },
-  {
-   "name": "form-control",
-   "tier": "external",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 21.4,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: копия без правок зелёная, семь мутантов краснеют каждый своим сообщением (очистку поля при отказе видит только браузер)"
-  },
-  {
-   "name": "ai-layer",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.2,
-   "why": "",
-   "tail": [],
-   "what": "ИИ-слой: девять md-двойников против своих страниц (секции, порядок, цены, ответы FAQ, ролик и кадры языка, ссылки), llms.txt против дерева и секунды роликов против байтов mp4"
-  },
-  {
-   "name": "source-labels",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "метка start= сверена с тем, КТО её разбирает: грамматика бота = грамматика отчёта = метки дерева, язык каждой метки, приёмник источника, разрыв ИИ-слоя"
-  },
-  {
-   "name": "source-labels-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 8/8",
-   "secs": 0.3,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: копия без правок зелёная, восемь мутантов краснеют каждый своим сообщением (чужой язык, чужая позиция, старая метка, слитая метка llms.txt, сужение грамматики бота и отчёта, раскол двойников, бот научился _md)"
-  },
-  {
-   "name": "lang-fonts",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "-",
-   "secs": 0.1,
-   "why": "",
-   "tail": [],
-   "what": "шрифты переключателя: девять названий покрыты объявленными unicode-range на каждой странице, реестр не отстал от LABELS, range без фантомов, вес лица покрывает веса страницы"
-  },
-  {
-   "name": "lang-fonts-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 7/7",
-   "secs": 0.4,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: семь мутантов (переименован язык, выпал кодпойнт ї, фантомный кодпойнт, чужой отпечаток, отставший реестр имён, разный вес лица, мини-лицо на своей странице)"
-  },
-  {
-   "name": "ai-layer-control",
-   "tier": "offline",
-   "status": "ok",
-   "checks": "поймал 13/13",
-   "secs": 2.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: копия без правок зелёная, тринадцать мутантов краснеют каждый своим классом"
-  },
-  {
-   "name": "load-ledger",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "-",
-   "secs": 51.9,
-   "why": "",
-   "tail": [],
-   "what": "журнал браузера на 12 страницах из ОПУБЛИКОВАННОГО дерева: каждый запрос получил ответ, ни одной ошибки консоли и ни одного падения JS; меньше 3 запросов на страницу — BLIND"
-  },
-  {
-   "name": "load-ledger-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 4/4",
-   "secs": 27.3,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: чистая копия зелёная, четыре мутанта краснеют каждый своим сообщением (фон из CSS, throw, console.error, srcset)"
-  },
-  {
-   "name": "paint",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "18/0",
-   "secs": 143.2,
-   "why": "",
-   "tail": [],
-   "what": "как страница встаёт: CLS и LCP на девяти языках в ДВУХ окнах (420 и 1280) и сдвиги при прокрутке (ведро SCROLL); нет записи LCP — BLIND"
-  },
-  {
-   "name": "paint-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 5/5",
-   "secs": 71.2,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: чистая копия зелёная в обоих окнах, пять мутантов (поздний блок, картинка без размеров, поздний абзац, сдвиг только на десктопе, сдвиг при прокрутке) пойманы 5/5, величины трёх первых различны — 0.310/0.930/0.106"
-  },
-  {
-   "name": "visual-420",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "54/0",
-   "secs": 130.1,
-   "why": "",
-   "tail": [],
-   "what": "420 px и десктоп: вылезание, обрезка, кнопки, кадры по блокам"
-  },
-  {
-   "name": "visual-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 18/18",
-   "secs": 91.4,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: обязан поймать блок шире окна"
-  },
-  {
-   "name": "narrow-320",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "27/0",
-   "secs": 51.7,
-   "why": "",
-   "tail": [],
-   "what": "320 px на девяти языках"
-  },
-  {
-   "name": "narrow-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 9/9",
-   "secs": 53.1,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: обязан поймать блок 600 px в окне 320"
-  },
-  {
-   "name": "narrow-360",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "27/0",
-   "secs": 51.6,
-   "why": "",
-   "tail": [],
-   "what": "360 px — САМА граница @media(max-width:360px), где правила включаются (до 02.11 не мерил никто: было 320 и 420)"
-  },
-  {
-   "name": "narrow-360-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 9/9",
-   "secs": 52.9,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор на новой ширине: блок 600 px в окне 360 обязан покраснеть — иначе параметр ширины не дошёл до пробы"
-  },
-  {
-   "name": "narrow-361",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "27/0",
-   "secs": 51.5,
-   "why": "",
-   "tail": [],
-   "what": "361 px — другая сторона той же границы: правила выключаются. Зелёный прогон сам доказывает, что параметр дошёл: при want=320 страница 361 дала бы H-OVERFLOW"
-  },
-  {
-   "name": "breakpoints",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "225/0",
-   "secs": 43.7,
-   "why": "",
-   "tail": [],
-   "what": "каждая точка перелома стилей (вычитывается из CSSOM, а не из литерала) в трёх ширинах w-1/w/w+1 на девяти языках: 25 ширин, 225 проверок"
-  },
-  {
-   "name": "breakpoints-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 1",
-   "secs": 48.3,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: блок 600 px обязан покраснеть на каждой ширине уже 600 — замер 02.11 поймал 72 из 72"
-  },
-  {
-   "name": "narrow-legal-320",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "12/0",
-   "secs": 8.3,
-   "why": "",
-   "tail": [],
-   "what": "privacy/terms/404 на 320 px: вылезание, обрезка, цели нажатия + канарейка личности страницы (заголовок и объём текста)"
-  },
-  {
-   "name": "narrow-legal-360",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "12/0",
-   "secs": 8.0,
-   "why": "",
-   "tail": [],
-   "what": "те же три страницы на границе 360, где включаются @media(max-width:360px)"
-  },
-  {
-   "name": "narrow-legal-control",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 3/3",
-   "secs": 8.4,
-   "why": "",
-   "tail": [],
-   "what": "сам прибор: блок 600 px в окне 320 обязан покраснеть на каждой из трёх страниц — иначе проба их не открывает"
-  },
-  {
-   "name": "narrow-legal-identity",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "поймал 3/3",
-   "secs": 8.0,
-   "why": "",
-   "tail": [],
-   "what": "канарейка личности: каждой странице подсунуто ЧУЖОЕ имя, все три обязаны покраснеть — иначе «ноль находок» получается и с пустого документа"
-  },
-  {
-   "name": "zoom-200",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "27/0",
-   "secs": 49.2,
-   "why": "",
-   "tail": [],
-   "what": "текст 200 % в тех же коробках на девяти языках: ширина, обрез, цели"
-  },
-  {
-   "name": "zoom-320",
-   "tier": "visual",
-   "status": "ok",
-   "checks": "27/0",
-   "secs": 49.8,
-   "why": "",
-   "tail": [],
-   "what": "то же при 320 px — узкое окно и крупный шрифт вместе"
-  },
-  {
-   "name": "zoom-legal",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "зум 200 % на трёх страницах вне языков (privacy, terms, 404) + канарейка личности страницы",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-legal-control",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "сам прибор на этих страницах: чистая копия зелёная, три мутанта в privacy.html обязаны покраснеть",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-legal-identity",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "канарейка личности: каждой странице подсунуто чужое имя — все три обязаны покраснеть, иначе зелёный выше значит «ноль прочитанного»",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-legal-320",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "зум 200 % и ширина 320 вместе на privacy/terms/404: запас карточки в узком окне",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-legal-360",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "то же на границе 360, где включаются @media(max-width:360px) — проверка, что правка поля не оставила щели между ширинами",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-legal-320-control",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "сам прибор НА ШИРИНЕ 320: чистая копия зелёная и окно её 320, три мутанта в privacy.html красные",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-legal-360-control",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "то же на 360 — граница медиа-правки блока 62",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-320-control",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "контроль девяти языков на 320: тот же прибор, та же ширина, мутант в ru/index.html",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-width-sensitivity",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "мутант, ломающийся только на узком: красный на 320, зелёный на 420, обе чистые копии годны",
-   "cut": "budget"
-  },
-  {
-   "name": "zoom-control",
-   "tier": "visual",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "сам прибор: чистая копия зелёная, три мутанта обязаны покраснеть",
-   "cut": "budget"
-  },
-  {
-   "name": "eye-pages",
-   "tier": "eye",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "глаз читает блоки всех девяти языков по кадрам visual-420",
-   "cut": "budget"
-  },
-  {
-   "name": "eye-anchors",
-   "tier": "eye",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "опоры блоков под глаз",
-   "cut": "budget"
-  },
-  {
-   "name": "eye-legal-tail",
-   "tier": "eye",
-   "status": "SKIP",
-   "checks": "-",
-   "secs": 0.0,
-   "why": "потолок прогона 2400 с (задан ключом --budget) исчерпан, осталось 17 с — прибор не запускался",
-   "tail": [],
-   "what": "нижняя часть privacy/terms глазами",
-   "cut": "budget"
-  }
- ]
-}
+[
+ {
+  "script": "landing-a11y-extra.py",
+  "code": 0,
+  "sec": 69.8,
+  "checks": 267,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] menu no-js en: CSS ceiling applied (258 px at this height)\n  [ok  ] menu no-js en: open list is cut by the ceiling, not taller than the screen\n  [ok  ] menu no-js en: all nine entries still reachable by scrolling\n  [ok  ] menu no-js en: list stops scroll chaining without the script\nCHECKS: 267, FAILED: 0  (69 s)\nJSON: <tools>/cache/scratch/landing-a11y-extra-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-axe-audit.py",
+  "code": 0,
+  "sec": 16.3,
+  "checks": 12,
+  "failed": 0,
+  "problems": null,
+  "tail": "PAGES: 12 | TOTAL VIOLATIONS: 0\nCHECKS: 12, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-backtab.py",
+  "code": 0,
+  "sec": 226.8,
+  "checks": 120,
+  "failed": 0,
+  "problems": null,
+  "tail": "самые тесные остановки: chromium/phone-390x844/en frac=1 A. «» h=40; chromium/phone-390x844/ru frac=1 A. «» h=40; chromium/phone-390x844/hi frac=1 A. «» h=40; chromium/tablet-768x1024/en frac=1 A. «» h=46\nCHECKS: 120, FAILED: 0  (227 s)\nevidence: <repo>/evidence/backtab-20261103T092241.json",
+  "err": ""
+ },
+ {
+  "script": "landing-badge-rows.py",
+  "code": 0,
+  "sec": 123.4,
+  "checks": 1017,
+  "failed": 0,
+  "problems": null,
+  "tail": "   768  [4, 3]                    106 px   46 px\n   900  [4, 3]                    106 px   46 px\n  1024  [4, 3]                    106 px   46 px\n  1280  [4, 3]                    106 px   46 px\n  1440  [4, 3]                    106 px   46 px\nCHECKS: 1017, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-bot-keys.py",
+  "code": 0,
+  "sec": 0.1,
+  "checks": 55,
+  "failed": 0,
+  "problems": null,
+  "tail": "PASS код: литерал — ключ\nPASS код: ключ не склеен\nPASS код: нет тени второго языка\nCHECKS: 55, FAILED: 0\nсловарь: 48 ключей, у каждого есть читатель; теней и склеек нет\nBOT-KEYS: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-bot-lang.py",
+  "code": 0,
+  "sec": 4.6,
+  "checks": 73,
+  "failed": 0,
+  "problems": null,
+  "tail": "PASS меню: uk\nPASS первый экран: uk\nPASS различны: подтверждения\nCHECKS: 73, FAILED: 0\nдевять языков: подтверждение смены, первый экран и меню называют свой язык\nBOT-LANG: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-bot-vars.py",
+  "code": 0,
+  "sec": 0.1,
+  "checks": 42,
+  "failed": 0,
+  "problems": null,
+  "tail": "PASS вызов: thanks_paid_no_task отдаёт все подстановки\nPASS вызов: thanks_paid_no_task без лишних\nPASS вызов: шаблон не зовут пустым\nCHECKS: 42, FAILED: 0\nшаблоны: 12 ключей с подстановками, набор один во всех девяти языках; каждый вызов отдаёт ровно свои и никто не зовёт шаблон пустым\nBOT-VARS: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-browser-smoke.py",
+  "code": 0,
+  "sec": 181.4,
+  "checks": 18,
+  "failed": 0,
+  "problems": null,
+  "tail": "ДЕГРАДАЦИЯ ЗНАЧКОВ, оборван один файл: запросов 1, скрыто 1, видимых целых 6, видимых битых 0\nПРОГОНОВ: 18\nС ПРОБЛЕМАМИ: 0\nCHECKS: 18, FAILED: 0\nok без замечаний: ['en/desktop', 'ru/desktop', 'es/desktop', 'pt/desktop', 'hi/desktop', 'id/desktop', 'tr/desktop', 'vi/desktop', 'uk/desktop', 'en/mobile', 'ru/mobile', 'es/mobile', 'pt/mobile', 'hi/mobile', 'id/mobile', 'tr/mobile', 'vi/mobile', 'uk/mobile']\nJSON: <tools>/cache/scratch/landing-browser-smoke-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-cross-engine.py",
+  "code": 0,
+  "sec": 424.5,
+  "checks": 60,
+  "failed": 0,
+  "problems": 0,
+  "tail": "[firefox/landscape-568x320/hi] ok 2.5s\nИТОГ: прогонов 60 / с проблемами 0 / время 424.3s\nCHECKS: 60, FAILED: 0\nJSON: <repo>/evidence/xengine-20261103-0934.json\nСкриншоты: evidence/xengine-view/webkit-en-mobile-top.png, evidence/xengine-view/webkit-ru-mobile-top.png, evidence/xengine-view/webkit-hi-mobile-top.png, evidence/xengine-view/webkit-hi-mobile-rail.png, evidence/xengine-view/webkit-en-desktop-top.png, evidence/xengine-view/firefox-en-mobile-top.png, evidence/xengine-view/firefox-ru-mobile-top.png, evidence/xengine-view/firefox-hi-mobile-top.png, evidence/xengine-view/firefox-hi-mobile-rail.png, evidence/xengine-view/firefox-en-desktop-top.png\nPROBLEMS: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-cwv.py",
+  "code": 0,
+  "sec": 76.8,
+  "checks": 69,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] hi desktop: CLS <= 0.1\n  [ok  ] hi desktop: постер ровно одна загрузка\n  [ok  ] hi desktop: тап FAQ -> кадр <= 200 ms\n  [ok  ] hi desktop: no JS errors\nCHECKS: 69, FAILED: 0  (77 s)\nJSON: <tools>/cache/scratch/landing-cwv-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-deeplink.py",
+  "code": 0,
+  "sec": 422.9,
+  "checks": 684,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 684, FAILED: 0\nALL PASS\nevidence: <repo>/evidence/deeplink-run-20261103T094315.json",
+  "err": ""
+ },
+ {
+  "script": "landing-en-leftovers.py",
+  "code": 0,
+  "sec": 0.2,
+  "checks": 16,
+  "failed": 0,
+  "problems": null,
+  "tail": "{\n \"count\": 0,\n \"problems\": []\n}\nCHECKS: 16, FAILED: 0\nEN-LEFTOVERS: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-env-prefs.py",
+  "code": 0,
+  "sec": 22.7,
+  "checks": 45,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] wk rm en: видео не играет ни в одной пробе\n  [ok  ] wk rm en: loop снят, автозапуска нет\n  [ok  ] wk rm en: reveal отключён, все .rv видны\n  [ok  ] wk rm en: без JS-ошибок\nCHECKS: 45, FAILED: 0  (22 s)\nJSON: <tools>/cache/scratch/landing-env-prefs-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-external-links.py",
+  "code": 2,
+  "sec": 37.7,
+  "checks": 68,
+  "failed": 0,
+  "problems": null,
+  "tail": "         200 [a] https://www.basedtools.ai/\nПРОБЛЕМНЫХ: 0\nCHECKS: 68, FAILED: 0\nНЕ ПРОВЕРЕНО (заслонка не пройдена — это не pass и не дефект): 1\n  заслонка 503, браузер 503 [a] https://auraplusplus.com/projects/uchisambot-study-helper\nРЕЕСТР: <repo>/tools/links-last-seen.json",
+  "err": ""
+ },
+ {
+  "script": "landing-first-screen.py",
+  "code": 0,
+  "sec": 62.4,
+  "checks": 252,
+  "failed": 0,
+  "problems": null,
+  "tail": "land-874x402     ru                 61  ОК\nland-896x414     ru                 73  ОК\nland-915x412     ru                 71  ОК\nland-926x428     ru                 87  ОК\nland-932x430     es                 89  ОК\nCHECKS: 252, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-font-identity.py",
+  "code": 0,
+  "sec": 5.3,
+  "checks": 12,
+  "failed": 0,
+  "problems": null,
+  "tail": "OK   marks: кадр нарисован (цветов ≥ 20) | цветов 306\nOK   marks: 0 расхождений с полным шрифтом | 0 px\nOK   footer: кадр нарисован (цветов ≥ 20) | цветов 238\nOK   footer: 0 расхождений с полным шрифтом | 0 px\nOK   прогон 2 (полный шрифт) тоже снял нарисованные кадры | пустые: \nCHECKS: 12, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-fonts.py",
+  "code": 0,
+  "sec": 42.5,
+  "checks": 41,
+  "failed": 0,
+  "problems": null,
+  "tail": "  [ok  ] uk: no console errors\n404: 33.2 КБ ['langs-cyrillic.woff2', 'langs-devanagari.woff2', 'langs-vietnamese.woff2', 'manrope-latin.woff2']\n  [ok  ] 404: шрифты ≤ 40 КБ\n  [ok  ] 404: «हिन्दी» со своим мини-сабсетом\n  [ok  ] 404: полного Noto нет\nCHECKS: 41, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-glyph-fallback.py",
+  "code": 0,
+  "sec": 33.5,
+  "checks": 24,
+  "failed": 0,
+  "problems": null,
+  "tail": "uk/            узлов=140 глифов=  5136+5189 наши=10325 подмена=0/0 пропущено=9/6\nprivacy.html   узлов= 94 глифов=17764+17973 наши=35737 подмена=0/0 пропущено=1/1\nterms.html     узлов= 80 глифов=  9483+9585 наши=19068 подмена=0/0 пропущено=1/1\n404.html       узлов= 19 глифов=    347+349 наши=  696 подмена=0/0 пропущено=1/1\nCHECKS: 24, FAILED: 0\nСТРАНИЦ: 12 | ОКОН: 2 | С ПОДМЕНОЙ: 0 | НЕДОМЕРЕНО: 0",
+  "err": "tml HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 09:46:36] \"GET /img/logo.svg HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 09:46:36] \"GET /fonts/manrope-latin.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 09:46:36] \"GET /fonts/manrope-cyrillic.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 09:46:37] \"GET /404.html HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 09:46:38] \"GET /404.html HTTP/1.1\" 200 -"
+ },
+ {
+  "script": "landing-header-engines.py",
+  "code": 0,
+  "sec": 424.2,
+  "checks": 973,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 973, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-keyboard-form.py",
+  "code": 0,
+  "sec": 113.3,
+  "checks": 244,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 244, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-landscape-page.py",
+  "code": 0,
+  "sec": 355.5,
+  "checks": 956,
+  "failed": 0,
+  "problems": null,
+  "tail": "chromium  проверок  478  красных   0\nwebkit    проверок  478  красных   0\nCHECKS: 956, FAILED: 0  (355 s)\nevidence: <repo>/evidence/landscape-page-20261103T100133.json",
+  "err": ""
+ },
+ {
+  "script": "landing-langlist-fit.py",
+  "code": 0,
+  "sec": 488.1,
+  "checks": 3591,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 3591, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-legal-pages.py",
+  "code": 0,
+  "sec": 9.0,
+  "checks": 42,
+  "failed": 0,
+  "problems": 0,
+  "tail": "[ok]   privacy.html-d\n[ok]   terms.html-m\n[ok]   terms.html-d\n[ok]   404.html-m\n[ok]   404.html-d\nCHECKS: 42, PROBLEMS: 0, frames: 6 → <repo>/evidence/legal-20261103",
+  "err": "tml HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 10:09:46] \"GET /img/logo.svg HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 10:09:46] \"GET /fonts/manrope-latin.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 10:09:46] \"GET /fonts/manrope-cyrillic.woff2 HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 10:09:48] \"GET /404.html HTTP/1.1\" 200 -\n127.0.0.1 - - [03/Nov/2026 10:09:49] \"GET /404.html HTTP/1.1\" 200 -"
+ },
+ {
+  "script": "landing-links-audit.py",
+  "code": 0,
+  "sec": 0.3,
+  "checks": 25,
+  "failed": 0,
+  "problems": null,
+  "tail": "  https://t.me/UchiSamBot?start=src_landing_vi_shots\n  https://t.me/UchiSamBot?start=src_landing_vi_sticky\nСТРАНИЦ: 12\nСАМОССЫЛКИ: проверены в дереве, база https://kerio-byte.github.io/uchisambot/\nПРОБЛЕМ: 0\nCHECKS: 25, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-min-font.py",
+  "code": 0,
+  "sec": 122.5,
+  "checks": 1554,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 1554, FAILED: 0\nALL PASS",
+  "err": ""
+ },
+ {
+  "script": "landing-nu-validate.py",
+  "code": 0,
+  "sec": 32.9,
+  "checks": 12,
+  "failed": 0,
+  "problems": null,
+  "tail": "ИТОГО сообщений: 126; из них известных ложных: 126, информационных: 0\nинформационные (не дефекты): «Trailing slash on void elements» — валидный HTML5, атрибуты в кавычках\n=== РЕАЛЬНЫЕ НАХОДКИ (error/warning) ===\nнет\nCHECKS: 12, FAILED: 0\nJSON: <tools>/cache/scratch/landing-nu-validate-results.json",
+  "err": ""
+ },
+ {
+  "script": "landing-page-contrast.py",
+  "code": 0,
+  "sec": 20.1,
+  "checks": 24,
+  "failed": 0,
+  "problems": null,
+  "tail": "ru/index.html     102 /  0 bad    106 /  0 bad  \ntr/index.html     102 /  0 bad    106 /  0 bad  \nuk/index.html     102 /  0 bad    106 /  0 bad  \nvi/index.html     102 /  0 bad    106 /  0 bad  \nне измерено с причиной: текст короче двух символов — 98\nCHECKS: 24, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-page-fold.py",
+  "code": 0,
+  "sec": 28.4,
+  "checks": 66,
+  "failed": 0,
+  "problems": null,
+  "tail": "ru/index.html   laptop-1440              247..382    1          512..567    1  ОК\ntr/index.html   laptop-1440              272..406    1          536..592    1  ОК\nuk/index.html   laptop-1440              233..367    1          527..582    1  ОК\nvi/index.html   laptop-1440              214..415    1          546..601    1  ОК\nстраниц 12, окон 3, клауз 66\nCHECKS: 66, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-page-lang.py",
+  "code": 0,
+  "sec": 4.7,
+  "checks": 71,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 71, FAILED: 0\nстраниц 9, меток 36 (4 на страницу), кодов 9 — совпадают; старая метка → None\nPAGE-LANG: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-page-overflow.py",
+  "code": 0,
+  "sec": 14.3,
+  "checks": 36,
+  "failed": 0,
+  "problems": null,
+  "tail": "pt/index.html             0px            0px            0px  \nru/index.html             0px            0px            0px  \ntr/index.html             0px            0px            0px  \nuk/index.html             0px            0px            0px  \nvi/index.html             0px            0px            0px  \nCHECKS: 36, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-pixel-density.py",
+  "code": 0,
+  "sec": 175.0,
+  "checks": 558,
+  "failed": 0,
+  "problems": null,
+  "tail": "ok   phone-390@1x uk: showmebest.webp 2400px >= 160px (1.0)\nok   phone-390@1x uk: liftoff-launched.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: liftoff-day.webp 360px >= 120px (1.0)\nok   phone-390@1x uk: постер <= 52 КБ\nCHECKS: 558, FAILED: 0  (175 s)\nJSON: <tools>/cache/scratch/landing-pixel-density.json",
+  "err": ""
+ },
+ {
+  "script": "landing-poster-frames.py",
+  "code": 0,
+  "sec": 4.9,
+  "checks": 9,
+  "failed": 0,
+  "problems": null,
+  "tail": "OK   hi: RMSE 0.00676\nOK   id: RMSE 0.00790\nOK   tr: RMSE 0.00736\nOK   vi: RMSE 0.00746\nOK   uk: RMSE 0.00770\nCHECKS: 9, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-price-parity.py",
+  "code": 0,
+  "sec": 0.1,
+  "checks": 11,
+  "failed": 0,
+  "problems": null,
+  "tail": "OK   реферал EN == бот\nOK   реферал RU == бот\nOK   реферал ref.text x9: чужих чисел нет\nOK   реферал ref.text x9: потолок == REFERRAL_MAX_CREDITS\nИТОГО: 11 проверок, расхождений 0\nCHECKS: 11, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-print-contrast.py",
+  "code": 0,
+  "sec": 71.1,
+  "checks": 3489,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 3489, FAILED: 0 (на листе 0, на плашке 0)",
+  "err": ""
+ },
+ {
+  "script": "landing-print-crossengine.py",
+  "code": 0,
+  "sec": 15.7,
+  "checks": 20,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 20, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-print-main.py",
+  "code": 0,
+  "sec": 25.6,
+  "checks": 210,
+  "failed": 0,
+  "problems": null,
+  "tail": "hi: 7 листов, знаков по листам [616, 587, 267, 656, 1139, 1162, 470], последний лист: 12 строк, из них вне подвала 9\nid: 8 листов, знаков по листам [624, 430, 442, 424, 743, 1339, 1048, 336], последний лист: 9 строк, из них вне подвала 5\ntr: 7 листов, знаков по листам [598, 650, 257, 732, 1146, 1122, 571], последний лист: 15 строк, из них вне подвала 11\nvi: 7 листов, знаков по листам [632, 619, 300, 613, 1290, 1326, 599], последний лист: 15 строк, из них вне подвала 11\nuk: 7 листов, знаков по листам [613, 674, 251, 694, 1094, 1148, 591], последний лист: 16 строк, из них вне подвала 12\nCHECKS: 210, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-print-pages.py",
+  "code": 0,
+  "sec": 14.7,
+  "checks": 391,
+  "failed": 0,
+  "problems": null,
+  "tail": "A4-landscape/404       1 листов  краска min 1.69 %  строка max 144.1 мм  просветы {'top': 41.7, 'left': 75.5, 'right': 77.8, 'bottom': 41.4}  подвал ×5.13  заголовки []\nA5/privacy            15 листов  краска min 4.42 %  строка max 125.8 мм  просветы {'top': 4.8, 'left': 11.4, 'right': 11.0, 'bottom': 5.6}  подвал ×21.89  заголовки []\nA5/terms               9 листов  краска min 4.55 %  строка max 125.8 мм  просветы {'top': 4.8, 'left': 11.4, 'right': 11.0, 'bottom': 8.5}  подвал ×21.25  заголовки []\nA5/404                 1 листов  краска min 3.18 %  строка max 102.4 мм  просветы {'top': 27.9, 'left': 21.2, 'right': 24.6, 'bottom': 27.6}  подвал ×5.13  заголовки []\nCHECKS: 391, FAILED: 0\nevidence: <repo>/evidence/print-pages-papers-20261103-101840.json",
+  "err": ""
+ },
+ {
+  "script": "landing-print-paper.py",
+  "code": 0,
+  "sec": 73.0,
+  "checks": 975,
+  "failed": 0,
+  "problems": null,
+  "tail": "A5/id: 15 листов, знаки [396, 227, 233, 377, 218, 59, 281, 456, 412, 626, 713, 270, 549, 280, 283], краска min 1.08 %, строка max 111.2 мм, подвал ×1.61\nA5/tr: 14 листов, знаки [388, 209, 209, 346, 172, 59, 271, 405, 403, 760, 729, 548, 273, 296], краска min 1.29 %, строка max 116.3 мм, подвал ×1.64\nA5/vi: 14 листов, знаки [421, 210, 215, 305, 193, 125, 257, 434, 475, 814, 747, 578, 329, 269], краска min 1.35 %, строка max 115.6 мм, подвал ×1.6\nA5/uk: 14 листов, знаки [315, 215, 226, 239, 360, 64, 260, 381, 368, 729, 746, 566, 273, 317], краска min 1.61 %, строка max 115.4 мм, подвал ×1.79\nCHECKS: 975, FAILED: 0\nevidence: <repo>/evidence/print-paper-20261103-1019.json",
+  "err": ""
+ },
+ {
+  "script": "landing-print.py",
+  "code": 0,
+  "sec": 34.2,
+  "checks": 147,
+  "failed": 0,
+  "problems": null,
+  "tail": "uk  листов  7 | прозрачных  0 | fixed 0 | светлый текст  0 | лента 678/678 | колонки 3 | FAQ да | пустых 0\nprivacy.html листов  8 | fixed 0 | светлый текст  0 | знаков 18146 | пустых 0\nterms.html   листов  5 | fixed 0 | светлый текст  0 | знаков  9714 | пустых 0\n404.html     листов  1 | fixed 0 | светлый текст  0 | знаков   354 | пустых 0\nCHECKS: 147, FAILED: 0\nJSON: <tools>/cache/scratch/landing-print.json  TMP: <tools>/cache/scratch/landing-print-s3drdotq",
+  "err": ""
+ },
+ {
+  "script": "landing-render-check.py",
+  "code": 0,
+  "sec": 10.1,
+  "checks": 37,
+  "failed": 0,
+  "problems": null,
+  "tail": "/vi/ | Dành cho phụ huynh | bullets: 4 | rv-in: True | overflow: 0 (sw/dw/iw 1280/1280/1280) | OK\nmobile /ru/: cols= 304px | single: True | overflow: 0 (sw/dw/iw 390/390/390)\nno-js /ru/: visible: True\nJS ERRORS: none\nCHECKS: 37, FAILED: 0\nRESULT: ALL OK",
+  "err": ""
+ },
+ {
+  "script": "landing-return.py",
+  "code": 0,
+  "sec": 148.8,
+  "checks": 216,
+  "failed": 0,
+  "problems": null,
+  "tail": "CHECKS: 216, FAILED: 0",
+  "err": ""
+ },
+ {
+  "script": "landing-rotate.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-site-move-test.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-stop-rule.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-tablet-menu.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-tablet-page.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-text-clip.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-toggle-clear.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-video-failure.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-video-hang.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-video-motion.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-video-weight.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-viewports-extra.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-visual-pass.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ },
+ {
+  "script": "landing-wcag22-targets.py",
+  "code": "SKIPPED-BUDGET",
+  "sec": 0,
+  "checks": null,
+  "failed": null,
+  "problems": null,
+  "tail": "",
+  "err": ""
+ }
+]
