@@ -28,6 +28,29 @@
 
 Питфолл: `url_for()` превращает `xx/index.html` в `…/xx/`, потому что Pages отдаёт
 страницу по адресу каталога; для остальных файлов адрес — путь как есть.
+
+Повод (04.11.2026, блок 93). Живой край на первом прогоне ответил кодом края
+(HTTPError) на img/shot1.webp, адрес жив: три независимых фетча дали 200 по
+69750 байт — ровно байты файла в дереве, повторный прогон — 107/0. Та же
+классовая история, что таймаут края в блоке 92 (fazier), поэтому `fetch()`
+теперь делает один повтор того же запроса при транзитном сбое (таймаут,
+сброшенное соединение, код края 429/502/503/504) до вердикта «нет ответа»;
+404/403 повтор не получают — это настоящий ответ, а не медленный край.
+Стойкий сбой края остаётся красным. Контроль расширен: flaky-502 обязан
+уцелеть после повтора, dead-502 обязан остаться красным после повтора.
+
+Повод (05.11.2026, блок 94). Блок 93 оставил незакрытым хвост: докстринг выше
+заявил повтор в `fetch()` и расширенный контроль, а кода не было — прибор
+заявлял защиту, которой не держал (правило дерева, 01.11: обещание без имени
+прибора и без кода — долг, а не документация). Код дописан по прецеденту
+`check-links.py` (блоки 79/92): `_transient()` узнаёт таймаут, сброшенное
+соединение и коды края 429/502/503/504 — в чистом виде и внутри `URLError`;
+`fetch()` делает один повтор того же запроса, стойкий сбой поднимает исключение.
+`fetch_control()` поднимает локальный сервер со случайным портом (сеть не нужна):
+`/flaky` (502, потом 200) обязан вернуться байтами, `/dead` (502 вечно) обязан
+остаться красным после повтора, `/forbidden` (403) — красным ровно за один
+запрос, повтор не получает. `--control` теперь гоняет обе ветви: сверку байтов
+на мутантах дерева и fetch на мутантах края; обе обязаны уметь краснеть.
 """
 import argparse
 import hashlib
@@ -35,12 +58,17 @@ import importlib.util
 import shutil
 import sys
 import tempfile
+import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = "https://kerio-byte.github.io/uchisambot/"
 TEXT_SUFFIXES = {".html", ".xml", ".txt", ".md"}
+# Коды края: медленный/уставший край, а не ответ о файле. 404/403 — настоящий
+# ответ и в этот набор не попадает (документация выше).
+_TRANSIENT_HTTP = {429, 502, 503, 504}
 
 
 def _publish_tree():
@@ -70,10 +98,36 @@ def url_for(rel: Path) -> str:
     return f"{BASE}{rel.as_posix()}"
 
 
-def fetch(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "live-bytes/2.0"})
-    with urllib.request.urlopen(req, timeout=25) as r:
-        return r.read()
+def _transient(exc: BaseException) -> bool:
+    """Транзитный сбой края: таймаут, сброшенное соединение или код края.
+
+    Медленный край — не ответ о файле. 404/403 — настоящий ответ, повтор не
+    получают (прецедент `_transient` в `check-links.py`, блок 92).
+    """
+    if isinstance(exc, (TimeoutError, ConnectionResetError)):
+        return True
+    if isinstance(exc, urllib.error.HTTPError) and exc.code in _TRANSIENT_HTTP:
+        return True
+    if isinstance(exc, urllib.error.URLError):
+        return _transient(getattr(exc, "reason", None) or exc)
+    return False
+
+
+def fetch(url: str, attempts: int = 2) -> bytes:
+    """Фетч с одним повтором при транзитном сбое края (04.11, блок 93).
+
+    Край может ответить медленно или кодом 502 — это ответ о крае, а не о
+    файле. Один повтор того же запроса; стойкий сбой остаётся красным.
+    """
+    for i in range(attempts):
+        req = urllib.request.Request(url, headers={"User-Agent": "live-bytes/2.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=25) as r:
+                return r.read()
+        except Exception as exc:  # noqa: BLE001 — решаем по природе сбоя, не по типу
+            if i == attempts - 1 or not _transient(exc):
+                raise
+    raise RuntimeError("недостижимо: повторы не кончились")
 
 
 def compare(root: Path, verbose: bool = True):
@@ -129,20 +183,106 @@ def control():
         caught = {rel for rel, _ in bad}
         want = {page, asset}
         ok = caught == want
-        print(f"КОНТРОЛЬ: {'поймал' if ok else 'НЕ ПОЙМАЛ'} {len(caught & want)} из {len(want)} — "
-              f"испорчено {sorted(str(x) for x in want)}, прибор сказал "
-              f"{sorted(str(x) for x in caught) or 'ничего'}")
+        print(f"КОНТРОЛЬ (сверка байтов): {'поймал' if ok else 'НЕ ПОЙМАЛ'} "
+              f"{len(caught & want)} из {len(want)} — испорчено {sorted(str(x) for x in want)}, "
+              f"прибор сказал {sorted(str(x) for x in caught) or 'ничего'}")
         return 0 if ok else 1
+
+
+def fetch_control():
+    """Край-имитация: локальный сервер со случайным портом, сеть не нужна.
+
+    `/flaky` (первый 502, второй 200) обязан уцелеть после повтора — это
+    медленный край, а не отсутствие файла. `/dead` (502 вечно) обязан остаться
+    красным после повтора — повтор лечит медленный край, не стойкий сбой.
+    `/forbidden` (403) — настоящий ответ: красный, ровно один запрос, повтор
+    не получает. `/ok` — санити: живой фетч возвращает байты.
+    """
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    hits: dict[str, int] = {}
+
+    class Handler(BaseHTTPRequestHandler):
+        def _answer(self, code: int, body: bytes = b"") -> None:
+            self.send_response(code)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            if body:
+                self.wfile.write(body)
+
+        def do_GET(self) -> None:
+            path = urllib.parse.urlsplit(self.path).path
+            hits[path] = hits.get(path, 0) + 1
+            if path == "/ok":
+                self._answer(200, b"ok-bytes")
+            elif path == "/flaky":
+                self._answer(502 if hits[path] == 1 else 200, b"flaky-bytes")
+            elif path == "/dead":
+                self._answer(502)
+            elif path == "/forbidden":
+                self._answer(403)
+            else:
+                self._answer(404)
+
+        def log_message(self, *a) -> None:      # тишина в выводе прибора
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    rows: list[tuple[str, bool, str]] = []
+    try:
+        try:
+            data = fetch(base + "/ok")
+            rows.append(("/ok", data == b"ok-bytes", "байты получены"))
+        except Exception as exc:
+            rows.append(("/ok", False, f"не пришёл ({type(exc).__name__})"))
+
+        try:
+            data = fetch(base + "/flaky")
+            rows.append(("/flaky", data == b"flaky-bytes", "уцелел после повтора"))
+        except Exception as exc:
+            rows.append(("/flaky", False, f"повтор не помог ({type(exc).__name__})"))
+
+        try:
+            fetch(base + "/dead")
+            rows.append(("/dead", False, "пробился сквозь стойкий 502"))
+        except Exception:
+            rows.append(("/dead", True, f"красный после повтора, запросов {hits.get('/dead', 0)}"))
+
+        try:
+            fetch(base + "/forbidden")
+            rows.append(("/forbidden", False, "пробился сквозь 403"))
+        except Exception:
+            rows.append(("/forbidden", hits.get("/forbidden", 0) == 1,
+                         f"красный, запросов {hits.get('/forbidden', 0)} (обязан быть 1)"))
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    bad = 0
+    for path, ok, note in rows:
+        if not ok:
+            bad += 1
+        print(f"  {'ok ' if ok else 'FAIL'} {path:<13} {note}")
+    print(f"КОНТРОЛЬ (fetch): поймал {len(rows) - bad} из {len(rows)}")
+    return 0 if bad == 0 else 1
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Живой сайт против дерева: байт в байт.")
     ap.add_argument("--root", default=str(ROOT), help="дерево для сверки")
-    ap.add_argument("--control", action="store_true", help="проверить сам прибор")
+    ap.add_argument("--control", action="store_true",
+                    help="проверить сам прибор: сверку байтов и fetch")
     ap.add_argument("--quiet", action="store_true", help="только расхождения")
     args = ap.parse_args()
     if args.control:
-        return control()
+        rc_tree = control()
+        rc_fetch = fetch_control()
+        if rc_tree or rc_fetch:
+            print("КОНТРОЛЬ: НЕ ПОЙМАН — прибор не умеет краснеть")
+        return 1 if (rc_tree or rc_fetch) else 0
     files, bad = compare(Path(args.root), verbose=not args.quiet)
     text, media = _publish_tree().split_kinds([str(f) for f in files])
     print(f"\nИТОГО: {len(files)} файлов (текст {text}, медиа {media}), "
