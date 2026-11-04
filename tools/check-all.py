@@ -295,7 +295,7 @@ BATTERIES = [
     ("live-bytes-control", ["tools/live-bytes.py", "--control"],                  "live",   240, "сам прибор: порча байта в странице И в картинке обязана покраснеть обоими файлами"),
     ("transport",        ["tools/check-transport.py"],                          "live",   180, "что сеть везёт: gzip у девяти страниц, сверка разжатого тела с деревом, vary, max-age 600, HTTP/2, accept-ranges у медиа, число «35,7 КБ» в README против измеренного"),
     ("transport-control",["tools/check-transport.py", "--control"],              "offline",300, "сам прибор: локальный сервер без gzip, с max-age=0, без vary, с обрезанным телом и с жатьём уже сжатого — пять порч обязаны быть названы, чистая копия зелёная"),
-    ("links-control",    ["tools/check-links.py", "--control"],                 "offline",120, "сам прибор: обязан разложить девять известных ответов по классам"),
+    ("links-control",    ["tools/check-links.py", "--control"],                 "offline",120, "сам прибор: обязан разложить десять известных ответов по классам, /reset обязан остаться error после повтора"),
     ("controls-mutation",["tools/controls-mutation.py"],                        "offline",300, "сам прибор: пять инструментов обязаны покраснеть на своих дефектах"),
     ("redirects",        ["tools/check-redirects.py"],                          "live",   240, "http→https, слэши, /index.html, 404, canonical"),
     ("redirects-control",["tools/check-redirects.py", "--control"],             "live",   240, "сам прибор: обязан краснеть на пяти кривых ответах"),

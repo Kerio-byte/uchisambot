@@ -51,6 +51,15 @@ HTTP 502 (03.11 — в реестре; свип «links» покрасился),
 в него. 500 остаётся error: это сбой приложения, не край. Контроль
 посадил: /edge502 и /edge503 обязаны лечь в blocked, /broken (500) —
 в error.
+
+Повод (04.11.2026, блок 92). Край fazier.com (Cloudflare) таймаутнул
+первый зонд (TIME=15 с), а адрес жив: три независимых фетча дали 200
+за 4–6 с, второй прогон самого прибора — зелёный. Таймаут — медленный
+край, тот же класс, что 502 в блоке 79, поэтому _transient
+(TimeoutError/ConnectionResetError, в чистом виде или внутри URLError)
+получает один повтор того же метода до вердикта error; стойкий сетевой
+сбой остаётся error. Контроль добавил /reset (соединение рвётся без
+ответа): обязан остаться error после повтора.
 """
 from __future__ import annotations
 
@@ -107,6 +116,17 @@ def collect() -> list[str]:
     return sorted(seen)
 
 
+def _transient(exc: BaseException) -> bool:
+    """Транзитный сбой транспорта: таймаут или сброшенное соединение,
+    в чистом виде или внутри URLError. HTTPError сюда не попадает."""
+    if isinstance(exc, (TimeoutError, ConnectionResetError)):
+        return True
+    if isinstance(exc, urllib.error.URLError):
+        return isinstance(getattr(exc, "reason", None),
+                          (TimeoutError, ConnectionResetError))
+    return False
+
+
 def probe(url: str) -> tuple[str, str]:
     """(класс, подробность). Класс — ok / dead / blocked / error / endpoint."""
     host = (urlsplit(url).hostname or "").lower()
@@ -133,6 +153,15 @@ def probe(url: str) -> tuple[str, str]:
             # прочие 4xx/5xx — пробуем другим методом, потом решаем
         except Exception as exc:                     # сеть, DNS, таймаут, TLS
             last = type(exc).__name__
+            if _transient(exc):
+                # Край может ответить медленно (fazier/Cloudflare, 04.11,
+                # блок 92): один повтор того же метода до вердикта;
+                # стойкий сбой — всё ещё error.
+                try:
+                    with urllib.request.urlopen(req, timeout=TIME) as resp:
+                        return "ok", str(resp.status)
+                except Exception as exc2:             # повтор тоже не пришёл
+                    last = f"{type(exc).__name__}->{type(exc2).__name__}"
     return "error", last
 
 
@@ -179,6 +208,14 @@ def control() -> int:
                 self._answer(503)
             elif path == "/head405":
                 self._answer(405 if self.command == "HEAD" else 200, b"ok")
+            elif path == "/reset":
+                # Соединение рвётся без ответа: клиент видит сброс,
+                # прибор обязан повторить и всё равно лечь в error.
+                self.close_connection = True
+                try:
+                    self.connection.shutdown(2)
+                except OSError:
+                    pass
             else:
                 self._answer(404)
 
@@ -192,7 +229,7 @@ def control() -> int:
         ("/ok", "ok"), ("/missing", "dead"), ("/gone", "dead"),
         ("/forbidden", "blocked"), ("/flood", "blocked"),
         ("/edge502", "blocked"), ("/edge503", "blocked"),
-        ("/broken", "error"), ("/head405", "ok"),
+        ("/broken", "error"), ("/head405", "ok"), ("/reset", "error"),
     ]
     bad = 0
     try:
