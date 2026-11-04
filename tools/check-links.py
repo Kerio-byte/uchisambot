@@ -19,10 +19,11 @@
 
   ok          — 2xx после редиректов;
   dead        — 404/410: адрес мёртв, это дефект страницы, код возврата 1;
-  blocked     — 401/403/429/999: край не пускает робота (Cloudflare, лимит),
+  blocked     — 401/403/429/999 и edge-5xx (502/503/504/520–524/526):
+                край или апстрим сломан — Cloudflare, лимит, origin лежит;
                 адрес при этом может быть живым; в отказы не пишется, но
                 и в «ok» не выдаётся;
-  error       — сеть/таймаут/DNS: код возврата 1.
+  error       — сеть/таймаут/DNS, 500 и прочий 5xx не из края: код возврата 1.
 
 Запуск:
   python3 tools/check-links.py            # проверить и обновить реестр
@@ -39,6 +40,17 @@
 по классам — 200 и 405-затем-200 в ok, 404 и 410 в dead, 403 и 429 в blocked,
 500-на-both в error. Ошибка раскладки — код 1; реестр в этом режиме не
 пишется вовсе.
+
+Повод (04.11.2026, блок 79). Край fazier.com (Cloudflare) отвечал нам
+HTTP 502 (03.11 — в реестре; свип «links» покрасился), а адрес жив:
+сайт отвечает 200 на origin-адресе (188.114.97.1), а независимый
+фетч (r.jina.ai) читает главную. 502 — это заявление края «апстрим
+сломан, может восстановиться», а не мёртвый адрес; класс blocked
+создан ровно для этого («край не пускает, адрес может быть живым»),
+поэтому edge-5xx (502/503/504 и 520–524, 526 от Cloudflare) добавлены
+в него. 500 остаётся error: это сбой приложения, не край. Контроль
+посадил: /edge502 и /edge503 обязаны лечь в blocked, /broken (500) —
+в error.
 """
 from __future__ import annotations
 
@@ -60,6 +72,9 @@ UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 URL_RE = re.compile(r"https?://[^\s\"'<>()\\)]+")
 TIME = 15
+# 5xx от края/апстрима: «апстрим сломан, может восстановиться» — адрес жив.
+# 500 и прочие 5xx не из края — сбой приложения, остаются в error.
+EDGE_UPSTREAM = frozenset({502, 503, 504, 520, 521, 522, 523, 524, 526})
 
 
 def sources() -> list[Path]:
@@ -113,6 +128,8 @@ def probe(url: str) -> tuple[str, str]:
                 return "dead", last
             if exc.code in (401, 403, 429, 999):
                 return "blocked", last
+            if exc.code in EDGE_UPSTREAM:
+                return "blocked", last
             # прочие 4xx/5xx — пробуем другим методом, потом решаем
         except Exception as exc:                     # сеть, DNS, таймаут, TLS
             last = type(exc).__name__
@@ -156,6 +173,10 @@ def control() -> int:
                 self._answer(429)
             elif path == "/broken":
                 self._answer(500)
+            elif path == "/edge502":
+                self._answer(502)
+            elif path == "/edge503":
+                self._answer(503)
             elif path == "/head405":
                 self._answer(405 if self.command == "HEAD" else 200, b"ok")
             else:
@@ -170,6 +191,7 @@ def control() -> int:
     rows = [
         ("/ok", "ok"), ("/missing", "dead"), ("/gone", "dead"),
         ("/forbidden", "blocked"), ("/flood", "blocked"),
+        ("/edge502", "blocked"), ("/edge503", "blocked"),
         ("/broken", "error"), ("/head405", "ok"),
     ]
     bad = 0
