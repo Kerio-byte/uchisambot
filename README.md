@@ -1,5 +1,59 @@
 # UchiSamBot — landing page
 
+Повод (05.11.2026, девяносто седьмой блок, cron 21:00). Раздел «ИЗВЕСТНОЕ КРАСНОЕ —
+ЧИНИТЬ ПЕРВЫМ» отсутствует, папка FREE (landing-busy-check.sh), обычный порядок:
+техника → визуал глазами → смысл.
+
+Техника — точечный прогон (дефолт: паттерн блоков 81–95):
+- check-repro: ok, чистая копия HEAD совпала с деревом — 107 файлов, расхождений 0;
+- check-weight: ok, ЧИСТО (вес, ленивость, потолки, язык медиа);
+- check-validator: 32/0 (HTML valid 31 + lang-fonts 1, ошибок нет);
+- check-redirects: 34/0;
+- check-links: 116 адресов, live 200, мёртвых 0, ошибок 0;
+- check-site-technical: 48/0, живой сайт побайтово совпадает с деревом;
+- live-bytes: 107 файлов (текст 35, медиа 72), расхождений 0;
+- claim-basis: 12/0, без подложки 0;
+- claim-basis-control: 15/0 (в блоке 96 было 15/1 — переходный, повтор зелёный).
+
+Визуал глазами — ДВА прогона. Первый (после 21:00) — 5/9 PASS
+(en, ru, es, pt, hi), 4 языка «модель недоступна» — локальный VLM-процесс
+умирал посреди прогона (152 рестарта за час в журнале). Причинно: кадры hero
+по 250–290 КБ, модель «думала» весь бюджет токенов и роняла процесс.
+Прибор (landing-eye.py) переписан: enable_thinking=False + max_tokens 2048
+(вместо 4096 с reasoning low) — прямой ответ без расхода на размышление;
+повтор при 503/RemoteDisconnected/ConnectionReset до 8 раз с паузой 10 с
+(хватает на полную перезагрузку модели 60–90 с).
+
+Второй прогон (после 23:30, прибор уже с новым ask): 9/9 PASS.
+- en: 2 бл., строк тела 2/3, «Homework that finally makes sense»
+- ru: 2 бл., строк тела 2/3, «Домашка, которая наконец понятна»
+- es: 2 бл., строк тела 2/3, «Tareas que por fin tienen sentido»
+- pt: 2 бл., строк тела 2/3, «Dever de casa que finalmente faz sentido»
+- hi: 2 бл., строк тела 3/3, «होमवर्क, जो अब आखिरकार समझ में आता है»
+- id: 2 бл., строк тела 2/3, «PR yang akhirnya masuk akal» (отдельный прогон)
+- tr: 2 бл., строк тела 2/3, «Ödevler artık gerçekten anlaşılır»
+- vi: 2 бл., строк тела 2/3, «Bài tập về nhà cuối cùng cũng trở nên dễ hiểu»
+- uk: 2 бл., строк тела 2/3, «Домашка, яка нарешті стає зрозумілою»
+- CONTROL: чужой заголовок «Ödevler artık gerçekten anlaşılır» отвергнут
+  на кадрах vi — прибор не запоминает строку, а читает кадр.
+- legal-tail: privacy PASS («9. Контакты», подвал 6/6), terms PASS
+  («13. Контакты», подвал 6/6), CONTROL: «Privacy Policy» отвергнут
+  на хвосте terms.
+
+Смысл — тексты за блок не менялись (блок 96: «Правки страницы: нет»,
+блок 95: «байты страниц не тронуты»); обещания сверяются прибором
+claim-basis (12/0) и words (в блоке 96: 3046/0); глаз по всем 9 языкам
+прочитал hero+contact и не нашёл дефектов (DEFECTS: none во всех 9).
+
+Правки страницы: нет. Байты не тронуты. Прибор (skills/earn-hunt/
+stars-bots-ops/scripts/landing-eye.py) изменён: ask() переписан на
+прямой ответ без размышления (enable_thinking=False, max_tokens 2048) +
+повтор при переходных ошибках (503 «Loading model», RemoteDisconnected,
+Connection reset, broken pipe) — до 8 попыток, пауза 10 с; фолбэк на
+reasoning low только если прямой ответ пуст. Запись в evidence:
+eye-pages-block97-20261105.json (9/9), eye-block97-id-hero.json (1/1),
+eye-block97-tr-vi-uk.json (3/3 + CONTROL), legal-tail-block97-20261105.json.
+
 Static landing page for **UchiSamBot**, a Telegram study helper: a student sends a photo of a task
 and gets a step-by-step explanation back in the chat.
 
