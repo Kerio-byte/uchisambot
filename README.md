@@ -55,6 +55,13 @@ and gets a step-by-step explanation back in the chat.
 Байты страниц не тронуты: только новые кадры evidence/visual-20261105/
 (hi+pt) и журнал evidence/eye-block95-hi-pt.json (local-only).
 
+Зеркала: main на GitHub (9891417..4af3190) и на Forgejo (9891417..4af3190)
+синхронизированы. Живой сайт (gh-pages) побайтово совпадает с деревом HEAD
+(проверено check-site-technical 48/0 и live-bytes 107/0 в этом блоке) —
+gh-pages остаётся на 141c58d «publish: only the site (107 files)», и это
+правильно: в HEAD добавлены только README и evidence (не часть публикации).
+Push gh-pages не выполнялся (не требовалось, байты сайта не менялись).
+
 Повод (05.11.2026, девяносто четвёртый блок). Раздел «ИЗВЕСТНОЕ КРАСНОЕ —
 ЧИНИТЬ ПЕРВЫМ» отсутствует (заголовок не найден), папка FREE
 (landing-busy-check.sh), обычный порядок: техника, визуал, смысл.
