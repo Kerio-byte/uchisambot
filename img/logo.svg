@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4FC3F7"/>
+      <stop offset="1" stop-color="#3D5AFE"/>
+    </linearGradient>
+    <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E9F1FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- фон -->
+  <rect x="0" y="0" width="512" height="512" rx="116" fill="url(#bg2)"/>
+  <circle cx="140" cy="104" r="150" fill="#FFFFFF" opacity="0.10"/>
+
+  <!-- лампочка -->
+  <g>
+    <!-- лучи -->
+    <g stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" opacity="0.9">
+      <line x1="256" y1="58" x2="256" y2="88"/>
+      <line x1="164" y1="92" x2="186" y2="112"/>
+      <line x1="348" y1="92" x2="326" y2="112"/>
+      <line x1="128" y1="188" x2="158" y2="188"/>
+      <line x1="384" y1="188" x2="354" y2="188"/>
+    </g>
+    <!-- колба -->
+    <circle cx="256" cy="182" r="58" fill="#FFD54F"/>
+    <circle cx="256" cy="182" r="36" fill="#FFE9A8"/>
+    <!-- нить -->
+    <path d="M240 172 q8 18 16 0 q8 -18 16 0 q8 18 16 0" stroke="#E8A900" stroke-width="6"
+          fill="none" stroke-linecap="round"/>
+    <!-- цоколь -->
+    <rect x="234" y="236" width="44" height="34" rx="8" fill="#E3E8F0"/>
+    <rect x="234" y="246" width="44" height="5" fill="#C3CCDA"/>
+    <rect x="234" y="258" width="44" height="5" fill="#C3CCDA"/>
+    <rect x="246" y="270" width="20" height="10" rx="4" fill="#B4BECD"/>
+  </g>
+
+  <!-- открытая книга -->
+  <g>
+    <path d="M130 402 L130 322 Q256 296 382 322 L382 402 Q256 378 130 402 Z" fill="url(#pg)"/>
+    <!-- строки -->
+    <g stroke="#C9D6EA" stroke-width="5" stroke-linecap="round">
+      <line x1="158" y1="344" x2="238" y2="334"/>
+      <line x1="158" y1="362" x2="238" y2="352"/>
+      <line x1="158" y1="380" x2="238" y2="370"/>
+      <line x1="274" y1="334" x2="354" y2="344"/>
+      <line x1="274" y1="352" x2="354" y2="362"/>
+      <line x1="274" y1="370" x2="354" y2="380"/>
+    </g>
+    <!-- корешок -->
+    <line x1="256" y1="303" x2="256" y2="392" stroke="#B9C8DE" stroke-width="7"/>
+    <!-- обложка-низ -->
+    <path d="M130 402 Q256 378 382 402 L382 414 Q256 390 130 414 Z" fill="#9FBCE8"/>
+  </g>
+  <!-- тень -->
+  <ellipse cx="256" cy="430" rx="130" ry="12" fill="#1E2E7A" opacity="0.35"/>
+</svg>
